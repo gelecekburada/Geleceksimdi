@@ -1,1 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAForge AI</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 20px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .badge {
+      background: #2563eb;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 44px;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 19px;
+      color: #667085;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 15px;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      font-size: 16px;
+      resize: vertical;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      background: white;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: 10px;
+      display: none;
+    }
+
+    @media (max-width: 700px) {
+      h1 {
+        font-size: 34px;
+      }
+
+      .options {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">BAForge AI</div>
+  <div class="badge">UAT Test Case Generator</div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <h1>Turn Requirements Into Test Cases</h1>
+    <p>
+      Generate professional UAT test cases from your requirements in seconds.
+    </p>
+  </section>
+
+  <section class="card">
+
+    <label for="requirement">Requirement</label>
+
+    <textarea
+      id="requirement"
+      placeholder="Example: A customer should be able to transfer money using FAST..."
+    ></textarea>
+
+    <div class="options">
+
+      <div>
+        <label>Test Type</label>
+        <select id="type">
+          <option>Functional</option>
+          <option>Negative</option>
+          <option>Edge Case</option>
+          <option>Regression</option>
+          <option>API</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Number of Cases</label>
+        <select id="number">
+          <option>5</option>
+          <option>10</option>
+          <option>20</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Detail Level</label>
+        <select id="detail">
+          <option>Basic</option>
+          <option>Professional</option>
+        </select>
+      </div>
+
+    </div>
+
+    <button onclick="generateCases()">
+      Generate Test Cases
+    </button>
+
+    <div class="result" id="result">
+      <strong>Preview</strong>
+      <p>
+        Your AI-generated test cases will appear here.
+      </p>
+    </div>
+
+  </section>
+
+</main>
+
+<script>
+  function generateCases() {
+    const requirement = document.getElementById("requirement").value;
+
+    if (!requirement.trim()) {
+      alert("Please enter a requirement first.");
+      return;
+    }
+
+    const result = document.getElementById("result");
+
+    result.style.display = "block";
+
+    result.innerHTML = `
+      <strong>Test Case Preview</strong>
+      <p><b>Requirement:</b> ${requirement}</p>
+      <p>AI generation will be connected in the next step.</p>
+    `;
+  }
+</script>
+
+</body>
+</html>
