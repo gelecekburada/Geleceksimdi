@@ -1,387 +1,801 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>BAForge AI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-      <style>
-            * {
-                  box-sizing: border-box;
-            }
+  <title>BAForge AI - UAT Test Case Generator</title>
 
-            body {
-                  margin: 0;
-                  font-family: Arial, sans-serif;
-                  background: #f5f7fb;
-                  color: #172033;
-            }
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-            header {
-                  background: #111827;
-                  color: white;
-                  padding: 20px 8%;
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-            }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+    }
 
-            .logo {
-                  font-size: 24px;
-                  font-weight: bold;
-            }
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 18px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
 
-            .badge {
-                  background: #2563eb;
-                  padding: 8px 14px;
-                  border-radius: 20px;
-                  font-size: 13px;
-            }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-            main {
-                  max-width: 1100px;
-                  margin: 60px auto;
-                  padding: 0 20px;
-            }
+    .brand h1 {
+      margin: 0;
+      font-size: 22px;
+    }
 
-            .hero {
-                  text-align: center;
-                  margin-bottom: 40px;
-            }
+    .badge {
+      background: #eef2ff;
+      color: #4338ca;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
 
-            h1 {
-                  font-size: 44px;
-                  margin-bottom: 15px;
-            }
+    .language-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-            .hero p {
-                  font-size: 19px;
-                  color: #667085;
-            }
+    .language-box select {
+      width: auto;
+      min-width: 110px;
+    }
 
-            .card {
-                  background: white;
-                  padding: 30px;
-                  border-radius: 16px;
-                  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            }
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 40px 25px 70px;
+    }
 
-            label {
-                  display: block;
-                  font-weight: bold;
-                  margin-bottom: 8px;
-            }
+    .hero {
+      margin-bottom: 30px;
+    }
 
-            textarea {
-                  width: 100%;
-                  min-height: 180px;
-                  padding: 15px;
-                  border: 1px solid #d0d5dd;
-                  border-radius: 10px;
-                  font-size: 16px;
-                  resize: vertical;
-                  margin-bottom: 20px;
-            }
+    .hero h2 {
+      font-size: 36px;
+      margin: 0 0 10px;
+    }
 
-            .options {
-                  display: grid;
-                  grid-template-columns: repeat(3, 1fr);
-                  gap: 15px;
-                  margin-bottom: 25px;
-            }
+    .hero p {
+      color: #64748b;
+      font-size: 17px;
+      margin: 0;
+    }
 
-            select {
-                  width: 100%;
-                  padding: 12px;
-                  border: 1px solid #d0d5dd;
-                  border-radius: 8px;
-                  background: white;
-            }
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 25px;
+      box-shadow: 0 5px 20px rgba(15, 23, 42, 0.06);
+      margin-bottom: 30px;
+    }
 
-            button {
-                  width: 100%;
-                  padding: 15px;
-                  border: none;
-                  border-radius: 10px;
-                  background: #2563eb;
-                  color: white;
-                  font-size: 17px;
-                  font-weight: bold;
-                  cursor: pointer;
-            }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
 
-            button:hover {
-                  background: #1d4ed8;
-            }
+    textarea,
+    select,
+    input {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      padding: 11px 12px;
+      font-size: 14px;
+      background: white;
+      color: #172033;
+      outline: none;
+    }
 
-            button:disabled {
-                  background: #94a3b8;
-                  cursor: wait;
-            }
+    textarea:focus,
+    select:focus,
+    input:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
 
-            .result {
-                  margin-top: 30px;
-                  padding: 20px;
-                  background: #f8fafc;
-                  border-radius: 10px;
-                  display: none;
-                  overflow-x: auto;
-            }
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      margin-bottom: 20px;
+    }
 
-            .result h2 {
-                  margin-top: 0;
-            }
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
 
-            table {
-                  width: 100%;
-                  border-collapse: collapse;
-                  margin-top: 20px;
-                  background: white;
-                  min-width: 900px;
-            }
+    .field {
+      min-width: 0;
+    }
 
-            th,
-            td {
-                  border: 1px solid #e2e8f0;
-                  padding: 12px;
-                  text-align: left;
-                  vertical-align: top;
-                  font-size: 14px;
-            }
+    button {
+      border: none;
+      border-radius: 9px;
+      padding: 13px 22px;
+      background: #4f46e5;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
 
-            th {
-                  background: #eef2ff;
-                  font-weight: bold;
-            }
+    button:hover {
+      background: #4338ca;
+    }
 
-            .error {
-                  color: #b42318;
-                  font-weight: bold;
-            }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
-            .loading {
-                  color: #475467;
-                  font-weight: bold;
-            }
+    .status {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #64748b;
+      display: none;
+    }
 
-            @media (max-width: 700px) {
-                  h1 {
-                        font-size: 34px;
-                  }
+    .error {
+      margin-top: 15px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      display: none;
+      white-space: pre-wrap;
+    }
 
-                  .options {
-                        grid-template-columns: 1fr;
-                  }
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
 
-                  main {
-                        margin: 30px auto;
-                  }
+    .results-header h3 {
+      margin: 0;
+      font-size: 22px;
+    }
 
-                  .card {
-                        padding: 20px;
-                  }
-            }
-      </style>
+    .table-wrapper {
+      overflow-x: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1300px;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f8fafc;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    td {
+      line-height: 1.55;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .priority {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .api-details {
+      min-width: 260px;
+      white-space: normal;
+    }
+
+    .api-details pre,
+    .test-data {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12px;
+      background: #f8fafc;
+      padding: 8px;
+      border-radius: 6px;
+    }
+
+    .empty {
+      text-align: center;
+      color: #64748b;
+      padding: 35px;
+    }
+
+    @media (max-width: 900px) {
+      .options-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero h2 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 15px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .container {
+        padding: 25px 15px 50px;
+      }
+
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h2 {
+        font-size: 25px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-      <header>
-            <div class="logo">BAForge AI</div>
-            <div class="badge">UAT Test Case Generator</div>
-      </header>
+<header>
+  <div class="brand">
+    <h1>BAForge AI</h1>
+    <span class="badge" id="badge">UAT Test Case Generator</span>
+  </div>
 
-      <main>
+  <div class="language-box">
+    <label for="language" id="languageLabel" style="margin:0;">Language</label>
+    <select id="language">
+      <option value="tr">Türkçe</option>
+      <option value="en" selected>English</option>
+    </select>
+  </div>
+</header>
 
-            <section class="hero">
-                  <h1>Turn Requirements Into Test Cases</h1>
-                  <p>
-                        Generate professional UAT test cases from your requirements in seconds.
-                  </p>
-            </section>
+<main class="container">
 
-            <section class="card">
+  <section class="hero">
+    <h2 id="heroTitle">Turn Requirements Into Test Cases</h2>
+    <p id="heroSubtitle">
+      Generate professional UAT test cases from your requirements in seconds.
+    </p>
+  </section>
 
-                  <label for="requirement">Requirement</label>
+  <section class="card">
 
-                  <textarea id="requirement"
-                        placeholder="Example: A customer should be able to transfer money using FAST..."></textarea>
+    <label for="requirement" id="requirementLabel">
+      Requirement
+    </label>
 
-                  <div class="options">
+    <textarea
+      id="requirement"
+      placeholder="Example: The user should be able to transfer money to another bank account using IBAN."
+    ></textarea>
 
-                        <div>
-                              <label>Test Type</label>
-                              <select id="type">
-                                    <option>Functional</option>
-                                    <option>Negative</option>
-                                    <option>Edge Case</option>
-                                    <option>Regression</option>
-                                    <option>API</option>
-                              </select>
-                        </div>
+    <div class="options-grid">
 
-                        <div>
-                              <label>Number of Cases</label>
-                              <select id="number">
-                                    <option>5</option>
-                                    <option>10</option>
-                                    <option>20</option>
-                              </select>
-                        </div>
+      <div class="field">
+        <label for="type" id="typeLabel">Test Type</label>
 
-                        <div>
-                              <label>Detail Level</label>
-                              <select id="detail">
-                                    <option>Basic</option>
-                                    <option>Professional</option>
-                              </select>
-                        </div>
+        <select id="type">
+          <option value="Functional">Functional</option>
+          <option value="Negative">Negative</option>
+          <option value="Edge Case">Edge Case</option>
+          <option value="Regression">Regression</option>
+          <option value="API">API</option>
+        </select>
+      </div>
 
-                  </div>
+      <div class="field">
+        <label for="number" id="numberLabel">Number of Cases</label>
 
-                  <button id="generateButton" onclick="generateCases()">
-                        Generate Test Cases
-                  </button>
+        <input
+          id="number"
+          type="number"
+          min="1"
+          max="50"
+          step="1"
+          value="5"
+        />
+      </div>
 
-                  <div class="result" id="result"></div>
+      <div class="field">
+        <label for="detail" id="detailLabel">Detail Level</label>
 
-            </section>
+        <select id="detail">
+          <option value="Basic">Basic</option>
+          <option value="Professional" selected>Professional</option>
+          <option value="Comprehensive">Comprehensive</option>
+        </select>
+      </div>
 
-      </main>
+      <div class="field">
+        <label for="focus" id="focusLabel">Test Focus</label>
 
-      <script>
-            async function generateCases() {
+        <select id="focus">
+          <option value="All">All</option>
+          <option value="Business Rules">Business Rules</option>
+          <option value="Validation">Validation</option>
+          <option value="Boundary">Boundary</option>
+          <option value="Error Handling">Error Handling</option>
+          <option value="Security">Security</option>
+          <option value="Integration">Integration</option>
+          <option value="Usability">Usability</option>
+        </select>
+      </div>
 
-                  const requirement =
-                        document.getElementById("requirement").value.trim();
+      <div class="field">
+        <label for="priority" id="priorityLabel">Priority</label>
 
-                  const type =
-                        document.getElementById("type").value;
+        <select id="priority">
+          <option value="All">All</option>
+          <option value="Critical">Critical</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+      </div>
 
-                  const number =
-                        document.getElementById("number").value;
+    </div>
 
-                  const detail =
-                        document.getElementById("detail").value;
+    <button id="generateButton">
+      Generate Test Cases
+    </button>
 
-                  const button =
-                        document.getElementById("generateButton");
+    <div class="status" id="status"></div>
 
-                  const result =
-                        document.getElementById("result");
+    <div class="error" id="error"></div>
 
-                  if (!requirement) {
-                        alert("Please enter a requirement first.");
-                        return;
-                  }
+  </section>
 
-                  button.disabled = true;
-                  button.textContent = "Generating...";
+  <section class="card" id="resultsCard" style="display:none;">
 
-                  result.style.display = "block";
-                  result.innerHTML =
-                        '<p class="loading">AI is generating your test cases...</p>';
+    <div class="results-header">
+      <h3 id="resultsTitle">Generated Test Cases</h3>
+    </div>
 
+    <div class="table-wrapper">
 
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th id="titleHeader">Title</th>
+            <th id="objectiveHeader">Objective</th>
+            <th id="preconditionsHeader">Preconditions</th>
+            <th id="stepsHeader">Steps</th>
+            <th id="expectedHeader">Expected Result</th>
+            <th id="priorityHeader">Priority</th>
+            <th id="testDataHeader">Test Data</th>
+            <th id="apiHeader" style="display:none;">API Details</th>
+          </tr>
+        </thead>
 
-                  try {
+        <tbody id="resultsBody"></tbody>
+      </table>
 
-                        const response = await fetch("/api/generate", {
-                              method: "POST",
-                              headers: {
-                                    "Content-Type": "application/json"
-                              },
-                              body: JSON.stringify({
-                                    requirement,
-                                    type,
-                                    number,
-                                    detail
-                              })
-                        });
+    </div>
 
-                        const data = await response.json();
+  </section>
 
-                        if (!response.ok) {
-                              throw new Error(data.error || "Something went wrong.");
-                        }
+</main>
 
-                        if (!data.cases || !Array.isArray(data.cases)) {
-                              throw new Error("Invalid response from AI.");
-                        }
+<script>
 
-                        let html = `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <h2>Generated Test Cases</h2>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <table>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <thead>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <tr>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <th>ID</th>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <th>Title</th>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <th>Objective</th>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <th>Preconditions</th>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <th>Steps</th>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <th>Expected Result</th>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <th>Priority</th>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <th>Test Data</th>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </tr>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </thead>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <tbody>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      `;
+  const translations = {
 
-                        data.cases.forEach(testCase => {
+    en: {
+      badge: "UAT Test Case Generator",
+      heroTitle: "Turn Requirements Into Test Cases",
+      heroSubtitle: "Generate professional UAT test cases from your requirements in seconds.",
+      language: "Language",
+      requirement: "Requirement",
+      requirementPlaceholder: "Example: The user should be able to transfer money to another bank account using IBAN.",
+      testType: "Test Type",
+      number: "Number of Cases",
+      detail: "Detail Level",
+      focus: "Test Focus",
+      priority: "Priority",
+      generate: "Generate Test Cases",
+      generating: "Generating test cases...",
+      results: "Generated Test Cases",
+      title: "Title",
+      objective: "Objective",
+      preconditions: "Preconditions",
+      steps: "Steps",
+      expected: "Expected Result",
+      priorityHeader: "Priority",
+      testData: "Test Data",
+      apiDetails: "API Details",
+      requirementError: "Please enter a clear requirement with at least 15 characters and 3 words.",
+      numberError: "Number of test cases must be between 1 and 50.",
+      apiError: "The server returned an unexpected response.",
+      noCases: "No test cases were generated.",
+      genericError: "Something went wrong while generating test cases."
+    },
 
-                              const steps = Array.isArray(testCase.steps)
-                                    ? testCase.steps.join("<br>")
-                                    : (testCase.steps || "");
+    tr: {
+      badge: "UAT Test Case Generator",
+      heroTitle: "Gereksinimleri Test Case'lere Dönüştür",
+      heroSubtitle: "Gereksinimlerinizden saniyeler içinde profesyonel UAT test case'leri oluşturun.",
+      language: "Dil",
+      requirement: "Gereksinim",
+      requirementPlaceholder: "Örnek: Kullanıcı IBAN kullanarak başka bir banka hesabına para transferi yapabilmelidir.",
+      testType: "Test Tipi",
+      number: "Test Case Sayısı",
+      detail: "Detay Seviyesi",
+      focus: "Test Odağı",
+      priority: "Öncelik",
+      generate: "Test Case Oluştur",
+      generating: "Test case'ler oluşturuluyor...",
+      results: "Oluşturulan Test Case'ler",
+      title: "Başlık",
+      objective: "Amaç",
+      preconditions: "Ön Koşullar",
+      steps: "Adımlar",
+      expected: "Beklenen Sonuç",
+      priorityHeader: "Öncelik",
+      testData: "Test Verisi",
+      apiDetails: "API Detayları",
+      requirementError: "Lütfen en az 15 karakter ve 3 kelime içeren açık bir gereksinim girin.",
+      numberError: "Test case sayısı 1 ile 50 arasında olmalıdır.",
+      apiError: "Sunucudan beklenmeyen bir cevap geldi.",
+      noCases: "Test case oluşturulamadı.",
+      genericError: "Test case oluşturulurken bir hata oluştu."
+    }
 
-                              html += `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <tr>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <td>${escapeHtml(testCase.id)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <td>${escapeHtml(testCase.title)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <td>${escapeHtml(testCase.objective)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <td>${escapeHtml(testCase.preconditions)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <td>${escapeHtml(steps)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <td>${escapeHtml(testCase.expectedResult)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <td>${escapeHtml(testCase.priority)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <td>${escapeHtml(typeof testCase.testData === "object" ? JSON.stringify(testCase.testData, null, 2) : testCase.testData)}</td>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </tr>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `;
-                        });
+  };
 
-                        html += `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </tbody>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </table>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `;
+  const languageEl = document.getElementById("language");
+  const requirementEl = document.getElementById("requirement");
+  const typeEl = document.getElementById("type");
+  const numberEl = document.getElementById("number");
+  const detailEl = document.getElementById("detail");
+  const focusEl = document.getElementById("focus");
+  const priorityEl = document.getElementById("priority");
+  const generateButton = document.getElementById("generateButton");
 
-                        result.innerHTML = html;
+  const statusEl = document.getElementById("status");
+  const errorEl = document.getElementById("error");
 
-                  } catch (error) {
+  const resultsCard = document.getElementById("resultsCard");
+  const resultsBody = document.getElementById("resultsBody");
 
-                        result.innerHTML = `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <p class="error">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Error: ${escapeHtml(error.message)}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `;
+  function t(key) {
+    return translations[languageEl.value][key];
+  }
 
-                  } finally {
+  function updateLanguage() {
 
-                        button.disabled = false;
-                        button.textContent = "Generate Test Cases";
+    document.documentElement.lang = languageEl.value;
 
-                  }
-            }
+    document.getElementById("badge").textContent = t("badge");
+    document.getElementById("heroTitle").textContent = t("heroTitle");
+    document.getElementById("heroSubtitle").textContent = t("heroSubtitle");
 
-            function escapeHtml(value) {
-                  return String(value ?? "")
-                        .replace(/&/g, "&amp;")
-                        .replace(/</g, "&lt;")
-                        .replace(/>/g, "&gt;")
-                        .replace(/"/g, "&quot;")
-                        .replace(/'/g, "&#039;")
-                        .replace(/\n/g, "<br>");
-            }
-      </script>
+    document.getElementById("languageLabel").textContent = t("language");
+    document.getElementById("requirementLabel").textContent = t("requirement");
+    document.getElementById("requirement").placeholder = t("requirementPlaceholder");
+
+    document.getElementById("typeLabel").textContent = t("testType");
+    document.getElementById("numberLabel").textContent = t("number");
+    document.getElementById("detailLabel").textContent = t("detail");
+    document.getElementById("focusLabel").textContent = t("focus");
+    document.getElementById("priorityLabel").textContent = t("priority");
+
+    generateButton.textContent = t("generate");
+
+    document.getElementById("resultsTitle").textContent = t("results");
+
+    document.getElementById("titleHeader").textContent = t("title");
+    document.getElementById("objectiveHeader").textContent = t("objective");
+    document.getElementById("preconditionsHeader").textContent = t("preconditions");
+    document.getElementById("stepsHeader").textContent = t("steps");
+    document.getElementById("expectedHeader").textContent = t("expected");
+    document.getElementById("priorityHeader").textContent = t("priorityHeader");
+    document.getElementById("testDataHeader").textContent = t("testData");
+    document.getElementById("apiHeader").textContent = t("apiDetails");
+  }
+
+  languageEl.addEventListener("change", updateLanguage);
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function formatCell(value) {
+
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    if (typeof value === "object") {
+      return JSON.stringify(value, null, 2);
+    }
+
+    return String(value);
+  }
+
+  function renderMultiline(value) {
+
+    return escapeHtml(formatCell(value))
+      .replace(/\n/g, "<br>");
+  }
+
+  function renderSteps(value) {
+
+    if (Array.isArray(value)) {
+      return value
+        .map(step => escapeHtml(step))
+        .join("<br>");
+    }
+
+    return renderMultiline(value);
+  }
+
+  function renderApiDetails(api) {
+
+    if (!api) {
+      return "";
+    }
+
+    return `
+      <div class="api-details">
+        <pre>${escapeHtml(JSON.stringify(api, null, 2))}</pre>
+      </div>
+    `;
+  }
+
+  function showError(message) {
+
+    errorEl.textContent = message;
+    errorEl.style.display = "block";
+  }
+
+  function hideError() {
+
+    errorEl.textContent = "";
+    errorEl.style.display = "none";
+  }
+
+  function validateRequirement() {
+
+    const requirement = requirementEl.value.trim();
+
+    const words = requirement
+      .split(/\s+/)
+      .filter(Boolean);
+
+    if (requirement.length < 15 || words.length < 3) {
+      showError(t("requirementError"));
+      return false;
+    }
+
+    return true;
+  }
+
+  function validateNumber() {
+
+    const number = Number(numberEl.value);
+
+    if (!Number.isInteger(number) || number < 1 || number > 50) {
+      showError(t("numberError"));
+      return false;
+    }
+
+    return true;
+  }
+
+  async function generateTestCases() {
+
+    hideError();
+
+    if (!validateRequirement()) {
+      return;
+    }
+
+    if (!validateNumber()) {
+      return;
+    }
+
+    const requirement = requirementEl.value.trim();
+    const type = typeEl.value;
+    const number = Number(numberEl.value);
+    const detail = detailEl.value;
+    const focus = focusEl.value;
+    const priority = priorityEl.value;
+    const language = languageEl.value;
+
+    generateButton.disabled = true;
+
+    statusEl.style.display = "block";
+    statusEl.textContent = t("generating");
+
+    resultsCard.style.display = "none";
+    resultsBody.innerHTML = "";
+
+    try {
+
+      const response = await fetch("/api/generate", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          requirement,
+          type,
+          number,
+          detail,
+          language,
+          focus,
+          priority
+        })
+
+      });
+
+      const raw = await response.text();
+
+      let data;
+
+      try {
+        data = JSON.parse(raw);
+      } catch (parseError) {
+        throw new Error(t("apiError"));
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || t("genericError"));
+      }
+
+      if (!Array.isArray(data.cases)) {
+        throw new Error(t("genericError"));
+      }
+
+      renderResults(data.cases, type);
+
+    } catch (error) {
+
+      showError(error.message || t("genericError"));
+
+    } finally {
+
+      generateButton.disabled = false;
+      statusEl.style.display = "none";
+
+    }
+  }
+
+  function renderResults(cases, type) {
+
+    if (!cases.length) {
+      showError(t("noCases"));
+      return;
+    }
+
+    const isApi = type === "API";
+
+    document.getElementById("apiHeader").style.display =
+      isApi ? "table-cell" : "none";
+
+    let html = "";
+
+    cases.forEach((testCase, index) => {
+
+      const apiDetails =
+        testCase.api ||
+        testCase.apiDetails ||
+        null;
+
+      html += `
+        <tr>
+
+          <td>
+            ${escapeHtml(testCase.id || `TC-${String(index + 1).padStart(3, "0")}`)}
+          </td>
+
+          <td>
+            ${renderMultiline(testCase.title)}
+          </td>
+
+          <td>
+            ${renderMultiline(testCase.objective)}
+          </td>
+
+          <td>
+            ${renderMultiline(testCase.preconditions)}
+          </td>
+
+          <td>
+            ${renderSteps(testCase.steps)}
+          </td>
+
+          <td>
+            ${renderMultiline(testCase.expectedResult)}
+          </td>
+
+          <td class="priority">
+            ${escapeHtml(testCase.priority)}
+          </td>
+
+          <td>
+            <pre class="test-data">${escapeHtml(formatCell(testCase.testData))}</pre>
+          </td>
+
+          ${
+            isApi
+              ? `
+                <td>
+                  ${renderApiDetails(apiDetails)}
+                </td>
+              `
+              : ""
+          }
+
+        </tr>
+      `;
+    });
+
+    resultsBody.innerHTML = html;
+    resultsCard.style.display = "block";
+  }
+
+  generateButton.addEventListener("click", generateTestCases);
+
+  updateLanguage();
+
+</script>
 
 </body>
-
 </html>
