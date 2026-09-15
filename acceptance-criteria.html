@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>BAForge AI - Acceptance Criteria Generator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6fb;
+      color: #1f2937;
+    }
+
+    .header {
+      background: #111827;
+      color: white;
+      padding: 22px 20px;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .brand {
+      font-size: 25px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 7px 12px;
+      border-radius: 20px;
+      background: #2563eb;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 28px auto;
+      padding: 0 18px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 5px 20px rgba(15, 23, 42, 0.07);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 24px;
+    }
+
+    h2 {
+      font-size: 19px;
+      margin-top: 28px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 190px;
+      resize: vertical;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 14px;
+      line-height: 1.6;
+      outline: none;
+    }
+
+    textarea:focus,
+    select:focus {
+      border-color: #2563eb;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      background: white;
+      font-size: 14px;
+    }
+
+    .generate-btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      border: 0;
+      border-radius: 9px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .generate-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .generate-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .error {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 9px;
+      background: #fee2e2;
+      color: #991b1b;
+      font-size: 14px;
+    }
+
+    .loading {
+      display: none;
+      margin-top: 16px;
+      text-align: center;
+      color: #475569;
+      font-size: 14px;
+    }
+
+    .result-section {
+      display: none;
+    }
+
+    .score-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px;
+      border-radius: 12px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+
+    .score-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e40af;
+    }
+
+    .score-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: #1d4ed8;
+    }
+
+    .score-explanation {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .criteria-table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th,
+    td {
+      border: 1px solid #e5e7eb;
+      padding: 11px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    th {
+      background: #eef2ff;
+      font-weight: 700;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 15px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+
+    .tag-positive {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .tag-negative {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .tag-boundary {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .tag-validation {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .empty {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    @media (max-width: 700px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .score-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">BAForge AI</div>
+      <div class="subtitle">
+        Business Analysis & QA Intelligence Platform
+      </div>
+      <div class="badge">
+        Acceptance Criteria Generator
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="card">
+
+      <h1 id="pageTitle">
+        Acceptance Criteria Generator
+      </h1>
+
+      <label id="inputLabel" for="requirement">
+        Requirement veya User Story
+      </label>
+
+      <textarea
+        id="requirement"
+        placeholder="Requirement veya User Story girin..."
+      ></textarea>
+
+      <div class="controls">
+
+        <div>
+          <label id="languageLabel" for="language">
+            Dil
+          </label>
+
+          <select id="language">
+            <option value="tr">Türkçe</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+
+        <div>
+          <label id="detailLabel" for="detail">
+            Detay Seviyesi
+          </label>
+
+          <select id="detail">
+            <option value="Basic">Basic</option>
+            <option value="Professional" selected>
+              Professional
+            </option>
+            <option value="Comprehensive">
+              Comprehensive
+            </option>
+          </select>
+        </div>
+
+      </div>
+
+      <button
+        class="generate-btn"
+        id="generateBtn"
+        onclick="generateCriteria()"
+      >
+        Acceptance Criteria Oluştur
+      </button>
+
+      <div class="loading" id="loading">
+        AI acceptance criteria oluşturuyor...
+      </div>
+
+      <div class="error" id="error"></div>
+
+    </section>
+
+    <section class="card result-section" id="result">
+
+      <h1 id="resultTitle">
+        Oluşturulan Acceptance Criteria
+      </h1>
+
+      <div class="score-card">
+
+        <div>
+          <div class="score-title">
+            Testability Score
+          </div>
+
+          <div
+            class="score-explanation"
+            id="scoreExplanation"
+          ></div>
+        </div>
+
+        <div
+          class="score-value"
+          id="scoreValue"
+        >
+          -
+        </div>
+
+      </div>
+
+      <h2 id="criteriaTitle">
+        Acceptance Criteria
+      </h2>
+
+      <div class="criteria-table-wrapper">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Type</th>
+              <th>Given</th>
+              <th>When</th>
+              <th>Then</th>
+            </tr>
+          </thead>
+
+          <tbody id="criteriaBody"></tbody>
+
+        </table>
+
+      </div>
+
+      <h2 id="coverageTitle">
+        Coverage Summary
+      </h2>
+
+      <ul id="coverageList"></ul>
+
+      <h2 id="rulesTitle">
+        Business Rules
+      </h2>
+
+      <ul id="rulesList"></ul>
+
+      <h2 id="assumptionsTitle">
+        Assumptions
+      </h2>
+
+      <ul id="assumptionsList"></ul>
+
+      <h2 id="questionsTitle">
+        Open Questions
+      </h2>
+
+      <ul id="questionsList"></ul>
+
+    </section>
+
+  </main>
+
+<script>
+
+  const translations = {
+
+    tr: {
+      pageTitle:
+        "Acceptance Criteria Generator",
+
+      inputLabel:
+        "Requirement veya User Story",
+
+      languageLabel:
+        "Dil",
+
+      detailLabel:
+        "Detay Seviyesi",
+
+      generate:
+        "Acceptance Criteria Oluştur",
+
+      loading:
+        "AI acceptance criteria oluşturuyor...",
+
+      resultTitle:
+        "Oluşturulan Acceptance Criteria",
+
+      criteriaTitle:
+        "Acceptance Criteria",
+
+      coverageTitle:
+        "Coverage Summary",
+
+      rulesTitle:
+        "Business Rules",
+
+      assumptionsTitle:
+        "Varsayımlar",
+
+      questionsTitle:
+        "Açık Sorular"
+    },
+
+    en: {
+      pageTitle:
+        "Acceptance Criteria Generator",
+
+      inputLabel:
+        "Requirement or User Story",
+
+      languageLabel:
+        "Language",
+
+      detailLabel:
+        "Detail Level",
+
+      generate:
+        "Generate Acceptance Criteria",
+
+      loading:
+        "AI is generating acceptance criteria...",
+
+      resultTitle:
+        "Generated Acceptance Criteria",
+
+      criteriaTitle:
+        "Acceptance Criteria",
+
+      coverageTitle:
+        "Coverage Summary",
+
+      rulesTitle:
+        "Business Rules",
+
+      assumptionsTitle:
+        "Assumptions",
+
+      questionsTitle:
+        "Open Questions"
+    }
+
+  };
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+  function applyLanguage() {
+
+    const lang =
+      document.getElementById("language").value;
+
+    const t =
+      translations[lang];
+
+    document.getElementById("pageTitle").textContent =
+      t.pageTitle;
+
+    document.getElementById("inputLabel").textContent =
+      t.inputLabel;
+
+    document.getElementById("languageLabel").textContent =
+      t.languageLabel;
+
+    document.getElementById("detailLabel").textContent =
+      t.detailLabel;
+
+    document.getElementById("generateBtn").textContent =
+      t.generate;
+
+    document.getElementById("loading").textContent =
+      t.loading;
+
+    document.getElementById("resultTitle").textContent =
+      t.resultTitle;
+
+    document.getElementById("criteriaTitle").textContent =
+      t.criteriaTitle;
+
+    document.getElementById("coverageTitle").textContent =
+      t.coverageTitle;
+
+    document.getElementById("rulesTitle").textContent =
+      t.rulesTitle;
+
+    document.getElementById("assumptionsTitle").textContent =
+      t.assumptionsTitle;
+
+    document.getElementById("questionsTitle").textContent =
+      t.questionsTitle;
+
+  }
+
+  document
+    .getElementById("language")
+    .addEventListener(
+      "change",
+      applyLanguage
+    );
+
+  function renderList(id, items) {
+
+    const element =
+      document.getElementById(id);
+
+    element.innerHTML = "";
+
+    if (
+      !Array.isArray(items) ||
+      items.length === 0
+    ) {
+
+      element.innerHTML =
+        `<li class="empty">-</li>`;
+
+      return;
+    }
+
+    items.forEach(item => {
+
+      const li =
+        document.createElement("li");
+
+      li.innerHTML =
+        escapeHtml(item);
+
+      element.appendChild(li);
+
+    });
+
+  }
+
+  function typeTag(type) {
+
+    const normalized =
+      String(type || "")
+        .toLowerCase();
+
+    let className =
+      "tag-validation";
+
+    if (
+      normalized.includes("positive") ||
+      normalized.includes("happy")
+    ) {
+      className =
+        "tag-positive";
+    }
+
+    if (
+      normalized.includes("negative") ||
+      normalized.includes("error")
+    ) {
+      className =
+        "tag-negative";
+    }
+
+    if (
+      normalized.includes("boundary") ||
+      normalized.includes("edge")
+    ) {
+      className =
+        "tag-boundary";
+    }
+
+    return `
+      <span class="tag ${className}">
+        ${escapeHtml(type || "Validation")}
+      </span>
+    `;
+  }
+
+  function renderCriteria(criteria) {
+
+    const body =
+      document.getElementById("criteriaBody");
+
+    body.innerHTML = "";
+
+    if (
+      !Array.isArray(criteria) ||
+      criteria.length === 0
+    ) {
+      return;
+    }
+
+    criteria.forEach((item, index) => {
+
+      const row =
+        document.createElement("tr");
+
+      row.innerHTML = `
+        <td>
+          ${escapeHtml(
+            item.id ||
+            `AC-${String(index + 1).padStart(2, "0")}`
+          )}
+        </td>
+
+        <td>
+          ${typeTag(item.type)}
+        </td>
+
+        <td>
+          ${escapeHtml(item.given)}
+        </td>
+
+        <td>
+          ${escapeHtml(item.when)}
+        </td>
+
+        <td>
+          ${escapeHtml(item.then)}
+        </td>
+      `;
+
+      body.appendChild(row);
+
+    });
+
+  }
+
+  async function generateCriteria() {
+
+    const requirement =
+      document
+        .getElementById("requirement")
+        .value
+        .trim();
+
+    const language =
+      document
+        .getElementById("language")
+        .value;
+
+    const detail =
+      document
+        .getElementById("detail")
+        .value;
+
+    const errorBox =
+      document.getElementById("error");
+
+    const loading =
+      document.getElementById("loading");
+
+    const button =
+      document.getElementById("generateBtn");
+
+    errorBox.style.display =
+      "none";
+
+    document.getElementById("result")
+      .style.display =
+      "none";
+
+    const words =
+      requirement
+        .split(/\s+/)
+        .filter(Boolean);
+
+    if (
+      requirement.length < 15 ||
+      words.length < 3
+    ) {
+
+      errorBox.textContent =
+        language === "tr"
+          ? "Lütfen en az 15 karakter ve 3 kelime içeren açık bir requirement veya user story girin."
+          : "Please provide a clear requirement or user story with at least 15 characters and 3 words.";
+
+      errorBox.style.display =
+        "block";
+
+      return;
+    }
+
+    button.disabled =
+      true;
+
+    loading.style.display =
+      "block";
+
+    try {
+
+      const response =
+        await fetch(
+          "/api/acceptance-criteria",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              requirement,
+              language,
+              detail
+            })
+          }
+        );
+
+      const raw =
+        await response.text();
+
+      let data;
+
+      try {
+        data =
+          JSON.parse(raw);
+      } catch {
+        throw new Error(
+          "Invalid server response."
+        );
+      }
+
+      if (!response.ok) {
+
+        throw new Error(
+          data?.error ||
+          "Request failed."
+        );
+
+      }
+
+      document.getElementById(
+        "scoreValue"
+      ).textContent =
+        `${data.testabilityScore ?? 0}/100`;
+
+      document.getElementById(
+        "scoreExplanation"
+      ).textContent =
+        data.testabilityExplanation ||
+        "";
+
+      renderCriteria(
+        data.acceptanceCriteria
+      );
+
+      renderList(
+        "coverageList",
+        data.coverageSummary
+      );
+
+      renderList(
+        "rulesList",
+        data.businessRules
+      );
+
+      renderList(
+        "assumptionsList",
+        data.assumptions
+      );
+
+      renderList(
+        "questionsList",
+        data.openQuestions
+      );
+
+      document.getElementById(
+        "result"
+      ).style.display =
+        "block";
+
+    } catch (error) {
+
+      errorBox.textContent =
+        error.message ||
+        "Something went wrong.";
+
+      errorBox.style.display =
+        "block";
+
+    } finally {
+
+      button.disabled =
+        false;
+
+      loading.style.display =
+        "none";
+
+    }
+
+  }
+
+  applyLanguage();
+
+</script>
+
+</body>
+</html>
