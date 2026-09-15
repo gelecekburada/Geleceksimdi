@@ -32,7 +32,6 @@ module.exports = async (req, res) => {
       requirement.length < 15 ||
       words.length < 3
     ) {
-
       return res.status(400).json({
         error:
           language === "tr"
@@ -42,7 +41,6 @@ module.exports = async (req, res) => {
     }
 
     if (!["tr", "en"].includes(language)) {
-
       return res.status(400).json({
         error: "Invalid language."
       });
@@ -55,7 +53,6 @@ module.exports = async (req, res) => {
         "Comprehensive"
       ].includes(detail)
     ) {
-
       return res.status(400).json({
         error: "Invalid detail level."
       });
@@ -67,42 +64,41 @@ module.exports = async (req, res) => {
         : "English";
 
     // -----------------------------------------
-    // DETAIL
+    // DETAIL INSTRUCTIONS
     // -----------------------------------------
 
     let detailInstruction = "";
 
     if (detail === "Basic") {
-
       detailInstruction = `
-Keep the output concise.
-Generate only the most important business information.
+Generate a concise backlog-ready result.
+
+Acceptance Criteria:
+- Generate 3-5 criteria.
+- Include only the most important acceptance scenarios.
 `;
     }
 
     if (detail === "Professional") {
-
       detailInstruction = `
-Create a professional Business Analyst / Product Owner level output.
+Generate a professional Business Analyst / Product Owner level result.
 
-The result should be clear enough to be used in an Agile backlog.
+Acceptance Criteria:
+- Generate 4-8 criteria.
+- Cover the main happy path and important validation/error scenarios.
+- Avoid duplicate or overlapping criteria.
 `;
     }
 
     if (detail === "Comprehensive") {
-
       detailInstruction = `
-Create a comprehensive BA-level analysis.
+Generate a comprehensive senior Business Analyst level result.
 
-Identify:
-- Business value
-- Acceptance criteria
-- Business rules
-- Assumptions
-- Dependencies
-- Edge cases
-- Missing information
-- Questions that should be clarified before development
+Acceptance Criteria:
+- Generate 6-10 criteria.
+- Cover the main happy path, validation, error handling and important boundary scenarios.
+- Every criterion must represent a distinct testable behavior.
+- Do not repeat the same behavior using different wording.
 `;
     }
 
@@ -111,44 +107,70 @@ Identify:
     // -----------------------------------------
 
     const prompt = `
-You are a senior Business Analyst and Agile Product Owner.
+You are a Senior Business Analyst and Agile Product Owner.
 
-Transform the requirement below into a professional User Story.
+Transform the requirement below into a high-quality Agile User Story.
 
-Requirement:
+REQUIREMENT:
 ${requirement}
 
-Detail level:
+DETAIL LEVEL:
 ${detail}
 
 ${detailInstruction}
 
-IMPORTANT:
+GENERAL RULES:
 
 1. Stay strictly within the provided requirement.
-2. Do not invent unrelated business functionality.
-3. Identify the most reasonable user/persona.
-4. Clearly describe the user's goal.
-5. Clearly describe the business value.
-6. Acceptance criteria must be testable.
-7. Use Given / When / Then structure.
-8. Business rules must come from the requirement.
-9. Clearly identify assumptions instead of presenting assumptions as facts.
-10. Identify dependencies only when reasonably inferable.
-11. Identify edge cases relevant to the requirement.
-12. Open questions should identify genuinely missing information.
-13. Do not fabricate technical implementation details.
-14. All human-readable output must be in ${outputLanguage}.
+2. Do not invent unrelated functionality.
+3. Do not fabricate technical implementation details.
+4. Identify the most reasonable user/persona.
+5. Focus on user goal and business value.
+6. The User Story MUST follow this structure:
 
-The User Story should follow this structure:
+   As a [user/persona],
+   I want [goal],
+   So that [business value].
 
-As a [user/persona],
-I want [goal],
-So that [business value].
+7. Acceptance Criteria MUST use Given / When / Then.
+8. Every Acceptance Criterion must be independently understandable and testable.
+9. Each Acceptance Criterion must describe ONE distinct behavior.
+10. Do NOT create duplicate or overlapping Acceptance Criteria.
+11. If two criteria test essentially the same behavior, combine them.
+12. Do not create a generic catch-all Acceptance Criterion that repeats previous criteria.
+13. Business Rules must represent actual business constraints or policies.
+14. Do NOT copy Acceptance Criteria into Business Rules.
+15. Business Rules should be concise and non-duplicative.
+16. Assumptions must be clearly identified as assumptions.
+17. Dependencies should only be included when reasonably inferable from the requirement.
+18. Do not invent specific external systems, APIs, databases or vendors.
+19. Edge Cases must be relevant to the requirement.
+20. If an Edge Case is inferred rather than explicitly stated in the requirement, prefix it with:
+   "Inferred:"
+21. Do not turn every possible technical failure into an Edge Case.
+22. Open Questions must identify genuinely missing business information.
+23. Do not ask questions whose answers are already stated in the requirement.
+24. Avoid unnecessary repetition across all sections.
+25. All human-readable output must be in ${outputLanguage}.
 
-Return ONLY valid JSON.
+QUALITY CHECK BEFORE RETURNING:
 
-The JSON must have exactly this structure:
+- Is the User Story a real As / I want / So that story?
+- Does it contain a clear user goal?
+- Does it contain clear business value?
+- Are Acceptance Criteria unique?
+- Does every Acceptance Criterion have Given, When and Then?
+- Are Business Rules different from Acceptance Criteria?
+- Are Edge Cases relevant?
+- Are inferred Edge Cases explicitly marked?
+- Are Open Questions genuinely unresolved?
+- Is anything invented that is not reasonably supported by the requirement?
+
+If a section has no meaningful content, return an empty array rather than inventing information.
+
+RETURN ONLY VALID JSON.
+
+JSON STRUCTURE:
 
 {
   "story": "...",
@@ -205,7 +227,6 @@ The JSON must have exactly this structure:
       await response.json();
 
     if (!response.ok) {
-
       return res.status(
         response.status
       ).json({
@@ -216,7 +237,7 @@ The JSON must have exactly this structure:
     }
 
     // -----------------------------------------
-    // OUTPUT
+    // EXTRACT OUTPUT
     // -----------------------------------------
 
     const text =
@@ -234,7 +255,6 @@ The JSON must have exactly this structure:
         ?.join("") || "";
 
     if (!text) {
-
       return res.status(500).json({
         error:
           "No output received from OpenAI"
@@ -247,7 +267,6 @@ The JSON must have exactly this structure:
     if (
       cleanText.startsWith("```")
     ) {
-
       cleanText =
         cleanText
           .replace(
@@ -266,7 +285,7 @@ The JSON must have exactly this structure:
     }
 
     // -----------------------------------------
-    // PARSE
+    // PARSE JSON
     // -----------------------------------------
 
     let result;
@@ -285,95 +304,197 @@ The JSON must have exactly this structure:
     }
 
     // -----------------------------------------
-    // NORMALIZE
+    // HELPERS
+    // -----------------------------------------
+
+    function cleanString(value) {
+      return String(value || "").trim();
+    }
+
+    function cleanArray(value) {
+
+      if (!Array.isArray(value)) {
+        return [];
+      }
+
+      return value
+        .map(cleanString)
+        .filter(Boolean);
+    }
+
+    function deduplicate(items) {
+
+      const seen = new Set();
+
+      return items.filter(item => {
+
+        const key =
+          item
+            .toLowerCase()
+            .replace(/\s+/g, " ")
+            .trim();
+
+        if (seen.has(key)) {
+          return false;
+        }
+
+        seen.add(key);
+
+        return true;
+      });
+    }
+
+    // -----------------------------------------
+    // ACCEPTANCE CRITERIA NORMALIZATION
+    // -----------------------------------------
+
+    let acceptanceCriteria = [];
+
+    if (
+      Array.isArray(
+        result.acceptanceCriteria
+      )
+    ) {
+
+      acceptanceCriteria =
+        result.acceptanceCriteria
+          .map((item, index) => ({
+
+            id:
+              cleanString(item?.id) ||
+              `AC-${String(
+                index + 1
+              ).padStart(2, "0")}`,
+
+            given:
+              cleanString(item?.given),
+
+            when:
+              cleanString(item?.when),
+
+            then:
+              cleanString(item?.then)
+
+          }))
+          .filter(item =>
+            item.given &&
+            item.when &&
+            item.then
+          );
+    }
+
+    // Remove exact duplicate scenarios
+    const seenCriteria = new Set();
+
+    acceptanceCriteria =
+      acceptanceCriteria.filter(item => {
+
+        const key =
+          [
+            item.given,
+            item.when,
+            item.then
+          ]
+            .join(" ")
+            .toLowerCase()
+            .replace(/\s+/g, " ")
+            .trim();
+
+        if (seenCriteria.has(key)) {
+          return false;
+        }
+
+        seenCriteria.add(key);
+
+        return true;
+      });
+
+    // Re-number Acceptance Criteria
+    acceptanceCriteria =
+      acceptanceCriteria.map(
+        (item, index) => ({
+          ...item,
+          id:
+            `AC-${String(
+              index + 1
+            ).padStart(2, "0")}`
+        })
+      );
+
+    // -----------------------------------------
+    // FINAL RESULT
     // -----------------------------------------
 
     result = {
 
       story:
-        String(result.story || ""),
+        cleanString(result.story),
 
       businessValue:
-        String(
-          result.businessValue || ""
+        cleanString(
+          result.businessValue
         ),
 
-      acceptanceCriteria:
-        Array.isArray(
-          result.acceptanceCriteria
-        )
-          ? result.acceptanceCriteria.map(
-              (item, index) => ({
-                id:
-                  item.id ||
-                  `AC-${String(
-                    index + 1
-                  ).padStart(2, "0")}`,
-
-                given:
-                  String(
-                    item.given || ""
-                  ),
-
-                when:
-                  String(
-                    item.when || ""
-                  ),
-
-                then:
-                  String(
-                    item.then || ""
-                  )
-              })
-            )
-          : [],
+      acceptanceCriteria,
 
       businessRules:
-        Array.isArray(
-          result.businessRules
-        )
-          ? result.businessRules.map(
-              String
-            )
-          : [],
+        deduplicate(
+          cleanArray(
+            result.businessRules
+          )
+        ),
 
       assumptions:
-        Array.isArray(
-          result.assumptions
-        )
-          ? result.assumptions.map(
-              String
-            )
-          : [],
+        deduplicate(
+          cleanArray(
+            result.assumptions
+          )
+        ),
 
       dependencies:
-        Array.isArray(
-          result.dependencies
-        )
-          ? result.dependencies.map(
-              String
-            )
-          : [],
+        deduplicate(
+          cleanArray(
+            result.dependencies
+          )
+        ),
 
       edgeCases:
-        Array.isArray(
-          result.edgeCases
-        )
-          ? result.edgeCases.map(
-              String
-            )
-          : [],
+        deduplicate(
+          cleanArray(
+            result.edgeCases
+          )
+        ),
 
       openQuestions:
-        Array.isArray(
-          result.openQuestions
+        deduplicate(
+          cleanArray(
+            result.openQuestions
+          )
         )
-          ? result.openQuestions.map(
-              String
-            )
-          : []
 
     };
+
+    // -----------------------------------------
+    // BASIC OUTPUT VALIDATION
+    // -----------------------------------------
+
+    if (!result.story) {
+
+      return res.status(500).json({
+        error:
+          "AI did not generate a valid User Story."
+      });
+    }
+
+    if (
+      result.acceptanceCriteria.length === 0
+    ) {
+
+      return res.status(500).json({
+        error:
+          "AI did not generate valid Acceptance Criteria."
+      });
+    }
 
     return res.status(200).json(
       result
@@ -386,5 +507,7 @@ The JSON must have exactly this structure:
     return res.status(500).json({
       error: "Server error"
     });
+
   }
+
 };
