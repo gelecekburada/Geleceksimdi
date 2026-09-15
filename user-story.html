@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>BAForge AI - User Story Generator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 18px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .badge {
+      background: #2563eb;
+      padding: 7px 13px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .hero h1 {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: #667085;
+      font-size: 18px;
+    }
+
+    .card {
+      background: white;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 14px;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      font-size: 15px;
+      resize: vertical;
+      margin-bottom: 18px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      background: white;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button:disabled {
+      background: #94a3b8;
+      cursor: wait;
+    }
+
+    .error {
+      margin-top: 15px;
+      padding: 12px;
+      background: #fef2f2;
+      color: #b42318;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .loading {
+      margin-top: 15px;
+      color: #475467;
+      font-weight: bold;
+      display: none;
+    }
+
+    .result {
+      display: none;
+    }
+
+    .story-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .story-label {
+      font-size: 12px;
+      color: #667085;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .story-value {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .story-main {
+      background: #eef2ff;
+      border-left: 5px solid #2563eb;
+    }
+
+    .section-title {
+      margin-top: 28px;
+      margin-bottom: 12px;
+      font-size: 20px;
+    }
+
+    ul {
+      margin-top: 8px;
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .ac-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    .ac-table th,
+    .ac-table td {
+      border: 1px solid #e2e8f0;
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .ac-table th {
+      background: #eef2ff;
+    }
+
+    .empty {
+      color: #667085;
+    }
+
+    @media (max-width: 700px) {
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 15px 20px;
+      }
+
+      main {
+        margin: 30px auto;
+      }
+
+      .card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">BAForge AI</div>
+  <div class="badge" id="badge">User Story Generator</div>
+</header>
+
+<main>
+
+  <section class="hero">
+
+    <h1 id="pageTitle">
+      Turn Requirements Into User Stories
+    </h1>
+
+    <p id="pageSubtitle">
+      Generate professional Agile user stories and acceptance criteria from your requirements.
+    </p>
+
+  </section>
+
+  <section class="card">
+
+    <label id="requirementLabel" for="requirement">
+      Requirement
+    </label>
+
+    <textarea
+      id="requirement"
+      placeholder="Example: The customer should be able to transfer money to another bank account using IBAN."
+    ></textarea>
+
+    <div class="options">
+
+      <div>
+        <label id="languageLabel" for="language">
+          Language
+        </label>
+
+        <select id="language">
+          <option value="en">English</option>
+          <option value="tr">Türkçe</option>
+        </select>
+      </div>
+
+      <div>
+        <label id="detailLabel" for="detail">
+          Detail Level
+        </label>
+
+        <select id="detail">
+          <option value="Professional">Professional</option>
+          <option value="Comprehensive">Comprehensive</option>
+          <option value="Basic">Basic</option>
+        </select>
+      </div>
+
+    </div>
+
+    <button id="generateButton">
+      Generate User Story
+    </button>
+
+    <div class="loading" id="loading">
+      AI is generating the user story...
+    </div>
+
+    <div class="error" id="error"></div>
+
+  </section>
+
+  <section class="card result" id="result">
+
+    <h2 id="resultTitle">
+      Generated User Story
+    </h2>
+
+    <div class="story-box story-main">
+
+      <div class="story-label" id="storyLabel">
+        User Story
+      </div>
+
+      <div class="story-value" id="story"></div>
+
+    </div>
+
+    <div class="story-box">
+
+      <div class="story-label" id="businessValueLabel">
+        Business Value
+      </div>
+
+      <div class="story-value" id="businessValue"></div>
+
+    </div>
+
+    <h3 class="section-title" id="acceptanceTitle">
+      Acceptance Criteria
+    </h3>
+
+    <div id="acceptanceCriteria"></div>
+
+    <h3 class="section-title" id="rulesTitle">
+      Business Rules
+    </h3>
+
+    <div id="businessRules"></div>
+
+    <h3 class="section-title" id="assumptionsTitle">
+      Assumptions
+    </h3>
+
+    <div id="assumptions"></div>
+
+    <h3 class="section-title" id="dependenciesTitle">
+      Dependencies
+    </h3>
+
+    <div id="dependencies"></div>
+
+    <h3 class="section-title" id="edgeCasesTitle">
+      Edge Cases
+    </h3>
+
+    <div id="edgeCases"></div>
+
+    <h3 class="section-title" id="questionsTitle">
+      Open Questions
+    </h3>
+
+    <div id="openQuestions"></div>
+
+  </section>
+
+</main>
+
+<script>
+
+  const translations = {
+
+    en: {
+      badge: "User Story Generator",
+      title: "Turn Requirements Into User Stories",
+      subtitle: "Generate professional Agile user stories and acceptance criteria from your requirements.",
+      requirement: "Requirement",
+      placeholder: "Example: The customer should be able to transfer money to another bank account using IBAN.",
+      language: "Language",
+      detail: "Detail Level",
+      generate: "Generate User Story",
+      loading: "AI is generating the user story...",
+      result: "Generated User Story",
+      story: "User Story",
+      businessValue: "Business Value",
+      acceptance: "Acceptance Criteria",
+      rules: "Business Rules",
+      assumptions: "Assumptions",
+      dependencies: "Dependencies",
+      edgeCases: "Edge Cases",
+      questions: "Open Questions",
+      validation: "Please enter a clear requirement with at least 15 characters and 3 words.",
+      genericError: "Something went wrong while generating the user story."
+    },
+
+    tr: {
+      badge: "User Story Generator",
+      title: "Gereksinimleri User Story'lere Dönüştür",
+      subtitle: "Gereksinimlerinizden profesyonel Agile user story ve acceptance criteria oluşturun.",
+      requirement: "Gereksinim",
+      placeholder: "Örnek: Müşteri IBAN kullanarak başka bir banka hesabına para transferi yapabilmelidir.",
+      language: "Dil",
+      detail: "Detay Seviyesi",
+      generate: "User Story Oluştur",
+      loading: "AI user story oluşturuyor...",
+      result: "Oluşturulan User Story",
+      story: "User Story",
+      businessValue: "Business Value",
+      acceptance: "Acceptance Criteria",
+      rules: "Business Rules",
+      assumptions: "Varsayımlar",
+      dependencies: "Bağımlılıklar",
+      edgeCases: "Edge Case'ler",
+      questions: "Açık Sorular",
+      validation: "Lütfen en az 15 karakter ve 3 kelime içeren açık bir gereksinim girin.",
+      genericError: "User story oluşturulurken bir hata oluştu."
+    }
+
+  };
+
+  const languageEl = document.getElementById("language");
+
+  const requirementEl =
+    document.getElementById("requirement");
+
+  const detailEl =
+    document.getElementById("detail");
+
+  const generateButton =
+    document.getElementById("generateButton");
+
+  const loadingEl =
+    document.getElementById("loading");
+
+  const errorEl =
+    document.getElementById("error");
+
+  const resultEl =
+    document.getElementById("result");
+
+  function t(key) {
+    return translations[languageEl.value][key];
+  }
+
+  function updateLanguage() {
+
+    document.documentElement.lang =
+      languageEl.value;
+
+    document.getElementById("badge").textContent =
+      t("badge");
+
+    document.getElementById("pageTitle").textContent =
+      t("title");
+
+    document.getElementById("pageSubtitle").textContent =
+      t("subtitle");
+
+    document.getElementById("requirementLabel").textContent =
+      t("requirement");
+
+    requirementEl.placeholder =
+      t("placeholder");
+
+    document.getElementById("languageLabel").textContent =
+      t("language");
+
+    document.getElementById("detailLabel").textContent =
+      t("detail");
+
+    generateButton.textContent =
+      t("generate");
+
+    loadingEl.textContent =
+      t("loading");
+
+    document.getElementById("resultTitle").textContent =
+      t("result");
+
+    document.getElementById("storyLabel").textContent =
+      t("story");
+
+    document.getElementById("businessValueLabel").textContent =
+      t("businessValue");
+
+    document.getElementById("acceptanceTitle").textContent =
+      t("acceptance");
+
+    document.getElementById("rulesTitle").textContent =
+      t("rules");
+
+    document.getElementById("assumptionsTitle").textContent =
+      t("assumptions");
+
+    document.getElementById("dependenciesTitle").textContent =
+      t("dependencies");
+
+    document.getElementById("edgeCasesTitle").textContent =
+      t("edgeCases");
+
+    document.getElementById("questionsTitle").textContent =
+      t("questions");
+  }
+
+  languageEl.addEventListener(
+    "change",
+    updateLanguage
+  );
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function renderList(items) {
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return `<div class="empty">-</div>`;
+    }
+
+    return `
+      <ul>
+        ${items.map(item => `
+          <li>${escapeHtml(item)}</li>
+        `).join("")}
+      </ul>
+    `;
+  }
+
+  function renderAcceptanceCriteria(items) {
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return `<div class="empty">-</div>`;
+    }
+
+    return `
+      <table class="ac-table">
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Given</th>
+            <th>When</th>
+            <th>Then</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          ${items.map((item, index) => `
+
+            <tr>
+
+              <td>
+                ${escapeHtml(
+                  item.id ||
+                  `AC-${String(index + 1).padStart(2, "0")}`
+                )}
+              </td>
+
+              <td>
+                ${escapeHtml(item.given)}
+              </td>
+
+              <td>
+                ${escapeHtml(item.when)}
+              </td>
+
+              <td>
+                ${escapeHtml(item.then)}
+              </td>
+
+            </tr>
+
+          `).join("")}
+
+        </tbody>
+
+      </table>
+    `;
+  }
+
+  function showError(message) {
+
+    errorEl.textContent = message;
+    errorEl.style.display = "block";
+  }
+
+  function hideError() {
+
+    errorEl.textContent = "";
+    errorEl.style.display = "none";
+  }
+
+  async function generateUserStory() {
+
+    hideError();
+
+    const requirement =
+      requirementEl.value.trim();
+
+    const words =
+      requirement
+        .split(/\s+/)
+        .filter(Boolean);
+
+    if (
+      requirement.length < 15 ||
+      words.length < 3
+    ) {
+
+      showError(t("validation"));
+
+      return;
+    }
+
+    generateButton.disabled = true;
+
+    loadingEl.style.display = "block";
+    resultEl.style.display = "none";
+
+    try {
+
+      const response = await fetch(
+        "/api/user-story",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            requirement,
+            language: languageEl.value,
+            detail: detailEl.value
+          })
+        }
+      );
+
+      const raw =
+        await response.text();
+
+      let data;
+
+      try {
+        data = JSON.parse(raw);
+      } catch {
+        throw new Error(
+          t("genericError")
+        );
+      }
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.error ||
+          t("genericError")
+        );
+      }
+
+      if (!data.story) {
+
+        throw new Error(
+          t("genericError")
+        );
+      }
+
+      document.getElementById("story").textContent =
+        data.story;
+
+      document.getElementById("businessValue").textContent =
+        data.businessValue || "";
+
+      document.getElementById("acceptanceCriteria").innerHTML =
+        renderAcceptanceCriteria(
+          data.acceptanceCriteria
+        );
+
+      document.getElementById("businessRules").innerHTML =
+        renderList(
+          data.businessRules
+        );
+
+      document.getElementById("assumptions").innerHTML =
+        renderList(
+          data.assumptions
+        );
+
+      document.getElementById("dependencies").innerHTML =
+        renderList(
+          data.dependencies
+        );
+
+      document.getElementById("edgeCases").innerHTML =
+        renderList(
+          data.edgeCases
+        );
+
+      document.getElementById("openQuestions").innerHTML =
+        renderList(
+          data.openQuestions
+        );
+
+      resultEl.style.display = "block";
+
+    } catch (error) {
+
+      showError(
+        error.message ||
+        t("genericError")
+      );
+
+    } finally {
+
+      generateButton.disabled = false;
+      loadingEl.style.display = "none";
+
+    }
+  }
+
+  generateButton.addEventListener(
+    "click",
+    generateUserStory
+  );
+
+  updateLanguage();
+
+</script>
+
+</body>
+</html>
