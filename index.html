@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>BAForge AI — Business Analysis & QA Toolkit</title>
 
   <style>
@@ -13,11 +14,16 @@
       --text: #172033;
       --muted: #667085;
       --border: #e5e7eb;
+
       --primary: #2563eb;
       --primary-dark: #1d4ed8;
       --accent: #7c3aed;
       --success: #059669;
+      --warning: #d97706;
+
       --shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+      --shadow-hover: 0 22px 50px rgba(15, 23, 42, 0.13);
+
       --radius: 18px;
     }
 
@@ -31,12 +37,28 @@
 
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
       color: var(--text);
+
       background:
-        radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 28%),
-        radial-gradient(circle at top left, rgba(124, 58, 237, 0.07), transparent 25%),
+        radial-gradient(
+          circle at top right,
+          rgba(37, 99, 235, 0.08),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at top left,
+          rgba(124, 58, 237, 0.07),
+          transparent 25%
+        ),
         var(--bg);
     }
 
@@ -45,199 +67,308 @@
       text-decoration: none;
     }
 
+    button {
+      font-family: inherit;
+    }
+
     .page {
       max-width: 1180px;
       margin: 0 auto;
       padding: 48px 24px 80px;
     }
 
-    /* HERO */
+    /* =========================================================
+       HERO
+    ========================================================= */
 
     .hero {
       position: relative;
       overflow: hidden;
-      padding: 72px 48px;
-      border: 1px solid rgba(255,255,255,0.8);
+
+      padding: 72px 52px;
+
+      border: 1px solid rgba(255, 255, 255, 0.8);
       border-radius: 28px;
+
       background:
-        linear-gradient(135deg, #111827 0%, #172554 55%, #312e81 100%);
+        linear-gradient(
+          135deg,
+          #111827 0%,
+          #172554 52%,
+          #312e81 100%
+        );
+
       color: white;
-      box-shadow: 0 25px 70px rgba(15, 23, 42, 0.20);
+
+      box-shadow:
+        0 25px 70px rgba(15, 23, 42, 0.20);
     }
 
     .hero::before {
       content: "";
+
       position: absolute;
-      width: 360px;
-      height: 360px;
-      right: -120px;
-      top: -150px;
+
+      width: 420px;
+      height: 420px;
+
+      right: -150px;
+      top: -190px;
+
       border-radius: 50%;
+
       background: rgba(59, 130, 246, 0.18);
-      filter: blur(10px);
+
+      filter: blur(12px);
     }
 
     .hero::after {
       content: "";
+
       position: absolute;
-      width: 260px;
-      height: 260px;
-      left: -130px;
-      bottom: -160px;
+
+      width: 300px;
+      height: 300px;
+
+      left: -150px;
+      bottom: -180px;
+
       border-radius: 50%;
-      background: rgba(124, 58, 237, 0.18);
+
+      background: rgba(124, 58, 237, 0.20);
     }
 
     .hero-content {
       position: relative;
+
       z-index: 1;
-      max-width: 760px;
+
+      max-width: 780px;
     }
 
     .eyebrow {
       display: inline-flex;
+
       align-items: center;
       gap: 8px;
+
       padding: 7px 12px;
       margin-bottom: 20px;
-      border: 1px solid rgba(255,255,255,0.16);
+
+      border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 999px;
-      background: rgba(255,255,255,0.08);
+
+      background: rgba(255, 255, 255, 0.08);
+
       font-size: 13px;
       font-weight: 600;
+
       letter-spacing: 0.02em;
     }
 
     .eyebrow-dot {
       width: 7px;
       height: 7px;
+
       border-radius: 50%;
+
       background: #60a5fa;
+
       box-shadow: 0 0 12px #60a5fa;
     }
 
     .hero h1 {
       margin: 0;
-      font-size: clamp(38px, 6vw, 68px);
+
+      font-size: clamp(40px, 6vw, 68px);
+
       line-height: 1.02;
+
       letter-spacing: -0.045em;
     }
 
     .hero h1 span {
+      display: block;
+
       color: #93c5fd;
     }
 
     .hero p {
-      max-width: 650px;
+      max-width: 680px;
+
       margin: 24px 0 32px;
+
       color: #cbd5e1;
+
       font-size: 18px;
       line-height: 1.7;
     }
 
     .hero-actions {
       display: flex;
+
       flex-wrap: wrap;
+
       gap: 12px;
     }
 
     .btn {
       display: inline-flex;
+
       align-items: center;
       justify-content: center;
+
       min-height: 48px;
+
       padding: 0 20px;
+
       border-radius: 12px;
+
       font-size: 14px;
       font-weight: 700;
+
       transition: 0.2s ease;
+
       cursor: pointer;
     }
 
     .btn-primary {
       color: #172033;
+
       background: white;
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+
+      box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.18);
     }
 
     .btn-secondary {
       color: white;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.08);
+
+      border: 1px solid rgba(255, 255, 255, 0.18);
+
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .btn-secondary:hover {
-      background: rgba(255,255,255,0.14);
+      background: rgba(255, 255, 255, 0.14);
+
       transform: translateY(-2px);
     }
 
-    /* SECTION */
+    /* =========================================================
+       SECTION
+    ========================================================= */
 
     .section {
-      margin-top: 70px;
+      margin-top: 72px;
     }
 
     .section-heading {
       display: flex;
+
       align-items: end;
       justify-content: space-between;
+
       gap: 20px;
+
       margin-bottom: 24px;
     }
 
     .section-heading h2 {
       margin: 0;
-      font-size: 28px;
+
+      font-size: 29px;
+
       letter-spacing: -0.025em;
     }
 
     .section-heading p {
-      max-width: 520px;
+      max-width: 560px;
+
       margin: 7px 0 0;
+
       color: var(--muted);
+
       line-height: 1.6;
     }
 
-    /* TOOL CARDS */
+    .section-kicker {
+      display: inline-block;
+
+      margin-bottom: 7px;
+
+      color: var(--primary);
+
+      font-size: 12px;
+      font-weight: 800;
+
+      letter-spacing: 0.08em;
+
+      text-transform: uppercase;
+    }
+
+    /* =========================================================
+       TOOL CARDS
+    ========================================================= */
 
     .tools-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
       gap: 20px;
     }
 
     .tool-card {
       position: relative;
+
       display: flex;
+
       flex-direction: column;
-      min-height: 290px;
+
+      min-height: 300px;
+
       padding: 28px;
+
       border: 1px solid var(--border);
+
       border-radius: var(--radius);
+
       background: var(--surface);
+
       box-shadow: var(--shadow);
+
       transition: 0.25s ease;
     }
 
     .tool-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+
+      box-shadow: var(--shadow-hover);
+
       border-color: #cbd5e1;
     }
 
     .tool-icon {
       display: flex;
+
       align-items: center;
       justify-content: center;
-      width: 52px;
-      height: 52px;
+
+      width: 54px;
+      height: 54px;
+
       margin-bottom: 22px;
-      border-radius: 14px;
+
+      border-radius: 15px;
+
       font-size: 24px;
+
       background: #eff6ff;
     }
 
@@ -251,23 +382,34 @@
 
     .tool-card h3 {
       margin: 0 0 10px;
+
       font-size: 20px;
+
+      letter-spacing: -0.015em;
     }
 
     .tool-card p {
       margin: 0;
+
       color: var(--muted);
+
       line-height: 1.65;
+
       font-size: 14px;
     }
 
     .tool-link {
       display: inline-flex;
+
       align-items: center;
+
       gap: 7px;
+
       margin-top: auto;
       padding-top: 24px;
+
       color: var(--primary);
+
       font-size: 14px;
       font-weight: 700;
     }
@@ -276,171 +418,471 @@
       color: var(--primary-dark);
     }
 
-    /* WORKFLOW */
+    /* =========================================================
+       FUTURE TOOLKIT
+    ========================================================= */
+
+    .future-section {
+      margin-top: 72px;
+
+      padding: 34px;
+
+      border: 1px solid var(--border);
+
+      border-radius: 22px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.95),
+          rgba(248,250,252,0.92)
+        );
+
+      box-shadow: var(--shadow);
+    }
+
+    .future-header {
+      display: flex;
+
+      align-items: end;
+      justify-content: space-between;
+
+      gap: 20px;
+
+      margin-bottom: 26px;
+    }
+
+    .future-header h2 {
+      margin: 0;
+
+      font-size: 27px;
+
+      letter-spacing: -0.025em;
+    }
+
+    .future-header p {
+      max-width: 570px;
+
+      margin: 7px 0 0;
+
+      color: var(--muted);
+
+      line-height: 1.6;
+    }
+
+    .roadmap-badge {
+      flex-shrink: 0;
+
+      padding: 7px 11px;
+
+      border: 1px solid #dbeafe;
+
+      border-radius: 999px;
+
+      background: #eff6ff;
+
+      color: var(--primary);
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .future-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 16px;
+    }
+
+    .future-card {
+      position: relative;
+
+      min-height: 190px;
+
+      padding: 22px;
+
+      border: 1px solid var(--border);
+
+      border-radius: 16px;
+
+      background: white;
+
+      overflow: hidden;
+    }
+
+    .future-card::after {
+      content: "";
+
+      position: absolute;
+
+      width: 90px;
+      height: 90px;
+
+      right: -35px;
+      bottom: -35px;
+
+      border-radius: 50%;
+
+      background: rgba(37, 99, 235, 0.05);
+    }
+
+    .future-icon {
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      width: 42px;
+      height: 42px;
+
+      margin-bottom: 15px;
+
+      border-radius: 12px;
+
+      background: #f8fafc;
+
+      font-size: 19px;
+    }
+
+    .future-card h3 {
+      margin: 0 0 8px;
+
+      font-size: 17px;
+    }
+
+    .future-card p {
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 13px;
+
+      line-height: 1.55;
+    }
+
+    .coming-soon {
+      position: absolute;
+
+      top: 18px;
+      right: 18px;
+
+      padding: 5px 8px;
+
+      border-radius: 999px;
+
+      background: #fef3c7;
+
+      color: #92400e;
+
+      font-size: 10px;
+      font-weight: 800;
+
+      letter-spacing: 0.04em;
+
+      text-transform: uppercase;
+    }
+
+    /* =========================================================
+       WORKFLOW
+    ========================================================= */
 
     .workflow {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
       gap: 12px;
     }
 
     .workflow-step {
       position: relative;
-      padding: 24px 20px;
+
+      padding: 25px 20px;
+
       border: 1px solid var(--border);
+
       border-radius: 16px;
+
       background: var(--surface);
+
       text-align: center;
+
+      transition: 0.2s ease;
+    }
+
+    .workflow-step:hover {
+      transform: translateY(-3px);
+
+      box-shadow: var(--shadow);
     }
 
     .workflow-number {
       display: inline-flex;
+
       align-items: center;
       justify-content: center;
-      width: 34px;
-      height: 34px;
+
+      width: 36px;
+      height: 36px;
+
       margin-bottom: 14px;
+
       border-radius: 50%;
+
       background: #eff6ff;
+
       color: var(--primary);
+
       font-size: 13px;
       font-weight: 800;
     }
 
     .workflow-step h3 {
       margin: 0 0 7px;
+
       font-size: 16px;
     }
 
     .workflow-step p {
       margin: 0;
+
       color: var(--muted);
+
       font-size: 13px;
+
       line-height: 1.5;
     }
 
-    /* VALUE SECTION */
+    /* =========================================================
+       VALUE SECTION
+    ========================================================= */
 
     .value-section {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+
+      grid-template-columns:
+        1fr 1fr;
+
       gap: 20px;
     }
 
     .value-card {
       padding: 30px;
+
       border: 1px solid var(--border);
+
       border-radius: var(--radius);
+
       background: var(--surface);
+
       box-shadow: var(--shadow);
     }
 
     .value-card h3 {
       margin: 0 0 14px;
+
       font-size: 21px;
+
+      letter-spacing: -0.015em;
     }
 
     .value-card p {
       margin: 0;
+
       color: var(--muted);
+
       line-height: 1.7;
     }
 
     .feature-list {
       display: grid;
+
       gap: 12px;
+
       margin-top: 20px;
     }
 
     .feature {
       display: flex;
+
       align-items: center;
+
       gap: 10px;
+
       color: #344054;
+
       font-size: 14px;
     }
 
     .feature span {
       display: flex;
+
       align-items: center;
       justify-content: center;
+
       width: 24px;
       height: 24px;
+
+      flex-shrink: 0;
+
       border-radius: 50%;
+
       background: #ecfdf5;
+
       color: var(--success);
+
       font-size: 12px;
+
       font-weight: 800;
     }
 
-    /* CTA */
+    /* =========================================================
+       CTA
+    ========================================================= */
 
     .cta {
-      margin-top: 70px;
-      padding: 42px;
-      border-radius: 22px;
-      background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+      position: relative;
+
+      overflow: hidden;
+
+      margin-top: 72px;
+
+      padding: 46px 30px;
+
+      border-radius: 24px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #eff6ff,
+          #f5f3ff
+        );
+
       border: 1px solid #dbeafe;
+
       text-align: center;
     }
 
+    .cta::before {
+      content: "";
+
+      position: absolute;
+
+      width: 180px;
+      height: 180px;
+
+      right: -60px;
+      top: -80px;
+
+      border-radius: 50%;
+
+      background: rgba(37, 99, 235, 0.08);
+    }
+
     .cta h2 {
+      position: relative;
+
       margin: 0 0 10px;
+
       font-size: 30px;
+
       letter-spacing: -0.025em;
     }
 
     .cta p {
+      position: relative;
+
       margin: 0 auto 24px;
+
       max-width: 600px;
+
       color: var(--muted);
+
       line-height: 1.6;
     }
 
     .cta .btn {
+      position: relative;
+
       color: white;
+
       background: var(--primary);
     }
 
     .cta .btn:hover {
       background: var(--primary-dark);
+
       transform: translateY(-2px);
+
+      box-shadow:
+        0 10px 25px rgba(37, 99, 235, 0.25);
     }
 
-    /* FOOTER */
+    /* =========================================================
+       FOOTER
+    ========================================================= */
 
     footer {
       margin-top: 50px;
+
       padding-top: 24px;
+
       border-top: 1px solid var(--border);
+
       color: var(--muted);
+
       text-align: center;
+
       font-size: 13px;
     }
 
-    /* RESPONSIVE */
+    .footer-title {
+      margin-bottom: 5px;
 
-    @media (max-width: 900px) {
+      color: #475467;
+
+      font-weight: 700;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 1000px) {
       .tools-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .tools-grid .tool-card:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .future-grid {
+        grid-template-columns: 1fr 1fr;
       }
 
       .workflow {
         grid-template-columns: repeat(2, 1fr);
       }
+    }
 
+    @media (max-width: 900px) {
       .value-section {
         grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 700px) {
       .page {
         padding: 28px 16px 60px;
       }
 
       .hero {
         padding: 48px 26px;
+
         border-radius: 22px;
       }
 
@@ -452,24 +894,72 @@
         font-size: 16px;
       }
 
-      .section {
-        margin-top: 50px;
+      .tools-grid {
+        grid-template-columns: 1fr;
       }
 
-      .section-heading {
+      .tools-grid .tool-card:last-child {
+        grid-column: auto;
+      }
+
+      .future-section {
+        padding: 24px 18px;
+      }
+
+      .future-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .future-header {
         display: block;
+      }
+
+      .roadmap-badge {
+        display: inline-block;
+
+        margin-top: 14px;
       }
 
       .workflow {
         grid-template-columns: 1fr;
       }
 
+      .section {
+        margin-top: 52px;
+      }
+
+      .section-heading {
+        display: block;
+      }
+
       .cta {
-        padding: 32px 22px;
+        padding: 34px 22px;
       }
 
       .cta h2 {
         font-size: 25px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 38px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .tool-card {
+        min-height: 270px;
+      }
+
+      .value-card {
+        padding: 24px;
       }
     }
   </style>
@@ -479,8 +969,12 @@
 
   <main class="page">
 
-    <!-- HERO -->
+    <!-- =======================================================
+         HERO
+    ======================================================== -->
+
     <section class="hero">
+
       <div class="hero-content">
 
         <div class="eyebrow">
@@ -496,48 +990,84 @@
         <p>
           BAForge AI helps Business Analysts and QA professionals
           transform requirements into User Stories, Acceptance Criteria
-          and UAT Test Cases — faster and with better structure.
+          and UAT Test Cases — faster, clearer and with better structure.
         </p>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="/user-story.html">
+
+          <a
+            class="btn btn-primary"
+            href="/user-story.html"
+          >
             Start with User Story →
           </a>
 
-          <a class="btn btn-secondary" href="#tools">
+          <a
+            class="btn btn-secondary"
+            href="#tools"
+          >
             Explore Tools
           </a>
+
         </div>
 
       </div>
+
     </section>
 
 
-    <!-- TOOLS -->
-    <section class="section" id="tools">
+    <!-- =======================================================
+         ACTIVE TOOLKIT
+    ======================================================== -->
+
+    <section
+      class="section"
+      id="tools"
+    >
 
       <div class="section-heading">
+
         <div>
-          <h2>BA / QA Toolkit</h2>
+
+          <span class="section-kicker">
+            Core Toolkit
+          </span>
+
+          <h2>
+            BA / QA Toolkit
+          </h2>
+
           <p>
-            Three focused AI tools for the most common stages
-            of requirements analysis and acceptance testing.
+            Three focused AI tools covering the most common stages
+            of requirements analysis, acceptance definition and UAT.
           </p>
+
         </div>
+
       </div>
+
 
       <div class="tools-grid">
 
-        <a class="tool-card" href="/user-story.html">
+        <!-- USER STORY -->
 
-          <div class="tool-icon">📝</div>
+        <a
+          class="tool-card"
+          href="/user-story.html"
+        >
 
-          <h3>User Story Generator</h3>
+          <div class="tool-icon">
+            📝
+          </div>
+
+          <h3>
+            User Story Generator
+          </h3>
 
           <p>
             Transform a business requirement into a structured
             User Story with business value, acceptance criteria,
-            rules, assumptions and edge cases.
+            business rules, assumptions and edge cases.
           </p>
 
           <span class="tool-link">
@@ -547,11 +1077,20 @@
         </a>
 
 
-        <a class="tool-card" href="/acceptance-criteria.html">
+        <!-- ACCEPTANCE CRITERIA -->
 
-          <div class="tool-icon">✓</div>
+        <a
+          class="tool-card"
+          href="/acceptance-criteria.html"
+        >
 
-          <h3>Acceptance Criteria</h3>
+          <div class="tool-icon">
+            ✓
+          </div>
+
+          <h3>
+            Acceptance Criteria
+          </h3>
 
           <p>
             Convert requirements into testable Given / When / Then
@@ -566,11 +1105,20 @@
         </a>
 
 
-        <a class="tool-card" href="/uat.html">
+        <!-- UAT -->
 
-          <div class="tool-icon">🧪</div>
+        <a
+          class="tool-card"
+          href="/uat.html"
+        >
 
-          <h3>UAT Test Cases</h3>
+          <div class="tool-icon">
+            🧪
+          </div>
+
+          <h3>
+            UAT Test Cases
+          </h3>
 
           <p>
             Generate structured UAT test cases covering business
@@ -585,63 +1133,313 @@
         </a>
 
       </div>
+
     </section>
 
 
-    <!-- WORKFLOW -->
+    <!-- =======================================================
+         FUTURE BA TOOLKIT
+    ======================================================== -->
+
+    <section class="future-section">
+
+      <div class="future-header">
+
+        <div>
+
+          <span class="section-kicker">
+            Product Roadmap
+          </span>
+
+          <h2>
+            More BA Tools Are Coming
+          </h2>
+
+          <p>
+            BAForge AI is evolving from a few generators into
+            a broader Business Analysis and QA workspace.
+          </p>
+
+        </div>
+
+        <div class="roadmap-badge">
+          Coming Soon
+        </div>
+
+      </div>
+
+
+      <div class="future-grid">
+
+        <!-- REQUIREMENT ANALYZER -->
+
+        <div class="future-card">
+
+          <span class="coming-soon">
+            Coming Soon
+          </span>
+
+          <div class="future-icon">
+            🔍
+          </div>
+
+          <h3>
+            Requirement Analyzer
+          </h3>
+
+          <p>
+            Analyze requirements for ambiguity, missing information,
+            business rules, assumptions and potential gaps.
+          </p>
+
+        </div>
+
+
+        <!-- RTM -->
+
+        <div class="future-card">
+
+          <span class="coming-soon">
+            Coming Soon
+          </span>
+
+          <div class="future-icon">
+            🔗
+          </div>
+
+          <h3>
+            Traceability Matrix
+          </h3>
+
+          <p>
+            Connect requirements, user stories, acceptance criteria
+            and test cases through a structured traceability view.
+          </p>
+
+        </div>
+
+
+        <!-- TEST DATA -->
+
+        <div class="future-card">
+
+          <span class="coming-soon">
+            Coming Soon
+          </span>
+
+          <div class="future-icon">
+            🧾
+          </div>
+
+          <h3>
+            Test Data Generator
+          </h3>
+
+          <p>
+            Generate realistic test data sets for positive,
+            negative, boundary and validation scenarios.
+          </p>
+
+        </div>
+
+
+        <!-- PROCESS FLOW -->
+
+        <div class="future-card">
+
+          <span class="coming-soon">
+            Coming Soon
+          </span>
+
+          <div class="future-icon">
+            🔄
+          </div>
+
+          <h3>
+            Process & Flow Generator
+          </h3>
+
+          <p>
+            Turn business requirements into structured process
+            flows, decision points and business scenarios.
+          </p>
+
+        </div>
+
+
+        <!-- BA DASHBOARD -->
+
+        <div class="future-card">
+
+          <span class="coming-soon">
+            Coming Soon
+          </span>
+
+          <div class="future-icon">
+            📊
+          </div>
+
+          <h3>
+            BA Dashboard
+          </h3>
+
+          <p>
+            Track requirements, stories, acceptance criteria,
+            test coverage and analysis progress in one workspace.
+          </p>
+
+        </div>
+
+
+        <!-- DOCUMENT GENERATOR -->
+
+        <div class="future-card">
+
+          <span class="coming-soon">
+            Coming Soon
+          </span>
+
+          <div class="future-icon">
+            📄
+          </div>
+
+          <h3>
+            BA Document Generator
+          </h3>
+
+          <p>
+            Create structured BA deliverables and project
+            documentation from analyzed requirements.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         WORKFLOW
+    ======================================================== -->
+
     <section class="section">
 
       <div class="section-heading">
+
         <div>
-          <h2>From Requirement to UAT</h2>
+
+          <span class="section-kicker">
+            Workflow
+          </span>
+
+          <h2>
+            From Requirement to UAT
+          </h2>
+
           <p>
-            A simple workflow connecting the three core BAForge AI tools.
+            A connected workflow for turning business requirements
+            into structured and testable delivery artifacts.
           </p>
+
         </div>
+
       </div>
+
 
       <div class="workflow">
 
         <div class="workflow-step">
-          <div class="workflow-number">01</div>
-          <h3>Requirement</h3>
-          <p>Start with a business requirement.</p>
+
+          <div class="workflow-number">
+            01
+          </div>
+
+          <h3>
+            Requirement
+          </h3>
+
+          <p>
+            Start with the business requirement.
+          </p>
+
         </div>
 
-        <div class="workflow-step">
-          <div class="workflow-number">02</div>
-          <h3>User Story</h3>
-          <p>Structure the requirement clearly.</p>
-        </div>
 
         <div class="workflow-step">
-          <div class="workflow-number">03</div>
-          <h3>Acceptance Criteria</h3>
-          <p>Define measurable conditions.</p>
+
+          <div class="workflow-number">
+            02
+          </div>
+
+          <h3>
+            User Story
+          </h3>
+
+          <p>
+            Structure the requirement clearly.
+          </p>
+
         </div>
 
+
         <div class="workflow-step">
-          <div class="workflow-number">04</div>
-          <h3>UAT Test Cases</h3>
-          <p>Turn requirements into executable tests.</p>
+
+          <div class="workflow-number">
+            03
+          </div>
+
+          <h3>
+            Acceptance Criteria
+          </h3>
+
+          <p>
+            Define measurable conditions.
+          </p>
+
+        </div>
+
+
+        <div class="workflow-step">
+
+          <div class="workflow-number">
+            04
+          </div>
+
+          <h3>
+            UAT Test Cases
+          </h3>
+
+          <p>
+            Turn requirements into executable tests.
+          </p>
+
         </div>
 
       </div>
+
     </section>
 
 
-    <!-- VALUE -->
+    <!-- =======================================================
+         VALUE
+    ======================================================== -->
+
     <section class="section">
 
       <div class="value-section">
 
+        <!-- BA -->
+
         <div class="value-card">
 
-          <h3>Built for Business Analysts</h3>
+          <h3>
+            Built for Business Analysts
+          </h3>
 
           <p>
             BAForge AI focuses on the practical artifacts
-            Business Analysts create every day.
+            Business Analysts create throughout the delivery lifecycle.
           </p>
 
           <div class="feature-list">
@@ -671,9 +1469,13 @@
         </div>
 
 
+        <!-- QA -->
+
         <div class="value-card">
 
-          <h3>Designed for QA Collaboration</h3>
+          <h3>
+            Designed for QA Collaboration
+          </h3>
 
           <p>
             Move from requirements to acceptance testing
@@ -707,33 +1509,53 @@
         </div>
 
       </div>
+
     </section>
 
 
-    <!-- CTA -->
+    <!-- =======================================================
+         CTA
+    ======================================================== -->
+
     <section class="cta">
 
-      <h2>Ready to turn your requirement into something usable?</h2>
+      <h2>
+        Ready to turn your requirement into something usable?
+      </h2>
 
       <p>
         Start with a User Story and continue through
         Acceptance Criteria and UAT Test Cases.
       </p>
 
-      <a class="btn" href="/user-story.html">
+      <a
+        class="btn"
+        href="/user-story.html"
+      >
         Create Your First User Story →
       </a>
 
     </section>
 
 
+    <!-- =======================================================
+         FOOTER
+    ======================================================== -->
+
     <footer>
-      BAForge AI · Business Analysis & QA Toolkit
+
+      <div class="footer-title">
+        BAForge AI
+      </div>
+
+      Business Analysis & QA Toolkit
+
     </footer>
 
   </main>
 
 
+  <!-- Shared BAForge navigation -->
   <script src="/nav.js"></script>
 
 </body>

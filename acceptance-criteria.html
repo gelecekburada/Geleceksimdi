@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,17 +12,69 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #eef4ff;
+
+      --text: #172033;
+      --heading: #101828;
+      --muted: #667085;
+
+      --border: #e4e7ec;
+      --surface: #ffffff;
+      --background: #f6f8fc;
+
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+
+      --danger: #b42318;
+      --danger-bg: #fef2f2;
+
+      --warning: #92400e;
+      --warning-bg: #fef3c7;
+
+      --shadow-sm:
+        0 4px 14px rgba(16, 24, 40, 0.06);
+
+      --shadow-md:
+        0 12px 35px rgba(16, 24, 40, 0.08);
+    }
+
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: #f4f6fb;
-      color: #1f2937;
+
+      background:
+        radial-gradient(
+          circle at top left,
+          rgba(37, 99, 235, 0.07),
+          transparent 32%
+        ),
+        var(--background);
+
+      color: var(--text);
+      line-height: 1.5;
     }
 
+    /* =========================================
+       EXISTING HEADER
+       ========================================= */
+
     .header {
-      background: #111827;
+      background:
+        linear-gradient(
+          135deg,
+          #111827 0%,
+          #172554 55%,
+          #1e3a8a 100%
+        );
+
       color: white;
       padding: 22px 20px;
+
+      border-bottom:
+        1px solid rgba(255, 255, 255, 0.08);
     }
 
     .header-inner {
@@ -31,7 +84,8 @@
 
     .brand {
       font-size: 25px;
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
 
     .subtitle {
@@ -42,236 +96,676 @@
 
     .badge {
       display: inline-block;
+
       margin-top: 14px;
-      padding: 7px 12px;
-      border-radius: 20px;
-      background: #2563eb;
-      color: white;
+      padding: 7px 13px;
+
+      border-radius: 999px;
+
+      background:
+        rgba(59, 130, 246, 0.18);
+
+      border:
+        1px solid rgba(147, 197, 253, 0.3);
+
+      color: #dbeafe;
+
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
     }
+
+    /* =========================================
+       MAIN
+       ========================================= */
 
     .container {
       max-width: 1100px;
-      margin: 28px auto;
-      padding: 0 18px;
+      margin: 48px auto;
+      padding: 0 20px;
     }
 
+    /* =========================================
+       CARDS
+       ========================================= */
+
     .card {
-      background: white;
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 22px;
-      box-shadow: 0 5px 20px rgba(15, 23, 42, 0.07);
+      background: var(--surface);
+
+      border-radius: 18px;
+
+      padding: 30px;
+
+      margin-bottom: 26px;
+
+      border:
+        1px solid var(--border);
+
+      box-shadow: var(--shadow-md);
+
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
     }
+
+    .card:hover {
+      border-color: #d7def0;
+    }
+
+    /* =========================================
+       HEADINGS
+       ========================================= */
 
     h1 {
       margin-top: 0;
-      font-size: 24px;
+      margin-bottom: 25px;
+
+      font-size: 28px;
+      line-height: 1.2;
+
+      color: var(--heading);
+
+      letter-spacing: -0.6px;
     }
 
     h2 {
-      font-size: 19px;
-      margin-top: 28px;
+      font-size: 20px;
+
+      margin-top: 34px;
       margin-bottom: 14px;
+
+      color: var(--heading);
+
+      letter-spacing: -0.2px;
     }
+
+    /* =========================================
+       FORM
+       ========================================= */
 
     label {
       display: block;
-      font-weight: 600;
-      margin-bottom: 8px;
+
+      font-weight: 700;
+
+      margin-bottom: 9px;
+
       font-size: 14px;
+
+      color: #344054;
     }
 
     textarea {
       width: 100%;
-      min-height: 190px;
+
+      min-height: 200px;
+
       resize: vertical;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 14px;
+
+      border:
+        1px solid #d0d5dd;
+
+      border-radius: 12px;
+
+      padding: 16px;
+
+      font-size: 15px;
+
       line-height: 1.6;
+
       outline: none;
+
+      background: #ffffff;
+
+      color: var(--text);
+
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
     }
 
-    textarea:focus,
-    select:focus {
-      border-color: #2563eb;
+    textarea::placeholder {
+      color: #98a2b3;
     }
+
+    textarea:hover {
+      border-color: #98a2b3;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 4px
+        rgba(37, 99, 235, 0.10);
+    }
+
+    /* =========================================
+       CONTROLS
+       ========================================= */
 
     .controls {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 18px;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 18px;
+
+      margin-top: 20px;
     }
 
     select {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 9px;
+
+      padding: 13px 14px;
+
+      border:
+        1px solid #d0d5dd;
+
+      border-radius: 10px;
+
       background: white;
+
+      color: #344054;
+
       font-size: 14px;
+
+      cursor: pointer;
+
+      outline: none;
+
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
     }
+
+    select:hover {
+      border-color: #98a2b3;
+    }
+
+    select:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 4px
+        rgba(37, 99, 235, 0.10);
+    }
+
+    /* =========================================
+       GENERATE BUTTON
+       ========================================= */
 
     .generate-btn {
       width: 100%;
-      margin-top: 20px;
-      padding: 14px;
+
+      margin-top: 22px;
+
+      padding: 15px 18px;
+
       border: 0;
-      border-radius: 9px;
-      background: #2563eb;
+
+      border-radius: 11px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #2563eb,
+          #1d4ed8
+        );
+
       color: white;
+
       font-size: 15px;
+
       font-weight: 700;
+
       cursor: pointer;
+
+      box-shadow:
+        0 6px 16px
+        rgba(37, 99, 235, 0.22);
+
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
     }
 
     .generate-btn:hover {
-      background: #1d4ed8;
+      background:
+        linear-gradient(
+          135deg,
+          #1d4ed8,
+          #1e40af
+        );
+
+      transform:
+        translateY(-1px);
+
+      box-shadow:
+        0 9px 20px
+        rgba(37, 99, 235, 0.28);
+    }
+
+    .generate-btn:active {
+      transform:
+        translateY(0);
     }
 
     .generate-btn:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
+      background: #94a3b8;
+
+      opacity: 1;
+
+      box-shadow: none;
+
+      cursor: wait;
+
+      transform: none;
     }
 
-    .error {
-      display: none;
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 9px;
-      background: #fee2e2;
-      color: #991b1b;
-      font-size: 14px;
-    }
+    /* =========================================
+       LOADING
+       ========================================= */
 
     .loading {
       display: none;
+
       margin-top: 16px;
+
+      padding: 13px 15px;
+
       text-align: center;
-      color: #475569;
+
+      color: #344054;
+
+      background: #f8fafc;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 10px;
+
       font-size: 14px;
+
+      font-weight: 600;
     }
+
+    /* =========================================
+       ERROR
+       ========================================= */
+
+    .error {
+      display: none;
+
+      margin-top: 16px;
+
+      padding: 13px 15px;
+
+      border-radius: 10px;
+
+      background: var(--danger-bg);
+
+      color: var(--danger);
+
+      border:
+        1px solid #fecaca;
+
+      font-size: 14px;
+
+      font-weight: 600;
+    }
+
+    /* =========================================
+       RESULT
+       ========================================= */
 
     .result-section {
       display: none;
     }
 
+    .result-section h1 {
+      margin-bottom: 25px;
+    }
+
+    /* =========================================
+       TESTABILITY SCORE
+       ========================================= */
+
     .score-card {
       display: flex;
+
       align-items: center;
+
       justify-content: space-between;
-      gap: 20px;
-      padding: 18px;
-      border-radius: 12px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
+
+      gap: 25px;
+
+      padding: 22px 24px;
+
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #eef4ff,
+          #f5f7ff
+        );
+
+      border:
+        1px solid #cddcff;
+
+      box-shadow: var(--shadow-sm);
     }
 
     .score-title {
       font-size: 14px;
-      font-weight: 700;
+
+      font-weight: 800;
+
       color: #1e40af;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.5px;
     }
 
     .score-value {
-      font-size: 32px;
+      font-size: 34px;
+
       font-weight: 800;
+
       color: #1d4ed8;
+
+      white-space: nowrap;
     }
 
     .score-explanation {
-      margin-top: 6px;
+      margin-top: 7px;
+
       font-size: 13px;
+
       color: #475569;
+
+      line-height: 1.5;
+
+      max-width: 750px;
     }
+
+    /* =========================================
+       CRITERIA TABLE
+       ========================================= */
 
     .criteria-table-wrapper {
       overflow-x: auto;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 13px;
+
+      background: white;
+
+      box-shadow: var(--shadow-sm);
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
+
+      border-collapse: separate;
+
+      border-spacing: 0;
+
       min-width: 760px;
     }
 
     th,
     td {
-      border: 1px solid #e5e7eb;
-      padding: 11px;
+      border-right:
+        1px solid var(--border);
+
+      border-bottom:
+        1px solid var(--border);
+
+      padding: 14px;
+
       text-align: left;
+
       vertical-align: top;
+
       font-size: 13px;
-      line-height: 1.5;
+
+      line-height: 1.55;
+    }
+
+    th:last-child,
+    td:last-child {
+      border-right: none;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
     }
 
     th {
-      background: #eef2ff;
-      font-weight: 700;
+      background:
+        #f1f5ff;
+
+      color: #344054;
+
+      font-weight: 800;
+
+      font-size: 12px;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.3px;
     }
+
+    td {
+      color: #475467;
+    }
+
+    tbody tr:hover td {
+      background: #fafbff;
+    }
+
+    /* =========================================
+       TAGS
+       ========================================= */
 
     .tag {
       display: inline-block;
+
       padding: 5px 9px;
-      border-radius: 15px;
+
+      border-radius: 999px;
+
       font-size: 11px;
+
       font-weight: 700;
+
       margin-right: 5px;
+
       margin-bottom: 5px;
+
+      white-space: nowrap;
     }
 
     .tag-positive {
-      background: #dcfce7;
+      background: var(--success-bg);
+
       color: #166534;
     }
 
     .tag-negative {
       background: #fee2e2;
+
       color: #991b1b;
     }
 
     .tag-boundary {
-      background: #fef3c7;
-      color: #92400e;
+      background: var(--warning-bg);
+
+      color: var(--warning);
     }
 
     .tag-validation {
       background: #e0e7ff;
+
       color: #3730a3;
     }
 
+    /* =========================================
+       LISTS
+       ========================================= */
+
     ul {
       margin: 0;
-      padding-left: 20px;
+
+      padding-left: 22px;
     }
 
     li {
-      margin-bottom: 8px;
-      line-height: 1.5;
+      margin-bottom: 9px;
+
+      line-height: 1.55;
+
       font-size: 14px;
+
+      color: #344054;
+    }
+
+    li::marker {
+      color: #2563eb;
     }
 
     .empty {
-      color: #64748b;
+      color: #98a2b3;
+
       font-size: 14px;
+
+      font-style: italic;
     }
 
-    @media (max-width: 700px) {
+    /* =========================================
+       MOBILE
+       ========================================= */
+
+    @media (max-width: 800px) {
+
+      .container {
+        margin: 35px auto;
+
+        padding:
+          0 16px;
+      }
+
+      .header {
+        padding:
+          18px 16px;
+      }
+
+      .card {
+        padding: 22px;
+
+        border-radius: 15px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      h2 {
+        font-size: 19px;
+      }
+
       .controls {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+          1fr;
+
+        gap: 14px;
+      }
+
+      .score-card {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 12px;
+      }
+
+      .score-value {
+        font-size: 30px;
+      }
+    }
+
+    @media (max-width: 500px) {
+
+      .container {
+        margin: 25px auto;
+
+        padding:
+          0 12px;
+      }
+
+      .header {
+        padding:
+          15px 16px;
+      }
+
+      .brand {
+        font-size: 21px;
+      }
+
+      .subtitle {
+        font-size: 12px;
+      }
+
+      .badge {
+        font-size: 10px;
+
+        padding:
+          6px 9px;
       }
 
       .card {
         padding: 18px;
+
+        border-radius: 14px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      h2 {
+        font-size: 18px;
+
+        margin-top: 28px;
+      }
+
+      textarea {
+        min-height: 175px;
+
+        padding: 14px;
+      }
+
+      .generate-btn {
+        padding: 14px;
       }
 
       .score-card {
-        flex-direction: column;
-        align-items: flex-start;
+        padding: 18px;
+      }
+
+      .score-value {
+        font-size: 28px;
+      }
+
+      .criteria-table-wrapper {
+        margin-left: -2px;
+        margin-right: -2px;
       }
     }
   </style>
@@ -280,15 +774,23 @@
 <body>
 
   <header class="header">
+
     <div class="header-inner">
-      <div class="brand">BAForge AI</div>
+
+      <div class="brand">
+        BAForge AI
+      </div>
+
       <div class="subtitle">
         Business Analysis & QA Intelligence Platform
       </div>
+
       <div class="badge">
         Acceptance Criteria Generator
       </div>
+
     </div>
+
   </header>
 
   <main class="container">
@@ -311,30 +813,56 @@
       <div class="controls">
 
         <div>
-          <label id="languageLabel" for="language">
+
+          <label
+            id="languageLabel"
+            for="language"
+          >
             Dil
           </label>
 
           <select id="language">
-            <option value="tr">Türkçe</option>
-            <option value="en">English</option>
+
+            <option value="tr">
+              Türkçe
+            </option>
+
+            <option value="en">
+              English
+            </option>
+
           </select>
+
         </div>
 
         <div>
-          <label id="detailLabel" for="detail">
+
+          <label
+            id="detailLabel"
+            for="detail"
+          >
             Detay Seviyesi
           </label>
 
           <select id="detail">
-            <option value="Basic">Basic</option>
-            <option value="Professional" selected>
+
+            <option value="Basic">
+              Basic
+            </option>
+
+            <option
+              value="Professional"
+              selected
+            >
               Professional
             </option>
+
             <option value="Comprehensive">
               Comprehensive
             </option>
+
           </select>
+
         </div>
 
       </div>
@@ -347,15 +875,24 @@
         Acceptance Criteria Oluştur
       </button>
 
-      <div class="loading" id="loading">
+      <div
+        class="loading"
+        id="loading"
+      >
         AI acceptance criteria oluşturuyor...
       </div>
 
-      <div class="error" id="error"></div>
+      <div
+        class="error"
+        id="error"
+      ></div>
 
     </section>
 
-    <section class="card result-section" id="result">
+    <section
+      class="card result-section"
+      id="result"
+    >
 
       <h1 id="resultTitle">
         Oluşturulan Acceptance Criteria
@@ -364,6 +901,7 @@
       <div class="score-card">
 
         <div>
+
           <div class="score-title">
             Testability Score
           </div>
@@ -372,6 +910,7 @@
             class="score-explanation"
             id="scoreExplanation"
           ></div>
+
         </div>
 
         <div
@@ -392,16 +931,36 @@
         <table>
 
           <thead>
+
             <tr>
-              <th>ID</th>
-              <th>Type</th>
-              <th>Given</th>
-              <th>When</th>
-              <th>Then</th>
+
+              <th>
+                ID
+              </th>
+
+              <th>
+                Type
+              </th>
+
+              <th>
+                Given
+              </th>
+
+              <th>
+                When
+              </th>
+
+              <th>
+                Then
+              </th>
+
             </tr>
+
           </thead>
 
-          <tbody id="criteriaBody"></tbody>
+          <tbody
+            id="criteriaBody"
+          ></tbody>
 
         </table>
 
@@ -440,6 +999,7 @@
   const translations = {
 
     tr: {
+
       pageTitle:
         "Acceptance Criteria Generator",
 
@@ -475,9 +1035,11 @@
 
       questionsTitle:
         "Açık Sorular"
+
     },
 
     en: {
+
       pageTitle:
         "Acceptance Criteria Generator",
 
@@ -513,6 +1075,7 @@
 
       questionsTitle:
         "Open Questions"
+
     }
 
   };
@@ -531,46 +1094,75 @@
   function applyLanguage() {
 
     const lang =
-      document.getElementById("language").value;
+      document
+        .getElementById("language")
+        .value;
 
     const t =
       translations[lang];
 
-    document.getElementById("pageTitle").textContent =
+    document
+      .getElementById("pageTitle")
+      .textContent =
       t.pageTitle;
 
-    document.getElementById("inputLabel").textContent =
+    document
+      .getElementById("inputLabel")
+      .textContent =
       t.inputLabel;
 
-    document.getElementById("languageLabel").textContent =
+    document
+      .getElementById("languageLabel")
+      .textContent =
       t.languageLabel;
 
-    document.getElementById("detailLabel").textContent =
+    document
+      .getElementById("detailLabel")
+      .textContent =
       t.detailLabel;
 
-    document.getElementById("generateBtn").textContent =
+    document
+      .getElementById("generateBtn")
+      .textContent =
       t.generate;
 
-    document.getElementById("loading").textContent =
+    document
+      .getElementById("loading")
+      .textContent =
       t.loading;
 
-    document.getElementById("resultTitle").textContent =
+    document
+      .getElementById("resultTitle")
+      .textContent =
       t.resultTitle;
 
-    document.getElementById("criteriaTitle").textContent =
+    document
+      .getElementById("criteriaTitle")
+      .textContent =
       t.criteriaTitle;
 
-    document.getElementById("coverageTitle").textContent =
+    document
+      .getElementById("coverageTitle")
+      .textContent =
       t.coverageTitle;
 
-    document.getElementById("rulesTitle").textContent =
+    document
+      .getElementById("rulesTitle")
+      .textContent =
       t.rulesTitle;
 
-    document.getElementById("assumptionsTitle").textContent =
+    document
+      .getElementById("assumptionsTitle")
+      .textContent =
       t.assumptionsTitle;
 
-    document.getElementById("questionsTitle").textContent =
+    document
+      .getElementById("questionsTitle")
+      .textContent =
       t.questionsTitle;
+
+    document.documentElement.lang =
+      lang;
 
   }
 
@@ -626,37 +1218,48 @@
       normalized.includes("positive") ||
       normalized.includes("happy")
     ) {
+
       className =
         "tag-positive";
+
     }
 
     if (
       normalized.includes("negative") ||
       normalized.includes("error")
     ) {
+
       className =
         "tag-negative";
+
     }
 
     if (
       normalized.includes("boundary") ||
       normalized.includes("edge")
     ) {
+
       className =
         "tag-boundary";
+
     }
 
     return `
       <span class="tag ${className}">
-        ${escapeHtml(type || "Validation")}
+        ${escapeHtml(
+          type || "Validation"
+        )}
       </span>
     `;
+
   }
 
   function renderCriteria(criteria) {
 
     const body =
-      document.getElementById("criteriaBody");
+      document.getElementById(
+        "criteriaBody"
+      );
 
     body.innerHTML = "";
 
@@ -664,42 +1267,56 @@
       !Array.isArray(criteria) ||
       criteria.length === 0
     ) {
+
       return;
+
     }
 
-    criteria.forEach((item, index) => {
+    criteria.forEach(
+      (item, index) => {
 
-      const row =
-        document.createElement("tr");
+        const row =
+          document.createElement("tr");
 
-      row.innerHTML = `
-        <td>
-          ${escapeHtml(
-            item.id ||
-            `AC-${String(index + 1).padStart(2, "0")}`
-          )}
-        </td>
+        row.innerHTML = `
 
-        <td>
-          ${typeTag(item.type)}
-        </td>
+          <td>
+            ${escapeHtml(
+              item.id ||
+              `AC-${String(
+                index + 1
+              ).padStart(2, "0")}`
+            )}
+          </td>
 
-        <td>
-          ${escapeHtml(item.given)}
-        </td>
+          <td>
+            ${typeTag(item.type)}
+          </td>
 
-        <td>
-          ${escapeHtml(item.when)}
-        </td>
+          <td>
+            ${escapeHtml(
+              item.given
+            )}
+          </td>
 
-        <td>
-          ${escapeHtml(item.then)}
-        </td>
-      `;
+          <td>
+            ${escapeHtml(
+              item.when
+            )}
+          </td>
 
-      body.appendChild(row);
+          <td>
+            ${escapeHtml(
+              item.then
+            )}
+          </td>
 
-    });
+        `;
+
+        body.appendChild(row);
+
+      }
+    );
 
   }
 
@@ -722,18 +1339,25 @@
         .value;
 
     const errorBox =
-      document.getElementById("error");
+      document.getElementById(
+        "error"
+      );
 
     const loading =
-      document.getElementById("loading");
+      document.getElementById(
+        "loading"
+      );
 
     const button =
-      document.getElementById("generateBtn");
+      document.getElementById(
+        "generateBtn"
+      );
 
     errorBox.style.display =
       "none";
 
-    document.getElementById("result")
+    document
+      .getElementById("result")
       .style.display =
       "none";
 
@@ -756,6 +1380,7 @@
         "block";
 
       return;
+
     }
 
     button.disabled =
@@ -770,6 +1395,7 @@
         await fetch(
           "/api/acceptance-criteria",
           {
+
             method: "POST",
 
             headers: {
@@ -782,6 +1408,7 @@
               language,
               detail
             })
+
           }
         );
 
@@ -791,12 +1418,16 @@
       let data;
 
       try {
+
         data =
           JSON.parse(raw);
+
       } catch {
+
         throw new Error(
           "Invalid server response."
         );
+
       }
 
       if (!response.ok) {
@@ -808,14 +1439,18 @@
 
       }
 
-      document.getElementById(
-        "scoreValue"
-      ).textContent =
+      document
+        .getElementById(
+          "scoreValue"
+        )
+        .textContent =
         `${data.testabilityScore ?? 0}/100`;
 
-      document.getElementById(
-        "scoreExplanation"
-      ).textContent =
+      document
+        .getElementById(
+          "scoreExplanation"
+        )
+        .textContent =
         data.testabilityExplanation ||
         "";
 
@@ -843,9 +1478,9 @@
         data.openQuestions
       );
 
-      document.getElementById(
-        "result"
-      ).style.display =
+      document
+        .getElementById("result")
+        .style.display =
         "block";
 
     } catch (error) {
@@ -872,6 +1507,8 @@
   applyLanguage();
 
 </script>
+
 <script src="/nav.js"></script>
+
 </body>
 </html>
