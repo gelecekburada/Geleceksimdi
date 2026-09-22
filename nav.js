@@ -1,366 +1,230 @@
 (function () {
+  const path = window.location.pathname;
 
-  const currentPath =
-    window.location.pathname
-      .split("/")
-      .pop() || "index.html";
+  let currentPage = "home";
 
-  const pages = {
-    uat: {
-      file: "index.html",
-      label: "🧪 UAT Test Cases"
-    },
+  if (path.endsWith("/user-story.html")) {
+    currentPage = "user-story";
+  } else if (path.endsWith("/acceptance-criteria.html")) {
+    currentPage = "acceptance-criteria";
+  } else if (path.endsWith("/uat.html")) {
+    currentPage = "uat";
+  }
 
-    story: {
-      file: "user-story.html",
-      label: "📝 User Story"
-    },
-
-    criteria: {
-      file: "acceptance-criteria.html",
-      label: "✓ Acceptance Criteria"
+  const styles = `
+    .baforge-nav {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
-  };
 
-  function injectStyles() {
+    .baforge-nav-inner {
+      max-width: 1180px;
+      min-height: 68px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
 
-    const style =
-      document.createElement("style");
+    .baforge-brand {
+      flex-shrink: 0;
+      color: white;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
 
-    style.textContent = `
-      .baforge-nav {
-        position: sticky;
-        top: 0;
-        z-index: 9999;
-        width: 100%;
-        background: #111827;
-        color: white;
-        box-shadow: 0 3px 14px rgba(0,0,0,0.15);
-      }
+    .baforge-brand span {
+      color: #60a5fa;
+    }
 
+    .baforge-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .baforge-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .baforge-link {
+      white-space: nowrap;
+      padding: 9px 13px;
+      border-radius: 9px;
+      color: #cbd5e1;
+      font-size: 13px;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+
+    .baforge-link:hover {
+      color: white;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .baforge-link.active {
+      color: white;
+      background: #2563eb;
+    }
+
+    .baforge-actions {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 10px 24px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .baforge-actions::-webkit-scrollbar {
+      display: none;
+    }
+
+    .baforge-action {
+      flex-shrink: 0;
+      padding: 7px 11px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: white;
+      color: #475467;
+      font-size: 12px;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+
+    .baforge-action:hover {
+      color: #2563eb;
+      border-color: #bfdbfe;
+      background: #eff6ff;
+    }
+
+    @media (max-width: 700px) {
       .baforge-nav-inner {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 0 18px;
-        min-height: 62px;
-
-        display: flex;
-        align-items: center;
-        gap: 18px;
+        min-height: 60px;
+        padding: 0 16px;
+        gap: 12px;
       }
 
       .baforge-brand {
-        color: white;
-        text-decoration: none;
-        font-size: 19px;
-        font-weight: 800;
-        white-space: nowrap;
-        margin-right: 8px;
-      }
-
-      .baforge-brand span {
-        color: #60a5fa;
+        font-size: 17px;
       }
 
       .baforge-links {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        overflow-x: auto;
-        scrollbar-width: none;
-      }
-
-      .baforge-links::-webkit-scrollbar {
-        display: none;
+        margin-left: 0;
       }
 
       .baforge-link {
-        color: #cbd5e1;
-        text-decoration: none;
-        padding: 9px 12px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        white-space: nowrap;
-        transition: all 0.15s ease;
-      }
-
-      .baforge-link:hover {
-        background: #1f2937;
-        color: white;
-      }
-
-      .baforge-link.active {
-        background: #2563eb;
-        color: white;
+        padding: 8px 10px;
+        font-size: 12px;
       }
 
       .baforge-actions {
-        max-width: 1100px;
-        margin: 14px auto 0;
-        padding: 0 18px;
-        display: flex;
-        gap: 10px;
-        overflow-x: auto;
-        scrollbar-width: none;
+        padding: 8px 16px;
       }
-
-      .baforge-actions::-webkit-scrollbar {
-        display: none;
-      }
-
-      .baforge-action {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-
-        padding: 9px 13px;
-        border-radius: 8px;
-
-        background: white;
-        color: #1e40af;
-
-        border: 1px solid #bfdbfe;
-
-        text-decoration: none;
-        font-size: 12px;
-        font-weight: 700;
-
-        white-space: nowrap;
-      }
-
-      .baforge-action:hover {
-        background: #eff6ff;
-      }
-
-      .baforge-nav-spacer {
-        height: 1px;
-      }
-
-      @media (max-width: 700px) {
-
-        .baforge-nav-inner {
-          min-height: 56px;
-          padding: 0 12px;
-          gap: 8px;
-        }
-
-        .baforge-brand {
-          font-size: 17px;
-        }
-
-        .baforge-link {
-          font-size: 12px;
-          padding: 8px 9px;
-        }
-
-        .baforge-actions {
-          padding: 0 12px;
-          margin-top: 10px;
-        }
-
-      }
-    `;
-
-    document.head.appendChild(style);
-  }
-
-  function getCurrentPage() {
-
-    if (
-      currentPath === "user-story.html"
-    ) {
-      return "story";
     }
+  `;
 
-    if (
-      currentPath ===
-      "acceptance-criteria.html"
-    ) {
-      return "criteria";
-    }
+  const style = document.createElement("style");
+  style.textContent = styles;
+  document.head.appendChild(style);
 
-    return "uat";
-  }
+  const nav = document.createElement("nav");
+  nav.className = "baforge-nav";
 
-  function createNav() {
+  nav.innerHTML = `
+    <div class="baforge-nav-inner">
 
-    const current =
-      getCurrentPage();
+      <a href="/" class="baforge-brand">
+        BA<span>Forge</span> AI
+      </a>
 
-    const nav =
-      document.createElement("nav");
-
-    nav.className =
-      "baforge-nav";
-
-    nav.innerHTML = `
-
-      <div class="baforge-nav-inner">
+      <div class="baforge-links">
 
         <a
           href="/"
-          class="baforge-brand"
-        >
-          BA<span>Forge</span> AI
+          class="baforge-link ${currentPage === "home" ? "active" : ""}">
+          Home
         </a>
 
-        <div class="baforge-links">
+        <a
+          href="/user-story.html"
+          class="baforge-link ${currentPage === "user-story" ? "active" : ""}">
+          User Story
+        </a>
 
-          <a
-            href="/user-story.html"
-            class="baforge-link ${
-              current === "story"
-                ? "active"
-                : ""
-            }"
-          >
-            📝 User Story
-          </a>
+        <a
+          href="/acceptance-criteria.html"
+          class="baforge-link ${currentPage === "acceptance-criteria" ? "active" : ""}">
+          Acceptance Criteria
+        </a>
 
-          <a
-            href="/acceptance-criteria.html"
-            class="baforge-link ${
-              current === "criteria"
-                ? "active"
-                : ""
-            }"
-          >
-            ✓ Acceptance Criteria
-          </a>
-
-          <a
-            href="/"
-            class="baforge-link ${
-              current === "uat"
-                ? "active"
-                : ""
-            }"
-          >
-            🧪 UAT Test Cases
-          </a>
-
-        </div>
+        <a
+          href="/uat.html"
+          class="baforge-link ${currentPage === "uat" ? "active" : ""}">
+          UAT Test Cases
+        </a>
 
       </div>
-    `;
 
-    document.body.prepend(nav);
+    </div>
+  `;
 
-    return nav;
-  }
+  document.body.insertBefore(nav, document.body.firstChild);
 
-  function createQuickActions() {
 
-    const current =
-      getCurrentPage();
+  // Quick actions on tool pages
+  if (currentPage !== "home") {
 
-    const actions =
-      document.createElement("div");
+    const actions = document.createElement("div");
+    actions.className = "baforge-actions";
 
-    actions.className =
-      "baforge-actions";
-
-    let html = "";
-
-    if (current === "story") {
-
-      html = `
-        <a
-          class="baforge-action"
-          href="/acceptance-criteria.html"
-        >
-          ✓ Acceptance Criteria Oluştur →
+    if (currentPage === "user-story") {
+      actions.innerHTML = `
+        <a class="baforge-action" href="/acceptance-criteria.html">
+          → Acceptance Criteria
         </a>
-
-        <a
-          class="baforge-action"
-          href="/"
-        >
-          🧪 UAT Test Cases Oluştur →
-        </a>
-      `;
-
-    } else if (current === "criteria") {
-
-      html = `
-        <a
-          class="baforge-action"
-          href="/user-story.html"
-        >
-          📝 User Story Oluştur →
-        </a>
-
-        <a
-          class="baforge-action"
-          href="/"
-        >
-          🧪 UAT Test Cases Oluştur →
-        </a>
-      `;
-
-    } else {
-
-      html = `
-        <a
-          class="baforge-action"
-          href="/user-story.html"
-        >
-          📝 User Story Oluştur →
-        </a>
-
-        <a
-          class="baforge-action"
-          href="/acceptance-criteria.html"
-        >
-          ✓ Acceptance Criteria Oluştur →
+        <a class="baforge-action" href="/uat.html">
+          → UAT Test Cases
         </a>
       `;
     }
 
-    actions.innerHTML = html;
-
-    const nav =
-      document.querySelector(
-        ".baforge-nav"
-      );
-
-    if (nav) {
-      nav.after(actions);
-    }
-  }
-
-  function init() {
-
-    if (
-      document.querySelector(
-        ".baforge-nav"
-      )
-    ) {
-      return;
+    if (currentPage === "acceptance-criteria") {
+      actions.innerHTML = `
+        <a class="baforge-action" href="/user-story.html">
+          → User Story
+        </a>
+        <a class="baforge-action" href="/uat.html">
+          → UAT Test Cases
+        </a>
+      `;
     }
 
-    injectStyles();
+    if (currentPage === "uat") {
+      actions.innerHTML = `
+        <a class="baforge-action" href="/user-story.html">
+          → User Story
+        </a>
+        <a class="baforge-action" href="/acceptance-criteria.html">
+          → Acceptance Criteria
+        </a>
+      `;
+    }
 
-    createNav();
-
-    createQuickActions();
-  }
-
-  if (
-    document.readyState ===
-    "loading"
-  ) {
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      init
-    );
-
-  } else {
-
-    init();
-
+    document.body.insertBefore(actions, document.body.children[1]);
   }
 
 })();
