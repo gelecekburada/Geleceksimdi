@@ -435,7 +435,7 @@
         </div>
 
         <div class="context-detail" id="contextDetail">
-          The requirement and acceptance criteria from the previous step have been transferred to UAT.
+          The requirement, user story, acceptance criteria and related BA context from the previous workflow step have been transferred to UAT.
         </div>
       </div>
     </div>
@@ -679,7 +679,7 @@
 
   /*
    * =========================================================
-   * ROBUST WORKFLOW CONTEXT LOADER
+   * WORKFLOW CONTEXT
    * =========================================================
    */
 
@@ -694,7 +694,9 @@
 
   function readStorage(storage, key) {
     try {
-      return safeParse(storage.getItem(key));
+      return safeParse(
+        storage.getItem(key)
+      );
     } catch {
       return null;
     }
@@ -715,23 +717,36 @@
   }
 
   function normalizeText(value) {
-    if (value === undefined || value === null) {
+    if (
+      value === undefined ||
+      value === null
+    ) {
       return "";
     }
 
-    if (typeof value === "string") {
+    if (
+      typeof value === "string"
+    ) {
       return value.trim();
     }
 
-    if (Array.isArray(value)) {
+    if (
+      Array.isArray(value)
+    ) {
       return value
         .map(normalizeText)
         .filter(Boolean)
         .join("\n");
     }
 
-    if (typeof value === "object") {
-      return JSON.stringify(value, null, 2);
+    if (
+      typeof value === "object"
+    ) {
+      return JSON.stringify(
+        value,
+        null,
+        2
+      );
     }
 
     return String(value).trim();
@@ -742,25 +757,39 @@
       return [];
     }
 
-    if (typeof value === "string") {
+    if (
+      typeof value === "string"
+    ) {
       return value
         .split(/\n+/)
-        .map(item =>
-          item
-            .replace(/^\s*(?:[-•*]|\d+[.)])\s*/, "")
-            .trim()
+        .map(
+          item =>
+            item
+              .replace(
+                /^\s*(?:[-•*]|\d+[.)])\s*/,
+                ""
+              )
+              .trim()
         )
         .filter(Boolean);
     }
 
-    if (Array.isArray(value)) {
+    if (
+      Array.isArray(value)
+    ) {
       return value
         .map(item => {
-          if (typeof item === "string") {
+
+          if (
+            typeof item === "string"
+          ) {
             return item.trim();
           }
 
-          if (typeof item === "object" && item !== null) {
+          if (
+            typeof item === "object" &&
+            item !== null
+          ) {
             return normalizeText(
               firstNonEmpty([
                 item.text,
@@ -775,6 +804,7 @@
           }
 
           return String(item);
+
         })
         .filter(Boolean);
     }
@@ -783,7 +813,10 @@
   }
 
   function unwrapContext(data) {
-    if (!data || typeof data !== "object") {
+    if (
+      !data ||
+      typeof data !== "object"
+    ) {
       return null;
     }
 
@@ -812,37 +845,87 @@
   }
 
   function getCandidateScore(context) {
-    if (!context) return 0;
+    if (!context) {
+      return 0;
+    }
 
     let score = 0;
 
-    const requirement = firstNonEmpty([
-      context.requirement,
-      context.sourceRequirement,
-      context.originalRequirement,
-      context.userStory,
-      context.userStoryText,
-      context.story
-    ]);
+    const requirement =
+      firstNonEmpty([
+        context.requirement,
+        context.sourceRequirement,
+        context.originalRequirement,
+        context.userStoryText,
+        context.story
+      ]);
 
-    const criteria = firstNonEmpty([
-      context.acceptanceCriteria,
-      context.acceptance_criteria,
-      context.criteria,
-      context.acceptanceCriteriaList
-    ]);
+    let userStory = "";
 
-    const rules = firstNonEmpty([
-      context.businessRules,
-      context.business_rules
-    ]);
+    if (
+      context.userStory &&
+      typeof context.userStory === "object"
+    ) {
+      userStory =
+        firstNonEmpty([
+          context.userStory.story,
+          context.userStory.userStory,
+          context.userStory.text,
+          context.userStory.requirement
+        ]);
+    } else {
+      userStory =
+        firstNonEmpty([
+          context.userStory
+        ]);
+    }
 
-    const assumptions = context.assumptions;
+    const criteria =
+      firstNonEmpty([
+        context.acceptanceCriteria,
+        context.acceptance_criteria,
+        context.criteria,
+        context.acceptanceCriteriaList
+      ]);
 
-    if (normalizeText(requirement)) score += 10;
-    if (normalizeList(criteria).length) score += 8;
-    if (normalizeList(rules).length) score += 4;
-    if (normalizeList(assumptions).length) score += 2;
+    const rules =
+      firstNonEmpty([
+        context.businessRules,
+        context.business_rules
+      ]);
+
+    const assumptions =
+      context.assumptions;
+
+    if (
+      normalizeText(requirement)
+    ) {
+      score += 10;
+    }
+
+    if (
+      normalizeText(userStory)
+    ) {
+      score += 8;
+    }
+
+    if (
+      normalizeList(criteria).length
+    ) {
+      score += 8;
+    }
+
+    if (
+      normalizeList(rules).length
+    ) {
+      score += 4;
+    }
+
+    if (
+      normalizeList(assumptions).length
+    ) {
+      score += 2;
+    }
 
     return score;
   }
@@ -859,15 +942,29 @@
 
     const candidates = [];
 
-    for (const storage of [sessionStorage, localStorage]) {
-      for (const key of keys) {
-        const raw = readStorage(storage, key);
+    for (
+      const storage of [
+        sessionStorage,
+        localStorage
+      ]
+    ) {
+
+      for (
+        const key of keys
+      ) {
+
+        const raw =
+          readStorage(
+            storage,
+            key
+          );
 
         if (!raw) {
           continue;
         }
 
-        const context = unwrapContext(raw);
+        const context =
+          unwrapContext(raw);
 
         if (!context) {
           continue;
@@ -876,87 +973,142 @@
         candidates.push({
           key,
           context,
-          score: getCandidateScore(context)
+          score:
+            getCandidateScore(
+              context
+            )
         });
+
       }
     }
 
-    candidates.sort((a, b) => b.score - a.score);
+    candidates.sort(
+      (a, b) =>
+        b.score - a.score
+    );
 
     return candidates;
   }
 
   function getBestWorkflowContext() {
-    const candidates = collectWorkflowContexts();
+    const candidates =
+      collectWorkflowContexts();
 
-    if (!candidates.length) {
+    if (
+      !candidates.length
+    ) {
       return null;
     }
 
     return candidates[0].context;
   }
 
+  /*
+   * =========================================================
+   * BUILD UAT REQUIREMENT
+   *
+   * IMPORTANT FIX:
+   * User Story can be an object.
+   * We now extract story/text/requirement
+   * instead of displaying the complete JSON object.
+   * =========================================================
+   */
+
   function buildUatRequirement(context) {
+
     if (!context) {
       return "";
     }
 
-    const requirement = normalizeText(
-      firstNonEmpty([
-        context.requirement,
-        context.sourceRequirement,
-        context.originalRequirement
-      ])
-    );
+    const requirement =
+      normalizeText(
+        firstNonEmpty([
+          context.requirement,
+          context.sourceRequirement,
+          context.originalRequirement
+        ])
+      );
 
-    const userStory = normalizeText(
-      firstNonEmpty([
-        context.userStoryText,
-        context.userStory,
-        context.story
-      ])
-    );
+    let userStory = "";
 
-    const acceptanceCriteria = normalizeList(
-      firstNonEmpty([
-        context.acceptanceCriteria,
-        context.acceptance_criteria,
-        context.criteria,
-        context.acceptanceCriteriaList
-      ])
-    );
+    if (
+      context.userStory &&
+      typeof context.userStory === "object"
+    ) {
 
-    const businessRules = normalizeList(
-      firstNonEmpty([
-        context.businessRules,
-        context.business_rules
-      ])
-    );
+      userStory =
+        normalizeText(
+          firstNonEmpty([
+            context.userStory.story,
+            context.userStory.userStory,
+            context.userStory.text,
+            context.userStory.requirement
+          ])
+        );
 
-    const assumptions = normalizeList(
-      context.assumptions
-    );
+    } else {
+
+      userStory =
+        normalizeText(
+          firstNonEmpty([
+            context.userStoryText,
+            context.userStory,
+            context.story
+          ])
+        );
+
+    }
+
+    const acceptanceCriteria =
+      normalizeList(
+        firstNonEmpty([
+          context.acceptanceCriteria,
+          context.acceptance_criteria,
+          context.criteria,
+          context.acceptanceCriteriaList
+        ])
+      );
+
+    const businessRules =
+      normalizeList(
+        firstNonEmpty([
+          context.businessRules,
+          context.business_rules
+        ])
+      );
+
+    const assumptions =
+      normalizeList(
+        context.assumptions
+      );
 
     const parts = [];
 
     if (requirement) {
+
       parts.push(
         "Requirement:\n" +
         requirement
       );
+
     }
 
     if (
       userStory &&
       userStory !== requirement
     ) {
+
       parts.push(
         "User Story:\n" +
         userStory
       );
+
     }
 
-    if (acceptanceCriteria.length) {
+    if (
+      acceptanceCriteria.length
+    ) {
+
       parts.push(
         "Acceptance Criteria:\n" +
         acceptanceCriteria
@@ -966,9 +1118,13 @@
           )
           .join("\n")
       );
+
     }
 
-    if (businessRules.length) {
+    if (
+      businessRules.length
+    ) {
+
       parts.push(
         "Business Rules:\n" +
         businessRules
@@ -978,9 +1134,13 @@
           )
           .join("\n")
       );
+
     }
 
-    if (assumptions.length) {
+    if (
+      assumptions.length
+    ) {
+
       parts.push(
         "Assumptions:\n" +
         assumptions
@@ -990,36 +1150,43 @@
           )
           .join("\n")
       );
+
     }
 
-    return parts.join("\n\n");
+    return parts.join(
+      "\n\n"
+    );
   }
 
   function loadWorkflowContext() {
-    const context = getBestWorkflowContext();
+
+    const context =
+      getBestWorkflowContext();
 
     if (!context) {
+
       console.log(
         "BAForge UAT: No workflow context found."
       );
+
       return;
     }
 
     const generatedRequirement =
-      buildUatRequirement(context);
+      buildUatRequirement(
+        context
+      );
 
-    if (!generatedRequirement) {
+    if (
+      !generatedRequirement
+    ) {
+
       console.log(
         "BAForge UAT: Context found but no usable requirement."
       );
+
       return;
     }
-
-    /*
-     * Always load workflow data when the textarea
-     * is empty. If we arrived directly from the
-     * Acceptance Criteria page, replace it too.
-     */
 
     const params =
       new URLSearchParams(
@@ -1034,19 +1201,15 @@
       fromAcceptanceCriteria ||
       !requirementEl.value.trim()
     ) {
+
       requirementEl.value =
         generatedRequirement;
+
     }
 
     contextBanner.classList.add(
       "visible"
     );
-
-    /*
-     * Store the normalized active context
-     * in BOTH storages so future workflow
-     * steps have a reliable source.
-     */
 
     const activeContext = {
       ...context,
@@ -1057,17 +1220,25 @@
     };
 
     try {
+
       sessionStorage.setItem(
         "baforge-uat-active-context",
-        JSON.stringify(activeContext)
+        JSON.stringify(
+          activeContext
+        )
       );
+
     } catch {}
 
     try {
+
       localStorage.setItem(
         "baforge-uat-active-context",
-        JSON.stringify(activeContext)
+        JSON.stringify(
+          activeContext
+        )
       );
+
     } catch {}
 
     console.log(
@@ -1076,6 +1247,7 @@
   }
 
   function clearWorkflowUrlParameter() {
+
     const url =
       new URL(
         window.location.href
@@ -1084,7 +1256,10 @@
     if (
       url.searchParams.has("from")
     ) {
-      url.searchParams.delete("from");
+
+      url.searchParams.delete(
+        "from"
+      );
 
       window.history.replaceState(
         {},
@@ -1096,6 +1271,7 @@
             : ""
         )
       );
+
     }
   }
 
@@ -1106,36 +1282,60 @@
    */
 
   function escapeHtml(value) {
-    return String(value ?? "")
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;")
-      .replace(/"/g,"&quot;")
-      .replace(/'/g,"&#039;");
+
+    return String(
+      value ?? ""
+    )
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
   }
 
   function formatCell(value) {
+
     if (
       value === null ||
       value === undefined
     ) {
+
       return "";
+
     }
 
     if (
       typeof value === "object"
     ) {
+
       return JSON.stringify(
         value,
         null,
         2
       );
+
     }
 
     return String(value);
   }
 
   function renderMultiline(value) {
+
     return escapeHtml(
       formatCell(value)
     ).replace(
@@ -1145,19 +1345,27 @@
   }
 
   function renderSteps(value) {
-    if (Array.isArray(value)) {
+
+    if (
+      Array.isArray(value)
+    ) {
+
       return value
         .map(
           step =>
             escapeHtml(step)
         )
         .join("<br>");
+
     }
 
-    return renderMultiline(value);
+    return renderMultiline(
+      value
+    );
   }
 
   function renderApiDetails(api) {
+
     if (!api) {
       return "";
     }
@@ -1176,6 +1384,7 @@
   }
 
   function showError(message) {
+
     errorEl.textContent =
       message;
 
@@ -1184,11 +1393,16 @@
   }
 
   function hideError() {
-    errorEl.textContent = "";
-    errorEl.style.display = "none";
+
+    errorEl.textContent =
+      "";
+
+    errorEl.style.display =
+      "none";
   }
 
   function validateRequirement() {
+
     const requirement =
       requirementEl.value.trim();
 
@@ -1201,6 +1415,7 @@
       requirement.length < 15 ||
       words.length < 3
     ) {
+
       showError(
         t("requirementError")
       );
@@ -1212,6 +1427,7 @@
   }
 
   function validateNumber() {
+
     const number =
       Number(
         numberEl.value
@@ -1222,6 +1438,7 @@
       number < 1 ||
       number > 50
     ) {
+
       showError(
         t("numberError")
       );
@@ -1234,18 +1451,25 @@
 
   /*
    * =========================================================
-   * GENERATE UAT TEST CASES
+   * GENERATE TEST CASES
    * =========================================================
    */
 
   async function generateTestCases() {
+
     hideError();
 
-    if (!validateRequirement()) {
+    if (
+      !validateRequirement()
+    ) {
+
       return;
     }
 
-    if (!validateNumber()) {
+    if (
+      !validateNumber()
+    ) {
+
       return;
     }
 
@@ -1284,9 +1508,11 @@
     resultsCard.style.display =
       "none";
 
-    resultsBody.innerHTML = "";
+    resultsBody.innerHTML =
+      "";
 
     try {
+
       const response =
         await fetch(
           "/api/generate",
@@ -1316,15 +1542,21 @@
       let data;
 
       try {
+
         data =
           JSON.parse(raw);
+
       } catch {
+
         throw new Error(
           t("apiError")
         );
       }
 
-      if (!response.ok) {
+      if (
+        !response.ok
+      ) {
+
         throw new Error(
           data.error ||
           t("genericError")
@@ -1336,6 +1568,7 @@
           data.cases
         )
       ) {
+
         throw new Error(
           t("genericError")
         );
@@ -1354,36 +1587,45 @@
         language,
         focus,
         priority,
-        cases: data.cases,
+        cases:
+          data.cases,
         generatedAt:
           new Date().toISOString()
       };
 
       try {
+
         sessionStorage.setItem(
           "baforge-uat-generated",
           JSON.stringify(
             generatedData
           )
         );
+
       } catch {}
 
       try {
+
         localStorage.setItem(
           "baforge-uat-generated",
           JSON.stringify(
             generatedData
           )
         );
+
       } catch {}
 
-    } catch (error) {
+    } catch (
+      error
+    ) {
+
       showError(
         error.message ||
         t("genericError")
       );
 
     } finally {
+
       generateButton.disabled =
         false;
 
@@ -1396,7 +1638,11 @@
     cases,
     type
   ) {
-    if (!cases.length) {
+
+    if (
+      !cases.length
+    ) {
+
       showError(
         t("noCases")
       );
@@ -1417,7 +1663,10 @@
     let html = "";
 
     cases.forEach(
-      (testCase, index) => {
+      (
+        testCase,
+        index
+      ) => {
 
         const apiDetails =
           testCase.api ||
