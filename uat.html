@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>BAForge AI - UAT Test Case Generator</title>
 
   <style>
@@ -15,193 +13,99 @@
     :root {
       --primary: #2563eb;
       --primary-dark: #1d4ed8;
-      --primary-light: #eef4ff;
-
       --text: #172033;
       --heading: #101828;
       --muted: #667085;
-
       --border: #e4e7ec;
       --surface: #ffffff;
       --background: #f6f8fc;
-
       --success: #16a34a;
       --danger: #b42318;
-
-      --shadow-sm:
-        0 4px 14px rgba(16, 24, 40, 0.06);
-
-      --shadow-md:
-        0 12px 35px rgba(16, 24, 40, 0.08);
+      --shadow-sm: 0 4px 14px rgba(16,24,40,.06);
+      --shadow-md: 0 12px 35px rgba(16,24,40,.08);
     }
 
     body {
       margin: 0;
-
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+      font-family: Arial, Helvetica, sans-serif;
       background:
-        radial-gradient(
-          circle at top left,
-          rgba(37, 99, 235, 0.07),
-          transparent 32%
-        ),
+        radial-gradient(circle at top left, rgba(37,99,235,.07), transparent 32%),
         var(--background);
-
       color: var(--text);
-
       line-height: 1.5;
     }
 
-    /* =========================================
-       HEADER
-       ========================================= */
-
     header {
-      background:
-        linear-gradient(
-          135deg,
-          #111827 0%,
-          #172554 55%,
-          #1e3a8a 100%
-        );
-
+      background: linear-gradient(135deg,#111827 0%,#172554 55%,#1e3a8a 100%);
       color: white;
-
       padding: 18px 6%;
-
       display: flex;
-
       align-items: center;
-
       justify-content: space-between;
-
       gap: 20px;
-
-      border-bottom:
-        1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255,255,255,.08);
     }
 
     .brand {
       display: flex;
-
       align-items: center;
-
       gap: 12px;
-
       min-width: 0;
     }
 
     .brand h1 {
       margin: 0;
-
       font-size: 24px;
-
       font-weight: 800;
-
-      letter-spacing: -0.5px;
+      letter-spacing: -.5px;
     }
 
     .badge {
-      background:
-        rgba(59, 130, 246, 0.18);
-
+      background: rgba(59,130,246,.18);
       color: #dbeafe;
-
-      border:
-        1px solid rgba(147, 197, 253, 0.3);
-
+      border: 1px solid rgba(147,197,253,.3);
       padding: 7px 12px;
-
       border-radius: 999px;
-
       font-size: 11px;
-
       font-weight: 700;
-
       white-space: nowrap;
     }
 
-    /* =========================================
-       LANGUAGE
-       ========================================= */
-
     .language-box {
       display: flex;
-
       align-items: center;
-
       gap: 8px;
     }
 
     .language-box label {
       color: #dbeafe;
-
       font-size: 13px;
-
       font-weight: 600;
-
       white-space: nowrap;
     }
 
     .language-box select {
       width: auto;
-
       min-width: 110px;
-
-      padding:
-        9px 12px;
-
-      border:
-        1px solid rgba(255, 255, 255, 0.2);
-
+      padding: 9px 12px;
+      border: 1px solid rgba(255,255,255,.2);
       border-radius: 9px;
-
-      background:
-        rgba(255, 255, 255, 0.08);
-
+      background: rgba(255,255,255,.08);
       color: white;
-
       font-size: 13px;
-
       cursor: pointer;
     }
 
     .language-box select option {
       color: #172033;
-
       background: white;
     }
 
-    .language-box select:focus {
-      outline: none;
-
-      border-color: #93c5fd;
-
-      box-shadow:
-        0 0 0 3px
-        rgba(147, 197, 253, 0.15);
-    }
-
-    /* =========================================
-       MAIN
-       ========================================= */
-
     .container {
       max-width: 1500px;
-
       margin: 0 auto;
-
-      padding:
-        52px 25px 80px;
+      padding: 52px 25px 80px;
     }
-
-    /* =========================================
-       HERO
-       ========================================= */
 
     .hero {
       margin-bottom: 32px;
@@ -209,67 +113,73 @@
 
     .hero h2 {
       font-size: 40px;
-
       line-height: 1.15;
-
       letter-spacing: -1.1px;
-
-      margin:
-        0 0 12px;
-
+      margin: 0 0 12px;
       color: var(--heading);
     }
 
     .hero p {
       color: var(--muted);
-
       font-size: 17px;
-
       margin: 0;
-
       max-width: 720px;
     }
 
-    /* =========================================
-       CARDS
-       ========================================= */
-
     .card {
       background: var(--surface);
-
       border-radius: 18px;
-
       padding: 30px;
-
-      border:
-        1px solid var(--border);
-
+      border: 1px solid var(--border);
       box-shadow: var(--shadow-md);
-
       margin-bottom: 28px;
-
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
     }
 
-    .card:hover {
-      border-color: #d7def0;
+    .context-banner {
+      display: none;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 22px;
+      padding: 14px 16px;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      background: linear-gradient(135deg,#eff6ff,#f8fbff);
+      color: #1e40af;
+      font-size: 13px;
+      line-height: 1.55;
     }
 
-    /* =========================================
-       FORM
-       ========================================= */
+    .context-banner.visible {
+      display: flex;
+    }
+
+    .context-icon {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: #dbeafe;
+      font-size: 15px;
+    }
+
+    .context-title {
+      font-weight: 800;
+      margin-bottom: 2px;
+      color: #1e3a8a;
+    }
+
+    .context-detail {
+      color: #475569;
+    }
 
     label {
       display: block;
-
       font-size: 14px;
-
       font-weight: 700;
-
       margin-bottom: 9px;
-
       color: #344054;
     }
 
@@ -277,70 +187,38 @@
     select,
     input {
       width: 100%;
-
-      border:
-        1px solid #d0d5dd;
-
+      border: 1px solid #d0d5dd;
       border-radius: 10px;
-
-      padding:
-        13px 14px;
-
+      padding: 13px 14px;
       font-size: 14px;
-
       background: white;
-
       color: var(--text);
-
       outline: none;
-
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-    }
-
-    textarea::placeholder {
-      color: #98a2b3;
-    }
-
-    textarea:hover,
-    select:hover,
-    input:hover {
-      border-color: #98a2b3;
+      transition: border-color .2s ease, box-shadow .2s ease;
     }
 
     textarea:focus,
     select:focus,
     input:focus {
       border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.10);
+    }
 
-      box-shadow:
-        0 0 0 4px
-        rgba(37, 99, 235, 0.10);
+    textarea::placeholder {
+      color: #98a2b3;
     }
 
     textarea {
       min-height: 175px;
-
       resize: vertical;
-
       margin-bottom: 22px;
-
       line-height: 1.6;
     }
 
-    /* =========================================
-       OPTIONS
-       ========================================= */
-
     .options-grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
-
+      grid-template-columns: repeat(3,1fr);
       gap: 18px;
-
       margin-bottom: 22px;
     }
 
@@ -348,481 +226,171 @@
       min-width: 0;
     }
 
-    /* =========================================
-       GENERATE BUTTON
-       ========================================= */
-
     button {
       border: none;
-
       border-radius: 11px;
-
-      padding:
-        15px 22px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #2563eb,
-          #1d4ed8
-        );
-
+      padding: 15px 22px;
+      background: linear-gradient(135deg,#2563eb,#1d4ed8);
       color: white;
-
       font-size: 15px;
-
       font-weight: 700;
-
       cursor: pointer;
-
-      box-shadow:
-        0 6px 16px
-        rgba(37, 99, 235, 0.22);
-
-      transition:
-        transform 0.15s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+      box-shadow: 0 6px 16px rgba(37,99,235,.22);
     }
 
     button:hover {
-      background:
-        linear-gradient(
-          135deg,
-          #1d4ed8,
-          #1e40af
-        );
-
-      transform:
-        translateY(-1px);
-
-      box-shadow:
-        0 9px 20px
-        rgba(37, 99, 235, 0.28);
-    }
-
-    button:active {
-      transform:
-        translateY(0);
+      background: linear-gradient(135deg,#1d4ed8,#1e40af);
     }
 
     button:disabled {
       background: #94a3b8;
-
-      opacity: 1;
-
       box-shadow: none;
-
       cursor: wait;
-
-      transform: none;
     }
 
     #generateButton {
       width: 100%;
     }
 
-    /* =========================================
-       STATUS
-       ========================================= */
-
-    .status {
+    .status,
+    .error {
       margin-top: 16px;
-
       padding: 13px 15px;
-
-      font-size: 14px;
-
-      color: #344054;
-
-      background: #f8fafc;
-
-      border:
-        1px solid var(--border);
-
       border-radius: 10px;
-
-      display: none;
-
+      font-size: 14px;
       font-weight: 600;
-
       text-align: center;
     }
 
-    /* =========================================
-       ERROR
-       ========================================= */
-
-    .error {
-      margin-top: 16px;
-
-      padding:
-        13px 15px;
-
-      border-radius: 10px;
-
-      background: #fef2f2;
-
-      color: var(--danger);
-
-      border:
-        1px solid #fecaca;
-
+    .status {
       display: none;
-
-      white-space: pre-wrap;
-
-      font-size: 14px;
-
-      font-weight: 600;
+      color: #344054;
+      background: #f8fafc;
+      border: 1px solid var(--border);
     }
 
-    /* =========================================
-       RESULTS
-       ========================================= */
+    .error {
+      display: none;
+      color: var(--danger);
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      white-space: pre-wrap;
+      text-align: left;
+    }
 
     .results-header {
       display: flex;
-
       justify-content: space-between;
-
       align-items: center;
-
-      gap: 20px;
-
       margin-bottom: 20px;
     }
 
     .results-header h3 {
       margin: 0;
-
       font-size: 25px;
-
       color: var(--heading);
-
-      letter-spacing: -0.5px;
     }
-
-    /* =========================================
-       TABLE
-       ========================================= */
 
     .table-wrapper {
       overflow-x: auto;
-
-      border:
-        1px solid var(--border);
-
+      border: 1px solid var(--border);
       border-radius: 14px;
-
       background: white;
-
       box-shadow: var(--shadow-sm);
     }
 
     table {
       width: 100%;
-
       border-collapse: separate;
-
       border-spacing: 0;
-
       min-width: 1300px;
     }
 
     th,
     td {
-      padding:
-        14px;
-
-      border-right:
-        1px solid var(--border);
-
-      border-bottom:
-        1px solid var(--border);
-
+      padding: 14px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
       vertical-align: top;
-
       text-align: left;
-
       font-size: 13px;
-
       line-height: 1.55;
     }
 
-    th:last-child,
-    td:last-child {
-      border-right: none;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
     th {
-      background:
-        #f1f5ff;
-
+      background: #f1f5ff;
       color: #344054;
-
       font-weight: 800;
-
       font-size: 12px;
-
       white-space: nowrap;
-
       text-transform: uppercase;
-
-      letter-spacing: 0.3px;
+      letter-spacing: .3px;
     }
 
     td {
       color: #475467;
     }
 
-    tbody tr:hover td {
-      background: #fafbff;
-    }
-
-    /* =========================================
-       PRIORITY
-       ========================================= */
-
     .priority {
       font-weight: 700;
-
       white-space: nowrap;
-
-      color: #344054;
     }
-
-    /* =========================================
-       API DETAILS
-       ========================================= */
 
     .api-details {
       min-width: 260px;
-
-      white-space: normal;
     }
 
     .api-details pre,
     .test-data {
       margin: 0;
-
       white-space: pre-wrap;
-
       word-break: break-word;
-
-      font-family:
-        Consolas,
-        Monaco,
-        monospace;
-
+      font-family: Consolas, Monaco, monospace;
       font-size: 12px;
-
       line-height: 1.5;
-
-      background:
-        #f8fafc;
-
-      border:
-        1px solid #edf0f5;
-
-      padding:
-        9px;
-
+      background: #f8fafc;
+      border: 1px solid #edf0f5;
+      padding: 9px;
       border-radius: 8px;
-
       color: #344054;
     }
 
-    /* =========================================
-       EMPTY
-       ========================================= */
-
-    .empty {
-      text-align: center;
-
-      color: #64748b;
-
-      padding: 40px;
-
-      font-size: 14px;
-    }
-
-    /* =========================================
-       TABLET
-       ========================================= */
-
-    @media (max-width: 1000px) {
-
+    @media (max-width:1000px) {
       .options-grid {
-        grid-template-columns:
-          repeat(2, 1fr);
+        grid-template-columns: repeat(2,1fr);
       }
 
       .hero h2 {
         font-size: 32px;
       }
-
-      .container {
-        padding-top: 40px;
-      }
     }
 
-    /* =========================================
-       MOBILE
-       ========================================= */
-
-    @media (max-width: 700px) {
-
+    @media (max-width:700px) {
       header {
-        padding:
-          15px 16px;
-
-        align-items:
-          flex-start;
-
-        flex-direction:
-          column;
+        padding: 15px 16px;
+        align-items: flex-start;
+        flex-direction: column;
       }
 
       .brand {
         width: 100%;
-
-        justify-content:
-          space-between;
-
-        align-items:
-          center;
-      }
-
-      .brand h1 {
-        font-size: 21px;
-      }
-
-      .badge {
-        font-size: 10px;
-
-        padding:
-          6px 9px;
-      }
-
-      .language-box {
-        width: 100%;
-
-        justify-content:
-          space-between;
-      }
-
-      .language-box select {
-        min-width: 130px;
+        justify-content: space-between;
       }
 
       .container {
-        padding:
-          28px 14px 55px;
-      }
-
-      .hero {
-        margin-bottom: 25px;
+        padding: 28px 14px 55px;
       }
 
       .hero h2 {
         font-size: 28px;
-
-        letter-spacing:
-          -0.7px;
-      }
-
-      .hero p {
-        font-size: 15px;
       }
 
       .card {
         padding: 20px;
-
-        border-radius: 15px;
       }
 
       .options-grid {
-        grid-template-columns:
-          1fr;
-
-        gap: 14px;
-      }
-
-      textarea {
-        min-height: 165px;
-      }
-
-      .results-header {
-        align-items:
-          flex-start;
-
-        flex-direction:
-          column;
-      }
-
-      .results-header h3 {
-        font-size: 22px;
-      }
-
-      .table-wrapper {
-        margin:
-          0 -2px;
-      }
-    }
-
-    /* =========================================
-       SMALL MOBILE
-       ========================================= */
-
-    @media (max-width: 450px) {
-
-      .brand {
-        align-items:
-          flex-start;
-
-        flex-direction:
-          column;
-
-        gap: 8px;
-      }
-
-      .badge {
-        align-self:
-          flex-start;
-      }
-
-      .language-box {
-        align-items:
-          center;
-      }
-
-      .container {
-        padding:
-          22px 12px 45px;
-      }
-
-      .hero h2 {
-        font-size: 25px;
-      }
-
-      .card {
-        padding: 17px;
-      }
-
-      button {
-        padding:
-          14px 18px;
-      }
-
-      th,
-      td {
-        padding:
-          12px;
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -831,70 +399,48 @@
 <body>
 
 <header>
-
   <div class="brand">
-
-    <h1>
-      BAForge AI
-    </h1>
-
-    <span
-      class="badge"
-      id="badge"
-    >
-      UAT Test Case Generator
-    </span>
-
+    <h1>BAForge AI</h1>
+    <span class="badge" id="badge">UAT Test Case Generator</span>
   </div>
 
   <div class="language-box">
-
-    <label
-      for="language"
-      id="languageLabel"
-    >
-      Language
-    </label>
+    <label for="language" id="languageLabel">Language</label>
 
     <select id="language">
-
-      <option value="tr">
-        Türkçe
-      </option>
-
-      <option
-        value="en"
-        selected
-      >
-        English
-      </option>
-
+      <option value="tr">Türkçe</option>
+      <option value="en" selected>English</option>
     </select>
-
   </div>
-
 </header>
 
 <main class="container">
 
   <section class="hero">
-
-    <h2 id="heroTitle">
-      Turn Requirements Into Test Cases
-    </h2>
+    <h2 id="heroTitle">Turn Requirements Into Test Cases</h2>
 
     <p id="heroSubtitle">
       Generate professional UAT test cases from your requirements in seconds.
     </p>
-
   </section>
 
   <section class="card">
 
-    <label
-      for="requirement"
-      id="requirementLabel"
-    >
+    <div class="context-banner" id="contextBanner">
+      <div class="context-icon">✓</div>
+
+      <div>
+        <div class="context-title" id="contextTitle">
+          Acceptance Criteria context loaded
+        </div>
+
+        <div class="context-detail" id="contextDetail">
+          The requirement, user story, acceptance criteria and related BA context from the previous workflow step have been transferred to UAT.
+        </div>
+      </div>
+    </div>
+
+    <label for="requirement" id="requirementLabel">
       Requirement
     </label>
 
@@ -906,48 +452,19 @@
     <div class="options-grid">
 
       <div class="field">
-
-        <label
-          for="type"
-          id="typeLabel"
-        >
-          Test Type
-        </label>
+        <label for="type" id="typeLabel">Test Type</label>
 
         <select id="type">
-
-          <option value="Functional">
-            Functional
-          </option>
-
-          <option value="Negative">
-            Negative
-          </option>
-
-          <option value="Edge Case">
-            Edge Case
-          </option>
-
-          <option value="Regression">
-            Regression
-          </option>
-
-          <option value="API">
-            API
-          </option>
-
+          <option value="Functional">Functional</option>
+          <option value="Negative">Negative</option>
+          <option value="Edge Case">Edge Case</option>
+          <option value="Regression">Regression</option>
+          <option value="API">API</option>
         </select>
-
       </div>
 
       <div class="field">
-
-        <label
-          for="number"
-          id="numberLabel"
-        >
-          Number of Cases
-        </label>
+        <label for="number" id="numberLabel">Number of Cases</label>
 
         <input
           id="number"
@@ -957,119 +474,43 @@
           step="1"
           value="5"
         />
-
       </div>
 
       <div class="field">
-
-        <label
-          for="detail"
-          id="detailLabel"
-        >
-          Detail Level
-        </label>
+        <label for="detail" id="detailLabel">Detail Level</label>
 
         <select id="detail">
-
-          <option value="Basic">
-            Basic
-          </option>
-
-          <option
-            value="Professional"
-            selected
-          >
-            Professional
-          </option>
-
-          <option value="Comprehensive">
-            Comprehensive
-          </option>
-
+          <option value="Basic">Basic</option>
+          <option value="Professional" selected>Professional</option>
+          <option value="Comprehensive">Comprehensive</option>
         </select>
-
       </div>
 
       <div class="field">
-
-        <label
-          for="focus"
-          id="focusLabel"
-        >
-          Test Focus
-        </label>
+        <label for="focus" id="focusLabel">Test Focus</label>
 
         <select id="focus">
-
-          <option value="All">
-            All
-          </option>
-
-          <option value="Business Rules">
-            Business Rules
-          </option>
-
-          <option value="Validation">
-            Validation
-          </option>
-
-          <option value="Boundary">
-            Boundary
-          </option>
-
-          <option value="Error Handling">
-            Error Handling
-          </option>
-
-          <option value="Security">
-            Security
-          </option>
-
-          <option value="Integration">
-            Integration
-          </option>
-
-          <option value="Usability">
-            Usability
-          </option>
-
+          <option value="All">All</option>
+          <option value="Business Rules">Business Rules</option>
+          <option value="Validation">Validation</option>
+          <option value="Boundary">Boundary</option>
+          <option value="Error Handling">Error Handling</option>
+          <option value="Security">Security</option>
+          <option value="Integration">Integration</option>
+          <option value="Usability">Usability</option>
         </select>
-
       </div>
 
       <div class="field">
-
-        <label
-          for="priority"
-          id="priorityLabel"
-        >
-          Priority
-        </label>
+        <label for="priority" id="priorityLabel">Priority</label>
 
         <select id="priority">
-
-          <option value="All">
-            All
-          </option>
-
-          <option value="Critical">
-            Critical
-          </option>
-
-          <option value="High">
-            High
-          </option>
-
-          <option value="Medium">
-            Medium
-          </option>
-
-          <option value="Low">
-            Low
-          </option>
-
+          <option value="All">All</option>
+          <option value="Critical">Critical</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
         </select>
-
       </div>
 
     </div>
@@ -1078,15 +519,8 @@
       Generate Test Cases
     </button>
 
-    <div
-      class="status"
-      id="status"
-    ></div>
-
-    <div
-      class="error"
-      id="error"
-    ></div>
+    <div class="status" id="status"></div>
+    <div class="error" id="error"></div>
 
   </section>
 
@@ -1097,68 +531,29 @@
   >
 
     <div class="results-header">
-
-      <h3 id="resultsTitle">
-        Generated Test Cases
-      </h3>
-
+      <h3 id="resultsTitle">Generated Test Cases</h3>
     </div>
 
     <div class="table-wrapper">
-
       <table>
 
         <thead>
-
           <tr>
-
-            <th>
-              ID
-            </th>
-
-            <th id="titleHeader">
-              Title
-            </th>
-
-            <th id="objectiveHeader">
-              Objective
-            </th>
-
-            <th id="preconditionsHeader">
-              Preconditions
-            </th>
-
-            <th id="stepsHeader">
-              Steps
-            </th>
-
-            <th id="expectedHeader">
-              Expected Result
-            </th>
-
-            <th id="priorityHeader">
-              Priority
-            </th>
-
-            <th id="testDataHeader">
-              Test Data
-            </th>
-
-            <th
-              id="apiHeader"
-              style="display:none;"
-            >
-              API Details
-            </th>
-
+            <th>ID</th>
+            <th id="titleHeader">Title</th>
+            <th id="objectiveHeader">Objective</th>
+            <th id="preconditionsHeader">Preconditions</th>
+            <th id="stepsHeader">Steps</th>
+            <th id="expectedHeader">Expected Result</th>
+            <th id="priorityHeader">Priority</th>
+            <th id="testDataHeader">Test Data</th>
+            <th id="apiHeader" style="display:none;">API Details</th>
           </tr>
-
         </thead>
 
         <tbody id="resultsBody"></tbody>
 
       </table>
-
     </div>
 
   </section>
@@ -1166,349 +561,731 @@
 </main>
 
 <script>
-
   const translations = {
-
     en: {
-
-      badge:
-        "UAT Test Case Generator",
-
-      heroTitle:
-        "Turn Requirements Into Test Cases",
-
-      heroSubtitle:
-        "Generate professional UAT test cases from your requirements in seconds.",
-
-      language:
-        "Language",
-
-      requirement:
-        "Requirement",
-
-      requirementPlaceholder:
-        "Example: The user should be able to transfer money to another bank account using IBAN.",
-
-      testType:
-        "Test Type",
-
-      number:
-        "Number of Cases",
-
-      detail:
-        "Detail Level",
-
-      focus:
-        "Test Focus",
-
-      priority:
-        "Priority",
-
-      generate:
-        "Generate Test Cases",
-
-      generating:
-        "Generating test cases...",
-
-      results:
-        "Generated Test Cases",
-
-      title:
-        "Title",
-
-      objective:
-        "Objective",
-
-      preconditions:
-        "Preconditions",
-
-      steps:
-        "Steps",
-
-      expected:
-        "Expected Result",
-
-      priorityHeader:
-        "Priority",
-
-      testData:
-        "Test Data",
-
-      apiDetails:
-        "API Details",
-
-      requirementError:
-        "Please enter a clear requirement with at least 15 characters and 3 words.",
-
-      numberError:
-        "Number of test cases must be between 1 and 50.",
-
-      apiError:
-        "The server returned an unexpected response.",
-
-      noCases:
-        "No test cases were generated.",
-
-      genericError:
-        "Something went wrong while generating test cases."
-
+      badge: "UAT Test Case Generator",
+      heroTitle: "Turn Requirements Into Test Cases",
+      heroSubtitle: "Generate professional UAT test cases from your requirements in seconds.",
+      language: "Language",
+      requirement: "Requirement",
+      requirementPlaceholder: "Example: The user should be able to transfer money to another bank account using IBAN.",
+      testType: "Test Type",
+      number: "Number of Cases",
+      detail: "Detail Level",
+      focus: "Test Focus",
+      priority: "Priority",
+      generate: "Generate Test Cases",
+      generating: "Generating test cases...",
+      results: "Generated Test Cases",
+      title: "Title",
+      objective: "Objective",
+      preconditions: "Preconditions",
+      steps: "Steps",
+      expected: "Expected Result",
+      priorityHeader: "Priority",
+      testData: "Test Data",
+      apiDetails: "API Details",
+      contextTitle: "Acceptance Criteria context loaded",
+      contextDetail: "The requirement, user story, acceptance criteria and related BA context from the previous workflow step have been transferred to UAT.",
+      requirementError: "Please enter a clear requirement with at least 15 characters and 3 words.",
+      numberError: "Number of test cases must be between 1 and 50.",
+      apiError: "The server returned an unexpected response.",
+      noCases: "No test cases were generated.",
+      genericError: "Something went wrong while generating test cases."
     },
 
     tr: {
-
-      badge:
-        "UAT Test Case Generator",
-
-      heroTitle:
-        "Gereksinimleri Test Case'lere Dönüştür",
-
-      heroSubtitle:
-        "Gereksinimlerinizden saniyeler içinde profesyonel UAT test case'leri oluşturun.",
-
-      language:
-        "Dil",
-
-      requirement:
-        "Gereksinim",
-
-      requirementPlaceholder:
-        "Örnek: Kullanıcı IBAN kullanarak başka bir banka hesabına para transferi yapabilmelidir.",
-
-      testType:
-        "Test Tipi",
-
-      number:
-        "Test Case Sayısı",
-
-      detail:
-        "Detay Seviyesi",
-
-      focus:
-        "Test Odağı",
-
-      priority:
-        "Öncelik",
-
-      generate:
-        "Test Case Oluştur",
-
-      generating:
-        "Test case'ler oluşturuluyor...",
-
-      results:
-        "Oluşturulan Test Case'ler",
-
-      title:
-        "Başlık",
-
-      objective:
-        "Amaç",
-
-      preconditions:
-        "Ön Koşullar",
-
-      steps:
-        "Adımlar",
-
-      expected:
-        "Beklenen Sonuç",
-
-      priorityHeader:
-        "Öncelik",
-
-      testData:
-        "Test Verisi",
-
-      apiDetails:
-        "API Detayları",
-
-      requirementError:
-        "Lütfen en az 15 karakter ve 3 kelime içeren açık bir gereksinim girin.",
-
-      numberError:
-        "Test case sayısı 1 ile 50 arasında olmalıdır.",
-
-      apiError:
-        "Sunucudan beklenmeyen bir cevap geldi.",
-
-      noCases:
-        "Test case oluşturulamadı.",
-
-      genericError:
-        "Test case oluşturulurken bir hata oluştu."
-
+      badge: "UAT Test Case Generator",
+      heroTitle: "Gereksinimleri Test Case'lere Dönüştür",
+      heroSubtitle: "Gereksinimlerinizden saniyeler içinde profesyonel UAT test case'leri oluşturun.",
+      language: "Dil",
+      requirement: "Gereksinim",
+      requirementPlaceholder: "Örnek: Kullanıcı IBAN kullanarak başka bir banka hesabına para transferi yapabilmelidir.",
+      testType: "Test Tipi",
+      number: "Test Case Sayısı",
+      detail: "Detay Seviyesi",
+      focus: "Test Odağı",
+      priority: "Öncelik",
+      generate: "Test Case Oluştur",
+      generating: "Test case'ler oluşturuluyor...",
+      results: "Oluşturulan Test Case'ler",
+      title: "Başlık",
+      objective: "Amaç",
+      preconditions: "Ön Koşullar",
+      steps: "Adımlar",
+      expected: "Beklenen Sonuç",
+      priorityHeader: "Öncelik",
+      testData: "Test Verisi",
+      apiDetails: "API Detayları",
+      contextTitle: "Acceptance Criteria bilgisi aktarıldı",
+      contextDetail: "Önceki workflow adımındaki gereksinim, user story, acceptance criteria ve ilgili BA bilgileri UAT'e aktarıldı.",
+      requirementError: "Lütfen en az 15 karakter ve 3 kelime içeren açık bir gereksinim girin.",
+      numberError: "Test case sayısı 1 ile 50 arasında olmalıdır.",
+      apiError: "Sunucudan beklenmeyen bir cevap geldi.",
+      noCases: "Test case oluşturulamadı.",
+      genericError: "Test case oluşturulurken bir hata oluştu."
     }
-
   };
 
-  const languageEl =
-    document.getElementById("language");
-
-  const requirementEl =
-    document.getElementById("requirement");
-
-  const typeEl =
-    document.getElementById("type");
-
-  const numberEl =
-    document.getElementById("number");
-
-  const detailEl =
-    document.getElementById("detail");
-
-  const focusEl =
-    document.getElementById("focus");
-
-  const priorityEl =
-    document.getElementById("priority");
-
-  const generateButton =
-    document.getElementById(
-      "generateButton"
-    );
-
-  const statusEl =
-    document.getElementById("status");
-
-  const errorEl =
-    document.getElementById("error");
-
-  const resultsCard =
-    document.getElementById(
-      "resultsCard"
-    );
-
-  const resultsBody =
-    document.getElementById(
-      "resultsBody"
-    );
+  const languageEl = document.getElementById("language");
+  const requirementEl = document.getElementById("requirement");
+  const typeEl = document.getElementById("type");
+  const numberEl = document.getElementById("number");
+  const detailEl = document.getElementById("detail");
+  const focusEl = document.getElementById("focus");
+  const priorityEl = document.getElementById("priority");
+  const generateButton = document.getElementById("generateButton");
+  const statusEl = document.getElementById("status");
+  const errorEl = document.getElementById("error");
+  const resultsCard = document.getElementById("resultsCard");
+  const resultsBody = document.getElementById("resultsBody");
+  const contextBanner = document.getElementById("contextBanner");
 
   function t(key) {
-
-    return translations[
-      languageEl.value
-    ][key];
-
+    return translations[languageEl.value][key];
   }
 
   function updateLanguage() {
+    document.documentElement.lang = languageEl.value;
 
-    document.documentElement.lang =
-      languageEl.value;
+    document.getElementById("badge").textContent = t("badge");
+    document.getElementById("heroTitle").textContent = t("heroTitle");
+    document.getElementById("heroSubtitle").textContent = t("heroSubtitle");
+    document.getElementById("languageLabel").textContent = t("language");
+    document.getElementById("requirementLabel").textContent = t("requirement");
+    requirementEl.placeholder = t("requirementPlaceholder");
+    document.getElementById("typeLabel").textContent = t("testType");
+    document.getElementById("numberLabel").textContent = t("number");
+    document.getElementById("detailLabel").textContent = t("detail");
+    document.getElementById("focusLabel").textContent = t("focus");
+    document.getElementById("priorityLabel").textContent = t("priority");
 
-    document.getElementById(
-      "badge"
-    ).textContent =
-      t("badge");
+    generateButton.textContent = t("generate");
 
-    document.getElementById(
-      "heroTitle"
-    ).textContent =
-      t("heroTitle");
-
-    document.getElementById(
-      "heroSubtitle"
-    ).textContent =
-      t("heroSubtitle");
-
-    document.getElementById(
-      "languageLabel"
-    ).textContent =
-      t("language");
-
-    document.getElementById(
-      "requirementLabel"
-    ).textContent =
-      t("requirement");
-
-    document.getElementById(
-      "requirement"
-    ).placeholder =
-      t("requirementPlaceholder");
-
-    document.getElementById(
-      "typeLabel"
-    ).textContent =
-      t("testType");
-
-    document.getElementById(
-      "numberLabel"
-    ).textContent =
-      t("number");
-
-    document.getElementById(
-      "detailLabel"
-    ).textContent =
-      t("detail");
-
-    document.getElementById(
-      "focusLabel"
-    ).textContent =
-      t("focus");
-
-    document.getElementById(
-      "priorityLabel"
-    ).textContent =
-      t("priority");
-
-    generateButton.textContent =
-      t("generate");
-
-    document.getElementById(
-      "resultsTitle"
-    ).textContent =
-      t("results");
-
-    document.getElementById(
-      "titleHeader"
-    ).textContent =
-      t("title");
-
-    document.getElementById(
-      "objectiveHeader"
-    ).textContent =
-      t("objective");
-
-    document.getElementById(
-      "preconditionsHeader"
-    ).textContent =
-      t("preconditions");
-
-    document.getElementById(
-      "stepsHeader"
-    ).textContent =
-      t("steps");
-
-    document.getElementById(
-      "expectedHeader"
-    ).textContent =
-      t("expected");
-
-    document.getElementById(
-      "priorityHeader"
-    ).textContent =
-      t("priorityHeader");
-
-    document.getElementById(
-      "testDataHeader"
-    ).textContent =
-      t("testData");
-
-    document.getElementById(
-      "apiHeader"
-    ).textContent =
-      t("apiDetails");
-
+    document.getElementById("resultsTitle").textContent = t("results");
+    document.getElementById("titleHeader").textContent = t("title");
+    document.getElementById("objectiveHeader").textContent = t("objective");
+    document.getElementById("preconditionsHeader").textContent = t("preconditions");
+    document.getElementById("stepsHeader").textContent = t("steps");
+    document.getElementById("expectedHeader").textContent = t("expected");
+    document.getElementById("priorityHeader").textContent = t("priorityHeader");
+    document.getElementById("testDataHeader").textContent = t("testData");
+    document.getElementById("apiHeader").textContent = t("apiDetails");
+    document.getElementById("contextTitle").textContent = t("contextTitle");
+    document.getElementById("contextDetail").textContent = t("contextDetail");
   }
 
-  languageEl.addEventListener(
-    "change",
-    updateLanguage
-  );
+  languageEl.addEventListener("change", updateLanguage);
+
+  /*
+   * =========================================================
+   * WORKFLOW CONTEXT
+   * =========================================================
+   */
+
+  function safeParse(value) {
+    try {
+      if (!value) return null;
+      return JSON.parse(value);
+    } catch {
+      return null;
+    }
+  }
+
+  function readStorage(storage, key) {
+    try {
+      return safeParse(
+        storage.getItem(key)
+      );
+    } catch {
+      return null;
+    }
+  }
+
+  function firstNonEmpty(values) {
+    for (const value of values) {
+      if (
+        value !== undefined &&
+        value !== null &&
+        String(value).trim() !== ""
+      ) {
+        return value;
+      }
+    }
+
+    return "";
+  }
+
+  function normalizeText(value) {
+    if (
+      value === undefined ||
+      value === null
+    ) {
+      return "";
+    }
+
+    if (
+      typeof value === "string"
+    ) {
+      return value.trim();
+    }
+
+    if (
+      Array.isArray(value)
+    ) {
+      return value
+        .map(normalizeText)
+        .filter(Boolean)
+        .join("\n");
+    }
+
+    if (
+      typeof value === "object"
+    ) {
+      return JSON.stringify(
+        value,
+        null,
+        2
+      );
+    }
+
+    return String(value).trim();
+  }
+
+  function normalizeList(value) {
+    if (!value) {
+      return [];
+    }
+
+    if (
+      typeof value === "string"
+    ) {
+      return value
+        .split(/\n+/)
+        .map(
+          item =>
+            item
+              .replace(
+                /^\s*(?:[-•*]|\d+[.)])\s*/,
+                ""
+              )
+              .trim()
+        )
+        .filter(Boolean);
+    }
+
+    if (
+      Array.isArray(value)
+    ) {
+      return value
+        .map(item => {
+
+          if (
+            typeof item === "string"
+          ) {
+            return item.trim();
+          }
+
+          if (
+            typeof item === "object" &&
+            item !== null
+          ) {
+            return normalizeText(
+              firstNonEmpty([
+                item.text,
+                item.criterion,
+                item.description,
+                item.then,
+                item.expected,
+                item.given,
+                item.when
+              ])
+            );
+          }
+
+          return String(item);
+
+        })
+        .filter(Boolean);
+    }
+
+    return [];
+  }
+
+  function unwrapContext(data) {
+    if (
+      !data ||
+      typeof data !== "object"
+    ) {
+      return null;
+    }
+
+    if (
+      data.context &&
+      typeof data.context === "object"
+    ) {
+      return data.context;
+    }
+
+    if (
+      data.payload &&
+      typeof data.payload === "object"
+    ) {
+      return data.payload;
+    }
+
+    if (
+      data.data &&
+      typeof data.data === "object"
+    ) {
+      return data.data;
+    }
+
+    return data;
+  }
+
+  function getCandidateScore(context) {
+    if (!context) {
+      return 0;
+    }
+
+    let score = 0;
+
+    const requirement =
+      firstNonEmpty([
+        context.requirement,
+        context.sourceRequirement,
+        context.originalRequirement,
+        context.userStoryText,
+        context.story
+      ]);
+
+    let userStory = "";
+
+    if (
+      context.userStory &&
+      typeof context.userStory === "object"
+    ) {
+      userStory =
+        firstNonEmpty([
+          context.userStory.story,
+          context.userStory.userStory,
+          context.userStory.text,
+          context.userStory.requirement
+        ]);
+    } else {
+      userStory =
+        firstNonEmpty([
+          context.userStory
+        ]);
+    }
+
+    const criteria =
+      firstNonEmpty([
+        context.acceptanceCriteria,
+        context.acceptance_criteria,
+        context.criteria,
+        context.acceptanceCriteriaList
+      ]);
+
+    const rules =
+      firstNonEmpty([
+        context.businessRules,
+        context.business_rules
+      ]);
+
+    const assumptions =
+      context.assumptions;
+
+    if (
+      normalizeText(requirement)
+    ) {
+      score += 10;
+    }
+
+    if (
+      normalizeText(userStory)
+    ) {
+      score += 8;
+    }
+
+    if (
+      normalizeList(criteria).length
+    ) {
+      score += 8;
+    }
+
+    if (
+      normalizeList(rules).length
+    ) {
+      score += 4;
+    }
+
+    if (
+      normalizeList(assumptions).length
+    ) {
+      score += 2;
+    }
+
+    return score;
+  }
+
+  function collectWorkflowContexts() {
+    const keys = [
+      "baforge-current-uat-context",
+      "baforge-uat-context",
+      "baforge-current-acceptance-criteria",
+      "baforge-acceptance-criteria-draft",
+      "baforge-user-story-context",
+      "baforge-uat-active-context"
+    ];
+
+    const candidates = [];
+
+    for (
+      const storage of [
+        sessionStorage,
+        localStorage
+      ]
+    ) {
+
+      for (
+        const key of keys
+      ) {
+
+        const raw =
+          readStorage(
+            storage,
+            key
+          );
+
+        if (!raw) {
+          continue;
+        }
+
+        const context =
+          unwrapContext(raw);
+
+        if (!context) {
+          continue;
+        }
+
+        candidates.push({
+          key,
+          context,
+          score:
+            getCandidateScore(
+              context
+            )
+        });
+
+      }
+    }
+
+    candidates.sort(
+      (a, b) =>
+        b.score - a.score
+    );
+
+    return candidates;
+  }
+
+  function getBestWorkflowContext() {
+    const candidates =
+      collectWorkflowContexts();
+
+    if (
+      !candidates.length
+    ) {
+      return null;
+    }
+
+    return candidates[0].context;
+  }
+
+  /*
+   * =========================================================
+   * BUILD UAT REQUIREMENT
+   *
+   * IMPORTANT FIX:
+   * User Story can be an object.
+   * We now extract story/text/requirement
+   * instead of displaying the complete JSON object.
+   * =========================================================
+   */
+
+  function buildUatRequirement(context) {
+
+    if (!context) {
+      return "";
+    }
+
+    const requirement =
+      normalizeText(
+        firstNonEmpty([
+          context.requirement,
+          context.sourceRequirement,
+          context.originalRequirement
+        ])
+      );
+
+    let userStory = "";
+
+    if (
+      context.userStory &&
+      typeof context.userStory === "object"
+    ) {
+
+      userStory =
+        normalizeText(
+          firstNonEmpty([
+            context.userStory.story,
+            context.userStory.userStory,
+            context.userStory.text,
+            context.userStory.requirement
+          ])
+        );
+
+    } else {
+
+      userStory =
+        normalizeText(
+          firstNonEmpty([
+            context.userStoryText,
+            context.userStory,
+            context.story
+          ])
+        );
+
+    }
+
+    const acceptanceCriteria =
+      normalizeList(
+        firstNonEmpty([
+          context.acceptanceCriteria,
+          context.acceptance_criteria,
+          context.criteria,
+          context.acceptanceCriteriaList
+        ])
+      );
+
+    const businessRules =
+      normalizeList(
+        firstNonEmpty([
+          context.businessRules,
+          context.business_rules
+        ])
+      );
+
+    const assumptions =
+      normalizeList(
+        context.assumptions
+      );
+
+    const parts = [];
+
+    if (requirement) {
+
+      parts.push(
+        "Requirement:\n" +
+        requirement
+      );
+
+    }
+
+    if (
+      userStory &&
+      userStory !== requirement
+    ) {
+
+      parts.push(
+        "User Story:\n" +
+        userStory
+      );
+
+    }
+
+    if (
+      acceptanceCriteria.length
+    ) {
+
+      parts.push(
+        "Acceptance Criteria:\n" +
+        acceptanceCriteria
+          .map(
+            (item, index) =>
+              `${index + 1}. ${item}`
+          )
+          .join("\n")
+      );
+
+    }
+
+    if (
+      businessRules.length
+    ) {
+
+      parts.push(
+        "Business Rules:\n" +
+        businessRules
+          .map(
+            (item, index) =>
+              `${index + 1}. ${item}`
+          )
+          .join("\n")
+      );
+
+    }
+
+    if (
+      assumptions.length
+    ) {
+
+      parts.push(
+        "Assumptions:\n" +
+        assumptions
+          .map(
+            (item, index) =>
+              `${index + 1}. ${item}`
+          )
+          .join("\n")
+      );
+
+    }
+
+    return parts.join(
+      "\n\n"
+    );
+  }
+
+  function loadWorkflowContext() {
+
+    const context =
+      getBestWorkflowContext();
+
+    if (!context) {
+
+      console.log(
+        "BAForge UAT: No workflow context found."
+      );
+
+      return;
+    }
+
+    const generatedRequirement =
+      buildUatRequirement(
+        context
+      );
+
+    if (
+      !generatedRequirement
+    ) {
+
+      console.log(
+        "BAForge UAT: Context found but no usable requirement."
+      );
+
+      return;
+    }
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const fromAcceptanceCriteria =
+      params.get("from") ===
+      "acceptance-criteria";
+
+    if (
+      fromAcceptanceCriteria ||
+      !requirementEl.value.trim()
+    ) {
+
+      requirementEl.value =
+        generatedRequirement;
+
+    }
+
+    contextBanner.classList.add(
+      "visible"
+    );
+
+    const activeContext = {
+      ...context,
+      uatRequirement:
+        generatedRequirement,
+      loadedAt:
+        new Date().toISOString()
+    };
+
+    try {
+
+      sessionStorage.setItem(
+        "baforge-uat-active-context",
+        JSON.stringify(
+          activeContext
+        )
+      );
+
+    } catch {}
+
+    try {
+
+      localStorage.setItem(
+        "baforge-uat-active-context",
+        JSON.stringify(
+          activeContext
+        )
+      );
+
+    } catch {}
+
+    console.log(
+      "BAForge UAT: Workflow context loaded."
+    );
+  }
+
+  function clearWorkflowUrlParameter() {
+
+    const url =
+      new URL(
+        window.location.href
+      );
+
+    if (
+      url.searchParams.has("from")
+    ) {
+
+      url.searchParams.delete(
+        "from"
+      );
+
+      window.history.replaceState(
+        {},
+        document.title,
+        url.pathname +
+        (
+          url.search
+            ? url.search
+            : ""
+        )
+      );
+
+    }
+  }
+
+  /*
+   * =========================================================
+   * GENERIC HELPERS
+   * =========================================================
+   */
 
   function escapeHtml(value) {
 
-    return String(value ?? "")
+    return String(
+      value ?? ""
+    )
       .replace(
         /&/g,
         "&amp;"
@@ -1529,7 +1306,6 @@
         /'/g,
         "&#039;"
       );
-
   }
 
   function formatCell(value) {
@@ -1556,7 +1332,6 @@
     }
 
     return String(value);
-
   }
 
   function renderMultiline(value) {
@@ -1567,7 +1342,6 @@
       /\n/g,
       "<br>"
     );
-
   }
 
   function renderSteps(value) {
@@ -1588,20 +1362,16 @@
     return renderMultiline(
       value
     );
-
   }
 
   function renderApiDetails(api) {
 
     if (!api) {
-
       return "";
-
     }
 
     return `
       <div class="api-details">
-
         <pre>${escapeHtml(
           JSON.stringify(
             api,
@@ -1609,10 +1379,8 @@
             2
           )
         )}</pre>
-
       </div>
     `;
-
   }
 
   function showError(message) {
@@ -1622,7 +1390,6 @@
 
     errorEl.style.display =
       "block";
-
   }
 
   function hideError() {
@@ -1632,7 +1399,6 @@
 
     errorEl.style.display =
       "none";
-
   }
 
   function validateRequirement() {
@@ -1655,11 +1421,9 @@
       );
 
       return false;
-
     }
 
     return true;
-
   }
 
   function validateNumber() {
@@ -1680,12 +1444,16 @@
       );
 
       return false;
-
     }
 
     return true;
-
   }
+
+  /*
+   * =========================================================
+   * GENERATE TEST CASES
+   * =========================================================
+   */
 
   async function generateTestCases() {
 
@@ -1696,7 +1464,6 @@
     ) {
 
       return;
-
     }
 
     if (
@@ -1704,7 +1471,6 @@
     ) {
 
       return;
-
     }
 
     const requirement =
@@ -1751,7 +1517,6 @@
         await fetch(
           "/api/generate",
           {
-
             method: "POST",
 
             headers: {
@@ -1760,23 +1525,14 @@
             },
 
             body: JSON.stringify({
-
               requirement,
-
               type,
-
               number,
-
               detail,
-
               language,
-
               focus,
-
               priority
-
             })
-
           }
         );
 
@@ -1790,14 +1546,11 @@
         data =
           JSON.parse(raw);
 
-      } catch (
-        parseError
-      ) {
+      } catch {
 
         throw new Error(
           t("apiError")
         );
-
       }
 
       if (
@@ -1808,7 +1561,6 @@
           data.error ||
           t("genericError")
         );
-
       }
 
       if (
@@ -1820,13 +1572,48 @@
         throw new Error(
           t("genericError")
         );
-
       }
 
       renderResults(
         data.cases,
         type
       );
+
+      const generatedData = {
+        requirement,
+        type,
+        number,
+        detail,
+        language,
+        focus,
+        priority,
+        cases:
+          data.cases,
+        generatedAt:
+          new Date().toISOString()
+      };
+
+      try {
+
+        sessionStorage.setItem(
+          "baforge-uat-generated",
+          JSON.stringify(
+            generatedData
+          )
+        );
+
+      } catch {}
+
+      try {
+
+        localStorage.setItem(
+          "baforge-uat-generated",
+          JSON.stringify(
+            generatedData
+          )
+        );
+
+      } catch {}
 
     } catch (
       error
@@ -1844,9 +1631,7 @@
 
       statusEl.style.display =
         "none";
-
     }
-
   }
 
   function renderResults(
@@ -1863,7 +1648,6 @@
       );
 
       return;
-
     }
 
     const isApi =
@@ -1876,8 +1660,7 @@
         ? "table-cell"
         : "none";
 
-    let html =
-      "";
+    let html = "";
 
     cases.forEach(
       (
@@ -1891,7 +1674,6 @@
           null;
 
         html += `
-
           <tr>
 
             <td>
@@ -1963,9 +1745,7 @@
             }
 
           </tr>
-
         `;
-
       }
     );
 
@@ -1974,7 +1754,6 @@
 
     resultsCard.style.display =
       "block";
-
   }
 
   generateButton.addEventListener(
@@ -1982,8 +1761,17 @@
     generateTestCases
   );
 
+  /*
+   * =========================================================
+   * INITIALIZE
+   * =========================================================
+   */
+
   updateLanguage();
 
+  loadWorkflowContext();
+
+  clearWorkflowUrlParameter();
 </script>
 
 <script src="/nav.js"></script>
