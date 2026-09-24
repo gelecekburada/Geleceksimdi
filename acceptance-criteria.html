@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
-  <title>BAForge AI - Acceptance Criteria Generator</title>
+  <title>
+    BAForge AI - Acceptance Criteria Workspace
+  </title>
 
   <style>
     * {
@@ -22,28 +27,44 @@
       --muted: #667085;
 
       --border: #e4e7ec;
+      --border-dark: #d0d5dd;
+
       --surface: #ffffff;
       --background: #f6f8fc;
 
       --success: #16a34a;
-      --success-bg: #dcfce7;
+      --success-light: #ecfdf3;
+
+      --warning: #d97706;
+      --warning-light: #fffbeb;
 
       --danger: #b42318;
-      --danger-bg: #fef2f2;
+      --danger-light: #fef2f2;
 
-      --warning: #92400e;
-      --warning-bg: #fef3c7;
+      --purple: #7c3aed;
+      --purple-light: #f5f3ff;
 
       --shadow-sm:
         0 4px 14px rgba(16, 24, 40, 0.06);
 
       --shadow-md:
         0 12px 35px rgba(16, 24, 40, 0.08);
+
+      --shadow-lg:
+        0 20px 50px rgba(16, 24, 40, 0.10);
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
       background:
         radial-gradient(
@@ -54,14 +75,26 @@
         var(--background);
 
       color: var(--text);
+
       line-height: 1.5;
     }
 
+    button,
+    input,
+    textarea,
+    select {
+      font-family: inherit;
+    }
+
+    button {
+      border: none;
+    }
+
     /* =========================================
-       EXISTING HEADER
+       HEADER
        ========================================= */
 
-    .header {
+    header {
       background:
         linear-gradient(
           135deg,
@@ -71,47 +104,125 @@
         );
 
       color: white;
-      padding: 22px 20px;
+
+      padding:
+        18px 6%;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 20px;
 
       border-bottom:
-        1px solid rgba(255, 255, 255, 0.08);
-    }
+        1px solid
+        rgba(255, 255, 255, 0.08);
 
-    .header-inner {
-      max-width: 1100px;
-      margin: auto;
+      position: relative;
+
+      z-index: 10;
     }
 
     .brand {
-      font-size: 25px;
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      min-width: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+
+      font-size: 24px;
+
       font-weight: 800;
+
       letter-spacing: -0.5px;
     }
 
-    .subtitle {
-      margin-top: 6px;
-      color: #cbd5e1;
-      font-size: 14px;
-    }
-
     .badge {
-      display: inline-block;
-
-      margin-top: 14px;
-      padding: 7px 13px;
-
-      border-radius: 999px;
-
       background:
         rgba(59, 130, 246, 0.18);
 
-      border:
-        1px solid rgba(147, 197, 253, 0.3);
-
       color: #dbeafe;
 
-      font-size: 12px;
+      border:
+        1px solid
+        rgba(147, 197, 253, 0.3);
+
+      padding:
+        7px 12px;
+
+      border-radius: 999px;
+
+      font-size: 11px;
+
       font-weight: 700;
+
+      white-space: nowrap;
+    }
+
+    .header-actions {
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+    }
+
+    .language-box {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+    }
+
+    .language-box label {
+      color: #dbeafe;
+
+      font-size: 13px;
+
+      font-weight: 600;
+
+      white-space: nowrap;
+
+      margin: 0;
+    }
+
+    .language-box select {
+      width: auto;
+
+      min-width: 110px;
+
+      padding:
+        9px 12px;
+
+      border:
+        1px solid
+        rgba(255, 255, 255, 0.2);
+
+      border-radius: 9px;
+
+      background:
+        rgba(255, 255, 255, 0.08);
+
+      color: white;
+
+      font-size: 13px;
+
+      cursor: pointer;
+    }
+
+    .language-box select option {
+      color: #172033;
+
+      background: white;
     }
 
     /* =========================================
@@ -119,9 +230,274 @@
        ========================================= */
 
     .container {
-      max-width: 1100px;
-      margin: 48px auto;
-      padding: 0 20px;
+      max-width: 1500px;
+
+      margin: 0 auto;
+
+      padding:
+        42px 25px 90px;
+    }
+
+    /* =========================================
+       HERO
+       ========================================= */
+
+    .hero {
+      margin-bottom: 26px;
+    }
+
+    .hero-top {
+      display: flex;
+
+      align-items: flex-start;
+
+      justify-content: space-between;
+
+      gap: 24px;
+    }
+
+    .hero-copy {
+      min-width: 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 7px;
+
+      color: var(--primary);
+
+      background:
+        var(--primary-light);
+
+      border:
+        1px solid #dbe7ff;
+
+      padding:
+        6px 10px;
+
+      border-radius: 999px;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.5px;
+
+      margin-bottom: 13px;
+    }
+
+    .eyebrow-dot {
+      width: 7px;
+
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: var(--primary);
+    }
+
+    .hero h2 {
+      font-size: 40px;
+
+      line-height: 1.15;
+
+      letter-spacing: -1.1px;
+
+      margin:
+        0 0 12px;
+
+      color: var(--heading);
+    }
+
+    .hero p {
+      color: var(--muted);
+
+      font-size: 17px;
+
+      margin: 0;
+
+      max-width: 760px;
+    }
+
+    .workflow-progress {
+      min-width: 300px;
+
+      background: white;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 15px;
+
+      padding: 16px 18px;
+
+      box-shadow: var(--shadow-sm);
+    }
+
+    .workflow-progress-title {
+      display: flex;
+
+      justify-content: space-between;
+
+      gap: 15px;
+
+      margin-bottom: 10px;
+
+      font-size: 12px;
+
+      font-weight: 800;
+
+      color: #475467;
+    }
+
+    .workflow-progress-title span:last-child {
+      color: var(--primary);
+    }
+
+    .progress-track {
+      width: 100%;
+
+      height: 7px;
+
+      border-radius: 999px;
+
+      background: #edf0f5;
+
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+
+      width: 0%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          #2563eb,
+          #7c3aed
+        );
+
+      transition:
+        width 0.3s ease;
+    }
+
+    /* =========================================
+       WORKFLOW STEPS
+       ========================================= */
+
+    .workflow-card {
+      background: white;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 16px;
+
+      padding: 16px 18px;
+
+      box-shadow: var(--shadow-sm);
+
+      margin-bottom: 25px;
+
+      overflow-x: auto;
+    }
+
+    .workflow-steps {
+      display: flex;
+
+      align-items: center;
+
+      min-width: 850px;
+    }
+
+    .workflow-step {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      color: #98a2b3;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+      white-space: nowrap;
+    }
+
+    .workflow-step-dot {
+      width: 27px;
+
+      height: 27px;
+
+      border-radius: 50%;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border:
+        1px solid #d0d5dd;
+
+      background: #f8fafc;
+
+      color: #667085;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      flex-shrink: 0;
+    }
+
+    .workflow-step.active {
+      color: var(--primary);
+    }
+
+    .workflow-step.active
+      .workflow-step-dot {
+      background: var(--primary-light);
+
+      border-color: #93c5fd;
+
+      color: var(--primary);
+    }
+
+    .workflow-step.completed {
+      color: var(--success);
+    }
+
+    .workflow-step.completed
+      .workflow-step-dot {
+      background: var(--success-light);
+
+      border-color: #86efac;
+
+      color: var(--success);
+    }
+
+    .workflow-line {
+      height: 1px;
+
+      flex: 1;
+
+      min-width: 20px;
+
+      background: #e4e7ec;
+
+      margin:
+        0 10px;
     }
 
     /* =========================================
@@ -133,144 +509,189 @@
 
       border-radius: 18px;
 
-      padding: 30px;
-
-      margin-bottom: 26px;
+      padding: 27px;
 
       border:
         1px solid var(--border);
 
       box-shadow: var(--shadow-md);
 
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-    }
-
-    .card:hover {
-      border-color: #d7def0;
-    }
-
-    /* =========================================
-       HEADINGS
-       ========================================= */
-
-    h1 {
-      margin-top: 0;
       margin-bottom: 25px;
+    }
 
-      font-size: 28px;
-      line-height: 1.2;
+    .card-header {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: flex-start;
+
+      gap: 20px;
+
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      margin: 0;
 
       color: var(--heading);
 
-      letter-spacing: -0.6px;
+      font-size: 21px;
+
+      letter-spacing: -0.4px;
     }
 
-    h2 {
-      font-size: 20px;
+    .card-subtitle {
+      margin:
+        5px 0 0;
 
-      margin-top: 34px;
-      margin-bottom: 14px;
+      color: var(--muted);
 
-      color: var(--heading);
+      font-size: 13px;
 
-      letter-spacing: -0.2px;
+      max-width: 760px;
     }
 
-    /* =========================================
-       FORM
-       ========================================= */
-
-    label {
+    .section-label {
       display: block;
 
-      font-weight: 700;
+      font-size: 13px;
 
-      margin-bottom: 9px;
+      font-weight: 800;
 
-      font-size: 14px;
+      margin-bottom: 8px;
 
       color: #344054;
     }
 
-    textarea {
-      width: 100%;
+    /* =========================================
+       SOURCE
+       ========================================= */
 
-      min-height: 200px;
+    .source-banner {
+      display: flex;
 
-      resize: vertical;
+      align-items: center;
+
+      gap: 13px;
+
+      padding:
+        13px 15px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #eff6ff,
+          #f5f3ff
+        );
 
       border:
-        1px solid #d0d5dd;
+        1px solid #dbe7ff;
 
       border-radius: 12px;
 
-      padding: 16px;
-
-      font-size: 15px;
-
-      line-height: 1.6;
-
-      outline: none;
-
-      background: #ffffff;
-
-      color: var(--text);
-
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+      margin-bottom: 20px;
     }
 
-    textarea::placeholder {
-      color: #98a2b3;
-    }
+    .source-icon {
+      width: 36px;
 
-    textarea:hover {
-      border-color: #98a2b3;
-    }
-
-    textarea:focus {
-      border-color: var(--primary);
-
-      box-shadow:
-        0 0 0 4px
-        rgba(37, 99, 235, 0.10);
-    }
-
-    /* =========================================
-       CONTROLS
-       ========================================= */
-
-    .controls {
-      display: grid;
-
-      grid-template-columns:
-        1fr 1fr;
-
-      gap: 18px;
-
-      margin-top: 20px;
-    }
-
-    select {
-      width: 100%;
-
-      padding: 13px 14px;
-
-      border:
-        1px solid #d0d5dd;
+      height: 36px;
 
       border-radius: 10px;
 
       background: white;
 
-      color: #344054;
+      color: var(--primary);
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      font-size: 16px;
+
+      font-weight: 900;
+
+      border:
+        1px solid #dbe7ff;
+
+      flex-shrink: 0;
+    }
+
+    .source-content {
+      min-width: 0;
+    }
+
+    .source-label {
+      color: #475467;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.4px;
+    }
+
+    .source-title {
+      color: var(--heading);
 
       font-size: 14px;
 
-      cursor: pointer;
+      font-weight: 800;
+
+      margin-top: 2px;
+
+      word-break: break-word;
+    }
+
+    .source-badge {
+      margin-left: auto;
+
+      flex-shrink: 0;
+
+      padding:
+        5px 9px;
+
+      border-radius: 999px;
+
+      background: white;
+
+      border:
+        1px solid #dbe7ff;
+
+      color: var(--primary);
+
+      font-size: 10px;
+
+      font-weight: 800;
+    }
+
+    /* =========================================
+       INPUTS
+       ========================================= */
+
+    textarea,
+    select,
+    input {
+      width: 100%;
+
+      border:
+        1px solid var(--border-dark);
+
+      border-radius: 10px;
+
+      padding:
+        12px 13px;
+
+      font-size: 14px;
+
+      background: white;
+
+      color: var(--text);
 
       outline: none;
 
@@ -279,11 +700,20 @@
         box-shadow 0.2s ease;
     }
 
-    select:hover {
+    textarea::placeholder,
+    input::placeholder {
+      color: #98a2b3;
+    }
+
+    textarea:hover,
+    select:hover,
+    input:hover {
       border-color: #98a2b3;
     }
 
-    select:focus {
+    textarea:focus,
+    select:focus,
+    input:focus {
       border-color: var(--primary);
 
       box-shadow:
@@ -291,20 +721,100 @@
         rgba(37, 99, 235, 0.10);
     }
 
+    textarea {
+      resize: vertical;
+
+      line-height: 1.55;
+    }
+
+    .source-textarea {
+      min-height: 145px;
+
+      margin-bottom: 20px;
+    }
+
+    .options-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 16px;
+
+      margin-bottom: 20px;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    label {
+      display: block;
+
+      font-size: 13px;
+
+      font-weight: 800;
+
+      margin-bottom: 8px;
+
+      color: #344054;
+    }
+
     /* =========================================
-       GENERATE BUTTON
+       BUTTONS
        ========================================= */
 
-    .generate-btn {
-      width: 100%;
+    .button-row {
+      display: flex;
 
-      margin-top: 22px;
+      align-items: center;
 
-      padding: 15px 18px;
+      gap: 10px;
 
-      border: 0;
+      flex-wrap: wrap;
+    }
 
-      border-radius: 11px;
+    .btn {
+      border-radius: 10px;
+
+      padding:
+        12px 18px;
+
+      font-size: 13px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .btn:hover {
+      transform:
+        translateY(-1px);
+    }
+
+    .btn:active {
+      transform:
+        translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+
+      cursor: wait;
+
+      transform: none;
+
+      box-shadow: none;
+    }
+
+    .btn-primary {
+      color: white;
 
       background:
         linear-gradient(
@@ -313,157 +823,206 @@
           #1d4ed8
         );
 
-      color: white;
-
-      font-size: 15px;
-
-      font-weight: 700;
-
-      cursor: pointer;
-
       box-shadow:
         0 6px 16px
         rgba(37, 99, 235, 0.22);
-
-      transition:
-        transform 0.15s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
     }
 
-    .generate-btn:hover {
-      background:
-        linear-gradient(
-          135deg,
-          #1d4ed8,
-          #1e40af
-        );
-
-      transform:
-        translateY(-1px);
-
+    .btn-primary:hover {
       box-shadow:
         0 9px 20px
         rgba(37, 99, 235, 0.28);
     }
 
-    .generate-btn:active {
-      transform:
-        translateY(0);
+    .btn-secondary {
+      color: #344054;
+
+      background: white;
+
+      border:
+        1px solid var(--border-dark);
+
+      box-shadow:
+        0 2px 6px
+        rgba(16, 24, 40, 0.04);
     }
 
-    .generate-btn:disabled {
-      background: #94a3b8;
+    .btn-secondary:hover {
+      border-color: #98a2b3;
 
-      opacity: 1;
+      background: #f8fafc;
+    }
 
-      box-shadow: none;
+    .btn-danger {
+      color: var(--danger);
 
-      cursor: wait;
+      background: var(--danger-light);
 
-      transform: none;
+      border:
+        1px solid #fecaca;
+    }
+
+    .btn-danger:hover {
+      background: #fee2e2;
+    }
+
+    .btn-success {
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          #16a34a,
+          #15803d
+        );
+
+      box-shadow:
+        0 6px 16px
+        rgba(22, 163, 74, 0.18);
+    }
+
+    .btn-small {
+      padding:
+        8px 11px;
+
+      font-size: 11px;
+
+      border-radius: 8px;
+    }
+
+    .btn-icon {
+      width: 31px;
+
+      height: 31px;
+
+      padding: 0;
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      font-size: 15px;
     }
 
     /* =========================================
-       LOADING
+       STATUS / ERROR
        ========================================= */
 
-    .loading {
+    .status {
       display: none;
 
-      margin-top: 16px;
+      margin-top: 15px;
 
-      padding: 13px 15px;
+      padding:
+        11px 13px;
 
-      text-align: center;
-
-      color: #344054;
+      border-radius: 10px;
 
       background: #f8fafc;
 
       border:
         1px solid var(--border);
 
-      border-radius: 10px;
+      color: #475467;
 
-      font-size: 14px;
+      font-size: 13px;
 
-      font-weight: 600;
+      font-weight: 700;
+
+      text-align: center;
     }
-
-    /* =========================================
-       ERROR
-       ========================================= */
 
     .error {
       display: none;
 
-      margin-top: 16px;
+      margin-top: 15px;
 
-      padding: 13px 15px;
+      padding:
+        12px 14px;
 
       border-radius: 10px;
 
-      background: var(--danger-bg);
-
-      color: var(--danger);
+      background: var(--danger-light);
 
       border:
         1px solid #fecaca;
 
-      font-size: 14px;
+      color: var(--danger);
 
-      font-weight: 600;
+      font-size: 13px;
+
+      font-weight: 700;
+
+      white-space: pre-wrap;
+    }
+
+    .success-message {
+      display: none;
+
+      margin-top: 15px;
+
+      padding:
+        12px 14px;
+
+      border-radius: 10px;
+
+      background: var(--success-light);
+
+      border:
+        1px solid #bbf7d0;
+
+      color: #166534;
+
+      font-size: 13px;
+
+      font-weight: 700;
     }
 
     /* =========================================
-       RESULT
+       RESULTS
        ========================================= */
 
-    .result-section {
+    #workspaceCard {
       display: none;
     }
 
-    .result-section h1 {
-      margin-bottom: 25px;
+    .score-grid {
+      display: grid;
+
+      grid-template-columns:
+        240px 1fr;
+
+      gap: 18px;
+
+      margin-bottom: 22px;
     }
 
-    /* =========================================
-       TESTABILITY SCORE
-       ========================================= */
-
     .score-card {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 25px;
-
-      padding: 22px 24px;
-
-      border-radius: 15px;
+      border:
+        1px solid #dbe7ff;
 
       background:
         linear-gradient(
           135deg,
-          #eef4ff,
-          #f5f7ff
+          #f8fbff,
+          #eef4ff
         );
 
-      border:
-        1px solid #cddcff;
+      border-radius: 15px;
 
-      box-shadow: var(--shadow-sm);
+      padding: 20px;
+
+      text-align: center;
     }
 
-    .score-title {
-      font-size: 14px;
+    .score-label {
+      color: #475467;
+
+      font-size: 11px;
 
       font-weight: 800;
-
-      color: #1e40af;
 
       text-transform: uppercase;
 
@@ -471,42 +1030,74 @@
     }
 
     .score-value {
-      font-size: 34px;
+      margin:
+        5px 0 2px;
 
-      font-weight: 800;
+      font-size: 42px;
 
-      color: #1d4ed8;
+      line-height: 1;
 
-      white-space: nowrap;
+      font-weight: 900;
+
+      color: var(--primary);
+
+      letter-spacing: -2px;
+    }
+
+    .score-caption {
+      color: var(--muted);
+
+      font-size: 11px;
+
+      font-weight: 700;
     }
 
     .score-explanation {
-      margin-top: 7px;
+      border:
+        1px solid var(--border);
+
+      border-radius: 15px;
+
+      padding: 18px;
+
+      background: #fff;
+    }
+
+    .score-explanation-title {
+      color: var(--heading);
 
       font-size: 13px;
 
-      color: #475569;
+      font-weight: 800;
 
-      line-height: 1.5;
+      margin-bottom: 7px;
+    }
 
-      max-width: 750px;
+    .score-explanation-text {
+      color: #667085;
+
+      font-size: 13px;
+
+      line-height: 1.6;
     }
 
     /* =========================================
-       CRITERIA TABLE
+       EDITOR TABLE
        ========================================= */
 
-    .criteria-table-wrapper {
+    .table-wrapper {
       overflow-x: auto;
 
       border:
         1px solid var(--border);
 
-      border-radius: 13px;
+      border-radius: 14px;
 
       background: white;
 
       box-shadow: var(--shadow-sm);
+
+      margin-bottom: 14px;
     }
 
     table {
@@ -516,26 +1107,23 @@
 
       border-spacing: 0;
 
-      min-width: 760px;
+      min-width: 1150px;
     }
 
     th,
     td {
+      padding:
+        11px;
+
       border-right:
         1px solid var(--border);
 
       border-bottom:
         1px solid var(--border);
 
-      padding: 14px;
-
-      text-align: left;
-
       vertical-align: top;
 
-      font-size: 13px;
-
-      line-height: 1.55;
+      text-align: left;
     }
 
     th:last-child,
@@ -543,7 +1131,7 @@
       border-right: none;
     }
 
-    tbody tr:last-child td {
+    tr:last-child td {
       border-bottom: none;
     }
 
@@ -555,171 +1143,378 @@
 
       font-weight: 800;
 
-      font-size: 12px;
+      font-size: 11px;
+
+      white-space: nowrap;
 
       text-transform: uppercase;
 
-      letter-spacing: 0.3px;
+      letter-spacing: 0.35px;
     }
 
     td {
-      color: #475467;
+      background: white;
     }
 
     tbody tr:hover td {
       background: #fafbff;
     }
 
-    /* =========================================
-       TAGS
-       ========================================= */
+    .criterion-id {
+      width: 72px;
 
-    .tag {
-      display: inline-block;
+      color: var(--primary);
 
-      padding: 5px 9px;
+      font-size: 12px;
 
-      border-radius: 999px;
-
-      font-size: 11px;
-
-      font-weight: 700;
-
-      margin-right: 5px;
-
-      margin-bottom: 5px;
+      font-weight: 900;
 
       white-space: nowrap;
     }
 
-    .tag-positive {
-      background: var(--success-bg);
-
-      color: #166534;
+    .criterion-type {
+      width: 130px;
     }
 
-    .tag-negative {
-      background: #fee2e2;
-
-      color: #991b1b;
+    .criterion-cell {
+      min-width: 210px;
     }
 
-    .tag-boundary {
-      background: var(--warning-bg);
+    .criterion-cell textarea {
+      min-height: 95px;
 
-      color: var(--warning);
+      font-size: 12px;
+
+      padding: 9px;
+
+      border-radius: 8px;
     }
 
-    .tag-validation {
-      background: #e0e7ff;
+    .criterion-type select {
+      font-size: 12px;
 
-      color: #3730a3;
+      padding:
+        9px 8px;
+
+      border-radius: 8px;
+    }
+
+    .criterion-actions {
+      width: 55px;
+
+      text-align: center;
+    }
+
+    .empty-table {
+      text-align: center;
+
+      color: #667085;
+
+      padding: 30px;
+
+      font-size: 13px;
     }
 
     /* =========================================
-       LISTS
+       LIST EDITORS
        ========================================= */
 
-    ul {
+    .editor-section {
+      margin-top: 23px;
+    }
+
+    .editor-section-header {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 15px;
+
+      margin-bottom: 10px;
+    }
+
+    .editor-section-title {
       margin: 0;
 
-      padding-left: 22px;
+      color: var(--heading);
+
+      font-size: 15px;
+
+      font-weight: 900;
     }
 
-    li {
-      margin-bottom: 9px;
+    .editable-list {
+      display: flex;
 
-      line-height: 1.55;
+      flex-direction: column;
 
-      font-size: 14px;
-
-      color: #344054;
+      gap: 9px;
     }
 
-    li::marker {
-      color: #2563eb;
+    .list-item {
+      display: flex;
+
+      align-items: flex-start;
+
+      gap: 9px;
     }
 
-    .empty {
-      color: #98a2b3;
+    .list-item textarea {
+      min-height: 55px;
 
-      font-size: 14px;
+      font-size: 13px;
 
-      font-style: italic;
+      padding:
+        10px 11px;
+    }
+
+    .list-item-actions {
+      display: flex;
+
+      gap: 5px;
+
+      padding-top: 1px;
+    }
+
+    .list-empty {
+      padding:
+        14px;
+
+      background: #f8fafc;
+
+      border:
+        1px dashed #d0d5dd;
+
+      border-radius: 10px;
+
+      color: #667085;
+
+      font-size: 12px;
+
+      text-align: center;
     }
 
     /* =========================================
-       MOBILE
+       COVERAGE
        ========================================= */
 
-    @media (max-width: 800px) {
+    .coverage-list {
+      display: grid;
 
-      .container {
-        margin: 35px auto;
+      grid-template-columns:
+        repeat(2, 1fr);
 
-        padding:
-          0 16px;
+      gap: 9px;
+
+      margin-top: 8px;
+    }
+
+    .coverage-item {
+      display: flex;
+
+      align-items: flex-start;
+
+      gap: 9px;
+
+      padding:
+        10px 11px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 10px;
+
+      background: #fbfcfe;
+
+      font-size: 12px;
+
+      color: #475467;
+    }
+
+    .coverage-check {
+      width: 18px;
+
+      height: 18px;
+
+      border-radius: 50%;
+
+      background: var(--success-light);
+
+      border:
+        1px solid #bbf7d0;
+
+      color: var(--success);
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      flex-shrink: 0;
+
+      font-size: 10px;
+
+      font-weight: 900;
+    }
+
+    /* =========================================
+       ACTION BAR
+       ========================================= */
+
+    .action-bar {
+      position: sticky;
+
+      bottom: 15px;
+
+      z-index: 5;
+
+      background:
+        rgba(255, 255, 255, 0.94);
+
+      backdrop-filter:
+        blur(12px);
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 15px;
+
+      padding:
+        12px 14px;
+
+      box-shadow: var(--shadow-lg);
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 15px;
+
+      margin-top: 25px;
+    }
+
+    .action-info {
+      min-width: 0;
+    }
+
+    .action-info-title {
+      font-size: 12px;
+
+      font-weight: 900;
+
+      color: var(--heading);
+    }
+
+    .action-info-text {
+      font-size: 11px;
+
+      color: var(--muted);
+
+      margin-top: 2px;
+    }
+
+    .action-buttons {
+      display: flex;
+
+      gap: 8px;
+
+      flex-wrap: wrap;
+
+      justify-content: flex-end;
+    }
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+
+    @media (max-width: 1050px) {
+      .hero-top {
+        flex-direction: column;
       }
 
-      .header {
+      .workflow-progress {
+        width: 100%;
+
+        min-width: 0;
+      }
+
+      .options-grid {
+        grid-template-columns:
+          repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 800px) {
+      header {
         padding:
-          18px 16px;
+          15px 18px;
+
+        align-items:
+          flex-start;
+
+        flex-direction:
+          column;
+      }
+
+      .header-actions {
+        width: 100%;
+
+        justify-content:
+          space-between;
+      }
+
+      .container {
+        padding:
+          30px 15px 70px;
+      }
+
+      .hero h2 {
+        font-size: 32px;
       }
 
       .card {
-        padding: 22px;
-
-        border-radius: 15px;
+        padding: 20px;
       }
 
-      h1 {
-        font-size: 25px;
+      .score-grid {
+        grid-template-columns: 1fr;
       }
 
-      h2 {
-        font-size: 19px;
+      .coverage-list {
+        grid-template-columns: 1fr;
       }
 
-      .controls {
-        grid-template-columns:
-          1fr;
+      .action-bar {
+        align-items:
+          flex-start;
 
-        gap: 14px;
+        flex-direction:
+          column;
       }
 
-      .score-card {
-        align-items: flex-start;
+      .action-buttons {
+        width: 100%;
 
-        flex-direction: column;
-
-        gap: 12px;
-      }
-
-      .score-value {
-        font-size: 30px;
+        justify-content:
+          flex-start;
       }
     }
 
-    @media (max-width: 500px) {
-
-      .container {
-        margin: 25px auto;
-
-        padding:
-          0 12px;
-      }
-
-      .header {
-        padding:
-          15px 16px;
-      }
-
+    @media (max-width: 600px) {
       .brand {
-        font-size: 21px;
+        width: 100%;
+
+        justify-content:
+          space-between;
       }
 
-      .subtitle {
-        font-size: 12px;
+      .brand h1 {
+        font-size: 21px;
       }
 
       .badge {
@@ -729,43 +1524,91 @@
           6px 9px;
       }
 
-      .card {
-        padding: 18px;
-
-        border-radius: 14px;
+      .header-actions {
+        align-items:
+          center;
       }
 
-      h1 {
-        font-size: 23px;
+      .language-box {
+        width: 100%;
+
+        justify-content:
+          space-between;
       }
 
-      h2 {
-        font-size: 18px;
-
-        margin-top: 28px;
+      .language-box select {
+        min-width: 130px;
       }
 
-      textarea {
-        min-height: 175px;
-
-        padding: 14px;
-      }
-
-      .generate-btn {
-        padding: 14px;
-      }
-
-      .score-card {
-        padding: 18px;
-      }
-
-      .score-value {
+      .hero h2 {
         font-size: 28px;
       }
 
-      .criteria-table-wrapper {
-        margin-left: -2px;
-        margin-right: -2px;
+      .hero p {
+        font-size: 15px;
+      }
+
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .source-banner {
+        align-items:
+          flex-start;
+      }
+
+      .source-badge {
+        display: none;
+      }
+
+      .button-row {
+        flex-direction:
+          column;
+
+        align-items:
+          stretch;
+      }
+
+      .button-row .btn {
+        width: 100%;
+      }
+
+      .action-buttons .btn {
+        flex: 1;
+
+        min-width: 120px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .container {
+        padding:
+          22px 12px 60px;
+      }
+
+      .card {
+        padding: 17px;
+      }
+
+      .hero h2 {
+        font-size: 25px;
+      }
+
+      .score-value {
+        font-size: 37px;
+      }
+
+      .action-buttons {
+        display: grid;
+
+        grid-template-columns:
+          1fr 1fr;
+
+        width: 100%;
+      }
+
+      .action-buttons .btn {
+        width: 100%;
       }
     }
   </style>
@@ -773,160 +1616,446 @@
 
 <body>
 
-  <header class="header">
+<header>
 
-    <div class="header-inner">
+  <div class="brand">
 
-      <div class="brand">
-        BAForge AI
+    <h1>
+      BAForge AI
+    </h1>
+
+    <span
+      class="badge"
+      id="badge"
+    >
+      Acceptance Criteria Workspace
+    </span>
+
+  </div>
+
+  <div class="header-actions">
+
+    <div class="language-box">
+
+      <label
+        for="language"
+        id="languageLabel"
+      >
+        Language
+      </label>
+
+      <select id="language">
+
+        <option value="tr">
+          Türkçe
+        </option>
+
+        <option
+          value="en"
+          selected
+        >
+          English
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+</header>
+
+<main class="container">
+
+  <!-- =========================================
+       HERO
+       ========================================= -->
+
+  <section class="hero">
+
+    <div class="hero-top">
+
+      <div class="hero-copy">
+
+        <div class="eyebrow">
+
+          <span class="eyebrow-dot"></span>
+
+          <span id="eyebrowText">
+            BA WORKSPACE
+          </span>
+
+        </div>
+
+        <h2 id="heroTitle">
+          Build Professional Acceptance Criteria
+        </h2>
+
+        <p id="heroSubtitle">
+          Transform your user story into clear,
+          testable, and traceable acceptance criteria.
+        </p>
+
       </div>
 
-      <div class="subtitle">
-        Business Analysis & QA Intelligence Platform
-      </div>
+      <div class="workflow-progress">
 
-      <div class="badge">
-        Acceptance Criteria Generator
+        <div class="workflow-progress-title">
+
+          <span id="workflowProgressLabel">
+            Workflow Progress
+          </span>
+
+          <span id="workflowProgressValue">
+            2 / 8
+          </span>
+
+        </div>
+
+        <div class="progress-track">
+
+          <div
+            class="progress-bar"
+            id="workflowProgressBar"
+          ></div>
+
+        </div>
+
       </div>
 
     </div>
 
-  </header>
+  </section>
 
-  <main class="container">
+  <!-- =========================================
+       WORKFLOW
+       ========================================= -->
 
-    <section class="card">
+  <section class="workflow-card">
 
-      <h1 id="pageTitle">
-        Acceptance Criteria Generator
-      </h1>
+    <div
+      class="workflow-steps"
+      id="workflowSteps"
+    ></div>
 
-      <label id="inputLabel" for="requirement">
-        Requirement veya User Story
-      </label>
+  </section>
 
-      <textarea
-        id="requirement"
-        placeholder="Requirement veya User Story girin..."
-      ></textarea>
+  <!-- =========================================
+       INPUT CARD
+       ========================================= -->
 
-      <div class="controls">
+  <section class="card">
 
-        <div>
+    <div class="card-header">
 
-          <label
-            id="languageLabel"
-            for="language"
-          >
-            Dil
-          </label>
+      <div>
 
-          <select id="language">
+        <h3
+          class="card-title"
+          id="inputTitle"
+        >
+          Acceptance Criteria Input
+        </h3>
 
-            <option value="tr">
-              Türkçe
-            </option>
-
-            <option value="en">
-              English
-            </option>
-
-          </select>
-
-        </div>
-
-        <div>
-
-          <label
-            id="detailLabel"
-            for="detail"
-          >
-            Detay Seviyesi
-          </label>
-
-          <select id="detail">
-
-            <option value="Basic">
-              Basic
-            </option>
-
-            <option
-              value="Professional"
-              selected
-            >
-              Professional
-            </option>
-
-            <option value="Comprehensive">
-              Comprehensive
-            </option>
-
-          </select>
-
-        </div>
+        <p
+          class="card-subtitle"
+          id="inputSubtitle"
+        >
+          Start from the User Story generated in the
+          previous workflow step or enter a story manually.
+        </p>
 
       </div>
 
-      <button
-        class="generate-btn"
-        id="generateBtn"
-        onclick="generateCriteria()"
-      >
-        Acceptance Criteria Oluştur
-      </button>
+    </div>
 
-      <div
-        class="loading"
-        id="loading"
-      >
-        AI acceptance criteria oluşturuyor...
-      </div>
-
-      <div
-        class="error"
-        id="error"
-      ></div>
-
-    </section>
-
-    <section
-      class="card result-section"
-      id="result"
+    <div
+      class="source-banner"
+      id="sourceBanner"
+      style="display:none;"
     >
 
-      <h1 id="resultTitle">
-        Oluşturulan Acceptance Criteria
-      </h1>
+      <div class="source-icon">
+        US
+      </div>
+
+      <div class="source-content">
+
+        <div
+          class="source-label"
+          id="sourceLabel"
+        >
+          Source
+        </div>
+
+        <div
+          class="source-title"
+          id="sourceTitle"
+        >
+          User Story
+        </div>
+
+      </div>
+
+      <div
+        class="source-badge"
+        id="sourceBadge"
+      >
+        WORKFLOW
+      </div>
+
+    </div>
+
+    <label
+      for="requirement"
+      id="requirementLabel"
+    >
+      User Story / Requirement
+    </label>
+
+    <textarea
+      class="source-textarea"
+      id="requirement"
+      placeholder="Example: As a customer, I want to transfer money to another bank account using an IBAN so that I can send money securely."
+    ></textarea>
+
+    <div class="options-grid">
+
+      <div class="field">
+
+        <label
+          for="detail"
+          id="detailLabel"
+        >
+          Detail Level
+        </label>
+
+        <select id="detail">
+
+          <option value="Basic">
+            Basic
+          </option>
+
+          <option
+            value="Professional"
+            selected
+          >
+            Professional
+          </option>
+
+          <option value="Comprehensive">
+            Comprehensive
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="field">
+
+        <label
+          for="priority"
+          id="priorityLabel"
+        >
+          Priority
+        </label>
+
+        <select id="priority">
+
+          <option value="medium">
+            Medium
+          </option>
+
+          <option value="high">
+            High
+          </option>
+
+          <option value="critical">
+            Critical
+          </option>
+
+          <option value="low">
+            Low
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="field">
+
+        <label
+          for="sourceType"
+          id="sourceTypeLabel"
+        >
+          Source Type
+        </label>
+
+        <select id="sourceType">
+
+          <option value="user_story">
+            User Story
+          </option>
+
+          <option value="requirement">
+            Requirement
+          </option>
+
+          <option value="manual">
+            Manual Input
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <div class="button-row">
+
+      <button
+        class="btn btn-primary"
+        id="generateButton"
+        type="button"
+      >
+        Generate Acceptance Criteria
+      </button>
+
+      <button
+        class="btn btn-secondary"
+        id="clearButton"
+        type="button"
+      >
+        Clear
+      </button>
+
+    </div>
+
+    <div
+      class="status"
+      id="status"
+    ></div>
+
+    <div
+      class="error"
+      id="error"
+    ></div>
+
+    <div
+      class="success-message"
+      id="successMessage"
+    ></div>
+
+  </section>
+
+  <!-- =========================================
+       WORKSPACE
+       ========================================= -->
+
+  <section
+    class="card"
+    id="workspaceCard"
+  >
+
+    <div class="card-header">
+
+      <div>
+
+        <h3
+          class="card-title"
+          id="workspaceTitle"
+        >
+          Acceptance Criteria Workspace
+        </h3>
+
+        <p
+          class="card-subtitle"
+          id="workspaceSubtitle"
+        >
+          Review, refine, and save the generated acceptance criteria.
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- SCORE -->
+
+    <div class="score-grid">
 
       <div class="score-card">
 
-        <div>
-
-          <div class="score-title">
-            Testability Score
-          </div>
-
-          <div
-            class="score-explanation"
-            id="scoreExplanation"
-          ></div>
-
+        <div
+          class="score-label"
+          id="scoreLabel"
+        >
+          Testability Score
         </div>
 
         <div
           class="score-value"
           id="scoreValue"
         >
+          0
+        </div>
+
+        <div
+          class="score-caption"
+          id="scoreCaption"
+        >
+          out of 100
+        </div>
+
+      </div>
+
+      <div class="score-explanation">
+
+        <div
+          class="score-explanation-title"
+          id="scoreExplanationTitle"
+        >
+          Testability Assessment
+        </div>
+
+        <div
+          class="score-explanation-text"
+          id="scoreExplanation"
+        >
           -
         </div>
 
       </div>
 
-      <h2 id="criteriaTitle">
-        Acceptance Criteria
-      </h2>
+    </div>
 
-      <div class="criteria-table-wrapper">
+    <!-- ACCEPTANCE CRITERIA -->
+
+    <div class="editor-section">
+
+      <div class="editor-section-header">
+
+        <div>
+
+          <h4
+            class="editor-section-title"
+            id="criteriaTitle"
+          >
+            Acceptance Criteria
+          </h4>
+
+        </div>
+
+        <button
+          class="btn btn-secondary btn-small"
+          id="addCriterionButton"
+          type="button"
+        >
+          + Add Criterion
+        </button>
+
+      </div>
+
+      <div class="table-wrapper">
 
         <table>
 
@@ -938,20 +2067,24 @@
                 ID
               </th>
 
-              <th>
+              <th id="typeHeader">
                 Type
               </th>
 
-              <th>
+              <th id="givenHeader">
                 Given
               </th>
 
-              <th>
+              <th id="whenHeader">
                 When
               </th>
 
-              <th>
+              <th id="thenHeader">
                 Then
+              </th>
+
+              <th>
+                -
               </th>
 
             </tr>
@@ -966,428 +2099,1714 @@
 
       </div>
 
-      <h2 id="coverageTitle">
-        Coverage Summary
-      </h2>
+    </div>
 
-      <ul id="coverageList"></ul>
+    <!-- COVERAGE -->
 
-      <h2 id="rulesTitle">
-        Business Rules
-      </h2>
+    <div class="editor-section">
 
-      <ul id="rulesList"></ul>
+      <div class="editor-section-header">
 
-      <h2 id="assumptionsTitle">
-        Assumptions
-      </h2>
+        <h4
+          class="editor-section-title"
+          id="coverageTitle"
+        >
+          Coverage Summary
+        </h4>
 
-      <ul id="assumptionsList"></ul>
+      </div>
 
-      <h2 id="questionsTitle">
-        Open Questions
-      </h2>
+      <div
+        class="coverage-list"
+        id="coverageList"
+      ></div>
 
-      <ul id="questionsList"></ul>
+    </div>
 
-    </section>
+    <!-- BUSINESS RULES -->
 
-  </main>
+    <div class="editor-section">
+
+      <div class="editor-section-header">
+
+        <h4
+          class="editor-section-title"
+          id="businessRulesTitle"
+        >
+          Business Rules
+        </h4>
+
+        <button
+          class="btn btn-secondary btn-small"
+          id="addRuleButton"
+          type="button"
+        >
+          + Add Rule
+        </button>
+
+      </div>
+
+      <div
+        class="editable-list"
+        id="businessRulesList"
+      ></div>
+
+    </div>
+
+    <!-- ASSUMPTIONS -->
+
+    <div class="editor-section">
+
+      <div class="editor-section-header">
+
+        <h4
+          class="editor-section-title"
+          id="assumptionsTitle"
+        >
+          Assumptions
+        </h4>
+
+        <button
+          class="btn btn-secondary btn-small"
+          id="addAssumptionButton"
+          type="button"
+        >
+          + Add Assumption
+        </button>
+
+      </div>
+
+      <div
+        class="editable-list"
+        id="assumptionsList"
+      ></div>
+
+    </div>
+
+    <!-- OPEN QUESTIONS -->
+
+    <div class="editor-section">
+
+      <div class="editor-section-header">
+
+        <h4
+          class="editor-section-title"
+          id="openQuestionsTitle"
+        >
+          Open Questions
+        </h4>
+
+        <button
+          class="btn btn-secondary btn-small"
+          id="addQuestionButton"
+          type="button"
+        >
+          + Add Question
+        </button>
+
+      </div>
+
+      <div
+        class="editable-list"
+        id="openQuestionsList"
+      ></div>
+
+    </div>
+
+    <!-- ACTION BAR -->
+
+    <div class="action-bar">
+
+      <div class="action-info">
+
+        <div
+          class="action-info-title"
+          id="actionInfoTitle"
+        >
+          Acceptance Criteria Ready
+        </div>
+
+        <div
+          class="action-info-text"
+          id="actionInfoText"
+        >
+          Save your work before continuing to UAT.
+        </div>
+
+      </div>
+
+      <div class="action-buttons">
+
+        <button
+          class="btn btn-secondary"
+          id="resetButton"
+          type="button"
+        >
+          Reset
+        </button>
+
+        <button
+          class="btn btn-secondary"
+          id="regenerateButton"
+          type="button"
+        >
+          Regenerate
+        </button>
+
+        <button
+          class="btn btn-primary"
+          id="saveButton"
+          type="button"
+        >
+          Save Draft
+        </button>
+
+        <button
+          class="btn btn-success"
+          id="continueButton"
+          type="button"
+        >
+          Continue to UAT →
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<!-- FOUNDATION -->
+
+<script src="/core/data-model.js"></script>
+<script src="/core/workflow.js"></script>
+<script src="/nav.js"></script>
 
 <script>
+(function () {
+
+  "use strict";
+
+  /* =========================================
+     STORAGE KEYS
+     ========================================= */
+
+  const STORAGE_KEYS = {
+    draft:
+      "baforge-acceptance-criteria-draft",
+
+    workflow:
+      "baforge-workflow-state",
+
+    userStory:
+      "baforge-user-story-context",
+
+    requirement:
+      "baforge-requirement-context",
+
+    uat:
+      "baforge-uat-context"
+  };
+
+  /* =========================================
+     TRANSLATIONS
+     ========================================= */
 
   const translations = {
 
-    tr: {
-
-      pageTitle:
-        "Acceptance Criteria Generator",
-
-      inputLabel:
-        "Requirement veya User Story",
-
-      languageLabel:
-        "Dil",
-
-      detailLabel:
-        "Detay Seviyesi",
-
-      generate:
-        "Acceptance Criteria Oluştur",
-
-      loading:
-        "AI acceptance criteria oluşturuyor...",
-
-      resultTitle:
-        "Oluşturulan Acceptance Criteria",
-
-      criteriaTitle:
-        "Acceptance Criteria",
-
-      coverageTitle:
-        "Coverage Summary",
-
-      rulesTitle:
-        "Business Rules",
-
-      assumptionsTitle:
-        "Varsayımlar",
-
-      questionsTitle:
-        "Açık Sorular"
-
-    },
-
     en: {
 
-      pageTitle:
-        "Acceptance Criteria Generator",
+      badge:
+        "Acceptance Criteria Workspace",
 
-      inputLabel:
-        "Requirement or User Story",
+      eyebrow:
+        "BA WORKSPACE",
 
-      languageLabel:
-        "Language",
+      heroTitle:
+        "Build Professional Acceptance Criteria",
 
-      detailLabel:
+      heroSubtitle:
+        "Transform your user story into clear, testable, and traceable acceptance criteria.",
+
+      workflowProgress:
+        "Workflow Progress",
+
+      inputTitle:
+        "Acceptance Criteria Input",
+
+      inputSubtitle:
+        "Start from the User Story generated in the previous workflow step or enter a story manually.",
+
+      source:
+        "Source",
+
+      workflow:
+        "WORKFLOW",
+
+      requirement:
+        "User Story / Requirement",
+
+      requirementPlaceholder:
+        "Example: As a customer, I want to transfer money to another bank account using an IBAN so that I can send money securely.",
+
+      detail:
         "Detail Level",
+
+      priority:
+        "Priority",
+
+      sourceType:
+        "Source Type",
+
+      userStory:
+        "User Story",
+
+      requirementType:
+        "Requirement",
+
+      manual:
+        "Manual Input",
 
       generate:
         "Generate Acceptance Criteria",
 
-      loading:
-        "AI is generating acceptance criteria...",
+      generating:
+        "Generating acceptance criteria...",
 
-      resultTitle:
-        "Generated Acceptance Criteria",
+      clear:
+        "Clear",
 
-      criteriaTitle:
+      workspace:
+        "Acceptance Criteria Workspace",
+
+      workspaceSubtitle:
+        "Review, refine, and save the generated acceptance criteria.",
+
+      score:
+        "Testability Score",
+
+      outOf100:
+        "out of 100",
+
+      scoreExplanation:
+        "Testability Assessment",
+
+      criteria:
         "Acceptance Criteria",
 
-      coverageTitle:
+      addCriterion:
+        "+ Add Criterion",
+
+      type:
+        "Type",
+
+      given:
+        "Given",
+
+      when:
+        "When",
+
+      then:
+        "Then",
+
+      coverage:
         "Coverage Summary",
 
-      rulesTitle:
+      businessRules:
         "Business Rules",
 
-      assumptionsTitle:
+      addRule:
+        "+ Add Rule",
+
+      assumptions:
         "Assumptions",
 
-      questionsTitle:
-        "Open Questions"
+      addAssumption:
+        "+ Add Assumption",
+
+      openQuestions:
+        "Open Questions",
+
+      addQuestion:
+        "+ Add Question",
+
+      save:
+        "Save Draft",
+
+      saving:
+        "Saving...",
+
+      regenerate:
+        "Regenerate",
+
+      reset:
+        "Reset",
+
+      continue:
+        "Continue to UAT →",
+
+      actionTitle:
+        "Acceptance Criteria Ready",
+
+      actionText:
+        "Save your work before continuing to UAT.",
+
+      saved:
+        "Acceptance Criteria draft saved successfully.",
+
+      sourceLoaded:
+        "User Story loaded from the previous workflow step.",
+
+      noSource:
+        "No previous User Story was found. You can enter the input manually.",
+
+      requirementError:
+        "Please enter at least 15 characters and 3 words.",
+
+      apiError:
+        "The server returned an unexpected response.",
+
+      genericError:
+        "Something went wrong while generating acceptance criteria.",
+
+      noCriteria:
+        "No acceptance criteria were generated.",
+
+      emptyList:
+        "No items added yet.",
+
+      confirmReset:
+        "Reset the current Acceptance Criteria workspace?",
+
+      deleteCriterion:
+        "Delete this acceptance criterion?",
+
+      deleteItem:
+        "Delete this item?",
+
+      continueWarning:
+        "Please save the Acceptance Criteria before continuing to UAT.",
+
+      noCriteriaWarning:
+        "At least one acceptance criterion is required before continuing to UAT.",
+
+      workflowSource:
+        "User Story",
+
+      workflowCurrent:
+        "Acceptance Criteria",
+
+      workflowUat:
+        "UAT Test Cases",
+
+      workflowRequirement:
+        "Requirement",
+
+      workflowTestData:
+        "Test Data",
+
+      workflowProcess:
+        "Process Flow",
+
+      workflowTraceability:
+        "Traceability",
+
+      workflowDocument:
+        "BA Document",
+
+      positive:
+        "Positive",
+
+      negative:
+        "Negative",
+
+      boundary:
+        "Boundary",
+
+      validation:
+        "Validation",
+
+      saveBeforeContinue:
+        "Draft saved. Preparing UAT context...",
+
+      transferReady:
+        "Acceptance Criteria context prepared for UAT.",
+
+      coverageEmpty:
+        "Coverage information was not generated.",
+
+      scoreExplanationFallback:
+        "The testability score was calculated from the generated acceptance criteria.",
+
+      newCriterion:
+        "New acceptance criterion",
+
+      newRule:
+        "New business rule",
+
+      newAssumption:
+        "New assumption",
+
+      newQuestion:
+        "New open question"
+
+    },
+
+    tr: {
+
+      badge:
+        "Acceptance Criteria Workspace",
+
+      eyebrow:
+        "BA WORKSPACE",
+
+      heroTitle:
+        "Profesyonel Acceptance Criteria Oluşturun",
+
+      heroSubtitle:
+        "User Story'nizi açık, test edilebilir ve izlenebilir acceptance criteria'lara dönüştürün.",
+
+      workflowProgress:
+        "Workflow İlerlemesi",
+
+      inputTitle:
+        "Acceptance Criteria Girdisi",
+
+      inputSubtitle:
+        "Önceki workflow adımından gelen User Story ile başlayın veya manuel olarak girin.",
+
+      source:
+        "Kaynak",
+
+      workflow:
+        "WORKFLOW",
+
+      requirement:
+        "User Story / Gereksinim",
+
+      requirementPlaceholder:
+        "Örnek: Müşteri, IBAN kullanarak başka bir banka hesabına para transferi yapabilmelidir.",
+
+      detail:
+        "Detay Seviyesi",
+
+      priority:
+        "Öncelik",
+
+      sourceType:
+        "Kaynak Tipi",
+
+      userStory:
+        "User Story",
+
+      requirementType:
+        "Requirement",
+
+      manual:
+        "Manuel Girdi",
+
+      generate:
+        "Acceptance Criteria Oluştur",
+
+      generating:
+        "Acceptance criteria oluşturuluyor...",
+
+      clear:
+        "Temizle",
+
+      workspace:
+        "Acceptance Criteria Workspace",
+
+      workspaceSubtitle:
+        "Oluşturulan acceptance criteria'ları inceleyin, düzenleyin ve kaydedin.",
+
+      score:
+        "Test Edilebilirlik Skoru",
+
+      outOf100:
+        "100 üzerinden",
+
+      scoreExplanation:
+        "Test Edilebilirlik Değerlendirmesi",
+
+      criteria:
+        "Acceptance Criteria",
+
+      addCriterion:
+        "+ Criterion Ekle",
+
+      type:
+        "Tip",
+
+      given:
+        "Given",
+
+      when:
+        "When",
+
+      then:
+        "Then",
+
+      coverage:
+        "Coverage Özeti",
+
+      businessRules:
+        "Business Rules",
+
+      addRule:
+        "+ Rule Ekle",
+
+      assumptions:
+        "Varsayımlar",
+
+      addAssumption:
+        "+ Varsayım Ekle",
+
+      openQuestions:
+        "Açık Sorular",
+
+      addQuestion:
+        "+ Soru Ekle",
+
+      save:
+        "Taslağı Kaydet",
+
+      saving:
+        "Kaydediliyor...",
+
+      regenerate:
+        "Yeniden Oluştur",
+
+      reset:
+        "Sıfırla",
+
+      continue:
+        "UAT'a Devam Et →",
+
+      actionTitle:
+        "Acceptance Criteria Hazır",
+
+      actionText:
+        "UAT'a geçmeden önce çalışmanızı kaydedin.",
+
+      saved:
+        "Acceptance Criteria taslağı başarıyla kaydedildi.",
+
+      sourceLoaded:
+        "User Story önceki workflow adımından yüklendi.",
+
+      noSource:
+        "Önceki User Story bulunamadı. Girdiyi manuel olarak ekleyebilirsiniz.",
+
+      requirementError:
+        "Lütfen en az 15 karakter ve 3 kelime girin.",
+
+      apiError:
+        "Sunucudan beklenmeyen bir cevap geldi.",
+
+      genericError:
+        "Acceptance criteria oluşturulurken bir hata oluştu.",
+
+      noCriteria:
+        "Acceptance criteria oluşturulamadı.",
+
+      emptyList:
+        "Henüz herhangi bir kayıt eklenmedi.",
+
+      confirmReset:
+        "Mevcut Acceptance Criteria workspace sıfırlansın mı?",
+
+      deleteCriterion:
+        "Bu acceptance criterion silinsin mi?",
+
+      deleteItem:
+        "Bu kayıt silinsin mi?",
+
+      continueWarning:
+        "UAT'a geçmeden önce Acceptance Criteria taslağını kaydedin.",
+
+      noCriteriaWarning:
+        "UAT'a geçmeden önce en az bir acceptance criterion gereklidir.",
+
+      workflowSource:
+        "User Story",
+
+      workflowCurrent:
+        "Acceptance Criteria",
+
+      workflowUat:
+        "UAT Test Cases",
+
+      workflowRequirement:
+        "Requirement",
+
+      workflowTestData:
+        "Test Data",
+
+      workflowProcess:
+        "Process Flow",
+
+      workflowTraceability:
+        "Traceability",
+
+      workflowDocument:
+        "BA Document",
+
+      positive:
+        "Positive",
+
+      negative:
+        "Negative",
+
+      boundary:
+        "Boundary",
+
+      validation:
+        "Validation",
+
+      saveBeforeContinue:
+        "Taslak kaydedildi. UAT context hazırlanıyor...",
+
+      transferReady:
+        "Acceptance Criteria context'i UAT için hazırlandı.",
+
+      coverageEmpty:
+        "Coverage bilgisi oluşturulmadı.",
+
+      scoreExplanationFallback:
+        "Test edilebilirlik skoru oluşturulan acceptance criteria'lar üzerinden hesaplandı.",
+
+      newCriterion:
+        "Yeni acceptance criterion",
+
+      newRule:
+        "Yeni business rule",
+
+      newAssumption:
+        "Yeni varsayım",
+
+      newQuestion:
+        "Yeni açık soru"
 
     }
 
   };
 
+  /* =========================================
+     DOM
+     ========================================= */
+
+  const languageEl =
+    document.getElementById(
+      "language"
+    );
+
+  const requirementEl =
+    document.getElementById(
+      "requirement"
+    );
+
+  const detailEl =
+    document.getElementById(
+      "detail"
+    );
+
+  const priorityEl =
+    document.getElementById(
+      "priority"
+    );
+
+  const sourceTypeEl =
+    document.getElementById(
+      "sourceType"
+    );
+
+  const generateButton =
+    document.getElementById(
+      "generateButton"
+    );
+
+  const clearButton =
+    document.getElementById(
+      "clearButton"
+    );
+
+  const statusEl =
+    document.getElementById(
+      "status"
+    );
+
+  const errorEl =
+    document.getElementById(
+      "error"
+    );
+
+  const successMessageEl =
+    document.getElementById(
+      "successMessage"
+    );
+
+  const workspaceCard =
+    document.getElementById(
+      "workspaceCard"
+    );
+
+  const criteriaBody =
+    document.getElementById(
+      "criteriaBody"
+    );
+
+  const coverageList =
+    document.getElementById(
+      "coverageList"
+    );
+
+  const businessRulesList =
+    document.getElementById(
+      "businessRulesList"
+    );
+
+  const assumptionsList =
+    document.getElementById(
+      "assumptionsList"
+    );
+
+  const openQuestionsList =
+    document.getElementById(
+      "openQuestionsList"
+    );
+
+  const scoreValue =
+    document.getElementById(
+      "scoreValue"
+    );
+
+  const scoreExplanation =
+    document.getElementById(
+      "scoreExplanation"
+    );
+
+  const sourceBanner =
+    document.getElementById(
+      "sourceBanner"
+    );
+
+  const sourceTitle =
+    document.getElementById(
+      "sourceTitle"
+    );
+
+  const workflowStepsEl =
+    document.getElementById(
+      "workflowSteps"
+    );
+
+  const workflowProgressValue =
+    document.getElementById(
+      "workflowProgressValue"
+    );
+
+  const workflowProgressBar =
+    document.getElementById(
+      "workflowProgressBar"
+    );
+
+  /* =========================================
+     STATE
+     ========================================= */
+
+  let state = {
+
+    source:
+      "manual",
+
+    requirementId:
+      null,
+
+    userStoryId:
+      null,
+
+    requirement:
+      "",
+
+    userStory:
+      null,
+
+    language:
+      "en",
+
+    detail:
+      "Professional",
+
+    priority:
+      "medium",
+
+    testabilityScore:
+      0,
+
+    testabilityExplanation:
+      "",
+
+    acceptanceCriteria:
+      [],
+
+    coverageSummary:
+      [],
+
+    businessRules:
+      [],
+
+    assumptions:
+      [],
+
+    openQuestions:
+      [],
+
+    saved:
+      false,
+
+    updatedAt:
+      null
+
+  };
+
+  /* =========================================
+     TRANSLATION HELPER
+     ========================================= */
+
+  function t(key) {
+
+    const language =
+      languageEl.value || "en";
+
+    return (
+      translations[language]?.[key] ||
+      translations.en[key] ||
+      key
+    );
+
+  }
+
+  /* =========================================
+     SAFE STORAGE
+     ========================================= */
+
+  function readStorage(key) {
+
+    try {
+
+      const value =
+        sessionStorage.getItem(key);
+
+      if (!value) {
+        return null;
+      }
+
+      return JSON.parse(value);
+
+    } catch (error) {
+
+      return null;
+
+    }
+
+  }
+
+  function writeStorage(
+    key,
+    value
+  ) {
+
+    try {
+
+      sessionStorage.setItem(
+        key,
+        JSON.stringify(value)
+      );
+
+      return true;
+
+    } catch (error) {
+
+      return false;
+
+    }
+
+  }
+
+  function removeStorage(key) {
+
+    try {
+
+      sessionStorage.removeItem(
+        key
+      );
+
+    } catch (error) {
+      /* no-op */
+    }
+
+  }
+
+  /* =========================================
+     GENERAL HELPERS
+     ========================================= */
+
+  function clone(value) {
+
+    if (
+      value === undefined ||
+      value === null
+    ) {
+
+      return value;
+
+    }
+
+    return JSON.parse(
+      JSON.stringify(value)
+    );
+
+  }
+
   function escapeHtml(value) {
 
     return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
 
   }
 
-  function applyLanguage() {
+  function createLocalId(
+    prefix
+  ) {
 
-    const lang =
-      document
-        .getElementById("language")
-        .value;
-
-    const t =
-      translations[lang];
-
-    document
-      .getElementById("pageTitle")
-      .textContent =
-      t.pageTitle;
-
-    document
-      .getElementById("inputLabel")
-      .textContent =
-      t.inputLabel;
-
-    document
-      .getElementById("languageLabel")
-      .textContent =
-      t.languageLabel;
-
-    document
-      .getElementById("detailLabel")
-      .textContent =
-      t.detailLabel;
-
-    document
-      .getElementById("generateBtn")
-      .textContent =
-      t.generate;
-
-    document
-      .getElementById("loading")
-      .textContent =
-      t.loading;
-
-    document
-      .getElementById("resultTitle")
-      .textContent =
-      t.resultTitle;
-
-    document
-      .getElementById("criteriaTitle")
-      .textContent =
-      t.criteriaTitle;
-
-    document
-      .getElementById("coverageTitle")
-      .textContent =
-      t.coverageTitle;
-
-    document
-      .getElementById("rulesTitle")
-      .textContent =
-      t.rulesTitle;
-
-    document
-      .getElementById("assumptionsTitle")
-      .textContent =
-      t.assumptionsTitle;
-
-    document
-      .getElementById("questionsTitle")
-      .textContent =
-      t.questionsTitle;
-
-    document.documentElement.lang =
-      lang;
-
-  }
-
-  document
-    .getElementById("language")
-    .addEventListener(
-      "change",
-      applyLanguage
+    return (
+      `${prefix}_${Date.now()}_${Math.random()
+        .toString(36)
+        .slice(2, 7)}`
     );
 
-  function renderList(id, items) {
+  }
 
-    const element =
-      document.getElementById(id);
-
-    element.innerHTML = "";
+  function normalizeArray(
+    value
+  ) {
 
     if (
-      !Array.isArray(items) ||
-      items.length === 0
+      !Array.isArray(value)
     ) {
 
-      element.innerHTML =
-        `<li class="empty">-</li>`;
+      return [];
 
-      return;
     }
 
-    items.forEach(item => {
+    return value
+      .map(
+        item =>
+          String(
+            item ?? ""
+          ).trim()
+      )
+      .filter(Boolean);
 
-      const li =
-        document.createElement("li");
+  }
 
-      li.innerHTML =
-        escapeHtml(item);
+  /* =========================================
+     FIND USER STORY CONTEXT
+     ========================================= */
 
-      element.appendChild(li);
+  function findUserStoryContext() {
+
+    const direct =
+      readStorage(
+        STORAGE_KEYS.userStory
+      );
+
+    if (
+      direct &&
+      typeof direct === "object"
+    ) {
+
+      return direct;
+
+    }
+
+    const possibleKeys = [
+      "baforge-user-story",
+      "baforge-user-story-state",
+      "user-story-state",
+      "userStory",
+      "userStoryDraft",
+      "ba-user-story",
+      "ba-workspace-user-story"
+    ];
+
+    for (
+      const key of possibleKeys
+    ) {
+
+      const value =
+        readStorage(key);
+
+      if (
+        value &&
+        typeof value === "object"
+      ) {
+
+        if (
+          value.story ||
+          value.title ||
+          value.role ||
+          value.goal ||
+          value.userStory ||
+          value.fullStory
+        ) {
+
+          return value;
+
+        }
+
+      }
+
+    }
+
+    /*
+     * Fallback:
+     * Search sessionStorage for an object that
+     * looks like a User Story artifact.
+     */
+
+    try {
+
+      for (
+        let index = 0;
+        index < sessionStorage.length;
+        index++
+      ) {
+
+        const key =
+          sessionStorage.key(index);
+
+        if (!key) {
+          continue;
+        }
+
+        const raw =
+          sessionStorage.getItem(key);
+
+        if (!raw) {
+          continue;
+        }
+
+        let parsed;
+
+        try {
+
+          parsed =
+            JSON.parse(raw);
+
+        } catch (error) {
+
+          continue;
+
+        }
+
+        if (
+          !parsed ||
+          typeof parsed !== "object"
+        ) {
+
+          continue;
+
+        }
+
+        const candidate =
+          parsed.data &&
+          typeof parsed.data === "object"
+            ? parsed.data
+            : parsed;
+
+        const looksLikeUserStory =
+          candidate.story ||
+          candidate.fullStory ||
+          (
+            candidate.role &&
+            candidate.goal &&
+            candidate.benefit
+          );
+
+        if (
+          looksLikeUserStory
+        ) {
+
+          return candidate;
+
+        }
+
+      }
+
+    } catch (error) {
+      /* no-op */
+    }
+
+    return null;
+
+  }
+
+  /* =========================================
+     BUILD USER STORY TEXT
+     ========================================= */
+
+  function buildUserStoryText(
+    userStory
+  ) {
+
+    if (!userStory) {
+      return "";
+    }
+
+    if (
+      typeof userStory === "string"
+    ) {
+
+      return userStory.trim();
+
+    }
+
+    if (
+      userStory.story &&
+      String(
+        userStory.story
+      ).trim()
+    ) {
+
+      return String(
+        userStory.story
+      ).trim();
+
+    }
+
+    if (
+      userStory.fullStory &&
+      String(
+        userStory.fullStory
+      ).trim()
+    ) {
+
+      return String(
+        userStory.fullStory
+      ).trim();
+
+    }
+
+    const role =
+      userStory.role ||
+      userStory.asA ||
+      "";
+
+    const goal =
+      userStory.goal ||
+      userStory.iWant ||
+      "";
+
+    const benefit =
+      userStory.benefit ||
+      userStory.soThat ||
+      "";
+
+    if (
+      role ||
+      goal ||
+      benefit
+    ) {
+
+      const parts = [];
+
+      if (role) {
+        parts.push(
+          `As a ${role}`
+        );
+      }
+
+      if (goal) {
+        parts.push(
+          `I want ${goal}`
+        );
+      }
+
+      if (benefit) {
+        parts.push(
+          `So that ${benefit}`
+        );
+      }
+
+      return parts.join(
+        "\n"
+      );
+
+    }
+
+    if (
+      userStory.description
+    ) {
+
+      return String(
+        userStory.description
+      ).trim();
+
+    }
+
+    if (
+      userStory.requirement
+    ) {
+
+      return String(
+        userStory.requirement
+      ).trim();
+
+    }
+
+    return "";
+
+  }
+
+  /* =========================================
+     LOAD CONTEXT
+     ========================================= */
+
+  function loadInitialContext() {
+
+    const savedDraft =
+      readStorage(
+        STORAGE_KEYS.draft
+      );
+
+    if (
+      savedDraft &&
+      typeof savedDraft === "object" &&
+      savedDraft.acceptanceCriteria
+    ) {
+
+      state = {
+        ...state,
+        ...clone(savedDraft)
+      };
+
+      applyStateToInputs();
+
+      renderWorkspace();
+
+      return;
+
+    }
+
+    const userStory =
+      findUserStoryContext();
+
+    if (
+      userStory
+    ) {
+
+      const storyText =
+        buildUserStoryText(
+          userStory
+        );
+
+      if (storyText) {
+
+        state.source =
+          "user_story";
+
+        state.userStory =
+          clone(userStory);
+
+        state.userStoryId =
+          userStory.id ||
+          userStory.userStoryId ||
+          null;
+
+        state.requirementId =
+          userStory.requirementId ||
+          null;
+
+        state.requirement =
+          storyText;
+
+        requirementEl.value =
+          storyText;
+
+        sourceTypeEl.value =
+          "user_story";
+
+        sourceBanner.style.display =
+          "flex";
+
+        sourceTitle.textContent =
+          userStory.title ||
+          t("userStory");
+
+        showSuccess(
+          t("sourceLoaded")
+        );
+
+      }
+
+    } else {
+
+      sourceBanner.style.display =
+        "none";
+
+    }
+
+  }
+
+  /* =========================================
+     APPLY STATE
+     ========================================= */
+
+  function applyStateToInputs() {
+
+    languageEl.value =
+      state.language ||
+      "en";
+
+    requirementEl.value =
+      state.requirement ||
+      "";
+
+    detailEl.value =
+      state.detail ||
+      "Professional";
+
+    priorityEl.value =
+      state.priority ||
+      "medium";
+
+    sourceTypeEl.value =
+      state.source ||
+      "manual";
+
+    if (
+      state.userStory
+    ) {
+
+      sourceBanner.style.display =
+        "flex";
+
+      sourceTitle.textContent =
+        state.userStory.title ||
+        t("userStory");
+
+    } else {
+
+      sourceBanner.style.display =
+        "none";
+
+    }
+
+    updateLanguage();
+
+  }
+
+  /* =========================================
+     BUILD STATE FROM UI
+     ========================================= */
+
+  function syncStateFromInputs() {
+
+    state.requirement =
+      requirementEl.value.trim();
+
+    state.language =
+      languageEl.value;
+
+    state.detail =
+      detailEl.value;
+
+    state.priority =
+      priorityEl.value;
+
+    state.source =
+      sourceTypeEl.value;
+
+    state.updatedAt =
+      new Date().toISOString();
+
+  }
+
+  /* =========================================
+     WORKFLOW
+     ========================================= */
+
+  function getWorkflowState() {
+
+    if (
+      !window.BAWorkflow
+    ) {
+
+      return null;
+
+    }
+
+    const stored =
+      readStorage(
+        STORAGE_KEYS.workflow
+      );
+
+    if (
+      stored
+    ) {
+
+      try {
+
+        return BAWorkflow.deserialize(
+          stored
+        );
+
+      } catch (error) {
+        /* create below */
+      }
+
+    }
+
+    return BAWorkflow.createWorkflowState({
+
+      currentStep:
+        "acceptance_criteria",
+
+      completedSteps:
+        state.userStoryId
+          ? [
+              "requirement",
+              "user_story"
+            ]
+          : []
 
     });
 
   }
 
-  function typeTag(type) {
-
-    const normalized =
-      String(type || "")
-        .toLowerCase();
-
-    let className =
-      "tag-validation";
+  function saveWorkflow(
+    workflow
+  ) {
 
     if (
-      normalized.includes("positive") ||
-      normalized.includes("happy")
-    ) {
-
-      className =
-        "tag-positive";
-
-    }
-
-    if (
-      normalized.includes("negative") ||
-      normalized.includes("error")
-    ) {
-
-      className =
-        "tag-negative";
-
-    }
-
-    if (
-      normalized.includes("boundary") ||
-      normalized.includes("edge")
-    ) {
-
-      className =
-        "tag-boundary";
-
-    }
-
-    return `
-      <span class="tag ${className}">
-        ${escapeHtml(
-          type || "Validation"
-        )}
-      </span>
-    `;
-
-  }
-
-  function renderCriteria(criteria) {
-
-    const body =
-      document.getElementById(
-        "criteriaBody"
-      );
-
-    body.innerHTML = "";
-
-    if (
-      !Array.isArray(criteria) ||
-      criteria.length === 0
+      !workflow
     ) {
 
       return;
 
     }
 
-    criteria.forEach(
-      (item, index) => {
-
-        const row =
-          document.createElement("tr");
-
-        row.innerHTML = `
-
-          <td>
-            ${escapeHtml(
-              item.id ||
-              `AC-${String(
-                index + 1
-              ).padStart(2, "0")}`
-            )}
-          </td>
-
-          <td>
-            ${typeTag(item.type)}
-          </td>
-
-          <td>
-            ${escapeHtml(
-              item.given
-            )}
-          </td>
-
-          <td>
-            ${escapeHtml(
-              item.when
-            )}
-          </td>
-
-          <td>
-            ${escapeHtml(
-              item.then
-            )}
-          </td>
-
-        `;
-
-        body.appendChild(row);
-
-      }
+    writeStorage(
+      STORAGE_KEYS.workflow,
+      workflow
     );
 
   }
 
-  async function generateCriteria() {
-
-    const requirement =
-      document
-        .getElementById("requirement")
-        .value
-        .trim();
-
-    const language =
-      document
-        .getElementById("language")
-        .value;
-
-    const detail =
-      document
-        .getElementById("detail")
-        .value;
-
-    const errorBox =
-      document.getElementById(
-        "error"
-      );
-
-    const loading =
-      document.getElementById(
-        "loading"
-      );
-
-    const button =
-      document.getElementById(
-        "generateBtn"
-      );
-
-    errorBox.style.display =
-      "none";
-
-    document
-      .getElementById("result")
-      .style.display =
-      "none";
-
-    const words =
-      requirement
-        .split(/\s+/)
-        .filter(Boolean);
+  function renderWorkflow() {
 
     if (
-      requirement.length < 15 ||
-      words.length < 3
+      !window.BAWorkflow
     ) {
-
-      errorBox.textContent =
-        language === "tr"
-          ? "Lütfen en az 15 karakter ve 3 kelime içeren açık bir requirement veya user story girin."
-          : "Please provide a clear requirement or user story with at least 15 characters and 3 words.";
-
-      errorBox.style.display =
-        "block";
 
       return;
 
     }
 
-    button.disabled =
+    const workflow =
+      getWorkflowState();
+
+    if (!workflow) {
+      return;
+    }
+
+    const definitions =
+      BAWorkflow.getWorkflowDefinition();
+
+    const labels = {
+
+      requirement:
+        t("workflowRequirement"),
+
+      user_story:
+        t("workflowSource"),
+
+      acceptance_criteria:
+        t("workflowCurrent"),
+
+      uat:
+        t("workflowUat"),
+
+      test_data:
+        t("workflowTestData"),
+
+      process_flow:
+        t("workflowProcess"),
+
+      traceability:
+        t("workflowTraceability"),
+
+      document:
+        t("workflowDocument")
+
+    };
+
+    workflowStepsEl.innerHTML =
+      definitions
+        .map(
+          (definition, index) => {
+
+            const status =
+              BAWorkflow.getStepStatus(
+                workflow,
+                definition.step
+              );
+
+            const statusClass =
+              status === "completed"
+                ? "completed"
+                : status === "current"
+                  ? "active"
+                  : "";
+
+            return `
+
+              <div
+                class="workflow-step ${statusClass}"
+              >
+
+                <div
+                  class="workflow-step-dot"
+                >
+                  ${
+                    status === "completed"
+                      ? "✓"
+                      : index + 1
+                  }
+                </div>
+
+                <span>
+                  ${escapeHtml(
+                    labels[
+                      definition.step
+                    ] ||
+                    definition.label
+                  )}
+                </span>
+
+              </div>
+
+              ${
+                index <
+                definitions.length - 1
+                  ? `
+                    <div
+                      class="workflow-line"
+                    ></div>
+                  `
+                  : ""
+              }
+
+            `;
+
+          }
+        )
+        .join("");
+
+    const progress =
+      BAWorkflow.getProgress(
+        workflow
+      );
+
+    workflowProgressValue.textContent =
+      `${progress.completed} / ${progress.total}`;
+
+    workflowProgressBar.style.width =
+      `${progress.percentage}%`;
+
+  }
+
+  /* =========================================
+     VALIDATION
+     ========================================= */
+
+  function validateRequirement() {
+
+    const value =
+      requirementEl.value.trim();
+
+    const words =
+      value
+        .split(/\s+/)
+        .filter(Boolean);
+
+    if (
+      value.length < 15 ||
+      words.length < 3
+    ) {
+
+      showError(
+        t("requirementError")
+      );
+
+      return false;
+
+    }
+
+    return true;
+
+  }
+
+  /* =========================================
+     API GENERATION
+     ========================================= */
+
+  async function generateCriteria() {
+
+    hideError();
+
+    hideSuccess();
+
+    if (
+      !validateRequirement()
+    ) {
+
+      return;
+
+    }
+
+    syncStateFromInputs();
+
+    generateButton.disabled =
       true;
 
-    loading.style.display =
+    statusEl.style.display =
       "block";
+
+    statusEl.textContent =
+      t("generating");
 
     try {
 
@@ -1404,9 +3823,25 @@
             },
 
             body: JSON.stringify({
-              requirement,
-              language,
-              detail
+
+              requirement:
+                state.requirement,
+
+              userStory:
+                state.userStory,
+
+              language:
+                state.language,
+
+              detail:
+                state.detail,
+
+              priority:
+                state.priority,
+
+              source:
+                state.source
+
             })
 
           }
@@ -1422,93 +3857,2391 @@
         data =
           JSON.parse(raw);
 
-      } catch {
+      } catch (error) {
 
         throw new Error(
-          "Invalid server response."
+          t("apiError")
         );
 
       }
 
-      if (!response.ok) {
+      if (
+        !response.ok
+      ) {
 
         throw new Error(
-          data?.error ||
-          "Request failed."
+          data.error ||
+          t("genericError")
         );
 
       }
 
-      document
-        .getElementById(
-          "scoreValue"
+      if (
+        !Array.isArray(
+          data.acceptanceCriteria
         )
-        .textContent =
-        `${data.testabilityScore ?? 0}/100`;
+      ) {
 
-      document
-        .getElementById(
-          "scoreExplanation"
-        )
-        .textContent =
-        data.testabilityExplanation ||
-        "";
+        throw new Error(
+          t("genericError")
+        );
 
-      renderCriteria(
-        data.acceptanceCriteria
+      }
+
+      state.testabilityScore =
+        normalizeScore(
+          data.testabilityScore
+        );
+
+      state.testabilityExplanation =
+        String(
+          data.testabilityExplanation ||
+          t("scoreExplanationFallback")
+        );
+
+      state.acceptanceCriteria =
+        normalizeCriteria(
+          data.acceptanceCriteria
+        );
+
+      state.coverageSummary =
+        normalizeArray(
+          data.coverageSummary
+        );
+
+      state.businessRules =
+        normalizeArray(
+          data.businessRules
+        );
+
+      state.assumptions =
+        normalizeArray(
+          data.assumptions
+        );
+
+      state.openQuestions =
+        normalizeArray(
+          data.openQuestions
+        );
+
+      state.saved =
+        false;
+
+      state.updatedAt =
+        new Date().toISOString();
+
+      renderWorkspace();
+
+      saveDraft(
+        false
       );
-
-      renderList(
-        "coverageList",
-        data.coverageSummary
-      );
-
-      renderList(
-        "rulesList",
-        data.businessRules
-      );
-
-      renderList(
-        "assumptionsList",
-        data.assumptions
-      );
-
-      renderList(
-        "questionsList",
-        data.openQuestions
-      );
-
-      document
-        .getElementById("result")
-        .style.display =
-        "block";
 
     } catch (error) {
 
-      errorBox.textContent =
+      showError(
         error.message ||
-        "Something went wrong.";
-
-      errorBox.style.display =
-        "block";
+        t("genericError")
+      );
 
     } finally {
 
-      button.disabled =
+      generateButton.disabled =
         false;
 
-      loading.style.display =
+      statusEl.style.display =
         "none";
 
     }
 
   }
 
-  applyLanguage();
+  /* =========================================
+     NORMALIZATION
+     ========================================= */
 
+  function normalizeScore(
+    value
+  ) {
+
+    const score =
+      Number(value);
+
+    if (
+      !Number.isFinite(score)
+    ) {
+
+      return 0;
+
+    }
+
+    return Math.max(
+      0,
+      Math.min(
+        100,
+        Math.round(score)
+      )
+    );
+
+  }
+
+  function normalizeCriteria(
+    criteria
+  ) {
+
+    if (
+      !Array.isArray(criteria)
+    ) {
+
+      return [];
+
+    }
+
+    return criteria
+      .map(
+        (criterion, index) => {
+
+          const type =
+            normalizeCriterionType(
+              criterion?.type
+            );
+
+          return {
+
+            id:
+              criterion?.id ||
+              `AC-${String(
+                index + 1
+              ).padStart(
+                2,
+                "0"
+              )}`,
+
+            type,
+
+            given:
+              String(
+                criterion?.given ||
+                ""
+              ).trim(),
+
+            when:
+              String(
+                criterion?.when ||
+                ""
+              ).trim(),
+
+            then:
+              String(
+                criterion?.then ||
+                ""
+              ).trim(),
+
+            title:
+              String(
+                criterion?.title ||
+                ""
+              ).trim(),
+
+            description:
+              String(
+                criterion?.description ||
+                ""
+              ).trim(),
+
+            priority:
+              criterion?.priority ||
+              state.priority ||
+              "medium"
+
+          };
+
+        }
+      )
+      .filter(
+        criterion =>
+          criterion.given ||
+          criterion.when ||
+          criterion.then
+      );
+
+  }
+
+  function normalizeCriterionType(
+    value
+  ) {
+
+    const normalized =
+      String(
+        value ||
+        "positive"
+      )
+        .trim()
+        .toLowerCase();
+
+    const map = {
+
+      positive:
+        "positive",
+
+      negative:
+        "negative",
+
+      boundary:
+        "boundary",
+
+      validation:
+        "validation"
+
+    };
+
+    return (
+      map[normalized] ||
+      "positive"
+    );
+
+  }
+
+  /* =========================================
+     RENDER WORKSPACE
+     ========================================= */
+
+  function renderWorkspace() {
+
+    workspaceCard.style.display =
+      "block";
+
+    renderScore();
+
+    renderCriteria();
+
+    renderCoverage();
+
+    renderList(
+      businessRulesList,
+      state.businessRules,
+      "rule"
+    );
+
+    renderList(
+      assumptionsList,
+      state.assumptions,
+      "assumption"
+    );
+
+    renderList(
+      openQuestionsList,
+      state.openQuestions,
+      "question"
+    );
+
+    renderWorkflow();
+
+    state.saved = false;
+
+  }
+
+  /* =========================================
+     SCORE
+     ========================================= */
+
+  function renderScore() {
+
+    scoreValue.textContent =
+      normalizeScore(
+        state.testabilityScore
+      );
+
+    scoreExplanation.textContent =
+      state.testabilityExplanation ||
+      t("scoreExplanationFallback");
+
+  }
+
+  /* =========================================
+     CRITERIA RENDER
+     ========================================= */
+
+  function renderCriteria() {
+
+    if (
+      !state.acceptanceCriteria.length
+    ) {
+
+      criteriaBody.innerHTML = `
+
+        <tr>
+
+          <td
+            colspan="6"
+            class="empty-table"
+          >
+            ${escapeHtml(
+              t("noCriteria")
+            )}
+          </td>
+
+        </tr>
+
+      `;
+
+      return;
+
+    }
+
+    criteriaBody.innerHTML =
+      state.acceptanceCriteria
+        .map(
+          (criterion, index) => `
+
+            <tr>
+
+              <td class="criterion-id">
+
+                ${escapeHtml(
+                  criterion.id ||
+                  `AC-${String(
+                    index + 1
+                  ).padStart(
+                    2,
+                    "0"
+                  )}`
+                )}
+
+              </td>
+
+              <td class="criterion-type">
+
+                <select
+                  data-criterion-index="${index}"
+                  data-field="type"
+                >
+
+                  ${renderTypeOptions(
+                    criterion.type
+                  )}
+
+                </select>
+
+              </td>
+
+              <td class="criterion-cell">
+
+                <textarea
+                  data-criterion-index="${index}"
+                  data-field="given"
+                  placeholder="Given..."
+                >${escapeHtml(
+                  criterion.given
+                )}</textarea>
+
+              </td>
+
+              <td class="criterion-cell">
+
+                <textarea
+                  data-criterion-index="${index}"
+                  data-field="when"
+                  placeholder="When..."
+                >${escapeHtml(
+                  criterion.when
+                )}</textarea>
+
+              </td>
+
+              <td class="criterion-cell">
+
+                <textarea
+                  data-criterion-index="${index}"
+                  data-field="then"
+                  placeholder="Then..."
+                >${escapeHtml(
+                  criterion.then
+                )}</textarea>
+
+              </td>
+
+              <td class="criterion-actions">
+
+                <button
+                  class="btn btn-danger btn-small btn-icon"
+                  type="button"
+                  data-delete-criterion="${index}"
+                  title="${escapeHtml(
+                    t("deleteCriterion")
+                  )}"
+                >
+                  ×
+                </button>
+
+              </td>
+
+            </tr>
+
+          `
+        )
+        .join("");
+
+  }
+
+  function renderTypeOptions(
+    selected
+  ) {
+
+    const options = [
+
+      {
+        value:
+          "positive",
+
+        label:
+          t("positive")
+
+      },
+
+      {
+        value:
+          "negative",
+
+        label:
+          t("negative")
+
+      },
+
+      {
+        value:
+          "boundary",
+
+        label:
+          t("boundary")
+
+      },
+
+      {
+        value:
+          "validation",
+
+        label:
+          t("validation")
+
+      }
+
+    ];
+
+    return options
+      .map(
+        option => `
+
+          <option
+            value="${escapeHtml(
+              option.value
+            )}"
+            ${
+              option.value ===
+              selected
+                ? "selected"
+                : ""
+            }
+          >
+            ${escapeHtml(
+              option.label
+            )}
+          </option>
+
+        `
+      )
+      .join("");
+
+  }
+
+  /* =========================================
+     COVERAGE
+     ========================================= */
+
+  function renderCoverage() {
+
+    if (
+      !state.coverageSummary.length
+    ) {
+
+      coverageList.innerHTML = `
+
+        <div
+          class="list-empty"
+          style="grid-column:1 / -1;"
+        >
+          ${escapeHtml(
+            t("coverageEmpty")
+          )}
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+    coverageList.innerHTML =
+      state.coverageSummary
+        .map(
+          item => `
+
+            <div class="coverage-item">
+
+              <div class="coverage-check">
+                ✓
+              </div>
+
+              <div>
+                ${escapeHtml(
+                  item
+                )}
+              </div>
+
+            </div>
+
+          `
+        )
+        .join("");
+
+  }
+
+  /* =========================================
+     LIST RENDER
+     ========================================= */
+
+  function renderList(
+    container,
+    items,
+    type
+  ) {
+
+    if (
+      !Array.isArray(items) ||
+      !items.length
+    ) {
+
+      container.innerHTML = `
+
+        <div class="list-empty">
+          ${escapeHtml(
+            t("emptyList")
+          )}
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+    container.innerHTML =
+      items
+        .map(
+          (item, index) => `
+
+            <div class="list-item">
+
+              <textarea
+                data-list-type="${type}"
+                data-list-index="${index}"
+              >${escapeHtml(
+                item
+              )}</textarea>
+
+              <div class="list-item-actions">
+
+                <button
+                  class="btn btn-danger btn-small btn-icon"
+                  type="button"
+                  data-delete-list="${type}"
+                  data-list-index="${index}"
+                  title="${escapeHtml(
+                    t("deleteItem")
+                  )}"
+                >
+                  ×
+                </button>
+
+              </div>
+
+            </div>
+
+          `
+        )
+        .join("");
+
+  }
+
+  /* =========================================
+     CRITERIA EVENTS
+     ========================================= */
+
+  criteriaBody.addEventListener(
+    "input",
+    function (event) {
+
+      const target =
+        event.target;
+
+      if (
+        !target.matches(
+          "[data-criterion-index][data-field]"
+        )
+      ) {
+
+        return;
+
+      }
+
+      const index =
+        Number(
+          target.dataset
+            .criterionIndex
+        );
+
+      const field =
+        target.dataset.field;
+
+      if (
+        !state.acceptanceCriteria[
+          index
+        ]
+      ) {
+
+        return;
+
+      }
+
+      state.acceptanceCriteria[
+        index
+      ][field] =
+        target.value;
+
+      state.saved =
+        false;
+
+    }
+  );
+
+  criteriaBody.addEventListener(
+    "change",
+    function (event) {
+
+      const target =
+        event.target;
+
+      if (
+        !target.matches(
+          "[data-criterion-index][data-field]"
+        )
+      ) {
+
+        return;
+
+      }
+
+      const index =
+        Number(
+          target.dataset
+            .criterionIndex
+        );
+
+      const field =
+        target.dataset.field;
+
+      if (
+        !state.acceptanceCriteria[
+          index
+        ]
+      ) {
+
+        return;
+
+      }
+
+      state.acceptanceCriteria[
+        index
+      ][field] =
+        target.value;
+
+      state.saved =
+        false;
+
+    }
+  );
+
+  criteriaBody.addEventListener(
+    "click",
+    function (event) {
+
+      const button =
+        event.target.closest(
+          "[data-delete-criterion]"
+        );
+
+      if (!button) {
+        return;
+      }
+
+      const index =
+        Number(
+          button.dataset
+            .deleteCriterion
+        );
+
+      if (
+        !confirm(
+          t("deleteCriterion")
+        )
+      ) {
+
+        return;
+
+      }
+
+      state.acceptanceCriteria
+        .splice(
+          index,
+          1
+        );
+
+      renumberCriteria();
+
+      renderCriteria();
+
+      state.saved =
+        false;
+
+    }
+  );
+
+  /* =========================================
+     LIST EVENTS
+     ========================================= */
+
+  function attachListListeners(
+    container
+  ) {
+
+    container.addEventListener(
+      "input",
+      function (event) {
+
+        const target =
+          event.target;
+
+        if (
+          !target.matches(
+            "[data-list-type][data-list-index]"
+          )
+        ) {
+
+          return;
+
+        }
+
+        const type =
+          target.dataset
+            .listType;
+
+        const index =
+          Number(
+            target.dataset
+              .listIndex
+          );
+
+        const list =
+          getListByType(
+            type
+          );
+
+        if (
+          list &&
+          list[index] !==
+            undefined
+        ) {
+
+          list[index] =
+            target.value;
+
+          state.saved =
+            false;
+
+        }
+
+      }
+    );
+
+    container.addEventListener(
+      "click",
+      function (event) {
+
+        const button =
+          event.target.closest(
+            "[data-delete-list]"
+          );
+
+        if (!button) {
+          return;
+        }
+
+        const type =
+          button.dataset
+            .deleteList;
+
+        const index =
+          Number(
+            button.dataset
+              .listIndex
+          );
+
+        const list =
+          getListByType(
+            type
+          );
+
+        if (!list) {
+          return;
+        }
+
+        if (
+          !confirm(
+            t("deleteItem")
+          )
+        ) {
+
+          return;
+
+        }
+
+        list.splice(
+          index,
+          1
+        );
+
+        renderList(
+          container,
+          list,
+          type
+        );
+
+        state.saved =
+          false;
+
+      }
+    );
+
+  }
+
+  attachListListeners(
+    businessRulesList
+  );
+
+  attachListListeners(
+    assumptionsList
+  );
+
+  attachListListeners(
+    openQuestionsList
+  );
+
+  function getListByType(
+    type
+  ) {
+
+    if (
+      type === "rule"
+    ) {
+
+      return state.businessRules;
+
+    }
+
+    if (
+      type === "assumption"
+    ) {
+
+      return state.assumptions;
+
+    }
+
+    if (
+      type === "question"
+    ) {
+
+      return state.openQuestions;
+
+    }
+
+    return null;
+
+  }
+
+  /* =========================================
+     ADD CRITERION
+     ========================================= */
+
+  function addCriterion() {
+
+    const nextNumber =
+      state.acceptanceCriteria
+        .length + 1;
+
+    state.acceptanceCriteria
+      .push({
+
+        id:
+          `AC-${String(
+            nextNumber
+          ).padStart(
+            2,
+            "0"
+          )}`,
+
+        type:
+          "positive",
+
+        given:
+          "",
+
+        when:
+          "",
+
+        then:
+          "",
+
+        title:
+          t("newCriterion"),
+
+        description:
+          "",
+
+        priority:
+          state.priority ||
+          "medium"
+
+      });
+
+    renderCriteria();
+
+    state.saved =
+      false;
+
+    const lastTextarea =
+      criteriaBody.querySelector(
+        "tr:last-child textarea"
+      );
+
+    if (
+      lastTextarea
+    ) {
+
+      lastTextarea.focus();
+
+    }
+
+  }
+
+  /* =========================================
+     ADD LIST ITEM
+     ========================================= */
+
+  function addListItem(
+    type
+  ) {
+
+    const list =
+      getListByType(
+        type
+      );
+
+    if (!list) {
+      return;
+    }
+
+    let value =
+      "";
+
+    if (
+      type === "rule"
+    ) {
+
+      value =
+        t("newRule");
+
+    }
+
+    if (
+      type === "assumption"
+    ) {
+
+      value =
+        t("newAssumption");
+
+    }
+
+    if (
+      type === "question"
+    ) {
+
+      value =
+        t("newQuestion");
+
+    }
+
+    list.push(
+      value
+    );
+
+    const container =
+      type === "rule"
+        ? businessRulesList
+        : type === "assumption"
+          ? assumptionsList
+          : openQuestionsList;
+
+    renderList(
+      container,
+      list,
+      type
+    );
+
+    state.saved =
+      false;
+
+  }
+
+  /* =========================================
+     RENUMBER
+     ========================================= */
+
+  function renumberCriteria() {
+
+    state.acceptanceCriteria
+      .forEach(
+        (
+          criterion,
+          index
+        ) => {
+
+          criterion.id =
+            `AC-${String(
+              index + 1
+            ).padStart(
+              2,
+              "0"
+            )}`;
+
+        }
+      );
+
+  }
+
+  /* =========================================
+     SAVE DRAFT
+     ========================================= */
+
+  function buildDraftState() {
+
+    syncStateFromInputs();
+
+    return {
+
+      ...clone(state),
+
+      acceptanceCriteria:
+        clone(
+          state.acceptanceCriteria
+        ),
+
+      businessRules:
+        clone(
+          state.businessRules
+        ),
+
+      assumptions:
+        clone(
+          state.assumptions
+        ),
+
+      openQuestions:
+        clone(
+          state.openQuestions
+        ),
+
+      coverageSummary:
+        clone(
+          state.coverageSummary
+        ),
+
+      saved:
+        true,
+
+      updatedAt:
+        new Date().toISOString()
+
+    };
+
+  }
+
+  function saveDraft(
+    showMessage = true
+  ) {
+
+    const draft =
+      buildDraftState();
+
+    const saved =
+      writeStorage(
+        STORAGE_KEYS.draft,
+        draft
+      );
+
+    if (!saved) {
+
+      showError(
+        "Unable to save the draft in this browser."
+      );
+
+      return false;
+
+    }
+
+    state.saved =
+      true;
+
+    state.updatedAt =
+      draft.updatedAt;
+
+    attachAcceptanceArtifact(
+      draft
+    );
+
+    if (
+      showMessage
+    ) {
+
+      showSuccess(
+        t("saved")
+      );
+
+    }
+
+    renderWorkflow();
+
+    return true;
+
+  }
+
+  /* =========================================
+     WORKFLOW ARTIFACT
+     ========================================= */
+
+  function attachAcceptanceArtifact(
+    draft
+  ) {
+
+    if (
+      !window.BAWorkflow ||
+      !window.BADataModel
+    ) {
+
+      return;
+
+    }
+
+    const workflow =
+      getWorkflowState();
+
+    if (!workflow) {
+      return;
+    }
+
+    const criteria =
+      Array.isArray(
+        draft.acceptanceCriteria
+      )
+        ? draft.acceptanceCriteria
+            .map(
+              criterion =>
+                BADataModel.createAcceptanceCriterion(
+                  {
+
+                    id:
+                      criterion.id,
+
+                    requirementId:
+                      draft.requirementId,
+
+                    userStoryId:
+                      draft.userStoryId,
+
+                    title:
+                      criterion.title,
+
+                    description:
+                      criterion.description,
+
+                    type:
+                      criterion.type,
+
+                    given:
+                      criterion.given,
+
+                    when:
+                      criterion.when,
+
+                    then:
+                      criterion.then,
+
+                    priority:
+                      criterion.priority ||
+                      draft.priority ||
+                      "medium"
+
+                  }
+                )
+            )
+        : [];
+
+    const artifactData = {
+
+      id:
+        state.acceptanceCriteriaArtifactId ||
+        createLocalId(
+          "ac"
+        ),
+
+      source:
+        draft.source,
+
+      requirementId:
+        draft.requirementId,
+
+      userStoryId:
+        draft.userStoryId,
+
+      requirement:
+        draft.requirement,
+
+      language:
+        draft.language,
+
+      detail:
+        draft.detail,
+
+      priority:
+        draft.priority,
+
+      testabilityScore:
+        draft.testabilityScore,
+
+      testabilityExplanation:
+        draft.testabilityExplanation,
+
+      acceptanceCriteria:
+        criteria,
+
+      coverageSummary:
+        clone(
+          draft.coverageSummary
+        ),
+
+      businessRules:
+        clone(
+          draft.businessRules
+        ),
+
+      assumptions:
+        clone(
+          draft.assumptions
+        ),
+
+      openQuestions:
+        clone(
+          draft.openQuestions
+        )
+
+    };
+
+    state.acceptanceCriteriaArtifactId =
+      artifactData.id;
+
+    const artifact =
+      BAWorkflow.createWorkflowArtifact(
+        {
+
+          id:
+            artifactData.id,
+
+          step:
+            "acceptance_criteria",
+
+          entityId:
+            artifactData.id,
+
+          entityType:
+            "acceptance_criteria",
+
+          status:
+            "draft",
+
+          data:
+            artifactData
+
+        }
+      );
+
+    workflow.currentStep =
+      "acceptance_criteria";
+
+    workflow.artifacts
+      .acceptance_criteria =
+      artifact;
+
+    saveWorkflow(
+      workflow
+    );
+
+  }
+
+  /* =========================================
+     COMPLETE WORKFLOW STEP
+     ========================================= */
+
+  function completeAcceptanceStep() {
+
+    if (
+      !window.BAWorkflow
+    ) {
+
+      return null;
+
+    }
+
+    const workflow =
+      getWorkflowState();
+
+    const draft =
+      buildDraftState();
+
+    const artifact =
+      {
+
+        id:
+          state.acceptanceCriteriaArtifactId ||
+          createLocalId(
+            "ac"
+          ),
+
+        entityId:
+          state.acceptanceCriteriaArtifactId ||
+          null,
+
+        entityType:
+          "acceptance_criteria",
+
+        status:
+          "completed",
+
+        data:
+          draft
+
+      };
+
+    const completed =
+      BAWorkflow.completeStep(
+        workflow,
+        "acceptance_criteria",
+        artifact
+      );
+
+    saveWorkflow(
+      completed
+    );
+
+    return completed;
+
+  }
+
+  /* =========================================
+     UAT TRANSFER
+     ========================================= */
+
+  function prepareUatContext() {
+
+    const workflow =
+      getWorkflowState();
+
+    if (
+      !workflow
+    ) {
+
+      return null;
+
+    }
+
+    const completed =
+      completeAcceptanceStep();
+
+    let transfer =
+      null;
+
+    try {
+
+      transfer =
+        BAWorkflow.createTransferPayload(
+          completed,
+          "acceptance_criteria",
+          "uat"
+        );
+
+    } catch (error) {
+
+      transfer =
+        {
+
+          id:
+            createLocalId(
+              "transfer"
+            ),
+
+          source:
+            {
+              step:
+                "acceptance_criteria",
+
+              label:
+                "Acceptance Criteria",
+
+              artifactId:
+                state.acceptanceCriteriaArtifactId ||
+                null
+            },
+
+          target:
+            {
+              step:
+                "uat",
+
+              label:
+                "UAT Test Cases"
+            },
+
+          context:
+            BAWorkflow.buildContext(
+              completed
+            ),
+
+          sourceData:
+            buildDraftState(),
+
+          createdAt:
+            new Date().toISOString()
+
+        };
+
+    }
+
+    const uatContext = {
+
+      ...clone(
+        transfer
+      ),
+
+      acceptanceCriteria:
+        clone(
+          state.acceptanceCriteria
+        ),
+
+      businessRules:
+        clone(
+          state.businessRules
+        ),
+
+      assumptions:
+        clone(
+          state.assumptions
+        ),
+
+      openQuestions:
+        clone(
+          state.openQuestions
+        ),
+
+      requirement:
+        state.requirement,
+
+      requirementId:
+        state.requirementId,
+
+      userStoryId:
+        state.userStoryId,
+
+      priority:
+        state.priority,
+
+      language:
+        state.language,
+
+      createdAt:
+        new Date().toISOString()
+
+    };
+
+    writeStorage(
+      STORAGE_KEYS.uat,
+      uatContext
+    );
+
+    /*
+     * Compatibility keys for the current
+     * UAT page and future UAT Workspace.
+     */
+
+    writeStorage(
+      "baforge-current-uat-context",
+      uatContext
+    );
+
+    writeStorage(
+      "baforge-uat-requirement",
+      {
+        requirement:
+          state.requirement,
+
+        acceptanceCriteria:
+          state.acceptanceCriteria,
+
+        businessRules:
+          state.businessRules
+      }
+    );
+
+    return uatContext;
+
+  }
+
+  /* =========================================
+     CONTINUE TO UAT
+     ========================================= */
+
+  function continueToUat() {
+
+    hideError();
+
+    if (
+      !state.acceptanceCriteria.length
+    ) {
+
+      showError(
+        t("noCriteriaWarning")
+      );
+
+      return;
+
+    }
+
+    if (
+      !saveDraft(
+        false
+      )
+    ) {
+
+      return;
+
+    }
+
+    showSuccess(
+      t("saveBeforeContinue")
+    );
+
+    const context =
+      prepareUatContext();
+
+    if (!context) {
+
+      showError(
+        t("genericError")
+      );
+
+      return;
+
+    }
+
+    showSuccess(
+      t("transferReady")
+    );
+
+    /*
+     * Small delay allows the user to see
+     * the successful handoff state.
+     */
+
+    setTimeout(
+      function () {
+
+        window.location.href =
+          "/uat.html?from=acceptance-criteria";
+
+      },
+      350
+    );
+
+  }
+
+  /* =========================================
+     RESET
+     ========================================= */
+
+  function resetWorkspace() {
+
+    if (
+      !confirm(
+        t("confirmReset")
+      )
+    ) {
+
+      return;
+
+    }
+
+    const preserved = {
+
+      language:
+        languageEl.value,
+
+      detail:
+        detailEl.value,
+
+      priority:
+        priorityEl.value,
+
+      source:
+        sourceTypeEl.value,
+
+      requirement:
+        requirementEl.value,
+
+      requirementId:
+        state.requirementId,
+
+      userStoryId:
+        state.userStoryId,
+
+      userStory:
+        clone(
+          state.userStory
+        )
+
+    };
+
+    state = {
+
+      source:
+        preserved.source,
+
+      requirementId:
+        preserved.requirementId,
+
+      userStoryId:
+        preserved.userStoryId,
+
+      requirement:
+        preserved.requirement,
+
+      userStory:
+        preserved.userStory,
+
+      language:
+        preserved.language,
+
+      detail:
+        preserved.detail,
+
+      priority:
+        preserved.priority,
+
+      testabilityScore:
+        0,
+
+      testabilityExplanation:
+        "",
+
+      acceptanceCriteria:
+        [],
+
+      coverageSummary:
+        [],
+
+      businessRules:
+        [],
+
+      assumptions:
+        [],
+
+      openQuestions:
+        [],
+
+      saved:
+        false,
+
+      updatedAt:
+        new Date().toISOString()
+
+    };
+
+    removeStorage(
+      STORAGE_KEYS.draft
+    );
+
+    workspaceCard.style.display =
+      "none";
+
+    hideError();
+
+    hideSuccess();
+
+    renderWorkflow();
+
+  }
+
+  /* =========================================
+     CLEAR
+     ========================================= */
+
+  function clearInput() {
+
+    requirementEl.value =
+      "";
+
+    sourceTypeEl.value =
+      "manual";
+
+    sourceBanner.style.display =
+      "none";
+
+    hideError();
+
+    hideSuccess();
+
+    workspaceCard.style.display =
+      "none";
+
+    state = {
+
+      ...state,
+
+      source:
+        "manual",
+
+      requirement:
+        "",
+
+      userStory:
+        null,
+
+      requirementId:
+        null,
+
+      userStoryId:
+        null,
+
+      testabilityScore:
+        0,
+
+      testabilityExplanation:
+        "",
+
+      acceptanceCriteria:
+        [],
+
+      coverageSummary:
+        [],
+
+      businessRules:
+        [],
+
+      assumptions:
+        [],
+
+      openQuestions:
+        [],
+
+      saved:
+        false
+
+    };
+
+    removeStorage(
+      STORAGE_KEYS.draft
+    );
+
+  }
+
+  /* =========================================
+     LANGUAGE
+     ========================================= */
+
+  function updateLanguage() {
+
+    const language =
+      languageEl.value;
+
+    document.documentElement.lang =
+      language;
+
+    document.getElementById(
+      "badge"
+    ).textContent =
+      t("badge");
+
+    document.getElementById(
+      "eyebrowText"
+    ).textContent =
+      t("eyebrow");
+
+    document.getElementById(
+      "heroTitle"
+    ).textContent =
+      t("heroTitle");
+
+    document.getElementById(
+      "heroSubtitle"
+    ).textContent =
+      t("heroSubtitle");
+
+    document.getElementById(
+      "workflowProgressLabel"
+    ).textContent =
+      t("workflowProgress");
+
+    document.getElementById(
+      "inputTitle"
+    ).textContent =
+      t("inputTitle");
+
+    document.getElementById(
+      "inputSubtitle"
+    ).textContent =
+      t("inputSubtitle");
+
+    document.getElementById(
+      "languageLabel"
+    ).textContent =
+      language === "tr"
+        ? "Dil"
+        : "Language";
+
+    document.getElementById(
+      "sourceLabel"
+    ).textContent =
+      t("source");
+
+    document.getElementById(
+      "sourceBadge"
+    ).textContent =
+      t("workflow");
+
+    document.getElementById(
+      "requirementLabel"
+    ).textContent =
+      t("requirement");
+
+    requirementEl.placeholder =
+      t(
+        "requirementPlaceholder"
+      );
+
+    document.getElementById(
+      "detailLabel"
+    ).textContent =
+      t("detail");
+
+    document.getElementById(
+      "priorityLabel"
+    ).textContent =
+      t("priority");
+
+    document.getElementById(
+      "sourceTypeLabel"
+    ).textContent =
+      t("sourceType");
+
+    updateSourceTypeOptions();
+
+    generateButton.textContent =
+      t("generate");
+
+    clearButton.textContent =
+      t("clear");
+
+    document.getElementById(
+      "workspaceTitle"
+    ).textContent =
+      t("workspace");
+
+    document.getElementById(
+      "workspaceSubtitle"
+    ).textContent =
+      t("workspaceSubtitle");
+
+    document.getElementById(
+      "scoreLabel"
+    ).textContent =
+      t("score");
+
+    document.getElementById(
+      "scoreCaption"
+    ).textContent =
+      t("outOf100");
+
+    document.getElementById(
+      "scoreExplanationTitle"
+    ).textContent =
+      t("scoreExplanation");
+
+    document.getElementById(
+      "criteriaTitle"
+    ).textContent =
+      t("criteria");
+
+    document.getElementById(
+      "addCriterionButton"
+    ).textContent =
+      t("addCriterion");
+
+    document.getElementById(
+      "typeHeader"
+    ).textContent =
+      t("type");
+
+    document.getElementById(
+      "givenHeader"
+    ).textContent =
+      t("given");
+
+    document.getElementById(
+      "whenHeader"
+    ).textContent =
+      t("when");
+
+    document.getElementById(
+      "thenHeader"
+    ).textContent =
+      t("then");
+
+    document.getElementById(
+      "coverageTitle"
+    ).textContent =
+      t("coverage");
+
+    document.getElementById(
+      "businessRulesTitle"
+    ).textContent =
+      t("businessRules");
+
+    document.getElementById(
+      "addRuleButton"
+    ).textContent =
+      t("addRule");
+
+    document.getElementById(
+      "assumptionsTitle"
+    ).textContent =
+      t("assumptions");
+
+    document.getElementById(
+      "addAssumptionButton"
+    ).textContent =
+      t("addAssumption");
+
+    document.getElementById(
+      "openQuestionsTitle"
+    ).textContent =
+      t("openQuestions");
+
+    document.getElementById(
+      "addQuestionButton"
+    ).textContent =
+      t("addQuestion");
+
+    document.getElementById(
+      "resetButton"
+    ).textContent =
+      t("reset");
+
+    document.getElementById(
+      "regenerateButton"
+    ).textContent =
+      t("regenerate");
+
+    document.getElementById(
+      "saveButton"
+    ).textContent =
+      t("save");
+
+    document.getElementById(
+      "continueButton"
+    ).textContent =
+      t("continue");
+
+    document.getElementById(
+      "actionInfoTitle"
+    ).textContent =
+      t("actionTitle");
+
+    document.getElementById(
+      "actionInfoText"
+    ).textContent =
+      t("actionText");
+
+    if (
+      workspaceCard.style.display !==
+      "none"
+    ) {
+
+      renderCriteria();
+
+      renderCoverage();
+
+      renderList(
+        businessRulesList,
+        state.businessRules,
+        "rule"
+      );
+
+      renderList(
+        assumptionsList,
+        state.assumptions,
+        "assumption"
+      );
+
+      renderList(
+        openQuestionsList,
+        state.openQuestions,
+        "question"
+      );
+
+    }
+
+    renderWorkflow();
+
+  }
+
+  function updateSourceTypeOptions() {
+
+    sourceTypeEl.innerHTML = `
+
+      <option value="user_story">
+        ${escapeHtml(
+          t("userStory")
+        )}
+      </option>
+
+      <option value="requirement">
+        ${escapeHtml(
+          t("requirementType")
+        )}
+      </option>
+
+      <option value="manual">
+        ${escapeHtml(
+          t("manual")
+        )}
+      </option>
+
+    `;
+
+    sourceTypeEl.value =
+      state.source ||
+      "manual";
+
+  }
+
+  /* =========================================
+     MESSAGES
+     ========================================= */
+
+  function showError(
+    message
+  ) {
+
+    errorEl.textContent =
+      message;
+
+    errorEl.style.display =
+      "block";
+
+  }
+
+  function hideError() {
+
+    errorEl.textContent =
+      "";
+
+    errorEl.style.display =
+      "none";
+
+  }
+
+  function showSuccess(
+    message
+  ) {
+
+    successMessageEl.textContent =
+      message;
+
+    successMessageEl.style.display =
+      "block";
+
+  }
+
+  function hideSuccess() {
+
+    successMessageEl.textContent =
+      "";
+
+    successMessageEl.style.display =
+      "none";
+
+  }
+
+  /* =========================================
+     EVENT LISTENERS
+     ========================================= */
+
+  languageEl.addEventListener(
+    "change",
+    function () {
+
+      state.language =
+        languageEl.value;
+
+      updateLanguage();
+
+    }
+  );
+
+  requirementEl.addEventListener(
+    "input",
+    function () {
+
+      state.requirement =
+        requirementEl.value;
+
+      state.saved =
+        false;
+
+    }
+  );
+
+  detailEl.addEventListener(
+    "change",
+    function () {
+
+      state.detail =
+        detailEl.value;
+
+      state.saved =
+        false;
+
+    }
+  );
+
+  priorityEl.addEventListener(
+    "change",
+    function () {
+
+      state.priority =
+        priorityEl.value;
+
+      state.saved =
+        false;
+
+    }
+  );
+
+  sourceTypeEl.addEventListener(
+    "change",
+    function () {
+
+      state.source =
+        sourceTypeEl.value;
+
+      state.saved =
+        false;
+
+    }
+  );
+
+  generateButton.addEventListener(
+    "click",
+    generateCriteria
+  );
+
+  clearButton.addEventListener(
+    "click",
+    clearInput
+  );
+
+  document
+    .getElementById(
+      "addCriterionButton"
+    )
+    .addEventListener(
+      "click",
+      addCriterion
+    );
+
+  document
+    .getElementById(
+      "addRuleButton"
+    )
+    .addEventListener(
+      "click",
+      function () {
+
+        addListItem(
+          "rule"
+        );
+
+      }
+    );
+
+  document
+    .getElementById(
+      "addAssumptionButton"
+    )
+    .addEventListener(
+      "click",
+      function () {
+
+        addListItem(
+          "assumption"
+        );
+
+      }
+    );
+
+  document
+    .getElementById(
+      "addQuestionButton"
+    )
+    .addEventListener(
+      "click",
+      function () {
+
+        addListItem(
+          "question"
+        );
+
+      }
+    );
+
+  document
+    .getElementById(
+      "saveButton"
+    )
+    .addEventListener(
+      "click",
+      function () {
+
+        saveDraft(
+          true
+        );
+
+      }
+    );
+
+  document
+    .getElementById(
+      "resetButton"
+    )
+    .addEventListener(
+      "click",
+      resetWorkspace
+    );
+
+  document
+    .getElementById(
+      "regenerateButton"
+    )
+    .addEventListener(
+      "click",
+      generateCriteria
+    );
+
+  document
+    .getElementById(
+      "continueButton"
+    )
+    .addEventListener(
+      "click",
+      continueToUat
+    );
+
+  /* =========================================
+     AUTO SAVE ON PAGE EXIT
+     ========================================= */
+
+  window.addEventListener(
+    "beforeunload",
+    function () {
+
+      if (
+        workspaceCard.style.display !==
+          "none" &&
+        state.acceptanceCriteria
+          .length
+      ) {
+
+        try {
+
+          saveDraft(
+            false
+          );
+
+        } catch (error) {
+          /* no-op */
+        }
+
+      }
+
+    }
+  );
+
+  /* =========================================
+     INITIALIZATION
+     ========================================= */
+
+  function initialize() {
+
+    updateLanguage();
+
+    loadInitialContext();
+
+    /*
+     * If a draft was loaded, render the workflow
+     * and workspace after language initialization.
+     */
+
+    if (
+      state.acceptanceCriteria.length
+    ) {
+
+      renderWorkspace();
+
+    }
+
+    renderWorkflow();
+
+  }
+
+  initialize();
+
+})();
 </script>
-
-<script src="/nav.js"></script>
 
 </body>
 </html>
