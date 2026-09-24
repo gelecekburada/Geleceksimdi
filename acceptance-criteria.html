@@ -1,101 +1,3758 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BAForge AI - Acceptance Criteria Workspace</title>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f6f8fc;color:#172033;line-height:1.5}
-.container{max-width:1500px;margin:auto;padding:48px 24px 90px}.hero{margin-bottom:25px}.heroTop{display:flex;justify-content:space-between;gap:25px;align-items:flex-start}
-.eyebrow{display:inline-flex;gap:7px;align-items:center;color:#2563eb;background:#eef4ff;border:1px solid #dbe7ff;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:800;margin-bottom:12px}
-.dot{width:7px;height:7px;background:#2563eb;border-radius:50%}.hero h1{font-size:40px;line-height:1.15;letter-spacing:-1px;margin:0 0 12px;color:#101828}.hero p{margin:0;color:#667085;font-size:17px}
-.progress{min-width:280px;background:white;border:1px solid #e4e7ec;border-radius:15px;padding:16px;box-shadow:0 8px 25px #1018280d}.progressHead{display:flex;justify-content:space-between;font-size:12px;font-weight:800;margin-bottom:9px}.track{height:7px;background:#edf0f5;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:linear-gradient(90deg,#2563eb,#7c3aed);transition:.3s}
-.workflow{background:white;border:1px solid #e4e7ec;border-radius:16px;padding:16px;overflow:auto;margin-bottom:25px;box-shadow:0 4px 14px #1018280f}.steps{display:flex;align-items:center;min-width:850px}.step{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:#98a2b3;white-space:nowrap}.stepDot{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid #d0d5dd;background:#f8fafc}.step.active{color:#2563eb}.step.active .stepDot{background:#eef4ff;border-color:#93c5fd;color:#2563eb}.step.done{color:#16a34a}.step.done .stepDot{background:#ecfdf3;border-color:#86efac;color:#16a34a}.line{height:1px;flex:1;background:#e4e7ec;margin:0 10px;min-width:20px}
-.card{background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:27px;box-shadow:0 12px 35px #10182814;margin-bottom:25px}.cardHead{margin-bottom:20px}.card h2{font-size:21px;margin:0;color:#101828}.sub{font-size:13px;color:#667085;margin:5px 0 0}
-label{display:block;font-size:13px;font-weight:800;color:#344054;margin-bottom:8px}textarea,select{width:100%;border:1px solid #d0d5dd;border-radius:10px;padding:12px 13px;background:#fff;color:#172033;font:14px Arial;outline:none}textarea:focus,select:focus{border-color:#2563eb;box-shadow:0 0 0 4px #2563eb1a}.source{min-height:145px;resize:vertical;margin-bottom:20px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}
-button{border-radius:10px;padding:12px 18px;font-size:13px;font-weight:800;cursor:pointer}.primary{color:#fff;background:linear-gradient(135deg,#2563eb,#1d4ed8);border:0}.secondary{color:#344054;background:#fff;border:1px solid #d0d5dd}.success{color:#fff;background:linear-gradient(135deg,#16a34a,#15803d);border:0}.danger{color:#b42318;background:#fef2f2;border:1px solid #fecaca}.small{padding:8px 11px;font-size:11px}.buttons{display:flex;gap:10px;flex-wrap:wrap}
-.msg{display:none;margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13px;font-weight:700}.status{background:#f8fafc;border:1px solid #e4e7ec}.error{background:#fef2f2;border:1px solid #fecaca;color:#b42318}.successMsg{background:#ecfdf3;border:1px solid #bbf7d0;color:#166534}
-#workspace{display:none}.scoreGrid{display:grid;grid-template-columns:240px 1fr;gap:18px;margin-bottom:22px}.score{background:linear-gradient(135deg,#f8fbff,#eef4ff);border:1px solid #dbe7ff;border-radius:15px;padding:20px;text-align:center}.score small{font-weight:800;color:#475467}.score strong{display:block;font-size:42px;line-height:1;color:#2563eb;margin:7px}.explain{border:1px solid #e4e7ec;border-radius:15px;padding:18px}.explain b{font-size:13px}.explain p{font-size:13px;color:#667085}
-.section{margin-top:24px}.sectionHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.sectionHead h3{font-size:15px;margin:0;color:#101828}
-.tableWrap{overflow:auto;border:1px solid #e4e7ec;border-radius:14px}table{width:100%;min-width:1100px;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #e4e7ec;border-right:1px solid #e4e7ec;vertical-align:top;text-align:left}th{background:#f1f5ff;font-size:11px;text-transform:uppercase}td textarea{min-height:90px;font-size:12px}.id{width:70px;color:#2563eb;font-weight:900}.type{width:130px}
-.coverage{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.coverageItem{padding:10px;border:1px solid #e4e7ec;border-radius:10px;font-size:12px;background:#fbfcfe}.list{display:flex;flex-direction:column;gap:9px}.listRow{display:flex;gap:8px}.listRow textarea{min-height:55px;font-size:13px}.empty{text-align:center;padding:25px;color:#667085;background:#f8fafc;border:1px dashed #d0d5dd;border-radius:10px;font-size:12px}
-.actions{position:sticky;bottom:15px;background:#fffffff2;backdrop-filter:blur(10px);border:1px solid #e4e7ec;border-radius:15px;padding:12px;box-shadow:0 20px 50px #1018281a;display:flex;justify-content:space-between;gap:15px;align-items:center;margin-top:25px}.actionBtns{display:flex;gap:8px;flex-wrap:wrap}
-@media(max-width:1050px){.heroTop{flex-direction:column}.progress{width:100%;min-width:0}.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.container{padding:32px 14px 70px}.hero h1{font-size:30px}.card{padding:20px}.grid,.scoreGrid,.coverage{grid-template-columns:1fr}.actions{flex-direction:column;align-items:stretch}.actionBtns{width:100%}.actionBtns button{flex:1}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>BAForge AI - Acceptance Criteria Workspace</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f6f8fc;
+      color: #172033;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1500px;
+      margin: auto;
+      padding: 48px 24px 90px;
+    }
+
+    .hero {
+      margin-bottom: 25px;
+    }
+
+    .heroTop {
+      display: flex;
+      justify-content: space-between;
+      gap: 25px;
+      align-items: flex-start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 7px;
+      align-items: center;
+      color: #2563eb;
+      background: #eef4ff;
+      border: 1px solid #dbe7ff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      background: #2563eb;
+      border-radius: 50%;
+    }
+
+    .hero h1 {
+      font-size: 40px;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin: 0 0 12px;
+      color: #101828;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #667085;
+      font-size: 17px;
+    }
+
+    .progress {
+      min-width: 280px;
+      background: white;
+      border: 1px solid #e4e7ec;
+      border-radius: 15px;
+      padding: 16px;
+      box-shadow: 0 8px 25px #1018280d;
+    }
+
+    .progressHead {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 9px;
+    }
+
+    .track {
+      height: 7px;
+      background: #edf0f5;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      transition: .3s;
+    }
+
+    .workflow {
+      background: white;
+      border: 1px solid #e4e7ec;
+      border-radius: 16px;
+      padding: 16px;
+      overflow: auto;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 14px #1018280f;
+    }
+
+    .steps {
+      display: flex;
+      align-items: center;
+      min-width: 850px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #98a2b3;
+      white-space: nowrap;
+    }
+
+    .stepDot {
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #d0d5dd;
+      background: #f8fafc;
+    }
+
+    .step.active {
+      color: #2563eb;
+    }
+
+    .step.active .stepDot {
+      background: #eef4ff;
+      border-color: #93c5fd;
+      color: #2563eb;
+    }
+
+    .step.done {
+      color: #16a34a;
+    }
+
+    .step.done .stepDot {
+      background: #ecfdf3;
+      border-color: #86efac;
+      color: #16a34a;
+    }
+
+    .line {
+      height: 1px;
+      flex: 1;
+      background: #e4e7ec;
+      margin: 0 10px;
+      min-width: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e4e7ec;
+      border-radius: 18px;
+      padding: 27px;
+      box-shadow: 0 12px 35px #10182814;
+      margin-bottom: 25px;
+    }
+
+    .cardHead {
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-size: 21px;
+      margin: 0;
+      color: #101828;
+    }
+
+    .sub {
+      font-size: 13px;
+      color: #667085;
+      margin: 5px 0 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      color: #344054;
+      margin-bottom: 8px;
+    }
+
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      padding: 12px 13px;
+      background: #fff;
+      color: #172033;
+      font: 14px Arial;
+      outline: none;
+    }
+
+    textarea:focus,
+    select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px #2563eb1a;
+    }
+
+    .source {
+      min-height: 145px;
+      resize: vertical;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .primary {
+      color: #fff;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border: 0;
+    }
+
+    .secondary {
+      color: #344054;
+      background: #fff;
+      border: 1px solid #d0d5dd;
+    }
+
+    .success {
+      color: #fff;
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      border: 0;
+    }
+
+    .danger {
+      color: #b42318;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+    }
+
+    .small {
+      padding: 8px 11px;
+      font-size: 11px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .msg {
+      display: none;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .status {
+      background: #f8fafc;
+      border: 1px solid #e4e7ec;
+    }
+
+    .error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b42318;
+    }
+
+    .successMsg {
+      background: #ecfdf3;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
+    .context-banner {
+      display: none;
+      align-items: flex-start;
+      gap: 12px;
+      background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+
+    .context-banner.visible {
+      display: flex;
+    }
+
+    .context-icon {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .context-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #1d4ed8;
+    }
+
+    .context-detail {
+      font-size: 12px;
+      color: #475467;
+      margin-top: 2px;
+    }
+
+    #workspace {
+      display: none;
+    }
+
+    .scoreGrid {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .score {
+      background: linear-gradient(135deg, #f8fbff, #eef4ff);
+      border: 1px solid #dbe7ff;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .score small {
+      font-weight: 800;
+      color: #475467;
+    }
+
+    .score strong {
+      display: block;
+      font-size: 42px;
+      line-height: 1;
+      color: #2563eb;
+      margin: 7px;
+    }
+
+    .explain {
+      border: 1px solid #e4e7ec;
+      border-radius: 15px;
+      padding: 18px;
+    }
+
+    .explain b {
+      font-size: 13px;
+    }
+
+    .explain p {
+      font-size: 13px;
+      color: #667085;
+    }
+
+    .section {
+      margin-top: 24px;
+    }
+
+    .sectionHead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .sectionHead h3 {
+      font-size: 15px;
+      margin: 0;
+      color: #101828;
+    }
+
+    .tableWrap {
+      overflow: auto;
+      border: 1px solid #e4e7ec;
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1100px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #e4e7ec;
+      border-right: 1px solid #e4e7ec;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5ff;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    td textarea {
+      min-height: 90px;
+      font-size: 12px;
+    }
+
+    .id {
+      width: 70px;
+      color: #2563eb;
+      font-weight: 900;
+    }
+
+    .type {
+      width: 130px;
+    }
+
+    .coverage {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 9px;
+    }
+
+    .coverageItem {
+      padding: 10px;
+      border: 1px solid #e4e7ec;
+      border-radius: 10px;
+      font-size: 12px;
+      background: #fbfcfe;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .listRow {
+      display: flex;
+      gap: 8px;
+    }
+
+    .listRow textarea {
+      min-height: 55px;
+      font-size: 13px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 25px;
+      color: #667085;
+      background: #f8fafc;
+      border: 1px dashed #d0d5dd;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+
+    .actions {
+      position: sticky;
+      bottom: 15px;
+      background: #fffffff2;
+      backdrop-filter: blur(10px);
+      border: 1px solid #e4e7ec;
+      border-radius: 15px;
+      padding: 12px;
+      box-shadow: 0 20px 50px #1018281a;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: center;
+      margin-top: 25px;
+    }
+
+    .actionBtns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1050px) {
+      .heroTop {
+        flex-direction: column;
+      }
+
+      .progress {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        padding: 32px 14px 70px;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .grid,
+      .scoreGrid,
+      .coverage {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .actionBtns {
+        width: 100%;
+      }
+
+      .actionBtns button {
+        flex: 1;
+      }
+    }
+  </style>
 </head>
+
 <body>
+
 <main class="container">
-<section class="hero"><div class="heroTop"><div><div class="eyebrow"><span class="dot"></span><span id="eyebrow">BA WORKSPACE</span></div><h1 id="heroTitle">Build Professional Acceptance Criteria</h1><p id="heroSub">Transform your user story into clear, testable, and traceable acceptance criteria.</p></div><div class="progress"><div class="progressHead"><span id="progressLabel">Workflow Progress</span><span id="progressValue">0 / 8</span></div><div class="track"><div class="bar" id="progressBar"></div></div></div></div></section>
-<section class="workflow"><div class="steps" id="steps"></div></section>
 
-<section class="card">
-<div class="cardHead"><h2 id="inputTitle">Acceptance Criteria Input</h2><p class="sub" id="inputSub">Start from the User Story generated in the previous workflow step or enter a story manually.</p></div>
-<label for="requirement" id="reqLabel">User Story / Requirement</label>
-<textarea id="requirement" class="source" placeholder="Example: As a customer, I want to transfer money to another bank account using an IBAN so that I can send money securely."></textarea>
-<div class="grid">
-<div><label id="langLabel">Language</label><select id="language"><option value="en">English</option><option value="tr">Türkçe</option></select></div>
-<div><label id="detailLabel">Detail Level</label><select id="detail"><option>Basic</option><option selected>Professional</option><option>Comprehensive</option></select></div>
-<div><label id="priorityLabel">Priority</label><select id="priority"><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option><option value="low">Low</option></select></div>
-<div><label id="sourceLabel">Source Type</label><select id="source"><option value="user_story">User Story</option><option value="requirement">Requirement</option><option value="manual">Manual Input</option></select></div>
-</div>
-<div class="buttons"><button class="primary" id="generate">Generate Acceptance Criteria</button><button class="secondary" id="clear">Clear</button></div>
-<div class="msg status" id="status"></div><div class="msg error" id="error"></div><div class="msg successMsg" id="success"></div>
-</section>
+  <section class="hero">
 
-<section class="card" id="workspace">
-<div class="cardHead"><h2 id="workspaceTitle">Acceptance Criteria Workspace</h2><p class="sub" id="workspaceSub">Review, refine, and save the generated acceptance criteria.</p></div>
-<div class="scoreGrid"><div class="score"><small id="scoreLabel">Testability Score</small><strong id="score">0</strong><small id="scoreOut">out of 100</small></div><div class="explain"><b id="assessment">Testability Assessment</b><p id="explanation">-</p></div></div>
+    <div class="heroTop">
 
-<div class="section"><div class="sectionHead"><h3 id="criteriaTitle">Acceptance Criteria</h3><button class="secondary small" id="addCriterion">+ Add Criterion</button></div><div class="tableWrap"><table><thead><tr><th>ID</th><th id="typeHead">Type</th><th id="givenHead">Given</th><th id="whenHead">When</th><th id="thenHead">Then</th><th></th></tr></thead><tbody id="criteria"></tbody></table></div></div>
-<div class="section"><div class="sectionHead"><h3 id="coverageTitle">Coverage Summary</h3></div><div class="coverage" id="coverage"></div></div>
-<div class="section"><div class="sectionHead"><h3 id="rulesTitle">Business Rules</h3><button class="secondary small" id="addRule">+ Add Rule</button></div><div class="list" id="rules"></div></div>
-<div class="section"><div class="sectionHead"><h3 id="assumptionsTitle">Assumptions</h3><button class="secondary small" id="addAssumption">+ Add Assumption</button></div><div class="list" id="assumptions"></div></div>
-<div class="section"><div class="sectionHead"><h3 id="questionsTitle">Open Questions</h3><button class="secondary small" id="addQuestion">+ Add Question</button></div><div class="list" id="questions"></div></div>
+      <div>
 
-<div class="actions"><div><b id="actionTitle">Acceptance Criteria Ready</b><div class="sub" id="actionSub">Save your work before continuing to UAT.</div></div><div class="actionBtns"><button class="secondary" id="reset">Reset</button><button class="secondary" id="regenerate">Regenerate</button><button class="primary" id="save">Save Draft</button><button class="success" id="continue">Continue to UAT →</button></div></div>
-</section>
+        <div class="eyebrow">
+          <span class="dot"></span>
+          <span id="eyebrow">BA WORKSPACE</span>
+        </div>
+
+        <h1 id="heroTitle">
+          Build Professional Acceptance Criteria
+        </h1>
+
+        <p id="heroSub">
+          Transform your user story into clear, testable, and traceable acceptance criteria.
+        </p>
+
+      </div>
+
+      <div class="progress">
+
+        <div class="progressHead">
+
+          <span id="progressLabel">
+            Workflow Progress
+          </span>
+
+          <span id="progressValue">
+            0 / 8
+          </span>
+
+        </div>
+
+        <div class="track">
+          <div class="bar" id="progressBar"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="workflow">
+    <div class="steps" id="steps"></div>
+  </section>
+
+  <section class="card">
+
+    <div class="cardHead">
+
+      <h2 id="inputTitle">
+        Acceptance Criteria Input
+      </h2>
+
+      <p class="sub" id="inputSub">
+        Start from the User Story generated in the previous workflow step or enter a story manually.
+      </p>
+
+    </div>
+
+    <!-- USER STORY / REQUIREMENT TRANSFER BANNER -->
+
+    <div class="context-banner" id="contextBanner">
+
+      <div class="context-icon">
+        ✓
+      </div>
+
+      <div>
+
+        <div
+          class="context-title"
+          id="contextTitle"
+        >
+          User Story context loaded
+        </div>
+
+        <div
+          class="context-detail"
+          id="contextDetail"
+        >
+          The User Story and related information from the previous workflow step have been transferred.
+        </div>
+
+      </div>
+
+    </div>
+
+    <label
+      for="requirement"
+      id="reqLabel"
+    >
+      User Story / Requirement
+    </label>
+
+    <textarea
+      id="requirement"
+      class="source"
+      placeholder="Example: As a customer, I want to transfer money to another bank account using an IBAN so that I can send money securely."
+    ></textarea>
+
+    <div class="grid">
+
+      <div>
+
+        <label id="langLabel">
+          Language
+        </label>
+
+        <select id="language">
+
+          <option value="en">
+            English
+          </option>
+
+          <option value="tr">
+            Türkçe
+          </option>
+
+        </select>
+
+      </div>
+
+      <div>
+
+        <label id="detailLabel">
+          Detail Level
+        </label>
+
+        <select id="detail">
+
+          <option>
+            Basic
+          </option>
+
+          <option selected>
+            Professional
+          </option>
+
+          <option>
+            Comprehensive
+          </option>
+
+        </select>
+
+      </div>
+
+      <div>
+
+        <label id="priorityLabel">
+          Priority
+        </label>
+
+        <select id="priority">
+
+          <option value="medium">
+            Medium
+          </option>
+
+          <option value="high">
+            High
+          </option>
+
+          <option value="critical">
+            Critical
+          </option>
+
+          <option value="low">
+            Low
+          </option>
+
+        </select>
+
+      </div>
+
+      <div>
+
+        <label id="sourceLabel">
+          Source Type
+        </label>
+
+        <select id="source">
+
+          <option value="user_story">
+            User Story
+          </option>
+
+          <option value="requirement">
+            Requirement
+          </option>
+
+          <option value="manual">
+            Manual Input
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <div class="buttons">
+
+      <button
+        class="primary"
+        id="generate"
+      >
+        Generate Acceptance Criteria
+      </button>
+
+      <button
+        class="secondary"
+        id="clear"
+      >
+        Clear
+      </button>
+
+    </div>
+
+    <div
+      class="msg status"
+      id="status"
+    ></div>
+
+    <div
+      class="msg error"
+      id="error"
+    ></div>
+
+    <div
+      class="msg successMsg"
+      id="success"
+    ></div>
+
+  </section>
+
+  <section
+    class="card"
+    id="workspace"
+  >
+
+    <div class="cardHead">
+
+      <h2 id="workspaceTitle">
+        Acceptance Criteria Workspace
+      </h2>
+
+      <p
+        class="sub"
+        id="workspaceSub"
+      >
+        Review, refine, and save the generated acceptance criteria.
+      </p>
+
+    </div>
+
+    <div class="scoreGrid">
+
+      <div class="score">
+
+        <small id="scoreLabel">
+          Testability Score
+        </small>
+
+        <strong id="score">
+          0
+        </strong>
+
+        <small id="scoreOut">
+          out of 100
+        </small>
+
+      </div>
+
+      <div class="explain">
+
+        <b id="assessment">
+          Testability Assessment
+        </b>
+
+        <p id="explanation">
+          -
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="section">
+
+      <div class="sectionHead">
+
+        <h3 id="criteriaTitle">
+          Acceptance Criteria
+        </h3>
+
+        <button
+          class="secondary small"
+          id="addCriterion"
+        >
+          + Add Criterion
+        </button>
+
+      </div>
+
+      <div class="tableWrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                ID
+              </th>
+
+              <th id="typeHead">
+                Type
+              </th>
+
+              <th id="givenHead">
+                Given
+              </th>
+
+              <th id="whenHead">
+                When
+              </th>
+
+              <th id="thenHead">
+                Then
+              </th>
+
+              <th></th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="criteria"></tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+    <div class="section">
+
+      <div class="sectionHead">
+
+        <h3 id="coverageTitle">
+          Coverage Summary
+        </h3>
+
+      </div>
+
+      <div
+        class="coverage"
+        id="coverage"
+      ></div>
+
+    </div>
+
+    <div class="section">
+
+      <div class="sectionHead">
+
+        <h3 id="rulesTitle">
+          Business Rules
+        </h3>
+
+        <button
+          class="secondary small"
+          id="addRule"
+        >
+          + Add Rule
+        </button>
+
+      </div>
+
+      <div
+        class="list"
+        id="rules"
+      ></div>
+
+    </div>
+
+    <div class="section">
+
+      <div class="sectionHead">
+
+        <h3 id="assumptionsTitle">
+          Assumptions
+        </h3>
+
+        <button
+          class="secondary small"
+          id="addAssumption"
+        >
+          + Add Assumption
+        </button>
+
+      </div>
+
+      <div
+        class="list"
+        id="assumptions"
+      ></div>
+
+    </div>
+
+    <div class="section">
+
+      <div class="sectionHead">
+
+        <h3 id="questionsTitle">
+          Open Questions
+        </h3>
+
+        <button
+          class="secondary small"
+          id="addQuestion"
+        >
+          + Add Question
+        </button>
+
+      </div>
+
+      <div
+        class="list"
+        id="questions"
+      ></div>
+
+    </div>
+
+    <div class="actions">
+
+      <div>
+
+        <b id="actionTitle">
+          Acceptance Criteria Ready
+        </b>
+
+        <div
+          class="sub"
+          id="actionSub"
+        >
+          Save your work before continuing to UAT.
+        </div>
+
+      </div>
+
+      <div class="actionBtns">
+
+        <button
+          class="secondary"
+          id="reset"
+        >
+          Reset
+        </button>
+
+        <button
+          class="secondary"
+          id="regenerate"
+        >
+          Regenerate
+        </button>
+
+        <button
+          class="primary"
+          id="save"
+        >
+          Save Draft
+        </button>
+
+        <button
+          class="success"
+          id="continue"
+        >
+          Continue to UAT →
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
 </main>
 
 <script src="/core/data-model.js"></script>
 <script src="/core/workflow.js"></script>
 <script src="/nav.js"></script>
+
 <script>
-(()=>{"use strict";
-const KEY={draft:"baforge-acceptance-criteria-draft",workflow:"baforge-workflow-state",story:"baforge-user-story-context",uat:"baforge-uat-context"};
-const TR={
-en:{eyebrow:"BA WORKSPACE",heroTitle:"Build Professional Acceptance Criteria",heroSub:"Transform your user story into clear, testable, and traceable acceptance criteria.",progress:"Workflow Progress",inputTitle:"Acceptance Criteria Input",inputSub:"Start from the User Story generated in the previous workflow step or enter a story manually.",lang:"Language",req:"User Story / Requirement",ph:"Example: As a customer, I want to transfer money to another bank account using an IBAN so that I can send money securely.",detail:"Detail Level",priority:"Priority",source:"Source Type",generate:"Generate Acceptance Criteria",generating:"Generating acceptance criteria...",clear:"Clear",workspace:"Acceptance Criteria Workspace",workspaceSub:"Review, refine, and save the generated acceptance criteria.",score:"Testability Score",out:"out of 100",assessment:"Testability Assessment",criteria:"Acceptance Criteria",addCriterion:"+ Add Criterion",type:"Type",given:"Given",when:"When",then:"Then",coverage:"Coverage Summary",rules:"Business Rules",addRule:"+ Add Rule",assumptions:"Assumptions",addAssumption:"+ Add Assumption",questions:"Open Questions",addQuestion:"+ Add Question",reset:"Reset",regenerate:"Regenerate",save:"Save Draft",continue:"Continue to UAT →",actionTitle:"Acceptance Criteria Ready",actionSub:"Save your work before continuing to UAT.",positive:"Positive",negative:"Negative",boundary:"Boundary",validation:"Validation",empty:"No items added yet.",reqError:"Please enter at least 15 characters and 3 words.",generic:"Something went wrong while generating acceptance criteria.",api:"The server returned an unexpected response.",none:"No acceptance criteria were generated.",delete:"Delete this item?",deleteCriterion:"Delete this acceptance criterion?",noCriteria:"At least one acceptance criterion is required before continuing to UAT.",loaded:"User Story loaded from the previous workflow step.",saved:"Acceptance Criteria draft saved successfully."},
-tr:{eyebrow:"BA WORKSPACE",heroTitle:"Profesyonel Acceptance Criteria Oluşturun",heroSub:"User Story'nizi açık, test edilebilir ve izlenebilir acceptance criteria'lara dönüştürün.",progress:"Workflow İlerlemesi",inputTitle:"Acceptance Criteria Girdisi",inputSub:"Önceki workflow adımından gelen User Story ile başlayın veya manuel olarak girin.",lang:"Dil",req:"User Story / Gereksinim",ph:"Örnek: Müşteri, IBAN kullanarak başka bir banka hesabına para transferi yapabilmelidir.",detail:"Detay Seviyesi",priority:"Öncelik",source:"Kaynak Tipi",generate:"Acceptance Criteria Oluştur",generating:"Acceptance criteria oluşturuluyor...",clear:"Temizle",workspace:"Acceptance Criteria Workspace",workspaceSub:"Oluşturulan acceptance criteria'ları inceleyin, düzenleyin ve kaydedin.",score:"Test Edilebilirlik Skoru",out:"100 üzerinden",assessment:"Test Edilebilirlik Değerlendirmesi",criteria:"Acceptance Criteria",addCriterion:"+ Criterion Ekle",type:"Tip",given:"Given",when:"When",then:"Then",coverage:"Coverage Özeti",rules:"Business Rules",addRule:"+ Rule Ekle",assumptions:"Varsayımlar",addAssumption:"+ Varsayım Ekle",questions:"Açık Sorular",addQuestion:"+ Soru Ekle",reset:"Sıfırla",regenerate:"Yeniden Oluştur",save:"Taslağı Kaydet",continue:"UAT'a Devam Et →",actionTitle:"Acceptance Criteria Hazır",actionSub:"UAT'a geçmeden önce çalışmanızı kaydedin.",positive:"Positive",negative:"Negative",boundary:"Boundary",validation:"Validation",empty:"Henüz herhangi bir kayıt eklenmedi.",reqError:"Lütfen en az 15 karakter ve 3 kelime girin.",generic:"Acceptance criteria oluşturulurken bir hata oluştu.",api:"Sunucudan beklenmeyen bir cevap geldi.",none:"Acceptance criteria oluşturulamadı.",delete:"Bu kayıt silinsin mi?",deleteCriterion:"Bu acceptance criterion silinsin mi?",noCriteria:"UAT'a geçmeden önce en az bir acceptance criterion gereklidir.",loaded:"User Story önceki workflow adımından yüklendi.",saved:"Acceptance Criteria taslağı başarıyla kaydedildi."}
-};
-const $=id=>document.getElementById(id),e={lang:$("language"),req:$("requirement"),detail:$("detail"),priority:$("priority"),source:$("source"),generate:$("generate"),clear:$("clear"),status:$("status"),error:$("error"),success:$("success"),workspace:$("workspace"),criteria:$("criteria"),coverage:$("coverage"),rules:$("rules"),assumptions:$("assumptions"),questions:$("questions"),score:$("score"),explanation:$("explanation"),steps:$("steps"),progress:$("progressValue"),bar:$("progressBar")};
-let s={source:"manual",requirementId:null,userStoryId:null,requirement:"",userStory:null,language:"en",detail:"Professional",priority:"medium",testabilityScore:0,testabilityExplanation:"",acceptanceCriteria:[],coverageSummary:[],businessRules:[],assumptions:[],openQuestions:[],saved:false,artifactId:null};
-const t=k=>(TR[e.lang.value]||TR.en)[k]||TR.en[k]||k;
-const esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-const read=k=>{try{let v=sessionStorage.getItem(k);return v?JSON.parse(v):null}catch(x){return null}},write=(k,v)=>{try{sessionStorage.setItem(k,JSON.stringify(v));return true}catch(x){return false}},remove=k=>{try{sessionStorage.removeItem(k)}catch(x){}};
-const list=v=>Array.isArray(v)?v.map(x=>String(x??"").trim()).filter(Boolean):[];
-function msg(type,text){e[type].textContent=text;e[type].style.display="block"}function hide(){["error","success","status"].forEach(x=>e[x].style.display="none")}
-function storyText(v){if(!v)return"";if(typeof v==="string")return v.trim();if(v.story)return String(v.story).trim();if(v.fullStory)return String(v.fullStory).trim();let r=v.role||v.asA||"",g=v.goal||v.iWant||"",b=v.benefit||v.soThat||"";return r||g||b?[r?`As a ${r}`:"",g?`I want ${g}`:"",b?`So that ${b}`:""].filter(Boolean).join("\n"):String(v.description||v.requirement||"").trim()}
-function findStory(){let v=read(KEY.story);if(v)return v;for(const k of ["baforge-user-story","baforge-user-story-state","user-story-state","userStoryDraft"]){v=read(k);if(v&&(v.story||v.fullStory||v.role||v.goal))return v}return null}
-function wf(){if(!window.BAWorkflow)return null;let v=read(KEY.workflow);if(v)try{return BAWorkflow.deserialize(v)}catch(x){}return BAWorkflow.createWorkflowState({currentStep:"acceptance_criteria",completedSteps:s.userStoryId?["requirement","user_story"]:[]})}
-function renderWF(){let w=wf();if(!w)return;let defs=BAWorkflow.getWorkflowDefinition(),labels={requirement:"Requirement",user_story:"User Story",acceptance_criteria:"Acceptance Criteria",uat:"UAT Test Cases",test_data:"Test Data",process_flow:"Process Flow",traceability:"Traceability",document:"BA Document"};e.steps.innerHTML=defs.map((d,i)=>{let st=BAWorkflow.getStepStatus(w,d.step);return `<div class="step ${st==="current"?"active":st==="completed"?"done":""}"><span class="stepDot">${st==="completed"?"✓":i+1}</span>${esc(labels[d.step])}</div>${i<7?'<div class="line"></div>':""}`}).join("");let p=BAWorkflow.getProgress(w);e.progress.textContent=`${p.completed} / ${p.total}`;e.bar.style.width=p.percentage+"%"}
-function normalize(v){return Array.isArray(v)?v.map((c,i)=>({id:c?.id||`AC-${String(i+1).padStart(2,"0")}`,type:["positive","negative","boundary","validation"].includes(String(c?.type||"").toLowerCase())?String(c.type).toLowerCase():"positive",given:String(c?.given||"").trim(),when:String(c?.when||"").trim(),then:String(c?.then||"").trim(),title:c?.title||"",description:c?.description||"",priority:c?.priority||s.priority})).filter(c=>c.given||c.when||c.then):[]}
-function render(){e.workspace.style.display="block";e.score.textContent=Math.max(0,Math.min(100,Math.round(Number(s.testabilityScore)||0)));e.explanation.textContent=s.testabilityExplanation||t("generic");renderCriteria();renderCoverage();renderList(e.rules,s.businessRules,"rules");renderList(e.assumptions,s.assumptions,"assumptions");renderList(e.questions,s.openQuestions,"questions");renderWF()}
-function renderCriteria(){if(!s.acceptanceCriteria.length){e.criteria.innerHTML=`<tr><td colspan="6" class="empty">${esc(t("none"))}</td></tr>`;return}e.criteria.innerHTML=s.acceptanceCriteria.map((c,i)=>`<tr><td class="id">${esc(c.id)}</td><td class="type"><select data-i="${i}" data-f="type">${["positive","negative","boundary","validation"].map(x=>`<option value="${x}" ${x===c.type?"selected":""}>${esc(t(x))}</option>`).join("")}</select></td><td><textarea data-i="${i}" data-f="given">${esc(c.given)}</textarea></td><td><textarea data-i="${i}" data-f="when">${esc(c.when)}</textarea></td><td><textarea data-i="${i}" data-f="then">${esc(c.then)}</textarea></td><td><button class="danger small" data-del="${i}">×</button></td></tr>`).join("")}
-function renderCoverage(){e.coverage.innerHTML=s.coverageSummary.length?s.coverageSummary.map(x=>`<div class="coverageItem">✓ ${esc(x)}</div>`).join(""):`<div class="empty" style="grid-column:1/-1">${esc(t("empty"))}</div>`}
-function renderList(el,a,type){el.innerHTML=a.length?a.map((x,i)=>`<div class="listRow"><textarea data-li="${i}" data-lt="${type}">${esc(x)}</textarea><button class="danger small" data-ld="${i}" data-lt="${type}">×</button></div>`).join(""):`<div class="empty">${esc(t("empty"))}</div>`}
-function sync(){s.requirement=e.req.value.trim();s.language=e.lang.value;s.detail=e.detail.value;s.priority=e.priority.value;s.source=e.source.value;s.saved=false}
-async function generate(){hide();let v=e.req.value.trim();if(v.length<15||v.split(/\s+/).filter(Boolean).length<3){msg("error",t("reqError"));return}sync();e.generate.disabled=true;msg("status",t("generating"));try{let r=await fetch("/api/acceptance-criteria",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({requirement:s.requirement,userStory:s.userStory,language:s.language,detail:s.detail,priority:s.priority,source:s.source})}),raw=await r.text(),d;try{d=JSON.parse(raw)}catch(x){throw Error(t("api"))}if(!r.ok)throw Error(d.error||t("generic"));s.testabilityScore=Number(d.testabilityScore)||0;s.testabilityExplanation=d.testabilityExplanation||t("generic");s.acceptanceCriteria=normalize(d.acceptanceCriteria);s.coverageSummary=list(d.coverageSummary);s.businessRules=list(d.businessRules);s.assumptions=list(d.assumptions);s.openQuestions=list(d.openQuestions);render();save(false)}catch(x){msg("error",x.message||t("generic"))}finally{e.generate.disabled=false;e.status.style.display="none"}}
-function draft(){sync();return {...s,acceptanceCriteria:JSON.parse(JSON.stringify(s.acceptanceCriteria)),coverageSummary:[...s.coverageSummary],businessRules:[...s.businessRules],assumptions:[...s.assumptions],openQuestions:[...s.openQuestions],saved:true,updatedAt:new Date().toISOString()}}
-function save(show=true){let d=draft();if(!write(KEY.draft,d)){msg("error","Unable to save draft.");return false}if(window.BAWorkflow&&window.BADataModel){let w=wf(),criteria=d.acceptanceCriteria.map(c=>BADataModel.createAcceptanceCriterion({id:c.id,requirementId:d.requirementId,userStoryId:d.userStoryId,type:c.type,given:c.given,when:c.when,then:c.then,priority:c.priority}));let a=BAWorkflow.createWorkflowArtifact({id:s.artifactId||("ac_"+Date.now()),step:"acceptance_criteria",entityId:s.artifactId||null,entityType:"acceptance_criteria",status:"draft",data:{...d,acceptanceCriteria:criteria}});s.artifactId=a.id;w.artifacts.acceptance_criteria=a;write(KEY.workflow,w);renderWF()}s.saved=true;if(show)msg("success",t("saved"));return true}
-function addCriterion(){s.acceptanceCriteria.push({id:`AC-${String(s.acceptanceCriteria.length+1).padStart(2,"0")}`,type:"positive",given:"",when:"",then:"",priority:s.priority});renderCriteria()}
-function addList(type){let a=type==="rules"?s.businessRules:type==="assumptions"?s.assumptions:s.openQuestions;a.push("");renderList(type==="rules"?e.rules:type==="assumptions"?e.assumptions:e.questions,a,type)}
-function complete(){if(!s.acceptanceCriteria.length){msg("error",t("noCriteria"));return}save(false);let w=wf();let a={id:s.artifactId||("ac_"+Date.now()),entityId:s.artifactId||null,entityType:"acceptance_criteria",status:"completed",data:draft()};w=BAWorkflow.completeStep(w,"acceptance_criteria",a);write(KEY.workflow,w);let transfer=BAWorkflow.createTransferPayload(w,"acceptance_criteria","uat");let ctx={...transfer,acceptanceCriteria:s.acceptanceCriteria,businessRules:s.businessRules,assumptions:s.assumptions,openQuestions:s.openQuestions,requirement:s.requirement,requirementId:s.requirementId,userStoryId:s.userStoryId,language:s.language,priority:s.priority};write(KEY.uat,ctx);write("baforge-current-uat-context",ctx);location.href="/uat.html?from=acceptance-criteria"}
-function lang(){const m=TR[e.lang.value]||TR.en;document.documentElement.lang=e.lang.value;const ids={eyebrow:"eyebrow",heroTitle:"heroTitle",heroSub:"heroSub",progressLabel:"progress",inputTitle:"inputTitle",inputSub:"inputSub",langLabel:"lang",reqLabel:"req",detailLabel:"detail",priorityLabel:"priority",sourceLabel:"source",generate:"generate",clear:"clear",workspaceTitle:"workspace",workspaceSub:"workspaceSub",scoreLabel:"score",scoreOut:"out",assessment:"assessment",criteriaTitle:"criteria",addCriterion:"addCriterion",typeHead:"type",givenHead:"given",whenHead:"when",thenHead:"then",coverageTitle:"coverage",rulesTitle:"rules",addRule:"addRule",assumptionsTitle:"assumptions",addAssumption:"addAssumption",questionsTitle:"questions",addQuestion:"addQuestion",reset:"reset",regenerate:"regenerate",save:"save",continue:"continue",actionTitle:"actionTitle",actionSub:"actionSub"};Object.entries(ids).forEach(([id,k])=>$(id).textContent=m[k]);e.req.placeholder=m.ph;renderCriteria();renderCoverage();renderList(e.rules,s.businessRules,"rules");renderList(e.assumptions,s.assumptions,"assumptions");renderList(e.questions,s.openQuestions,"questions");renderWF()}
-e.criteria.addEventListener("input",x=>{let i=+x.target.dataset.i,f=x.target.dataset.f;if(Number.isInteger(i)&&f&&s.acceptanceCriteria[i])s.acceptanceCriteria[i][f]=x.target.value});e.criteria.addEventListener("click",x=>{let b=x.target.closest("[data-del]");if(b&&confirm(t("delete"))){s.acceptanceCriteria.splice(+b.dataset.del,1);s.acceptanceCriteria.forEach((c,i)=>c.id=`AC-${String(i+1).padStart(2,"0")}`);renderCriteria()}});
-function bind(el){el.addEventListener("input",x=>{let i=+x.target.dataset.li,type=x.target.dataset.lt,a=type==="rules"?s.businessRules:type==="assumptions"?s.assumptions:s.openQuestions;if(Number.isInteger(i)&&a[i]!==undefined)a[i]=x.target.value});el.addEventListener("click",x=>{let b=x.target.closest("[data-ld]");if(b&&confirm(t("delete"))){let type=b.dataset.lt,a=type==="rules"?s.businessRules:type==="assumptions"?s.assumptions:s.openQuestions;a.splice(+b.dataset.ld,1);renderList(el,a,type)}})}
-bind(e.rules);bind(e.assumptions);bind(e.questions);
-e.lang.addEventListener("change",lang);e.generate.addEventListener("click",generate);e.clear.addEventListener("click",()=>{e.req.value="";e.source.value="manual";e.workspace.style.display="none";remove(KEY.draft);s={...s,source:"manual",requirement:"",userStory:null,acceptanceCriteria:[],coverageSummary:[],businessRules:[],assumptions:[],openQuestions:[]};hide()});$("addCriterion").addEventListener("click",addCriterion);$("addRule").addEventListener("click",()=>addList("rules"));$("addAssumption").addEventListener("click",()=>addList("assumptions"));$("addQuestion").addEventListener("click",()=>addList("questions"));$("save").addEventListener("click",()=>save(true));$("regenerate").addEventListener("click",generate);$("continue").addEventListener("click",complete);$("reset").addEventListener("click",()=>{if(confirm(t("resetConfirm")||"Reset workspace?")){remove(KEY.draft);e.workspace.style.display="none";s.acceptanceCriteria=[];s.businessRules=[];s.assumptions=[];s.openQuestions=[]}});
-function init(){let d=read(KEY.draft);if(d&&Array.isArray(d.acceptanceCriteria)){s={...s,...d};e.req.value=s.requirement;e.lang.value=s.language||"en";e.detail.value=s.detail||"Professional";e.priority.value=s.priority||"medium";e.source.value=s.source||"manual";lang();render();return}let st=findStory();if(st){let text=storyText(st);if(text){s.source="user_story";s.userStory=st;s.userStoryId=st.id||st.userStoryId||null;s.requirementId=st.requirementId||null;s.requirement=text;e.req.value=text;e.source.value="user_story"}}lang()}init();
+
+(() => {
+
+  "use strict";
+
+  const KEY = {
+
+    draft:
+      "baforge-acceptance-criteria-draft",
+
+    workflow:
+      "baforge-workflow-state",
+
+    story:
+      "baforge-user-story-context",
+
+    currentStory:
+      "baforge-current-user-story",
+
+    currentAcceptance:
+      "baforge-current-acceptance-criteria",
+
+    uat:
+      "baforge-uat-context"
+
+  };
+
+
+  const TR = {
+
+    en: {
+
+      eyebrow: "BA WORKSPACE",
+
+      heroTitle:
+        "Build Professional Acceptance Criteria",
+
+      heroSub:
+        "Transform your user story into clear, testable, and traceable acceptance criteria.",
+
+      progress:
+        "Workflow Progress",
+
+      inputTitle:
+        "Acceptance Criteria Input",
+
+      inputSub:
+        "Start from the User Story generated in the previous workflow step or enter a story manually.",
+
+      lang:
+        "Language",
+
+      req:
+        "User Story / Requirement",
+
+      ph:
+        "Example: As a customer, I want to transfer money to another bank account using an IBAN so that I can send money securely.",
+
+      detail:
+        "Detail Level",
+
+      priority:
+        "Priority",
+
+      source:
+        "Source Type",
+
+      generate:
+        "Generate Acceptance Criteria",
+
+      generating:
+        "Generating acceptance criteria...",
+
+      clear:
+        "Clear",
+
+      workspace:
+        "Acceptance Criteria Workspace",
+
+      workspaceSub:
+        "Review, refine, and save the generated acceptance criteria.",
+
+      score:
+        "Testability Score",
+
+      out:
+        "out of 100",
+
+      assessment:
+        "Testability Assessment",
+
+      criteria:
+        "Acceptance Criteria",
+
+      addCriterion:
+        "+ Add Criterion",
+
+      type:
+        "Type",
+
+      given:
+        "Given",
+
+      when:
+        "When",
+
+      then:
+        "Then",
+
+      coverage:
+        "Coverage Summary",
+
+      rules:
+        "Business Rules",
+
+      addRule:
+        "+ Add Rule",
+
+      assumptions:
+        "Assumptions",
+
+      addAssumption:
+        "+ Add Assumption",
+
+      questions:
+        "Open Questions",
+
+      addQuestion:
+        "+ Add Question",
+
+      reset:
+        "Reset",
+
+      regenerate:
+        "Regenerate",
+
+      save:
+        "Save Draft",
+
+      continue:
+        "Continue to UAT →",
+
+      actionTitle:
+        "Acceptance Criteria Ready",
+
+      actionSub:
+        "Save your work before continuing to UAT.",
+
+      positive:
+        "Positive",
+
+      negative:
+        "Negative",
+
+      boundary:
+        "Boundary",
+
+      validation:
+        "Validation",
+
+      empty:
+        "No items added yet.",
+
+      reqError:
+        "Please enter at least 15 characters and 3 words.",
+
+      generic:
+        "Something went wrong while generating acceptance criteria.",
+
+      api:
+        "The server returned an unexpected response.",
+
+      none:
+        "No acceptance criteria were generated.",
+
+      delete:
+        "Delete this item?",
+
+      noCriteria:
+        "At least one acceptance criterion is required before continuing to UAT.",
+
+      loaded:
+        "User Story context loaded",
+
+      loadedDetail:
+        "The User Story and related information from the previous workflow step have been transferred.",
+
+      saved:
+        "Acceptance Criteria draft saved successfully."
+
+    },
+
+
+    tr: {
+
+      eyebrow:
+        "BA WORKSPACE",
+
+      heroTitle:
+        "Profesyonel Acceptance Criteria Oluşturun",
+
+      heroSub:
+        "User Story'nizi açık, test edilebilir ve izlenebilir acceptance criteria'lara dönüştürün.",
+
+      progress:
+        "Workflow İlerlemesi",
+
+      inputTitle:
+        "Acceptance Criteria Girdisi",
+
+      inputSub:
+        "Önceki workflow adımından gelen User Story ile başlayın veya manuel olarak girin.",
+
+      lang:
+        "Dil",
+
+      req:
+        "User Story / Gereksinim",
+
+      ph:
+        "Örnek: Müşteri, IBAN kullanarak başka bir banka hesabına para transferi yapabilmelidir.",
+
+      detail:
+        "Detay Seviyesi",
+
+      priority:
+        "Öncelik",
+
+      source:
+        "Kaynak Tipi",
+
+      generate:
+        "Acceptance Criteria Oluştur",
+
+      generating:
+        "Acceptance criteria oluşturuluyor...",
+
+      clear:
+        "Temizle",
+
+      workspace:
+        "Acceptance Criteria Workspace",
+
+      workspaceSub:
+        "Oluşturulan acceptance criteria'ları inceleyin, düzenleyin ve kaydedin.",
+
+      score:
+        "Test Edilebilirlik Skoru",
+
+      out:
+        "100 üzerinden",
+
+      assessment:
+        "Test Edilebilirlik Değerlendirmesi",
+
+      criteria:
+        "Acceptance Criteria",
+
+      addCriterion:
+        "+ Criterion Ekle",
+
+      type:
+        "Tip",
+
+      given:
+        "Given",
+
+      when:
+        "When",
+
+      then:
+        "Then",
+
+      coverage:
+        "Coverage Özeti",
+
+      rules:
+        "Business Rules",
+
+      addRule:
+        "+ Rule Ekle",
+
+      assumptions:
+        "Varsayımlar",
+
+      addAssumption:
+        "+ Varsayım Ekle",
+
+      questions:
+        "Açık Sorular",
+
+      addQuestion:
+        "+ Soru Ekle",
+
+      reset:
+        "Sıfırla",
+
+      regenerate:
+        "Yeniden Oluştur",
+
+      save:
+        "Taslağı Kaydet",
+
+      continue:
+        "UAT'a Devam Et →",
+
+      actionTitle:
+        "Acceptance Criteria Hazır",
+
+      actionSub:
+        "UAT'a geçmeden önce çalışmanızı kaydedin.",
+
+      positive:
+        "Positive",
+
+      negative:
+        "Negative",
+
+      boundary:
+        "Boundary",
+
+      validation:
+        "Validation",
+
+      empty:
+        "Henüz herhangi bir kayıt eklenmedi.",
+
+      reqError:
+        "Lütfen en az 15 karakter ve 3 kelime girin.",
+
+      generic:
+        "Acceptance criteria oluşturulurken bir hata oluştu.",
+
+      api:
+        "Sunucudan beklenmeyen bir cevap geldi.",
+
+      none:
+        "Acceptance criteria oluşturulamadı.",
+
+      delete:
+        "Bu kayıt silinsin mi?",
+
+      noCriteria:
+        "UAT'a geçmeden önce en az bir acceptance criterion gereklidir.",
+
+      loaded:
+        "User Story context yüklendi",
+
+      loadedDetail:
+        "Önceki workflow adımındaki User Story ve ilgili bilgiler aktarıldı.",
+
+      saved:
+        "Acceptance Criteria taslağı başarıyla kaydedildi."
+
+    }
+
+  };
+
+
+  const $ =
+    id => document.getElementById(id);
+
+
+  const e = {
+
+    lang:
+      $("language"),
+
+    req:
+      $("requirement"),
+
+    detail:
+      $("detail"),
+
+    priority:
+      $("priority"),
+
+    source:
+      $("source"),
+
+    generate:
+      $("generate"),
+
+    clear:
+      $("clear"),
+
+    status:
+      $("status"),
+
+    error:
+      $("error"),
+
+    success:
+      $("success"),
+
+    workspace:
+      $("workspace"),
+
+    criteria:
+      $("criteria"),
+
+    coverage:
+      $("coverage"),
+
+    rules:
+      $("rules"),
+
+    assumptions:
+      $("assumptions"),
+
+    questions:
+      $("questions"),
+
+    score:
+      $("score"),
+
+    explanation:
+      $("explanation"),
+
+    steps:
+      $("steps"),
+
+    progress:
+      $("progressValue"),
+
+    bar:
+      $("progressBar")
+
+  };
+
+
+  let s = {
+
+    source:
+      "manual",
+
+    requirementId:
+      null,
+
+    userStoryId:
+      null,
+
+    requirement:
+      "",
+
+    userStory:
+      null,
+
+    language:
+      "en",
+
+    detail:
+      "Professional",
+
+    priority:
+      "medium",
+
+    testabilityScore:
+      0,
+
+    testabilityExplanation:
+      "",
+
+    acceptanceCriteria:
+      [],
+
+    coverageSummary:
+      [],
+
+    businessRules:
+      [],
+
+    assumptions:
+      [],
+
+    openQuestions:
+      [],
+
+    saved:
+      false,
+
+    artifactId:
+      null
+
+  };
+
+
+  const t =
+    key =>
+      (TR[e.lang.value] || TR.en)[key]
+      ||
+      TR.en[key]
+      ||
+      key;
+
+
+  const esc =
+    value =>
+      String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+
+  function read(key) {
+
+    try {
+
+      const value =
+        sessionStorage.getItem(key);
+
+      return value
+        ? JSON.parse(value)
+        : null;
+
+    } catch (error) {
+
+      return null;
+
+    }
+
+  }
+
+
+  function write(key, value) {
+
+    try {
+
+      sessionStorage.setItem(
+        key,
+        JSON.stringify(value)
+      );
+
+      return true;
+
+    } catch (error) {
+
+      return false;
+
+    }
+
+  }
+
+
+  function remove(key) {
+
+    try {
+
+      sessionStorage.removeItem(key);
+
+    } catch (error) {}
+
+  }
+
+
+  function list(value) {
+
+    return Array.isArray(value)
+
+      ? value
+          .map(item =>
+            String(item ?? "").trim()
+          )
+          .filter(Boolean)
+
+      : [];
+
+  }
+
+
+  function msg(type, text) {
+
+    e[type].textContent =
+      text;
+
+    e[type].style.display =
+      "block";
+
+  }
+
+
+  function hide() {
+
+    [
+      "error",
+      "success",
+      "status"
+    ].forEach(
+      item =>
+        e[item].style.display =
+          "none"
+    );
+
+  }
+
+
+  function storyText(value) {
+
+    if (!value) {
+      return "";
+    }
+
+    if (typeof value === "string") {
+      return value.trim();
+    }
+
+    if (value.story) {
+      return String(value.story).trim();
+    }
+
+    if (value.fullStory) {
+      return String(value.fullStory).trim();
+    }
+
+    let role =
+      value.role ||
+      value.asA ||
+      "";
+
+    let goal =
+      value.goal ||
+      value.iWant ||
+      "";
+
+    let benefit =
+      value.benefit ||
+      value.soThat ||
+      "";
+
+    if (role || goal || benefit) {
+
+      return [
+
+        role
+          ? `As a ${role}`
+          : "",
+
+        goal
+          ? `I want ${goal}`
+          : "",
+
+        benefit
+          ? `So that ${benefit}`
+          : ""
+
+      ]
+        .filter(Boolean)
+        .join(" ");
+
+    }
+
+    return String(
+      value.description ||
+      value.requirement ||
+      value.text ||
+      ""
+    ).trim();
+
+  }
+
+
+  function normalizeText(value) {
+
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return "";
+    }
+
+    return String(value).trim();
+
+  }
+
+
+  /*
+   * IMPORTANT:
+   * This function reads the exact storage key
+   * created by user-story.html:
+   *
+   * baforge-current-acceptance-criteria
+   */
+
+  function loadUserStoryTransfer() {
+
+    const data =
+      read(KEY.currentAcceptance);
+
+    if (!data) {
+      return null;
+    }
+
+    let requirement =
+      normalizeText(
+        data.requirement
+      );
+
+    let userStory =
+      data.userStory ||
+      null;
+
+    /*
+     * If requirement is empty, try to
+     * recover it from the User Story object.
+     */
+
+    if (!requirement && userStory) {
+
+      requirement =
+        normalizeText(
+          userStory.requirement
+        );
+
+    }
+
+    /*
+     * If still empty, use the actual
+     * generated User Story text.
+     */
+
+    if (!requirement && userStory) {
+
+      requirement =
+        storyText(userStory);
+
+    }
+
+    return {
+
+      requirement,
+
+      userStory,
+
+      acceptanceCriteria:
+        Array.isArray(
+          data.acceptanceCriteria
+        )
+          ? data.acceptanceCriteria
+          : [],
+
+      businessRules:
+        list(
+          userStory?.businessRules
+        ),
+
+      assumptions:
+        list(
+          userStory?.assumptions
+        ),
+
+      dependencies:
+        list(
+          userStory?.dependencies
+        ),
+
+      edgeCases:
+        list(
+          userStory?.edgeCases
+        ),
+
+      openQuestions:
+        list(
+          userStory?.openQuestions
+        ),
+
+      language:
+        data.language ||
+        userStory?.language ||
+        "en"
+
+    };
+
+  }
+
+
+  function applyUserStoryTransfer(data) {
+
+    if (!data) {
+      return false;
+    }
+
+    if (data.requirement) {
+
+      s.requirement =
+        data.requirement;
+
+      e.req.value =
+        data.requirement;
+
+    }
+
+    if (data.userStory) {
+
+      s.userStory =
+        data.userStory;
+
+      s.userStoryId =
+        data.userStory.id ||
+        data.userStory.userStoryId ||
+        null;
+
+      s.requirementId =
+        data.userStory.requirementId ||
+        null;
+
+    }
+
+    s.source =
+      "user_story";
+
+    e.source.value =
+      "user_story";
+
+
+    if (
+      data.language === "tr" ||
+      data.language === "en"
+    ) {
+
+      s.language =
+        data.language;
+
+      e.lang.value =
+        data.language;
+
+    }
+
+
+    /*
+     * We do NOT automatically populate
+     * acceptance criteria here as generated
+     * User Story criteria are source content.
+     *
+     * The user can now generate fresh
+     * Acceptance Criteria from the transferred
+     * User Story.
+     */
+
+
+    const banner =
+      $("contextBanner");
+
+    banner.classList.add(
+      "visible"
+    );
+
+    $("contextTitle").textContent =
+      t("loaded");
+
+    $("contextDetail").textContent =
+      t("loadedDetail");
+
+
+    return true;
+
+  }
+
+
+  function findStory() {
+
+    const transfer =
+      loadUserStoryTransfer();
+
+    if (transfer) {
+      return transfer;
+    }
+
+
+    const v =
+      read(KEY.story);
+
+    if (v) {
+      return v;
+    }
+
+
+    for (
+      const key of [
+        "baforge-user-story",
+        "baforge-user-story-state",
+        "user-story-state",
+        "userStoryDraft",
+        "baforge-current-user-story"
+      ]
+    ) {
+
+      const value =
+        read(key);
+
+      if (
+        value &&
+        (
+          value.story ||
+          value.fullStory ||
+          value.role ||
+          value.goal ||
+          value.requirement
+        )
+      ) {
+
+        return value;
+
+      }
+
+    }
+
+    return null;
+
+  }
+
+
+  function wf() {
+
+    if (!window.BAWorkflow) {
+      return null;
+    }
+
+    const value =
+      read(KEY.workflow);
+
+    if (value) {
+
+      try {
+
+        return BAWorkflow.deserialize(
+          value
+        );
+
+      } catch (error) {}
+
+    }
+
+    return BAWorkflow.createWorkflowState({
+
+      currentStep:
+        "acceptance_criteria",
+
+      completedSteps:
+        s.userStoryId
+          ? [
+              "requirement",
+              "user_story"
+            ]
+          : []
+
+    });
+
+  }
+
+
+  function renderWF() {
+
+    const w =
+      wf();
+
+    if (!w) {
+      return;
+    }
+
+    const defs =
+      BAWorkflow.getWorkflowDefinition();
+
+    const labels = {
+
+      requirement:
+        "Requirement",
+
+      user_story:
+        "User Story",
+
+      acceptance_criteria:
+        "Acceptance Criteria",
+
+      uat:
+        "UAT Test Cases",
+
+      test_data:
+        "Test Data",
+
+      process_flow:
+        "Process Flow",
+
+      traceability:
+        "Traceability",
+
+      document:
+        "BA Document"
+
+    };
+
+
+    e.steps.innerHTML =
+      defs.map(
+        (definition, index) => {
+
+          const status =
+            BAWorkflow.getStepStatus(
+              w,
+              definition.step
+            );
+
+          return `
+
+            <div class="step ${
+              status === "current"
+                ? "active"
+                : status === "completed"
+                  ? "done"
+                  : ""
+            }">
+
+              <span class="stepDot">
+
+                ${
+                  status === "completed"
+                    ? "✓"
+                    : index + 1
+                }
+
+              </span>
+
+              ${esc(
+                labels[
+                  definition.step
+                ]
+              )}
+
+            </div>
+
+            ${
+              index < 7
+                ? '<div class="line"></div>'
+                : ""
+            }
+
+          `;
+
+        }
+      ).join("");
+
+
+    const progress =
+      BAWorkflow.getProgress(w);
+
+    e.progress.textContent =
+      `${progress.completed} / ${progress.total}`;
+
+    e.bar.style.width =
+      progress.percentage + "%";
+
+  }
+
+
+  function normalize(value) {
+
+    return Array.isArray(value)
+
+      ? value
+          .map(
+            (criterion, index) => ({
+
+              id:
+                criterion?.id ||
+                `AC-${String(
+                  index + 1
+                ).padStart(2, "0")}`,
+
+              type:
+                [
+                  "positive",
+                  "negative",
+                  "boundary",
+                  "validation"
+                ].includes(
+                  String(
+                    criterion?.type || ""
+                  ).toLowerCase()
+                )
+                  ? String(
+                      criterion.type
+                    ).toLowerCase()
+                  : "positive",
+
+              given:
+                String(
+                  criterion?.given || ""
+                ).trim(),
+
+              when:
+                String(
+                  criterion?.when || ""
+                ).trim(),
+
+              then:
+                String(
+                  criterion?.then || ""
+                ).trim(),
+
+              title:
+                criterion?.title || "",
+
+              description:
+                criterion?.description || "",
+
+              priority:
+                criterion?.priority ||
+                s.priority
+
+            })
+          )
+          .filter(
+            criterion =>
+              criterion.given ||
+              criterion.when ||
+              criterion.then
+          )
+
+      : [];
+
+  }
+
+
+  function render() {
+
+    e.workspace.style.display =
+      "block";
+
+    e.score.textContent =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          Math.round(
+            Number(
+              s.testabilityScore
+            ) || 0
+          )
+        )
+      );
+
+    e.explanation.textContent =
+      s.testabilityExplanation ||
+      t("generic");
+
+    renderCriteria();
+
+    renderCoverage();
+
+    renderList(
+      e.rules,
+      s.businessRules,
+      "rules"
+    );
+
+    renderList(
+      e.assumptions,
+      s.assumptions,
+      "assumptions"
+    );
+
+    renderList(
+      e.questions,
+      s.openQuestions,
+      "questions"
+    );
+
+    renderWF();
+
+  }
+
+
+  function renderCriteria() {
+
+    if (
+      !s.acceptanceCriteria.length
+    ) {
+
+      e.criteria.innerHTML = `
+
+        <tr>
+
+          <td
+            colspan="6"
+            class="empty"
+          >
+
+            ${esc(t("none"))}
+
+          </td>
+
+        </tr>
+
+      `;
+
+      return;
+
+    }
+
+
+    e.criteria.innerHTML =
+      s.acceptanceCriteria
+        .map(
+          (criterion, index) => `
+
+            <tr>
+
+              <td class="id">
+                ${esc(criterion.id)}
+              </td>
+
+              <td class="type">
+
+                <select
+                  data-i="${index}"
+                  data-f="type"
+                >
+
+                  ${
+                    [
+                      "positive",
+                      "negative",
+                      "boundary",
+                      "validation"
+                    ]
+                      .map(
+                        type => `
+
+                          <option
+                            value="${type}"
+                            ${
+                              type ===
+                              criterion.type
+                                ? "selected"
+                                : ""
+                            }
+                          >
+
+                            ${esc(
+                              t(type)
+                            )}
+
+                          </option>
+
+                        `
+                      )
+                      .join("")
+                  }
+
+                </select>
+
+              </td>
+
+              <td>
+
+                <textarea
+                  data-i="${index}"
+                  data-f="given"
+                >${esc(
+                  criterion.given
+                )}</textarea>
+
+              </td>
+
+              <td>
+
+                <textarea
+                  data-i="${index}"
+                  data-f="when"
+                >${esc(
+                  criterion.when
+                )}</textarea>
+
+              </td>
+
+              <td>
+
+                <textarea
+                  data-i="${index}"
+                  data-f="then"
+                >${esc(
+                  criterion.then
+                )}</textarea>
+
+              </td>
+
+              <td>
+
+                <button
+                  class="danger small"
+                  data-del="${index}"
+                >
+                  ×
+                </button>
+
+              </td>
+
+            </tr>
+
+          `
+        )
+        .join("");
+
+  }
+
+
+  function renderCoverage() {
+
+    e.coverage.innerHTML =
+      s.coverageSummary.length
+
+        ? s.coverageSummary
+            .map(
+              item => `
+
+                <div class="coverageItem">
+                  ✓ ${esc(item)}
+                </div>
+
+              `
+            )
+            .join("")
+
+        : `
+
+            <div
+              class="empty"
+              style="grid-column:1/-1"
+            >
+
+              ${esc(t("empty"))}
+
+            </div>
+
+          `;
+
+  }
+
+
+  function renderList(
+    element,
+    values,
+    type
+  ) {
+
+    element.innerHTML =
+      values.length
+
+        ? values
+            .map(
+              (value, index) => `
+
+                <div class="listRow">
+
+                  <textarea
+                    data-li="${index}"
+                    data-lt="${type}"
+                  >${esc(value)}</textarea>
+
+                  <button
+                    class="danger small"
+                    data-ld="${index}"
+                    data-lt="${type}"
+                  >
+                    ×
+                  </button>
+
+                </div>
+
+              `
+            )
+            .join("")
+
+        : `
+
+            <div class="empty">
+              ${esc(t("empty"))}
+            </div>
+
+          `;
+
+  }
+
+
+  function sync() {
+
+    s.requirement =
+      e.req.value.trim();
+
+    s.language =
+      e.lang.value;
+
+    s.detail =
+      e.detail.value;
+
+    s.priority =
+      e.priority.value;
+
+    s.source =
+      e.source.value;
+
+    s.saved =
+      false;
+
+  }
+
+
+  async function generate() {
+
+    hide();
+
+    const value =
+      e.req.value.trim();
+
+    if (
+      value.length < 15 ||
+      value
+        .split(/\s+/)
+        .filter(Boolean)
+        .length < 3
+    ) {
+
+      msg(
+        "error",
+        t("reqError")
+      );
+
+      return;
+
+    }
+
+
+    sync();
+
+    e.generate.disabled =
+      true;
+
+    msg(
+      "status",
+      t("generating")
+    );
+
+
+    try {
+
+      const response =
+        await fetch(
+          "/api/acceptance-criteria",
+          {
+
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body:
+              JSON.stringify({
+
+                requirement:
+                  s.requirement,
+
+                userStory:
+                  s.userStory,
+
+                language:
+                  s.language,
+
+                detail:
+                  s.detail,
+
+                priority:
+                  s.priority,
+
+                source:
+                  s.source
+
+              })
+
+          }
+        );
+
+
+      const raw =
+        await response.text();
+
+      let data;
+
+
+      try {
+
+        data =
+          JSON.parse(raw);
+
+      } catch (error) {
+
+        throw Error(
+          t("api")
+        );
+
+      }
+
+
+      if (!response.ok) {
+
+        throw Error(
+          data.error ||
+          t("generic")
+        );
+
+      }
+
+
+      s.testabilityScore =
+        Number(
+          data.testabilityScore
+        ) || 0;
+
+
+      s.testabilityExplanation =
+        data.testabilityExplanation ||
+        t("generic");
+
+
+      s.acceptanceCriteria =
+        normalize(
+          data.acceptanceCriteria
+        );
+
+
+      s.coverageSummary =
+        list(
+          data.coverageSummary
+        );
+
+
+      s.businessRules =
+        list(
+          data.businessRules
+        );
+
+
+      s.assumptions =
+        list(
+          data.assumptions
+        );
+
+
+      s.openQuestions =
+        list(
+          data.openQuestions
+        );
+
+
+      render();
+
+      save(false);
+
+    } catch (error) {
+
+      msg(
+        "error",
+        error.message ||
+        t("generic")
+      );
+
+    } finally {
+
+      e.generate.disabled =
+        false;
+
+      e.status.style.display =
+        "none";
+
+    }
+
+  }
+
+
+  function draft() {
+
+    sync();
+
+    return {
+
+      ...s,
+
+      acceptanceCriteria:
+        JSON.parse(
+          JSON.stringify(
+            s.acceptanceCriteria
+          )
+        ),
+
+      coverageSummary:
+        [
+          ...s.coverageSummary
+        ],
+
+      businessRules:
+        [
+          ...s.businessRules
+        ],
+
+      assumptions:
+        [
+          ...s.assumptions
+        ],
+
+      openQuestions:
+        [
+          ...s.openQuestions
+        ],
+
+      saved:
+        true,
+
+      updatedAt:
+        new Date().toISOString()
+
+    };
+
+  }
+
+
+  function save(
+    show = true
+  ) {
+
+    const data =
+      draft();
+
+
+    if (
+      !write(
+        KEY.draft,
+        data
+      )
+    ) {
+
+      msg(
+        "error",
+        "Unable to save draft."
+      );
+
+      return false;
+
+    }
+
+
+    if (
+      window.BAWorkflow &&
+      window.BADataModel
+    ) {
+
+      const workflow =
+        wf();
+
+
+      const criteria =
+        data.acceptanceCriteria.map(
+          criterion =>
+            BADataModel.createAcceptanceCriterion(
+              {
+
+                id:
+                  criterion.id,
+
+                requirementId:
+                  data.requirementId,
+
+                userStoryId:
+                  data.userStoryId,
+
+                type:
+                  criterion.type,
+
+                given:
+                  criterion.given,
+
+                when:
+                  criterion.when,
+
+                then:
+                  criterion.then,
+
+                priority:
+                  criterion.priority
+
+              }
+            )
+        );
+
+
+      const artifact =
+        BAWorkflow.createWorkflowArtifact(
+          {
+
+            id:
+              s.artifactId ||
+              (
+                "ac_" +
+                Date.now()
+              ),
+
+            step:
+              "acceptance_criteria",
+
+            entityId:
+              s.artifactId ||
+              null,
+
+            entityType:
+              "acceptance_criteria",
+
+            status:
+              "draft",
+
+            data:
+              {
+                ...data,
+                acceptanceCriteria:
+                  criteria
+              }
+
+          }
+        );
+
+
+      s.artifactId =
+        artifact.id;
+
+
+      workflow.artifacts
+        .acceptance_criteria =
+        artifact;
+
+
+      write(
+        KEY.workflow,
+        workflow
+      );
+
+
+      renderWF();
+
+    }
+
+
+    s.saved =
+      true;
+
+
+    if (show) {
+
+      msg(
+        "success",
+        t("saved")
+      );
+
+    }
+
+
+    return true;
+
+  }
+
+
+  function addCriterion() {
+
+    s.acceptanceCriteria.push({
+
+      id:
+        `AC-${String(
+          s.acceptanceCriteria.length + 1
+        ).padStart(2, "0")}`,
+
+      type:
+        "positive",
+
+      given:
+        "",
+
+      when:
+        "",
+
+      then:
+        "",
+
+      priority:
+        s.priority
+
+    });
+
+
+    renderCriteria();
+
+  }
+
+
+  function addList(type) {
+
+    const values =
+      type === "rules"
+        ? s.businessRules
+        : type === "assumptions"
+          ? s.assumptions
+          : s.openQuestions;
+
+
+    values.push("");
+
+
+    renderList(
+
+      type === "rules"
+        ? e.rules
+        : type === "assumptions"
+          ? e.assumptions
+          : e.questions,
+
+      values,
+
+      type
+
+    );
+
+  }
+
+
+  /*
+   * Acceptance Criteria -> UAT
+   *
+   * This is the important transfer point.
+   */
+
+  function complete() {
+
+    if (
+      !s.acceptanceCriteria.length
+    ) {
+
+      msg(
+        "error",
+        t("noCriteria")
+      );
+
+      return;
+
+    }
+
+
+    save(false);
+
+
+    let workflow =
+      wf();
+
+
+    const artifact = {
+
+      id:
+        s.artifactId ||
+        (
+          "ac_" +
+          Date.now()
+        ),
+
+      entityId:
+        s.artifactId ||
+        null,
+
+      entityType:
+        "acceptance_criteria",
+
+      status:
+        "completed",
+
+      data:
+        draft()
+
+    };
+
+
+    workflow =
+      BAWorkflow.completeStep(
+        workflow,
+        "acceptance_criteria",
+        artifact
+      );
+
+
+    write(
+      KEY.workflow,
+      workflow
+    );
+
+
+    let transfer =
+      null;
+
+
+    try {
+
+      transfer =
+        BAWorkflow.createTransferPayload(
+          workflow,
+          "acceptance_criteria",
+          "uat"
+        );
+
+    } catch (error) {
+
+      transfer = {};
+
+    }
+
+
+    /*
+     * Everything required by UAT is explicitly
+     * included in the context.
+     */
+
+    const context = {
+
+      ...transfer,
+
+      requirement:
+        s.requirement,
+
+      userStory:
+        s.userStory,
+
+      acceptanceCriteria:
+        s.acceptanceCriteria,
+
+      businessRules:
+        s.businessRules,
+
+      assumptions:
+        s.assumptions,
+
+      openQuestions:
+        s.openQuestions,
+
+      requirementId:
+        s.requirementId,
+
+      userStoryId:
+        s.userStoryId,
+
+      language:
+        s.language,
+
+      priority:
+        s.priority
+
+    };
+
+
+    write(
+      KEY.uat,
+      context
+    );
+
+
+    write(
+      "baforge-current-uat-context",
+      context
+    );
+
+
+    location.href =
+      "/uat.html?from=acceptance-criteria";
+
+  }
+
+
+  function lang() {
+
+    const translation =
+      TR[e.lang.value] ||
+      TR.en;
+
+
+    document.documentElement.lang =
+      e.lang.value;
+
+
+    const ids = {
+
+      eyebrow:
+        "eyebrow",
+
+      heroTitle:
+        "heroTitle",
+
+      heroSub:
+        "heroSub",
+
+      progressLabel:
+        "progress",
+
+      inputTitle:
+        "inputTitle",
+
+      inputSub:
+        "inputSub",
+
+      langLabel:
+        "lang",
+
+      reqLabel:
+        "req",
+
+      detailLabel:
+        "detail",
+
+      priorityLabel:
+        "priority",
+
+      sourceLabel:
+        "source",
+
+      generate:
+        "generate",
+
+      clear:
+        "clear",
+
+      workspaceTitle:
+        "workspace",
+
+      workspaceSub:
+        "workspaceSub",
+
+      scoreLabel:
+        "score",
+
+      scoreOut:
+        "out",
+
+      assessment:
+        "assessment",
+
+      criteriaTitle:
+        "criteria",
+
+      addCriterion:
+        "addCriterion",
+
+      typeHead:
+        "type",
+
+      givenHead:
+        "given",
+
+      whenHead:
+        "when",
+
+      thenHead:
+        "then",
+
+      coverageTitle:
+        "coverage",
+
+      rulesTitle:
+        "rules",
+
+      addRule:
+        "addRule",
+
+      assumptionsTitle:
+        "assumptions",
+
+      addAssumption:
+        "addAssumption",
+
+      questionsTitle:
+        "questions",
+
+      addQuestion:
+        "addQuestion",
+
+      reset:
+        "reset",
+
+      regenerate:
+        "regenerate",
+
+      save:
+        "save",
+
+      continue:
+        "continue",
+
+      actionTitle:
+        "actionTitle",
+
+      actionSub:
+        "actionSub"
+
+    };
+
+
+    Object.entries(ids)
+      .forEach(
+        ([id, key]) => {
+
+          $(id).textContent =
+            translation[key];
+
+        }
+      );
+
+
+    e.req.placeholder =
+      translation.ph;
+
+
+    if (
+      $("contextBanner")
+        .classList
+        .contains("visible")
+    ) {
+
+      $("contextTitle")
+        .textContent =
+        translation.loaded;
+
+      $("contextDetail")
+        .textContent =
+        translation.loadedDetail;
+
+    }
+
+
+    renderCriteria();
+
+    renderCoverage();
+
+    renderList(
+      e.rules,
+      s.businessRules,
+      "rules"
+    );
+
+    renderList(
+      e.assumptions,
+      s.assumptions,
+      "assumptions"
+    );
+
+    renderList(
+      e.questions,
+      s.openQuestions,
+      "questions"
+    );
+
+    renderWF();
+
+  }
+
+
+  e.criteria.addEventListener(
+    "input",
+    event => {
+
+      const index =
+        Number(
+          event.target.dataset.i
+        );
+
+      const field =
+        event.target.dataset.f;
+
+
+      if (
+        Number.isInteger(index) &&
+        field &&
+        s.acceptanceCriteria[index]
+      ) {
+
+        s.acceptanceCriteria[index][field] =
+          event.target.value;
+
+      }
+
+    }
+  );
+
+
+  e.criteria.addEventListener(
+    "click",
+    event => {
+
+      const button =
+        event.target.closest(
+          "[data-del]"
+        );
+
+
+      if (
+        button &&
+        confirm(t("delete"))
+      ) {
+
+        s.acceptanceCriteria.splice(
+          Number(
+            button.dataset.del
+          ),
+          1
+        );
+
+
+        s.acceptanceCriteria
+          .forEach(
+            (criterion, index) => {
+
+              criterion.id =
+                `AC-${String(
+                  index + 1
+                ).padStart(2, "0")}`;
+
+            }
+          );
+
+
+        renderCriteria();
+
+      }
+
+    }
+  );
+
+
+  function bindList(
+    element
+  ) {
+
+    element.addEventListener(
+      "input",
+      event => {
+
+        const index =
+          Number(
+            event.target.dataset.li
+          );
+
+        const type =
+          event.target.dataset.lt;
+
+
+        const values =
+          type === "rules"
+            ? s.businessRules
+            : type === "assumptions"
+              ? s.assumptions
+              : s.openQuestions;
+
+
+        if (
+          Number.isInteger(index) &&
+          values[index] !== undefined
+        ) {
+
+          values[index] =
+            event.target.value;
+
+        }
+
+      }
+    );
+
+
+    element.addEventListener(
+      "click",
+      event => {
+
+        const button =
+          event.target.closest(
+            "[data-ld]"
+          );
+
+
+        if (
+          button &&
+          confirm(t("delete"))
+        ) {
+
+          const type =
+            button.dataset.lt;
+
+
+          const values =
+            type === "rules"
+              ? s.businessRules
+              : type === "assumptions"
+                ? s.assumptions
+                : s.openQuestions;
+
+
+          values.splice(
+            Number(
+              button.dataset.ld
+            ),
+            1
+          );
+
+
+          renderList(
+            element,
+            values,
+            type
+          );
+
+        }
+
+      }
+    );
+
+  }
+
+
+  bindList(e.rules);
+
+  bindList(e.assumptions);
+
+  bindList(e.questions);
+
+
+  e.lang.addEventListener(
+    "change",
+    lang
+  );
+
+
+  e.generate.addEventListener(
+    "click",
+    generate
+  );
+
+
+  e.clear.addEventListener(
+    "click",
+    () => {
+
+      e.req.value =
+        "";
+
+      e.source.value =
+        "manual";
+
+      e.workspace.style.display =
+        "none";
+
+
+      remove(
+        KEY.draft
+      );
+
+
+      remove(
+        KEY.currentAcceptance
+      );
+
+
+      s = {
+
+        ...s,
+
+        source:
+          "manual",
+
+        requirement:
+          "",
+
+        userStory:
+          null,
+
+        acceptanceCriteria:
+          [],
+
+        coverageSummary:
+          [],
+
+        businessRules:
+          [],
+
+        assumptions:
+          [],
+
+        openQuestions:
+          []
+
+      };
+
+
+      $("contextBanner")
+        .classList
+        .remove("visible");
+
+
+      hide();
+
+    }
+  );
+
+
+  $("addCriterion")
+    .addEventListener(
+      "click",
+      addCriterion
+    );
+
+
+  $("addRule")
+    .addEventListener(
+      "click",
+      () =>
+        addList("rules")
+    );
+
+
+  $("addAssumption")
+    .addEventListener(
+      "click",
+      () =>
+        addList("assumptions")
+    );
+
+
+  $("addQuestion")
+    .addEventListener(
+      "click",
+      () =>
+        addList("questions")
+    );
+
+
+  $("save")
+    .addEventListener(
+      "click",
+      () =>
+        save(true)
+    );
+
+
+  $("regenerate")
+    .addEventListener(
+      "click",
+      generate
+    );
+
+
+  $("continue")
+    .addEventListener(
+      "click",
+      complete
+    );
+
+
+  $("reset")
+    .addEventListener(
+      "click",
+      () => {
+
+        if (
+          confirm(
+            "Reset workspace?"
+          )
+        ) {
+
+          remove(
+            KEY.draft
+          );
+
+          e.workspace.style.display =
+            "none";
+
+          s.acceptanceCriteria =
+            [];
+
+          s.businessRules =
+            [];
+
+          s.assumptions =
+            [];
+
+          s.openQuestions =
+            [];
+
+        }
+
+      }
+    );
+
+
+  function init() {
+
+    /*
+     * 1. First priority:
+     *    User Story -> Acceptance Criteria
+     *
+     * This is the key fix.
+     */
+
+    const transfer =
+      loadUserStoryTransfer();
+
+
+    if (transfer) {
+
+      applyUserStoryTransfer(
+        transfer
+      );
+
+    }
+
+
+    /*
+     * 2. Existing Acceptance Criteria draft
+     *    should still work.
+     */
+
+    const draftData =
+      read(KEY.draft);
+
+
+    if (
+      draftData &&
+      Array.isArray(
+        draftData.acceptanceCriteria
+      )
+    ) {
+
+      s = {
+
+        ...s,
+
+        ...draftData
+
+      };
+
+
+      e.req.value =
+        s.requirement || "";
+
+
+      e.lang.value =
+        s.language || "en";
+
+
+      e.detail.value =
+        s.detail ||
+        "Professional";
+
+
+      e.priority.value =
+        s.priority ||
+        "medium";
+
+
+      e.source.value =
+        s.source ||
+        "manual";
+
+
+      lang();
+
+      render();
+
+      return;
+
+    }
+
+
+    /*
+     * 3. If there is no draft, continue
+     *    with User Story transfer.
+     */
+
+    if (transfer) {
+
+      e.req.value =
+        transfer.requirement || "";
+
+
+      e.lang.value =
+        transfer.language || "en";
+
+
+      e.source.value =
+        "user_story";
+
+
+      s.requirement =
+        transfer.requirement || "";
+
+
+      s.userStory =
+        transfer.userStory || null;
+
+
+      s.acceptanceCriteria =
+        [];
+
+
+      s.businessRules =
+        transfer.businessRules || [];
+
+
+      s.assumptions =
+        transfer.assumptions || [];
+
+
+      s.openQuestions =
+        transfer.openQuestions || [];
+
+
+      lang();
+
+      renderWF();
+
+      return;
+
+    }
+
+
+    /*
+     * 4. Legacy / other User Story sources.
+     */
+
+    const story =
+      findStory();
+
+
+    if (story) {
+
+      const text =
+        storyText(
+          story
+        );
+
+
+      if (text) {
+
+        s.source =
+          "user_story";
+
+        s.userStory =
+          story;
+
+        s.userStoryId =
+          story.id ||
+          story.userStoryId ||
+          null;
+
+        s.requirementId =
+          story.requirementId ||
+          null;
+
+        s.requirement =
+          text;
+
+        e.req.value =
+          text;
+
+        e.source.value =
+          "user_story";
+
+      }
+
+    }
+
+
+    lang();
+
+    renderWF();
+
+  }
+
+
+  init();
+
 })();
+
 </script>
+
 </body>
 </html>
