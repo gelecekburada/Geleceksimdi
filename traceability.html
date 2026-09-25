@@ -1,0 +1,2964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAForge AI - Traceability Matrix</title>
+
+<style>
+*{box-sizing:border-box}
+
+:root{
+  --primary:#2563eb;
+  --primary-dark:#1d4ed8;
+  --text:#172033;
+  --heading:#101828;
+  --muted:#667085;
+  --border:#e4e7ec;
+  --surface:#fff;
+  --background:#f6f8fc;
+  --success:#15803d;
+  --success-bg:#ecfdf3;
+  --warning:#b54708;
+  --warning-bg:#fffaeb;
+  --danger:#b42318;
+  --danger-bg:#fef2f2;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--background);
+  color:var(--text);
+}
+
+main{
+  max-width:1450px;
+  margin:auto;
+  padding:28px 22px 70px;
+}
+
+/* WORKFLOW */
+
+.workflow-wrapper{
+  overflow-x:auto;
+  margin-bottom:25px;
+  padding-bottom:8px;
+}
+
+.workflow{
+  min-width:1050px;
+  display:flex;
+  align-items:center;
+}
+
+.workflow-step{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  white-space:nowrap;
+  color:#98a2b3;
+  font-size:12px;
+  font-weight:700;
+}
+
+.workflow-step.active{
+  color:var(--primary);
+}
+
+.workflow-dot{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  border:1px solid #d0d5dd;
+}
+
+.workflow-step.active .workflow-dot{
+  color:#fff;
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+.workflow-line{
+  width:35px;
+  height:1px;
+  background:#d0d5dd;
+  margin:0 8px;
+}
+
+/* HERO */
+
+.hero{
+  margin-bottom:20px;
+}
+
+.badge{
+  display:inline-block;
+  padding:7px 11px;
+  border-radius:999px;
+  background:#eef4ff;
+  border:1px solid #c7d7fe;
+  color:#175cd3;
+  font-size:11px;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.hero h1{
+  margin:0 0 8px;
+  color:var(--heading);
+  font-size:38px;
+  line-height:1.15;
+}
+
+.hero h1 span{
+  color:var(--primary);
+}
+
+.hero p{
+  max-width:850px;
+  margin:0;
+  color:var(--muted);
+  line-height:1.55;
+}
+
+/* NAV */
+
+.navigation{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.nav-button{
+  display:inline-flex;
+  padding:10px 15px;
+  border-radius:10px;
+  border:1px solid #d0d5dd;
+  background:#fff;
+  color:#344054;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:700;
+}
+
+.nav-button.next{
+  color:#fff;
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+/* CARDS */
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:17px;
+  box-shadow:0 10px 30px rgba(16,24,40,.06);
+  padding:25px;
+  margin-bottom:20px;
+}
+
+.card-header{
+  margin-bottom:18px;
+}
+
+.card-header h2{
+  margin:0 0 5px;
+  color:var(--heading);
+  font-size:20px;
+}
+
+.card-header p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* STATUS */
+
+.status{
+  display:none;
+  padding:13px 15px;
+  border-radius:10px;
+  margin-bottom:18px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.status.success{
+  display:block;
+  color:var(--success);
+  background:var(--success-bg);
+  border:1px solid #abefc6;
+}
+
+.status.warning{
+  display:block;
+  color:var(--warning);
+  background:var(--warning-bg);
+  border:1px solid #fedf89;
+}
+
+.status.error{
+  display:block;
+  color:var(--danger);
+  background:var(--danger-bg);
+  border:1px solid #fecaca;
+}
+
+/* SUMMARY */
+
+.summary-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:13px;
+}
+
+.summary{
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:16px;
+  background:#fff;
+}
+
+.summary-label{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.summary-value{
+  margin-top:5px;
+  color:var(--heading);
+  font-size:25px;
+  font-weight:800;
+}
+
+.summary.success{
+  background:var(--success-bg);
+  border-color:#abefc6;
+}
+
+.summary.warning{
+  background:var(--warning-bg);
+  border-color:#fedf89;
+}
+
+.summary.success .summary-value{
+  color:var(--success);
+}
+
+.summary.warning .summary-value{
+  color:var(--warning);
+}
+
+/* CHAIN */
+
+.chain-wrapper{
+  overflow-x:auto;
+  padding:8px 4px 15px;
+}
+
+.chain{
+  min-width:1050px;
+  display:flex;
+  align-items:center;
+}
+
+.chain-node{
+  width:150px;
+  min-height:105px;
+  flex:0 0 150px;
+  border-radius:14px;
+  border:1px solid #d0d5dd;
+  background:#fff;
+  padding:14px 10px;
+  text-align:center;
+  box-shadow:0 3px 10px rgba(16,24,40,.05);
+}
+
+.chain-node.available{
+  background:#f0fdf4;
+  border-color:#86efac;
+}
+
+.chain-node.missing{
+  background:#fff7f7;
+  border-color:#fca5a5;
+}
+
+.chain-number{
+  width:27px;
+  height:27px;
+  margin:0 auto 7px;
+  border-radius:50%;
+  background:#eef4ff;
+  color:#175cd3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:800;
+}
+
+.chain-title{
+  color:var(--heading);
+  font-size:11px;
+  font-weight:800;
+}
+
+.chain-count{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.chain-status{
+  margin-top:6px;
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.available .chain-status{
+  color:var(--success);
+}
+
+.missing .chain-status{
+  color:var(--danger);
+}
+
+.chain-arrow{
+  flex:0 0 32px;
+  height:2px;
+  background:#98a2b3;
+  position:relative;
+  margin:0 7px;
+}
+
+.chain-arrow:after{
+  content:"";
+  position:absolute;
+  right:-1px;
+  top:-4px;
+  border-left:7px solid #98a2b3;
+  border-top:5px solid transparent;
+  border-bottom:5px solid transparent;
+}
+
+/* MATRIX */
+
+.matrix-wrapper{
+  overflow-x:auto;
+  border:1px solid var(--border);
+  border-radius:13px;
+}
+
+table{
+  width:100%;
+  min-width:1150px;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:12px 13px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  vertical-align:top;
+  font-size:12px;
+}
+
+th{
+  background:#f8fafc;
+  color:#475467;
+  font-size:10px;
+  text-transform:uppercase;
+}
+
+tr:last-child td{
+  border-bottom:0;
+}
+
+.artifact-id{
+  color:#175cd3;
+  font-weight:800;
+  margin-top:6px;
+}
+
+.artifact-title{
+  color:var(--heading);
+  font-weight:700;
+  margin-top:3px;
+}
+
+.linked,
+.not-linked{
+  display:inline-flex;
+  padding:4px 7px;
+  border-radius:7px;
+  font-size:9px;
+  font-weight:800;
+}
+
+.linked{
+  color:var(--success);
+  background:#ecfdf3;
+  border:1px solid #abefc6;
+}
+
+.not-linked{
+  color:var(--danger);
+  background:#fef2f2;
+  border:1px solid #fecaca;
+}
+
+/* COVERAGE */
+
+.coverage-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.coverage-block{
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:18px;
+}
+
+.coverage-block h3{
+  margin:0 0 15px;
+  font-size:15px;
+  color:var(--heading);
+}
+
+.coverage-row{
+  margin-bottom:14px;
+}
+
+.coverage-top{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:6px;
+  color:#344054;
+  font-size:11px;
+  font-weight:700;
+}
+
+.progress{
+  height:8px;
+  border-radius:999px;
+  background:#eaecf0;
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  border-radius:999px;
+}
+
+.progress-bar.ok{
+  background:#16a34a;
+}
+
+.progress-bar.empty{
+  background:#f59e0b;
+}
+
+.gap-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.gap{
+  display:flex;
+  gap:9px;
+  padding:11px;
+  border:1px solid #fedf89;
+  background:#fffbeb;
+  border-radius:9px;
+}
+
+.gap-icon{
+  flex:0 0 23px;
+  width:23px;
+  height:23px;
+  border-radius:50%;
+  background:#fef3c7;
+  color:var(--warning);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  font-size:11px;
+}
+
+.gap-text{
+  color:#475467;
+  font-size:11px;
+  line-height:1.4;
+}
+
+.gap-text strong{
+  display:block;
+  color:#344054;
+  margin-bottom:2px;
+}
+
+/* EMPTY */
+
+.empty{
+  padding:30px 20px;
+  text-align:center;
+  border:1px dashed #d0d5dd;
+  border-radius:12px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* BUTTONS */
+
+.actions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+}
+
+button{
+  border:0;
+  border-radius:9px;
+  padding:11px 16px;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+button.secondary{
+  background:#fff;
+  color:#344054;
+  border:1px solid #d0d5dd;
+}
+
+button.success{
+  background:#15803d;
+}
+
+.bottom-nav{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:20px;
+}
+
+.bottom-nav a{
+  padding:10px 15px;
+  border-radius:9px;
+  border:1px solid #d0d5dd;
+  background:#fff;
+  color:#344054;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:700;
+}
+
+.bottom-nav a.next{
+  color:#fff;
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+/* MOBILE */
+
+@media(max-width:950px){
+
+  .summary-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .coverage-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:650px){
+
+  main{
+    padding:18px 12px 55px;
+  }
+
+  .hero h1{
+    font-size:29px;
+  }
+
+  .navigation,
+  .bottom-nav{
+    flex-direction:column;
+  }
+
+  .nav-button,
+  .bottom-nav a{
+    width:100%;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<main>
+
+<!-- WORKFLOW -->
+
+<div class="workflow-wrapper">
+
+<div class="workflow">
+
+<div class="workflow-step">
+<span class="workflow-dot">1</span>
+Requirement
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">2</span>
+User Story
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">3</span>
+Acceptance Criteria
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">4</span>
+UAT Test Cases
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">5</span>
+Test Data
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">6</span>
+Process Flow
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step active">
+<span class="workflow-dot">7</span>
+Traceability
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">8</span>
+BA Document
+</div>
+
+</div>
+
+</div>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+<div class="badge">
+Traceability Matrix
+</div>
+
+<h1>
+Connect Requirements to
+<span>Delivery Artifacts</span>
+</h1>
+
+<p>
+Trace the relationship between Requirements, User Stories,
+Acceptance Criteria, UAT Test Cases, Test Data and Process Flows
+in one structured workspace.
+</p>
+
+</section>
+
+
+<!-- NAV -->
+
+<div class="navigation">
+
+<a
+class="nav-button"
+href="/process-flow.html">
+← Process Flow
+</a>
+
+<a
+class="nav-button next"
+href="/document.html">
+BA Document →
+</a>
+
+</div>
+
+
+<div
+id="status"
+class="status">
+</div>
+
+
+<!-- SUMMARY -->
+
+<section class="card">
+
+<div class="card-header">
+
+<h2>
+Traceability Overview
+</h2>
+
+<p>
+Artifacts detected from the current BAForge workspace.
+</p>
+
+</div>
+
+
+<div class="summary-grid">
+
+<div class="summary">
+<div class="summary-label">Requirements</div>
+<div id="requirementsCount" class="summary-value">0</div>
+</div>
+
+<div class="summary">
+<div class="summary-label">User Stories</div>
+<div id="userStoriesCount" class="summary-value">0</div>
+</div>
+
+<div class="summary">
+<div class="summary-label">Acceptance Criteria</div>
+<div id="acCount" class="summary-value">0</div>
+</div>
+
+<div class="summary">
+<div class="summary-label">Test Cases</div>
+<div id="testCasesCount" class="summary-value">0</div>
+</div>
+
+<div class="summary">
+<div class="summary-label">Test Data</div>
+<div id="testDataCount" class="summary-value">0</div>
+</div>
+
+<div class="summary">
+<div class="summary-label">Process Flows</div>
+<div id="processFlowsCount" class="summary-value">0</div>
+</div>
+
+<div id="coverageCard" class="summary warning">
+<div class="summary-label">Coverage</div>
+<div id="coverage" class="summary-value">0%</div>
+</div>
+
+<div id="gapsCard" class="summary warning">
+<div class="summary-label">Traceability Gaps</div>
+<div id="gaps" class="summary-value">0</div>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CHAIN -->
+
+<section class="card">
+
+<div class="card-header">
+
+<h2>
+Traceability Chain
+</h2>
+
+<p>
+Requirement → User Story → Acceptance Criteria → UAT → Test Data → Process Flow
+</p>
+
+</div>
+
+<div class="chain-wrapper">
+
+<div id="chain" class="chain"></div>
+
+</div>
+
+</section>
+
+
+<!-- MATRIX -->
+
+<section class="card">
+
+<div class="card-header">
+
+<h2>
+Traceability Matrix
+</h2>
+
+<p>
+Connected artifacts detected from the current workspace.
+</p>
+
+</div>
+
+<div
+id="matrixEmpty"
+class="empty"
+style="display:none">
+No workflow artifacts could be detected yet.
+</div>
+
+<div
+id="matrixWrapper"
+class="matrix-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Requirement</th>
+<th>User Story</th>
+<th>Acceptance Criteria</th>
+<th>UAT Test Cases</th>
+<th>Test Data</th>
+<th>Process Flow</th>
+
+</tr>
+
+</thead>
+
+<tbody id="matrixBody"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- COVERAGE -->
+
+<section class="card">
+
+<div class="card-header">
+
+<h2>
+Coverage Analysis
+</h2>
+
+<p>
+Identify completed workflow areas and missing downstream artifacts.
+</p>
+
+</div>
+
+
+<div class="coverage-grid">
+
+<div
+id="coverageBlock"
+class="coverage-block">
+</div>
+
+<div
+class="coverage-block">
+
+<h3>
+Traceability Gaps
+</h3>
+
+<div
+id="gapList"
+class="gap-list">
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ACTIONS -->
+
+<section class="card">
+
+<div class="actions">
+
+<button
+id="refreshButton">
+Refresh Traceability
+</button>
+
+<button
+id="copyButton"
+class="secondary">
+Copy Matrix
+</button>
+
+<button
+id="saveButton"
+class="success">
+Save Traceability
+</button>
+
+</div>
+
+
+<div class="bottom-nav">
+
+<a href="/process-flow.html">
+← Process Flow
+</a>
+
+<a
+href="/document.html"
+class="next">
+Continue to BA Document →
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+
+<script src="/core/data-model.js"></script>
+<script src="/core/workflow.js"></script>
+
+
+<script>
+
+/* =====================================================
+   GENERAL HELPERS
+===================================================== */
+
+function safeParse(value){
+
+  try{
+    return JSON.parse(value);
+  }catch{
+    return null;
+  }
+
+}
+
+
+function safeString(value){
+
+  if(
+    value === null ||
+    value === undefined
+  ){
+    return "";
+  }
+
+  return String(value);
+
+}
+
+
+function escapeHtml(value){
+
+  return safeString(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function isObject(value){
+
+  return (
+    value &&
+    typeof value === "object"
+  );
+
+}
+
+
+function arrayify(value){
+
+  if(!value)
+    return [];
+
+  if(Array.isArray(value))
+    return value;
+
+  return [value];
+
+}
+
+
+/* =====================================================
+   SESSION STORAGE SCANNER
+===================================================== */
+
+function getAllStorageObjects(){
+
+  const result = [];
+
+  for(
+    let i=0;
+    i<sessionStorage.length;
+    i++
+  ){
+
+    const key =
+      sessionStorage.key(i);
+
+    if(!key)
+      continue;
+
+    const raw =
+      sessionStorage.getItem(key);
+
+    if(!raw)
+      continue;
+
+    const parsed =
+      safeParse(raw);
+
+    if(parsed){
+
+      result.push({
+        key,
+        value:parsed
+      });
+
+    }
+
+  }
+
+  return result;
+
+}
+
+
+/* =====================================================
+   RECURSIVE OBJECT WALKER
+===================================================== */
+
+function walkObject(
+  value,
+  callback,
+  path=[]
+){
+
+  if(
+    value === null ||
+    value === undefined
+  )
+    return;
+
+
+  callback(
+    value,
+    path
+  );
+
+
+  if(
+    typeof value !== "object"
+  )
+    return;
+
+
+  if(
+    path.length > 7
+  )
+    return;
+
+
+  if(Array.isArray(value)){
+
+    value.forEach(
+      (item,index) => {
+
+        walkObject(
+          item,
+          callback,
+          path.concat(index)
+        );
+
+      }
+    );
+
+    return;
+
+  }
+
+
+  Object.keys(value)
+    .forEach(
+      key => {
+
+        walkObject(
+          value[key],
+          callback,
+          path.concat(key)
+        );
+
+      }
+    );
+
+}
+
+
+/* =====================================================
+   TEXT EXTRACTION
+===================================================== */
+
+function objectText(obj){
+
+  if(
+    obj === null ||
+    obj === undefined
+  )
+    return "";
+
+  if(
+    typeof obj === "string"
+  )
+    return obj;
+
+  if(
+    typeof obj !== "object"
+  )
+    return "";
+
+  const parts=[];
+
+  const fields=[
+
+    "title",
+    "name",
+    "description",
+    "story",
+    "requirement",
+    "text",
+    "summary",
+    "action",
+    "expectedResult",
+    "objective",
+    "processName",
+    "question",
+    "type"
+
+  ];
+
+  fields.forEach(
+    field => {
+
+      if(
+        typeof obj[field] === "string"
+      ){
+
+        parts.push(
+          obj[field]
+        );
+
+      }
+
+    }
+  );
+
+  return parts.join(" ");
+
+}
+
+
+/* =====================================================
+   UNIQUE ARTIFACT STORAGE
+===================================================== */
+
+const detected = {
+
+  requirements:[],
+  userStories:[],
+  acceptanceCriteria:[],
+  testCases:[],
+  testData:[],
+  processFlows:[]
+
+};
+
+
+const seen = {
+
+  requirements:new Set(),
+  userStories:new Set(),
+  acceptanceCriteria:new Set(),
+  testCases:new Set(),
+  testData:new Set(),
+  processFlows:new Set()
+
+};
+
+
+function addArtifact(
+  type,
+  object
+){
+
+  if(!isObject(object))
+    return;
+
+
+  const text =
+    objectText(object)
+      .trim();
+
+
+  if(!text)
+    return;
+
+
+  let id =
+    object.id ||
+    object.testCaseId ||
+    object.requirementId ||
+    object.userStoryId ||
+    object.acceptanceCriterionId ||
+    object.name ||
+    "";
+
+
+  id =
+    safeString(id)
+      .toLowerCase()
+      .trim();
+
+
+  /*
+   * When an ID does not exist,
+   * use the first part of the content.
+   */
+
+  const fingerprint =
+    id ||
+    text
+      .toLowerCase()
+      .replace(/\s+/g," ")
+      .slice(0,240);
+
+
+  if(
+    seen[type].has(
+      fingerprint
+    )
+  )
+    return;
+
+
+  seen[type].add(
+    fingerprint
+  );
+
+
+  detected[type].push(
+    object
+  );
+
+}
+
+
+/* =====================================================
+   CLASSIFICATION
+===================================================== */
+
+function classifyObject(
+  object,
+  sourceKey
+){
+
+  if(!isObject(object))
+    return;
+
+
+  const key =
+    safeString(sourceKey)
+      .toLowerCase();
+
+
+  const text =
+    objectText(object)
+      .toLowerCase();
+
+
+  const type =
+    safeString(
+      object.type
+    )
+    .toLowerCase();
+
+
+  /*
+   * Strong source-key signals.
+   */
+
+  if(
+    key.includes("process-flow")
+    ||
+    key.includes("process_flow")
+    ||
+    key.includes("processflow")
+  ){
+
+    if(
+      object.steps ||
+      object.nodes ||
+      object.connections ||
+      object.processName
+    ){
+
+      addArtifact(
+        "processFlows",
+        object
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  if(
+    key.includes("test-data")
+    ||
+    key.includes("test_data")
+    ||
+    key.includes("testdata")
+  ){
+
+    if(
+      object.records ||
+      object.fields ||
+      object.testData ||
+      object.data
+    ){
+
+      addArtifact(
+        "testData",
+        object
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  if(
+    key.includes("uat")
+    ||
+    key.includes("test-case")
+    ||
+    key.includes("test_case")
+  ){
+
+    if(
+      object.testCases ||
+      object.cases ||
+      object.steps ||
+      object.expectedResult ||
+      object.testType
+    ){
+
+      /*
+       * Collection containers are
+       * handled separately.
+       */
+
+      if(
+        Array.isArray(
+          object.testCases
+        )
+        ||
+        Array.isArray(
+          object.cases
+        )
+      ){
+
+        return;
+
+      }
+
+      addArtifact(
+        "testCases",
+        object
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  if(
+    key.includes("acceptance")
+    ||
+    key.includes("criteria")
+  ){
+
+    if(
+      object.given ||
+      object.when ||
+      object.then ||
+      type.includes("acceptance")
+    ){
+
+      addArtifact(
+        "acceptanceCriteria",
+        object
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  if(
+    key.includes("user-story")
+    ||
+    key.includes("user_story")
+    ||
+    key.includes("userstory")
+  ){
+
+    if(
+      object.story ||
+      object.role ||
+      object.goal ||
+      object.benefit
+    ){
+
+      addArtifact(
+        "userStories",
+        object
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  if(
+    key.includes("requirement")
+  ){
+
+    if(
+      object.description ||
+      object.requirement ||
+      object.analysis ||
+      object.priority
+    ){
+
+      /*
+       * Do not classify a full
+       * requirement container twice.
+       */
+
+      if(
+        !object.requirements &&
+        !object.userStories
+      ){
+
+        addArtifact(
+          "requirements",
+          object
+        );
+
+      }
+
+      return;
+
+    }
+
+  }
+
+
+  /*
+   * Generic structural signals.
+   */
+
+  if(
+    object.given &&
+    object.when &&
+    object.then
+  ){
+
+    addArtifact(
+      "acceptanceCriteria",
+      object
+    );
+
+    return;
+
+  }
+
+
+  if(
+    object.testCaseId ||
+    (
+      object.preconditions &&
+      object.expectedResult &&
+      object.steps
+    )
+  ){
+
+    addArtifact(
+      "testCases",
+      object
+    );
+
+    return;
+
+  }
+
+
+  if(
+    object.processName &&
+    (
+      object.steps ||
+      object.nodes ||
+      object.connections
+    )
+  ){
+
+    addArtifact(
+      "processFlows",
+      object
+    );
+
+    return;
+
+  }
+
+
+  if(
+    object.records &&
+    Array.isArray(
+      object.records
+    )
+  ){
+
+    addArtifact(
+      "testData",
+      object
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * Avoid turning every random
+   * title/description object into
+   * a Requirement.
+   */
+
+  if(
+    object.analysis &&
+    (
+      object.description ||
+      object.requirement
+    )
+  ){
+
+    addArtifact(
+      "requirements",
+      object
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   CONTAINER EXTRACTION
+===================================================== */
+
+function extractContainers(
+  object,
+  sourceKey
+){
+
+  if(!isObject(object))
+    return;
+
+
+  const mappings=[
+
+    [
+      "requirements",
+      "requirements"
+    ],
+
+    [
+      "requirement",
+      "requirements"
+    ],
+
+    [
+      "userStories",
+      "userStories"
+    ],
+
+    [
+      "stories",
+      "userStories"
+    ],
+
+    [
+      "userStory",
+      "userStories"
+    ],
+
+    [
+      "acceptanceCriteria",
+      "acceptanceCriteria"
+    ],
+
+    [
+      "criteria",
+      "acceptanceCriteria"
+    ],
+
+    [
+      "testCases",
+      "testCases"
+    ],
+
+    [
+      "cases",
+      "testCases"
+    ],
+
+    [
+      "records",
+      "testData"
+    ],
+
+    [
+      "processFlows",
+      "processFlows"
+    ],
+
+    [
+      "processFlow",
+      "processFlows"
+    ]
+
+  ];
+
+
+  mappings.forEach(
+    ([field,type]) => {
+
+      const value =
+        object[field];
+
+
+      if(!value)
+        return;
+
+
+      if(
+        Array.isArray(value)
+      ){
+
+        value.forEach(
+          item => {
+
+            if(
+              isObject(item)
+            ){
+
+              addArtifact(
+                type,
+                item
+              );
+
+            }
+
+          }
+        );
+
+      }else if(
+        isObject(value)
+      ){
+
+        /*
+         * Only add the object itself
+         * if it looks like an artifact.
+         */
+
+        classifyObject(
+          value,
+          sourceKey + "-" + field
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   KNOWN KEY BOOST
+===================================================== */
+
+function processKnownData(){
+
+  const storage =
+    getAllStorageObjects();
+
+
+  storage.forEach(
+    entry => {
+
+      const key =
+        entry.key;
+
+      const value =
+        entry.value;
+
+
+      extractContainers(
+        value,
+        key
+      );
+
+
+      walkObject(
+        value,
+        object => {
+
+          if(
+            isObject(object)
+          ){
+
+            classifyObject(
+              object,
+              key
+            );
+
+          }
+
+        }
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   NORMALIZE DETECTED ARTIFACTS
+===================================================== */
+
+function normalizeDetected(){
+
+  /*
+   * Remove accidental container
+   * objects which have no useful
+   * artifact identity/content.
+   */
+
+  Object.keys(detected)
+    .forEach(
+      type => {
+
+        detected[type] =
+          detected[type]
+            .filter(
+              item => {
+
+                if(!isObject(item))
+                  return false;
+
+                const text =
+                  objectText(item)
+                    .trim();
+
+                return text.length > 2;
+
+              }
+            );
+
+      }
+    );
+
+}
+
+
+/* =====================================================
+   BUILD FINAL DATASET
+===================================================== */
+
+function collectArtifacts(){
+
+  /*
+   * Reset.
+   */
+
+  Object.keys(detected)
+    .forEach(
+      type => {
+
+        detected[type].length = 0;
+        seen[type].clear();
+
+      }
+    );
+
+
+  processKnownData();
+
+  normalizeDetected();
+
+
+  return {
+
+    requirements:[
+      ...detected.requirements
+    ],
+
+    userStories:[
+      ...detected.userStories
+    ],
+
+    acceptanceCriteria:[
+      ...detected.acceptanceCriteria
+    ],
+
+    testCases:[
+      ...detected.testCases
+    ],
+
+    testData:[
+      ...detected.testData
+    ],
+
+    processFlows:[
+      ...detected.processFlows
+    ]
+
+  };
+
+}
+
+
+/* =====================================================
+   COUNTS
+===================================================== */
+
+function getCounts(data){
+
+  return {
+
+    requirements:
+      data.requirements.length,
+
+    userStories:
+      data.userStories.length,
+
+    acceptanceCriteria:
+      data.acceptanceCriteria.length,
+
+    testCases:
+      data.testCases.length,
+
+    testData:
+      data.testData.length,
+
+    processFlows:
+      data.processFlows.length
+
+  };
+
+}
+
+
+/* =====================================================
+   ARTIFACT ID
+===================================================== */
+
+function getId(
+  item,
+  prefix,
+  index
+){
+
+  return (
+    item.id ||
+    item.testCaseId ||
+    item.requirementId ||
+    item.userStoryId ||
+    item.acceptanceCriterionId ||
+    `${prefix}-${String(index+1).padStart(3,"0")}`
+  );
+
+}
+
+
+/* =====================================================
+   ARTIFACT TITLE
+===================================================== */
+
+function getTitle(
+  item,
+  fallback
+){
+
+  return (
+    item.title ||
+    item.name ||
+    item.story ||
+    item.processName ||
+    item.description ||
+    item.summary ||
+    fallback
+  );
+
+}
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+function renderSummary(
+  data
+){
+
+  const counts =
+    getCounts(data);
+
+
+  document.getElementById(
+    "requirementsCount"
+  ).textContent =
+    counts.requirements;
+
+
+  document.getElementById(
+    "userStoriesCount"
+  ).textContent =
+    counts.userStories;
+
+
+  document.getElementById(
+    "acCount"
+  ).textContent =
+    counts.acceptanceCriteria;
+
+
+  document.getElementById(
+    "testCasesCount"
+  ).textContent =
+    counts.testCases;
+
+
+  document.getElementById(
+    "testDataCount"
+  ).textContent =
+    counts.testData;
+
+
+  document.getElementById(
+    "processFlowsCount"
+  ).textContent =
+    counts.processFlows;
+
+
+  const categories=[
+    counts.requirements,
+    counts.userStories,
+    counts.acceptanceCriteria,
+    counts.testCases,
+    counts.testData,
+    counts.processFlows
+  ];
+
+
+  const available =
+    categories.filter(
+      value => value > 0
+    ).length;
+
+
+  const coverage =
+    Math.round(
+      available / 6 * 100
+    );
+
+
+  const missing =
+    6 - available;
+
+
+  document.getElementById(
+    "coverage"
+  ).textContent =
+    coverage + "%";
+
+
+  document.getElementById(
+    "gaps"
+  ).textContent =
+    missing;
+
+
+  const coverageCard =
+    document.getElementById(
+      "coverageCard"
+    );
+
+
+  const gapsCard =
+    document.getElementById(
+      "gapsCard"
+    );
+
+
+  coverageCard.className =
+    "summary " +
+    (
+      coverage === 100
+        ? "success"
+        : "warning"
+    );
+
+
+  gapsCard.className =
+    "summary " +
+    (
+      missing === 0
+        ? "success"
+        : "warning"
+    );
+
+}
+
+
+/* =====================================================
+   CHAIN
+===================================================== */
+
+function renderChain(
+  data
+){
+
+  const items=[
+
+    [
+      "Requirement",
+      data.requirements.length
+    ],
+
+    [
+      "User Story",
+      data.userStories.length
+    ],
+
+    [
+      "Acceptance Criteria",
+      data.acceptanceCriteria.length
+    ],
+
+    [
+      "UAT Test Cases",
+      data.testCases.length
+    ],
+
+    [
+      "Test Data",
+      data.testData.length
+    ],
+
+    [
+      "Process Flow",
+      data.processFlows.length
+    ]
+
+  ];
+
+
+  let html="";
+
+
+  items.forEach(
+    ([name,count],index) => {
+
+      const available =
+        count > 0;
+
+
+      html += `
+
+        <div class="chain-node ${
+          available
+            ? "available"
+            : "missing"
+        }">
+
+          <div class="chain-number">
+            ${index+1}
+          </div>
+
+          <div class="chain-title">
+            ${escapeHtml(name)}
+          </div>
+
+          <div class="chain-count">
+            ${count}
+            artifact${count === 1 ? "" : "s"}
+          </div>
+
+          <div class="chain-status">
+            ${
+              available
+                ? "Available"
+                : "Missing"
+            }
+          </div>
+
+        </div>
+
+      `;
+
+
+      if(
+        index <
+        items.length-1
+      ){
+
+        html += `
+          <div class="chain-arrow"></div>
+        `;
+
+      }
+
+    }
+  );
+
+
+  document.getElementById(
+    "chain"
+  ).innerHTML =
+    html;
+
+}
+
+
+/* =====================================================
+   MATRIX CELL
+===================================================== */
+
+function renderCell(
+  list,
+  prefix,
+  fallback
+){
+
+  if(
+    !list ||
+    !list.length
+  ){
+
+    return `
+      <span class="not-linked">
+        Missing
+      </span>
+    `;
+
+  }
+
+
+  const item =
+    list[0];
+
+
+  return `
+
+    <span class="linked">
+      ✓ Available
+    </span>
+
+    <div class="artifact-id">
+      ${escapeHtml(
+        getId(
+          item,
+          prefix,
+          0
+        )
+      )}
+    </div>
+
+    <div class="artifact-title">
+      ${escapeHtml(
+        getTitle(
+          item,
+          fallback
+        )
+      )}
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   MATRIX
+===================================================== */
+
+function renderMatrix(
+  data
+){
+
+  const hasAny =
+    Object.values(data)
+      .some(
+        list =>
+          list.length > 0
+      );
+
+
+  const wrapper =
+    document.getElementById(
+      "matrixWrapper"
+    );
+
+
+  const empty =
+    document.getElementById(
+      "matrixEmpty"
+    );
+
+
+  if(!hasAny){
+
+    wrapper.style.display =
+      "none";
+
+    empty.style.display =
+      "block";
+
+    return;
+
+  }
+
+
+  wrapper.style.display =
+    "block";
+
+  empty.style.display =
+    "none";
+
+
+  document.getElementById(
+    "matrixBody"
+  ).innerHTML = `
+
+    <tr>
+
+      <td>
+        ${renderCell(
+          data.requirements,
+          "REQ",
+          "Requirement"
+        )}
+      </td>
+
+      <td>
+        ${renderCell(
+          data.userStories,
+          "US",
+          "User Story"
+        )}
+      </td>
+
+      <td>
+        ${renderCell(
+          data.acceptanceCriteria,
+          "AC",
+          "Acceptance Criterion"
+        )}
+      </td>
+
+      <td>
+        ${renderCell(
+          data.testCases,
+          "TC",
+          "Test Case"
+        )}
+      </td>
+
+      <td>
+        ${renderCell(
+          data.testData,
+          "TD",
+          "Test Data"
+        )}
+      </td>
+
+      <td>
+        ${renderCell(
+          data.processFlows,
+          "PF",
+          "Process Flow"
+        )}
+      </td>
+
+    </tr>
+
+  `;
+
+}
+
+
+/* =====================================================
+   COVERAGE
+===================================================== */
+
+function renderCoverage(
+  data
+){
+
+  const steps=[
+
+    [
+      "Requirement",
+      data.requirements.length
+    ],
+
+    [
+      "User Story",
+      data.userStories.length
+    ],
+
+    [
+      "Acceptance Criteria",
+      data.acceptanceCriteria.length
+    ],
+
+    [
+      "UAT Test Cases",
+      data.testCases.length
+    ],
+
+    [
+      "Test Data",
+      data.testData.length
+    ],
+
+    [
+      "Process Flow",
+      data.processFlows.length
+    ]
+
+  ];
+
+
+  const max =
+    Math.max(
+      ...steps.map(
+        item =>
+          item[1]
+      ),
+      1
+    );
+
+
+  document.getElementById(
+    "coverageBlock"
+  ).innerHTML = `
+
+    <h3>
+      Workflow Coverage
+    </h3>
+
+    ${
+      steps.map(
+        ([name,count]) => {
+
+          const width =
+            count > 0
+              ? Math.max(
+                  12,
+                  Math.round(
+                    count/max*100
+                  )
+                )
+              : 0;
+
+
+          return `
+
+            <div class="coverage-row">
+
+              <div class="coverage-top">
+
+                <span>
+                  ${escapeHtml(name)}
+                </span>
+
+                <span>
+                  ${count}
+                </span>
+
+              </div>
+
+              <div class="progress">
+
+                <div
+                  class="progress-bar ${
+                    count
+                      ? "ok"
+                      : "empty"
+                  }"
+                  style="width:${width}%">
+                </div>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      ).join("")
+    }
+
+  `;
+
+}
+
+
+/* =====================================================
+   GAPS
+===================================================== */
+
+function renderGaps(
+  data
+){
+
+  const definitions=[
+
+    [
+      "Requirement",
+      data.requirements.length,
+      "No Requirement artifact was detected."
+    ],
+
+    [
+      "User Story",
+      data.userStories.length,
+      "No User Story artifact was detected."
+    ],
+
+    [
+      "Acceptance Criteria",
+      data.acceptanceCriteria.length,
+      "No Acceptance Criteria artifact was detected."
+    ],
+
+    [
+      "UAT Test Cases",
+      data.testCases.length,
+      "No UAT Test Cases artifact was detected."
+    ],
+
+    [
+      "Test Data",
+      data.testData.length,
+      "No Test Data artifact was detected."
+    ],
+
+    [
+      "Process Flow",
+      data.processFlows.length,
+      "No Process Flow artifact was detected."
+    ]
+
+  ];
+
+
+  const missing =
+    definitions.filter(
+      item =>
+        item[1] === 0
+    );
+
+
+  const list =
+    document.getElementById(
+      "gapList"
+    );
+
+
+  if(!missing.length){
+
+    list.innerHTML = `
+
+      <div
+        class="gap"
+        style="
+          background:#f0fdf4;
+          border-color:#abefc6;
+        ">
+
+        <div
+          class="gap-icon"
+          style="
+            color:#15803d;
+            background:#dcfce7;
+          ">
+          ✓
+        </div>
+
+        <div class="gap-text">
+
+          <strong>
+            No major gaps detected
+          </strong>
+
+          All six workflow artifact categories are available.
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    missing.map(
+      item => `
+
+        <div class="gap">
+
+          <div class="gap-icon">
+            !
+          </div>
+
+          <div class="gap-text">
+
+            <strong>
+              ${escapeHtml(
+                item[0]
+              )} is missing
+            </strong>
+
+            ${escapeHtml(
+              item[2]
+            )}
+
+          </div>
+
+        </div>
+
+      `
+    ).join("");
+
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+function renderStatus(
+  data
+){
+
+  const counts =
+    getCounts(data);
+
+
+  const available =
+    Object.values(counts)
+      .filter(
+        value =>
+          value > 0
+      )
+      .length;
+
+
+  const status =
+    document.getElementById(
+      "status"
+    );
+
+
+  status.className =
+    "status";
+
+
+  status.style.display =
+    "block";
+
+
+  if(
+    available === 6
+  ){
+
+    status.classList.add(
+      "success"
+    );
+
+    status.textContent =
+      "✓ Full traceability detected across the BA workflow.";
+
+    return;
+
+  }
+
+
+  if(
+    available > 0
+  ){
+
+    status.classList.add(
+      "warning"
+    );
+
+    status.textContent =
+      `⚠ Traceability detected for ${available} of 6 artifact categories. Missing areas are shown below.`;
+
+    return;
+
+  }
+
+
+  status.classList.add(
+    "warning"
+  );
+
+  status.textContent =
+    "⚠ No workflow artifacts were detected in the current browser workspace.";
+
+}
+
+
+/* =====================================================
+   DEBUG INFORMATION
+===================================================== */
+
+function getStorageSummary(){
+
+  const keys=[];
+
+
+  for(
+    let i=0;
+    i<sessionStorage.length;
+    i++
+  ){
+
+    const key =
+      sessionStorage.key(i);
+
+    if(key)
+      keys.push(key);
+
+  }
+
+
+  return keys;
+
+}
+
+
+/* =====================================================
+   REFRESH
+===================================================== */
+
+function refresh(){
+
+  const data =
+    collectArtifacts();
+
+
+  renderSummary(
+    data
+  );
+
+  renderChain(
+    data
+  );
+
+  renderMatrix(
+    data
+  );
+
+  renderCoverage(
+    data
+  );
+
+  renderGaps(
+    data
+  );
+
+  renderStatus(
+    data
+  );
+
+
+  /*
+   * Keep a snapshot for later
+   * Traceability / Document usage.
+   */
+
+  try{
+
+    sessionStorage.setItem(
+      "baforge-traceability",
+      JSON.stringify({
+        type:"traceability",
+        createdAt:
+          new Date().toISOString(),
+        artifacts:data
+      })
+    );
+
+  }catch{}
+
+
+  console.log(
+    "BAForge Traceability detected:",
+    data
+  );
+
+  console.log(
+    "BAForge sessionStorage keys:",
+    getStorageSummary()
+  );
+
+}
+
+
+/* =====================================================
+   COPY
+===================================================== */
+
+async function copyMatrix(){
+
+  const data =
+    collectArtifacts();
+
+
+  const lines=[
+
+    "BAForge AI - Traceability Matrix",
+    "",
+    `Requirements: ${data.requirements.length}`,
+    `User Stories: ${data.userStories.length}`,
+    `Acceptance Criteria: ${data.acceptanceCriteria.length}`,
+    `UAT Test Cases: ${data.testCases.length}`,
+    `Test Data: ${data.testData.length}`,
+    `Process Flows: ${data.processFlows.length}`,
+    "",
+    "Traceability Chain:",
+    "Requirement → User Story → Acceptance Criteria → UAT Test Cases → Test Data → Process Flow"
+
+  ];
+
+
+  try{
+
+    await navigator.clipboard.writeText(
+      lines.join("\n")
+    );
+
+
+    const button =
+      document.getElementById(
+        "copyButton"
+      );
+
+
+    button.textContent =
+      "Copied ✓";
+
+
+    setTimeout(
+      () => {
+
+        button.textContent =
+          "Copy Matrix";
+
+      },
+      1500
+    );
+
+  }catch{
+
+    alert(
+      "Unable to copy the matrix."
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SAVE
+===================================================== */
+
+function saveTraceability(){
+
+  const data =
+    collectArtifacts();
+
+
+  try{
+
+    sessionStorage.setItem(
+      "baforge-traceability",
+      JSON.stringify({
+
+        type:"traceability",
+
+        createdAt:
+          new Date().toISOString(),
+
+        artifacts:data
+
+      })
+    );
+
+
+    const status =
+      document.getElementById(
+        "status"
+      );
+
+
+    status.className =
+      "status success";
+
+    status.style.display =
+      "block";
+
+    status.textContent =
+      "✓ Traceability matrix saved to the workspace.";
+
+  }catch{
+
+    alert(
+      "Unable to save traceability."
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   EVENTS
+===================================================== */
+
+document
+  .getElementById(
+    "refreshButton"
+  )
+  .addEventListener(
+    "click",
+    refresh
+  );
+
+
+document
+  .getElementById(
+    "copyButton"
+  )
+  .addEventListener(
+    "click",
+    copyMatrix
+  );
+
+
+document
+  .getElementById(
+    "saveButton"
+  )
+  .addEventListener(
+    "click",
+    saveTraceability
+  );
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+refresh();
+
+</script>
+
+<script src="/nav.js"></script>
+
+</body>
+</html>
