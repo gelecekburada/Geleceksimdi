@@ -23,7 +23,6 @@
       --success-bg: #ecfdf3;
       --danger: #b42318;
       --danger-bg: #fef2f2;
-      --shadow-sm: 0 4px 14px rgba(16, 24, 40, 0.06);
       --shadow-md: 0 12px 35px rgba(16, 24, 40, 0.08);
     }
 
@@ -46,6 +45,8 @@
       margin: 35px auto 70px;
       padding: 0 20px;
     }
+
+    /* WORKFLOW */
 
     .workflow {
       display: flex;
@@ -96,6 +97,8 @@
       flex-shrink: 0;
     }
 
+    /* HERO */
+
     .hero {
       text-align: center;
       margin-bottom: 30px;
@@ -131,6 +134,8 @@
       font-size: 17px;
     }
 
+    /* NAVIGATION */
+
     .navigation {
       display: flex;
       justify-content: space-between;
@@ -156,6 +161,8 @@
       border-color: var(--primary);
       color: #fff;
     }
+
+    /* CARD */
 
     .card {
       background: var(--surface);
@@ -198,8 +205,7 @@
     }
 
     textarea,
-    select,
-    input {
+    select {
       width: 100%;
       border: 1px solid #d0d5dd;
       border-radius: 10px;
@@ -216,12 +222,13 @@
     }
 
     textarea:focus,
-    select:focus,
-    input:focus {
+    select:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
     }
+
+    /* OPTIONS */
 
     .options {
       display: grid;
@@ -229,6 +236,8 @@
       gap: 15px;
       margin-top: 20px;
     }
+
+    /* ACTIONS */
 
     .actions {
       display: flex;
@@ -263,6 +272,8 @@
       border: 1px solid #d0d5dd;
     }
 
+    /* STATUS */
+
     .loading,
     .error {
       display: none;
@@ -284,6 +295,8 @@
       border: 1px solid #fecaca;
       color: var(--danger);
     }
+
+    /* RESULTS */
 
     .result {
       display: none;
@@ -412,975 +425,1085 @@
       .nav-button {
         justify-content: center;
       }
-
-      .workflow {
-        padding-bottom: 12px;
-      }
     }
   </style>
 </head>
 
 <body>
 
-  <main>
+<main>
 
-    <div class="workflow">
+  <!-- WORKFLOW -->
 
-      <div class="workflow-step">
-        <span class="workflow-number">1</span>
-        Requirement
+  <div class="workflow">
+
+    <div class="workflow-step">
+      <span class="workflow-number">1</span>
+      Requirement
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">2</span>
+      User Story
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">3</span>
+      Acceptance Criteria
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">4</span>
+      UAT Test Cases
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step active">
+      <span class="workflow-number">5</span>
+      Test Data
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">6</span>
+      Process Flow
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">7</span>
+      Traceability
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">8</span>
+      BA Document
+    </div>
+
+  </div>
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="badge">
+      Test Data Generator
+    </div>
+
+    <h1>
+      Generate <span>Professional Test Data</span>
+    </h1>
+
+    <p>
+      Create realistic, structured and scenario-focused test data
+      for functional, negative and boundary testing.
+    </p>
+
+  </section>
+
+
+  <!-- NAVIGATION -->
+
+  <div class="navigation">
+
+    <a
+      class="nav-button"
+      href="/uat.html">
+      ← UAT Test Cases
+    </a>
+
+    <a
+      class="nav-button next"
+      href="/process-flow.html">
+      Process Flow →
+    </a>
+
+  </div>
+
+
+  <!-- INPUT -->
+
+  <section class="card">
+
+    <h2 class="card-title">
+      Test Data Context
+    </h2>
+
+    <p class="card-description">
+      Start directly or use context from the previous workflow step.
+      You can edit the context before generating data.
+    </p>
+
+    <div
+      id="contextStatus"
+      class="context-status">
+    </div>
+
+    <label for="context">
+      Requirement / Test Context
+    </label>
+
+    <textarea
+      id="context"
+      placeholder="Example: A customer wants to transfer money to another bank account using an IBAN. The transfer should be completed when the IBAN is valid. Invalid or incomplete IBAN information should be rejected."></textarea>
+
+
+    <div class="options">
+
+      <div>
+        <label for="scenario">
+          Scenario Type
+        </label>
+
+        <select id="scenario">
+          <option value="all">All Scenarios</option>
+          <option value="positive">Positive</option>
+          <option value="negative">Negative</option>
+          <option value="boundary">Boundary</option>
+        </select>
       </div>
 
-      <div class="workflow-line"></div>
 
-      <div class="workflow-step">
-        <span class="workflow-number">2</span>
-        User Story
+      <div>
+        <label for="domain">
+          Data Domain
+        </label>
+
+        <select id="domain">
+          <option value="auto">Auto Detect</option>
+          <option value="banking">Banking / Payments</option>
+          <option value="customer">Customer</option>
+          <option value="api">API / Integration</option>
+          <option value="generic">Generic</option>
+        </select>
       </div>
 
-      <div class="workflow-line"></div>
 
-      <div class="workflow-step">
-        <span class="workflow-number">3</span>
-        Acceptance Criteria
+      <div>
+        <label for="count">
+          Number of Records
+        </label>
+
+        <select id="count">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+        </select>
       </div>
 
-      <div class="workflow-line"></div>
 
-      <div class="workflow-step">
-        <span class="workflow-number">4</span>
-        UAT Test Cases
-      </div>
+      <div>
+        <label for="language">
+          Output Language
+        </label>
 
-      <div class="workflow-line"></div>
-
-      <div class="workflow-step active">
-        <span class="workflow-number">5</span>
-        Test Data
-      </div>
-
-      <div class="workflow-line"></div>
-
-      <div class="workflow-step">
-        <span class="workflow-number">6</span>
-        Process Flow
-      </div>
-
-      <div class="workflow-line"></div>
-
-      <div class="workflow-step">
-        <span class="workflow-number">7</span>
-        Traceability
-      </div>
-
-      <div class="workflow-line"></div>
-
-      <div class="workflow-step">
-        <span class="workflow-number">8</span>
-        BA Document
+        <select id="language">
+          <option value="en">English</option>
+          <option value="tr">Türkçe</option>
+        </select>
       </div>
 
     </div>
 
 
-    <section class="hero">
+    <div class="actions">
 
-      <div class="badge">
-        Test Data Generator
-      </div>
+      <button
+        id="generateButton"
+        type="button">
+        Generate Test Data
+      </button>
 
-      <h1>
-        Generate <span>Professional Test Data</span>
-      </h1>
-
-      <p>
-        Create realistic, structured and scenario-focused test data
-        for functional, negative and boundary testing.
-      </p>
-
-    </section>
-
-
-    <div class="navigation">
-
-      <a
-        class="nav-button"
-        href="/uat.html">
-        ← UAT Test Cases
-      </a>
-
-      <a
-        class="nav-button next"
-        href="/process-flow.html">
-        Process Flow →
-      </a>
+      <button
+        id="clearButton"
+        class="secondary"
+        type="button">
+        Clear
+      </button>
 
     </div>
 
 
-    <section class="card">
+    <div
+      id="loading"
+      class="loading">
+      AI is generating professional test data...
+    </div>
 
-      <h2 class="card-title">
-        Test Data Context
-      </h2>
+    <div
+      id="error"
+      class="error">
+    </div>
 
-      <p class="card-description">
-        Start directly or use context from the previous workflow step.
-        You can edit the context before generating data.
-      </p>
-
-      <div
-        id="contextStatus"
-        class="context-status">
-      </div>
-
-      <label for="context">
-        Requirement / Test Context
-      </label>
-
-      <textarea
-        id="context"
-        placeholder="Example: Customer transfers money to another bank account using an IBAN. Test data should cover valid, invalid and boundary scenarios."></textarea>
+  </section>
 
 
-      <div class="options">
+  <!-- RESULTS -->
 
-        <div>
-          <label for="scenario">
-            Scenario Type
-          </label>
+  <section
+    id="result"
+    class="card result">
 
-          <select id="scenario">
-            <option value="all">All Scenarios</option>
-            <option value="positive">Positive</option>
-            <option value="negative">Negative</option>
-            <option value="boundary">Boundary</option>
-          </select>
-        </div>
+    <div class="result-header">
 
+      <div>
+        <h2>
+          Generated Test Data
+        </h2>
 
-        <div>
-          <label for="domain">
-            Data Domain
-          </label>
-
-          <select id="domain">
-            <option value="auto">Auto Detect</option>
-            <option value="banking">Banking / Payments</option>
-            <option value="customer">Customer</option>
-            <option value="api">API / Integration</option>
-            <option value="generic">Generic</option>
-          </select>
-        </div>
-
-
-        <div>
-          <label for="count">
-            Number of Records
-          </label>
-
-          <select id="count">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-          </select>
-        </div>
-
-
-        <div>
-          <label for="language">
-            Output Language
-          </label>
-
-          <select id="language">
-            <option value="en">English</option>
-            <option value="tr">Türkçe</option>
-          </select>
-        </div>
-
-      </div>
-
-
-      <div class="actions">
-
-        <button
-          id="generateButton"
-          type="button">
-          Generate Test Data
-        </button>
-
-        <button
-          id="clearButton"
-          class="secondary"
-          type="button">
-          Clear
-        </button>
-
-      </div>
-
-
-      <div
-        id="loading"
-        class="loading">
-        AI is generating professional test data...
+        <p>
+          Structured synthetic data generated from the selected scenarios.
+        </p>
       </div>
 
       <div
-        id="error"
-        class="error">
+        id="countPill"
+        class="count-pill">
+        0 records
       </div>
 
-    </section>
+    </div>
 
 
-    <section
-      id="result"
-      class="card result">
+    <div class="table-wrapper">
 
-      <div class="result-header">
+      <table>
 
-        <div>
-          <h2>
-            Generated Test Data
-          </h2>
+        <thead id="tableHead">
+        </thead>
 
-          <p>
-            Structured data generated from the selected test scenarios.
-          </p>
-        </div>
+        <tbody id="tableBody">
+        </tbody>
 
-        <div
-          id="countPill"
-          class="count-pill">
-          0 records
-        </div>
+      </table>
 
-      </div>
+    </div>
 
 
-      <div class="table-wrapper">
+    <div class="result-actions">
 
-        <table>
+      <button
+        id="copyButton"
+        type="button">
+        Copy Data
+      </button>
 
-          <thead id="tableHead">
-          </thead>
+    </div>
 
-          <tbody id="tableBody">
-          </tbody>
+  </section>
 
-        </table>
+</main>
 
-      </div>
 
+<script src="/core/data-model.js"></script>
 
-      <div class="result-actions">
+<script>
 
-        <button
-          id="copyButton"
-          type="button">
-          Copy Data
-        </button>
+const contextEl =
+  document.getElementById("context");
 
-      </div>
+const scenarioEl =
+  document.getElementById("scenario");
 
-    </section>
+const domainEl =
+  document.getElementById("domain");
 
-  </main>
+const countEl =
+  document.getElementById("count");
 
+const languageEl =
+  document.getElementById("language");
 
-  <script src="/core/data-model.js"></script>
+const generateButton =
+  document.getElementById("generateButton");
 
-  <script>
+const clearButton =
+  document.getElementById("clearButton");
 
-    const contextEl =
-      document.getElementById("context");
+const copyButton =
+  document.getElementById("copyButton");
 
-    const scenarioEl =
-      document.getElementById("scenario");
+const loadingEl =
+  document.getElementById("loading");
 
-    const domainEl =
-      document.getElementById("domain");
+const errorEl =
+  document.getElementById("error");
 
-    const countEl =
-      document.getElementById("count");
+const resultEl =
+  document.getElementById("result");
 
-    const languageEl =
-      document.getElementById("language");
+const tableHead =
+  document.getElementById("tableHead");
 
-    const generateButton =
-      document.getElementById("generateButton");
+const tableBody =
+  document.getElementById("tableBody");
 
-    const clearButton =
-      document.getElementById("clearButton");
+const countPill =
+  document.getElementById("countPill");
 
-    const copyButton =
-      document.getElementById("copyButton");
+const contextStatus =
+  document.getElementById("contextStatus");
 
-    const loadingEl =
-      document.getElementById("loading");
 
-    const errorEl =
-      document.getElementById("error");
+let generatedRows = [];
 
-    const resultEl =
-      document.getElementById("result");
 
-    const tableHead =
-      document.getElementById("tableHead");
+/* -----------------------------------------
+   HELPERS
+----------------------------------------- */
 
-    const tableBody =
-      document.getElementById("tableBody");
+function escapeHtml(value) {
 
-    const countPill =
-      document.getElementById("countPill");
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
-    const contextStatus =
-      document.getElementById("contextStatus");
-
-
-    let generatedRows = [];
-
-
-    function escapeHtml(value) {
-
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    }
-
-
-    function showError(message) {
-
-      errorEl.textContent =
-        message;
-
-      errorEl.style.display =
-        "block";
-
-    }
-
-
-    function hideError() {
-
-      errorEl.textContent =
-        "";
-
-      errorEl.style.display =
-        "none";
-
-    }
-
-
-    function getStorage(key) {
-
-      try {
-
-        const value =
-          sessionStorage.getItem(key);
-
-        if (!value) {
-          return null;
-        }
-
-        return JSON.parse(value);
-
-      } catch {
-
-        return null;
-
-      }
-
-    }
-
-
-    function stringifyContext(value) {
-
-      if (!value) {
-        return "";
-      }
-
-      if (typeof value === "string") {
-        return value;
-      }
-
-      if (Array.isArray(value)) {
-
-        return value
-          .map(item =>
-            typeof item === "string"
-              ? item
-              : JSON.stringify(item)
-          )
-          .join("\n");
-
-      }
-
-      if (typeof value === "object") {
-
-        const parts = [];
-
-        if (value.title) {
-          parts.push(
-            `Title: ${value.title}`
-          );
-        }
-
-        if (value.description) {
-          parts.push(
-            `Description: ${value.description}`
-          );
-        }
-
-        if (value.story) {
-          parts.push(
-            `User Story: ${value.story}`
-          );
-        }
-
-        if (value.summary) {
-          parts.push(
-            `Summary: ${value.summary}`
-          );
-        }
-
-        if (value.requirement) {
-          parts.push(
-            `Requirement: ${value.requirement}`
-          );
-        }
-
-        if (value.acceptanceCriteria) {
-          parts.push(
-            `Acceptance Criteria:\n${
-              stringifyContext(
-                value.acceptanceCriteria
-              )
-            }`
-          );
-        }
-
-        if (value.testCases) {
-          parts.push(
-            `Test Cases:\n${
-              stringifyContext(
-                value.testCases
-              )
-            }`
-          );
-        }
-
-        return parts.join("\n\n");
-
-      }
-
-      return String(value);
-
-    }
-
-
-    function loadContext() {
-
-      const keys = [
-        "baforge-uat-generated",
-        "baforge-uat-context",
-        "baforge-current-uat-context",
-        "baforge-current-requirement",
-        "baforge-user-story-context",
-        "baforge-acceptance-criteria-draft"
-      ];
-
-      for (const key of keys) {
-
-        const value =
-          getStorage(key);
-
-        if (!value) {
-          continue;
-        }
-
-        const text =
-          stringifyContext(value);
-
-        if (text.trim()) {
-
-          contextEl.value =
-            text.trim();
-
-          contextStatus.textContent =
-            "✓ Existing BA context loaded. You can edit it before generating test data.";
-
-          contextStatus.style.display =
-            "block";
-
-          return;
-
-        }
-
-      }
-
-    }
-
-
-    function normalizeRows(data) {
-
-      if (!data) {
-        return [];
-      }
-
-      if (Array.isArray(data)) {
-        return data;
-      }
-
-      if (Array.isArray(data.records)) {
-        return data.records;
-      }
-
-      if (Array.isArray(data.testData)) {
-        return data.testData;
-      }
-
-      if (Array.isArray(data.data)) {
-        return data.data;
-      }
-
-      return [];
-
-    }
-
-
-    function renderRows(rows) {
-
-      generatedRows =
-        rows;
-
-      if (!rows.length) {
-
-        tableHead.innerHTML =
-          "<tr><th>Data</th></tr>";
-
-        tableBody.innerHTML =
-          `<tr>
-            <td class="empty">
-              No structured records were returned.
-            </td>
-          </tr>`;
-
-        countPill.textContent =
-          "0 records";
-
-        return;
-
-      }
-
-
-      const keys = [
-        ...new Set(
-          rows.flatMap(row =>
-            typeof row === "object" &&
-            row !== null
-              ? Object.keys(row)
-              : ["value"]
-          )
-        )
-      ];
-
-
-      tableHead.innerHTML = `
-        <tr>
-          ${keys
-            .map(
-              key =>
-                `<th>${escapeHtml(key)}</th>`
-            )
-            .join("")}
-        </tr>
-      `;
-
-
-      tableBody.innerHTML =
-        rows
-          .map(row => {
-
-            return `
-              <tr>
-                ${keys
-                  .map(key => {
-
-                    let value =
-                      row?.[key];
-
-                    if (
-                      value === undefined ||
-                      value === null
-                    ) {
-                      value = "";
-                    }
-
-                    if (
-                      typeof value === "object"
-                    ) {
-                      value =
-                        JSON.stringify(
-                          value
-                        );
-                    }
-
-                    return `
-                      <td>
-                        ${escapeHtml(value)}
-                      </td>
-                    `;
-
-                  })
-                  .join("")}
-              </tr>
-            `;
-
-          })
-          .join("");
-
-
-      countPill.textContent =
-        `${rows.length} records`;
-
-    }
-
-
-    async function generateData() {
-
-      hideError();
-
-      const context =
-        contextEl.value.trim();
-
-      if (context.length < 10) {
-
-        showError(
-          "Please provide a test data context."
-        );
-
-        return;
-
-      }
-
-
-      generateButton.disabled =
-        true;
-
-      clearButton.disabled =
-        true;
-
-      loadingEl.style.display =
-        "block";
-
-      resultEl.style.display =
-        "none";
-
-
-      const scenario =
-        scenarioEl.value;
-
-      const domain =
-        domainEl.value;
-
-      const count =
-        Number(countEl.value);
-
-      const language =
-        languageEl.value;
-
-
-      const prompt = `
-
-You are a senior Business Analyst and QA Test Data Designer.
-
-Generate professional structured test data based on the following context.
-
-CONTEXT:
-${context}
-
-SCENARIO TYPE:
-${scenario}
-
-DATA DOMAIN:
-${domain}
-
-NUMBER OF RECORDS:
-${count}
-
-OUTPUT LANGUAGE:
-${language === "tr" ? "Turkish" : "English"}
-
-RULES:
-
-- Return ONLY valid JSON.
-- Do not return Markdown.
-- Do not return explanations.
-- Do not invent unsupported business rules.
-- Data should be realistic but synthetic.
-- Never use real people's personal data.
-- Clearly distinguish positive, negative and boundary scenarios.
-- Use values appropriate to the supplied context.
-- If the context concerns banking or payments, prefer domain-appropriate synthetic values.
-- Do not automatically use GBP, EUR or another foreign currency unless supported by the context.
-- Do not invent country-specific rules.
-- For invalid data, make the invalidity explicit.
-- For boundary data, describe the boundary reason.
-- Avoid duplicate records.
-
-Return exactly:
-
-{
-  "records": [
-    {
-      "scenario": "Positive | Negative | Boundary",
-      "field": "value",
-      "expectedPurpose": "..."
-    }
-  ]
 }
 
-Return between 1 and ${count} records.
+
+function showError(message) {
+
+  errorEl.textContent =
+    message;
+
+  errorEl.style.display =
+    "block";
+
+}
+
+
+function hideError() {
+
+  errorEl.textContent =
+    "";
+
+  errorEl.style.display =
+    "none";
+
+}
+
+
+function getStorage(key) {
+
+  try {
+
+    const value =
+      sessionStorage.getItem(key);
+
+    if (!value) {
+      return null;
+    }
+
+    return JSON.parse(value);
+
+  } catch {
+
+    return null;
+
+  }
+
+}
+
+
+/* -----------------------------------------
+   CONTEXT
+----------------------------------------- */
+
+function stringifyContext(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+
+    return value
+      .map(item =>
+        typeof item === "string"
+          ? item
+          : JSON.stringify(item)
+      )
+      .join("\n");
+
+  }
+
+  if (typeof value === "object") {
+
+    const parts = [];
+
+    if (value.title) {
+      parts.push(
+        `Title: ${value.title}`
+      );
+    }
+
+    if (value.description) {
+      parts.push(
+        `Description: ${value.description}`
+      );
+    }
+
+    if (value.story) {
+      parts.push(
+        `User Story: ${value.story}`
+      );
+    }
+
+    if (value.summary) {
+      parts.push(
+        `Summary: ${value.summary}`
+      );
+    }
+
+    if (value.requirement) {
+      parts.push(
+        `Requirement: ${value.requirement}`
+      );
+    }
+
+    if (value.acceptanceCriteria) {
+
+      parts.push(
+        `Acceptance Criteria:\n${
+          stringifyContext(
+            value.acceptanceCriteria
+          )
+        }`
+      );
+
+    }
+
+    if (value.testCases) {
+
+      parts.push(
+        `Test Cases:\n${
+          stringifyContext(
+            value.testCases
+          )
+        }`
+      );
+
+    }
+
+    return parts.join("\n\n");
+
+  }
+
+  return String(value);
+
+}
+
+
+function loadContext() {
+
+  const keys = [
+    "baforge-uat-generated",
+    "baforge-uat-context",
+    "baforge-current-uat-context",
+    "baforge-current-requirement",
+    "baforge-user-story-context",
+    "baforge-acceptance-criteria-draft"
+  ];
+
+  for (const key of keys) {
+
+    const value =
+      getStorage(key);
+
+    if (!value) {
+      continue;
+    }
+
+    const text =
+      stringifyContext(value);
+
+    if (text.trim()) {
+
+      contextEl.value =
+        text.trim();
+
+      contextStatus.textContent =
+        "✓ Existing BA context loaded. You can edit it before generating test data.";
+
+      contextStatus.style.display =
+        "block";
+
+      return;
+
+    }
+
+  }
+
+}
+
+
+/* -----------------------------------------
+   RESULT NORMALIZATION
+----------------------------------------- */
+
+function normalizeRows(data) {
+
+  if (!data) {
+    return [];
+  }
+
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  if (Array.isArray(data.records)) {
+    return data.records;
+  }
+
+  if (Array.isArray(data.testData)) {
+    return data.testData;
+  }
+
+  if (Array.isArray(data.data)) {
+    return data.data;
+  }
+
+  if (Array.isArray(data.cases)) {
+
+    return data.cases.map(testCase => {
+
+      return {
+        scenario:
+          scenarioEl.value,
+
+        title:
+          testCase.title || "",
+
+        testData:
+          testCase.testData || "",
+
+        expectedPurpose:
+          testCase.expectedResult || ""
+      };
+
+    });
+
+  }
+
+  return [];
+
+}
+
+
+/* -----------------------------------------
+   RENDER
+----------------------------------------- */
+
+function renderRows(rows) {
+
+  generatedRows =
+    rows;
+
+  if (!rows.length) {
+
+    tableHead.innerHTML =
+      "<tr><th>Data</th></tr>";
+
+    tableBody.innerHTML =
+      `<tr>
+        <td class="empty">
+          No structured records were returned.
+        </td>
+      </tr>`;
+
+    countPill.textContent =
+      "0 records";
+
+    return;
+
+  }
+
+
+  const keys = [
+    ...new Set(
+      rows.flatMap(row =>
+        typeof row === "object" &&
+        row !== null
+          ? Object.keys(row)
+          : ["value"]
+      )
+    )
+  ];
+
+
+  tableHead.innerHTML = `
+    <tr>
+      ${keys
+        .map(
+          key =>
+            `<th>${escapeHtml(key)}</th>`
+        )
+        .join("")}
+    </tr>
+  `;
+
+
+  tableBody.innerHTML =
+    rows
+      .map(row => {
+
+        return `
+          <tr>
+            ${keys
+              .map(key => {
+
+                let value =
+                  row?.[key];
+
+                if (
+                  value === undefined ||
+                  value === null
+                ) {
+                  value = "";
+                }
+
+                if (
+                  typeof value === "object"
+                ) {
+
+                  value =
+                    JSON.stringify(
+                      value,
+                      null,
+                      2
+                    );
+
+                }
+
+                return `
+                  <td>
+                    ${escapeHtml(value)}
+                  </td>
+                `;
+
+              })
+              .join("")}
+          </tr>
+        `;
+
+      })
+      .join("");
+
+
+  countPill.textContent =
+    `${rows.length} records`;
+
+}
+
+
+/* -----------------------------------------
+   GENERATE
+----------------------------------------- */
+
+async function generateData() {
+
+  hideError();
+
+  const context =
+    contextEl.value.trim();
+
+  /*
+   * IMPORTANT:
+   * Backend /api/generate expects
+   * "requirement", not "prompt".
+   */
+
+  const words =
+    context
+      .split(/\s+/)
+      .filter(Boolean);
+
+  if (
+    context.length < 15 ||
+    words.length < 3
+  ) {
+
+    showError(
+      languageEl.value === "tr"
+        ? "Lütfen en az 15 karakter ve 3 kelime içeren açık bir gereksinim girin."
+        : "Please provide a clear requirement with at least 15 characters and 3 words."
+    );
+
+    return;
+
+  }
+
+
+  generateButton.disabled =
+    true;
+
+  clearButton.disabled =
+    true;
+
+  loadingEl.style.display =
+    "block";
+
+  resultEl.style.display =
+    "none";
+
+
+  const scenario =
+    scenarioEl.value;
+
+  const domain =
+    domainEl.value;
+
+  const count =
+    Number(countEl.value);
+
+  const language =
+    languageEl.value;
+
+
+  /*
+   * We enrich the requirement sent
+   * to the existing test-generation
+   * endpoint so that generated
+   * test data is related to the
+   * selected domain/scenario.
+   */
+
+  const enrichedRequirement = `
+
+${context}
+
+Test Data Generation Context:
+- Purpose: Generate synthetic test data for QA/UAT testing.
+- Scenario Type: ${scenario}
+- Data Domain: ${domain}
+- Requested Records: ${count}
+- Output Language: ${
+    language === "tr"
+      ? "Turkish"
+      : "English"
+  }
+
+Test Data Rules:
+- Use realistic but synthetic values.
+- Never use real personal data.
+- Keep data directly related to the requirement.
+- For banking/payments, use banking-appropriate synthetic values.
+- Do not introduce unsupported currencies or countries.
+- Do not invent business rules.
+- Negative data must clearly show why it is invalid.
+- Boundary data must clearly represent a boundary condition.
 `;
 
 
-      try {
+  try {
 
-        const response =
-          await fetch(
-            "/api/generate",
-            {
-              method: "POST",
+    const response =
+      await fetch(
+        "/api/generate",
+        {
+          method: "POST",
 
-              headers: {
-                "Content-Type":
-                  "application/json"
-              },
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
 
-              body:
-                JSON.stringify({
-                  prompt
-                })
-            }
-          );
-
-
-        const raw =
-          await response.text();
-
-        let data;
-
-        try {
-          data =
-            JSON.parse(raw);
-        } catch {
-          throw new Error(
-            "AI returned an invalid response."
-          );
-        }
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            data.error ||
-            "Test data generation failed."
-          );
-
-        }
-
-
-        let parsed =
-          data;
-
-        if (typeof data.output === "string") {
-
-          try {
-            parsed =
-              JSON.parse(
-                data.output
-              );
-          } catch {}
-
-        }
-
-
-        const rows =
-          normalizeRows(
-            parsed
-          );
-
-
-        if (!rows.length) {
-
-          throw new Error(
-            "No structured test data was returned."
-          );
-
-        }
-
-
-        renderRows(rows);
-
-        resultEl.style.display =
-          "block";
-
-
-        try {
-
-          sessionStorage.setItem(
-            "baforge-test-data",
+          body:
             JSON.stringify({
-              context,
-              scenario,
-              domain,
-              language,
-              records: rows
+
+              /*
+               * THIS IS THE FIX.
+               * Previously only "prompt"
+               * was sent.
+               */
+
+              requirement:
+                enrichedRequirement,
+
+              type:
+                "Functional",
+
+              number:
+                count,
+
+              detail:
+                "Professional",
+
+              language:
+                language,
+
+              focus:
+                "All",
+
+              priority:
+                "All"
+
             })
-          );
-
-        } catch {}
-
-
-        resultEl.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
+        }
+      );
 
 
-      } catch (error) {
+    const raw =
+      await response.text();
 
-        console.error(
-          "Test Data error:",
-          error
-        );
 
-        showError(
-          error.message ||
-          "Something went wrong while generating test data."
-        );
+    let data;
 
-      } finally {
+    try {
 
-        generateButton.disabled =
-          false;
+      data =
+        JSON.parse(raw);
 
-        clearButton.disabled =
-          false;
+    } catch {
 
-        loadingEl.style.display =
-          "none";
-
-      }
+      throw new Error(
+        language === "tr"
+          ? "Sunucudan geçersiz bir cevap geldi."
+          : "The server returned an invalid response."
+      );
 
     }
 
 
-    function clearForm() {
+    if (!response.ok) {
 
-      contextEl.value =
-        "";
-
-      generatedRows =
-        [];
-
-      resultEl.style.display =
-        "none";
-
-      contextStatus.style.display =
-        "none";
-
-      hideError();
-
-      try {
-
-        sessionStorage.removeItem(
-          "baforge-test-data"
-        );
-
-      } catch {}
-
-      contextEl.focus();
+      throw new Error(
+        data.error ||
+        (
+          language === "tr"
+            ? "Test verisi oluşturulamadı."
+            : "Test data generation failed."
+        )
+      );
 
     }
 
 
-    async function copyData() {
+    const rows =
+      normalizeRows(data);
 
-      if (!generatedRows.length) {
-        return;
-      }
 
-      const text =
-        generatedRows
-          .map(row =>
-            Object.entries(row)
-              .map(
-                ([key, value]) =>
-                  `${key}: ${
-                    typeof value === "object"
-                      ? JSON.stringify(value)
-                      : value
-                  }`
-              )
-              .join(" | ")
+    if (!rows.length) {
+
+      throw new Error(
+        language === "tr"
+          ? "Yapılandırılmış test verisi oluşturulamadı."
+          : "No structured test data was returned."
+      );
+
+    }
+
+
+    renderRows(rows);
+
+    resultEl.style.display =
+      "block";
+
+
+    try {
+
+      sessionStorage.setItem(
+        "baforge-test-data",
+
+        JSON.stringify({
+
+          context,
+
+          scenario,
+
+          domain,
+
+          language,
+
+          records:
+            rows,
+
+          generatedAt:
+            new Date().toISOString()
+
+        })
+      );
+
+    } catch {}
+
+
+    resultEl.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      "Test Data error:",
+      error
+    );
+
+    showError(
+      error.message ||
+      (
+        language === "tr"
+          ? "Test verisi oluşturulurken bir hata oluştu."
+          : "Something went wrong while generating test data."
+      )
+    );
+
+  } finally {
+
+    generateButton.disabled =
+      false;
+
+    clearButton.disabled =
+      false;
+
+    loadingEl.style.display =
+      "none";
+
+  }
+
+}
+
+
+/* -----------------------------------------
+   CLEAR
+----------------------------------------- */
+
+function clearForm() {
+
+  contextEl.value =
+    "";
+
+  generatedRows =
+    [];
+
+  resultEl.style.display =
+    "none";
+
+  contextStatus.style.display =
+    "none";
+
+  hideError();
+
+  try {
+
+    sessionStorage.removeItem(
+      "baforge-test-data"
+    );
+
+  } catch {}
+
+  contextEl.focus();
+
+}
+
+
+/* -----------------------------------------
+   COPY
+----------------------------------------- */
+
+async function copyData() {
+
+  if (!generatedRows.length) {
+    return;
+  }
+
+
+  const text =
+    generatedRows
+      .map(row =>
+        Object.entries(row)
+          .map(
+            ([key, value]) =>
+              `${key}: ${
+                typeof value === "object"
+                  ? JSON.stringify(value)
+                  : value
+              }`
           )
-          .join("\n");
-
-      try {
-
-        await navigator.clipboard.writeText(
-          text
-        );
-
-        copyButton.textContent =
-          "Copied ✓";
-
-        setTimeout(() => {
-
-          copyButton.textContent =
-            "Copy Data";
-
-        }, 1500);
-
-      } catch {
-
-        showError(
-          "Unable to copy data."
-        );
-
-      }
-
-    }
+          .join(" | ")
+      )
+      .join("\n");
 
 
-    generateButton.addEventListener(
-      "click",
-      generateData
+  try {
+
+    await navigator.clipboard.writeText(
+      text
     );
 
-    clearButton.addEventListener(
-      "click",
-      clearForm
+    copyButton.textContent =
+      "Copied ✓";
+
+    setTimeout(() => {
+
+      copyButton.textContent =
+        "Copy Data";
+
+    }, 1500);
+
+  } catch {
+
+    showError(
+      languageEl.value === "tr"
+        ? "Veriler kopyalanamadı."
+        : "Unable to copy data."
     );
 
-    copyButton.addEventListener(
-      "click",
-      copyData
-    );
+  }
+
+}
 
 
-    loadContext();
+/* -----------------------------------------
+   EVENTS
+----------------------------------------- */
 
-  </script>
+generateButton.addEventListener(
+  "click",
+  generateData
+);
+
+clearButton.addEventListener(
+  "click",
+  clearForm
+);
+
+copyButton.addEventListener(
+  "click",
+  copyData
+);
 
 
-  <script src="/nav.js"></script>
+/* -----------------------------------------
+   INIT
+----------------------------------------- */
+
+loadContext();
+
+</script>
+
+<script src="/nav.js"></script>
 
 </body>
 </html>
