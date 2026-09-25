@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>BAForge AI - Process Flow Generator</title>
 
 <style>
@@ -40,9 +39,7 @@ main{
   padding:28px 22px 80px;
 }
 
-/* =========================================================
-   WORKFLOW
-========================================================= */
+/* WORKFLOW */
 
 .workflow-wrapper{
   overflow-x:auto;
@@ -94,9 +91,7 @@ main{
   margin:0 9px;
 }
 
-/* =========================================================
-   HERO
-========================================================= */
+/* HERO */
 
 .hero{
   margin-bottom:25px;
@@ -131,9 +126,7 @@ main{
   color:var(--muted);
 }
 
-/* =========================================================
-   NAV
-========================================================= */
+/* NAV */
 
 .navigation{
   display:flex;
@@ -160,9 +153,7 @@ main{
   border-color:var(--primary);
 }
 
-/* =========================================================
-   CARD
-========================================================= */
+/* CARD */
 
 .card{
   background:var(--surface);
@@ -189,9 +180,7 @@ main{
   font-size:13px;
 }
 
-/* =========================================================
-   CONTEXT
-========================================================= */
+/* CONTEXT */
 
 .context-banner{
   display:none;
@@ -212,9 +201,7 @@ main{
   font-weight:500;
 }
 
-/* =========================================================
-   FORM
-========================================================= */
+/* FORM */
 
 .field{
   margin-bottom:18px;
@@ -261,9 +248,7 @@ textarea{
   gap:18px;
 }
 
-/* =========================================================
-   BUTTONS
-========================================================= */
+/* BUTTONS */
 
 .actions{
   display:flex;
@@ -302,9 +287,7 @@ button.success{
   background:#15803d;
 }
 
-/* =========================================================
-   STATUS
-========================================================= */
+/* STATUS */
 
 .status,
 .error{
@@ -328,9 +311,7 @@ button.success{
   color:var(--danger);
 }
 
-/* =========================================================
-   RESULT
-========================================================= */
+/* RESULT */
 
 #resultSection{
   display:none;
@@ -366,9 +347,7 @@ button.success{
   font-weight:800;
 }
 
-/* =========================================================
-   REAL PROCESS GRAPH
-========================================================= */
+/* PROCESS GRAPH */
 
 .flow-wrapper{
   overflow:auto;
@@ -380,8 +359,8 @@ button.success{
 
 .process-graph{
   position:relative;
-  min-width:980px;
-  min-height:500px;
+  min-width:1100px;
+  min-height:650px;
 }
 
 .graph-svg{
@@ -391,12 +370,13 @@ button.success{
   height:100%;
   pointer-events:none;
   overflow:visible;
+  z-index:1;
 }
 
 .graph-node{
   position:absolute;
   width:180px;
-  min-height:70px;
+  min-height:72px;
   padding:12px 14px;
   border:1px solid #c7d7fe;
   border-radius:12px;
@@ -426,6 +406,7 @@ button.success{
   width:150px;
   height:150px;
   min-height:150px;
+  padding:0;
   border-color:#f5c451;
   background:var(--warning-bg);
   transform:rotate(45deg);
@@ -436,8 +417,8 @@ button.success{
 }
 
 .graph-node.decision .graph-inner{
-  transform:rotate(-45deg);
   width:110px;
+  transform:rotate(-45deg);
 }
 
 .graph-node.decision .graph-title{
@@ -456,33 +437,10 @@ button.success{
   line-height:1.4;
 }
 
-.graph-label{
-  position:absolute;
-  z-index:4;
-  padding:4px 7px;
-  border-radius:999px;
-  font-size:10px;
-  font-weight:800;
-  background:#fff;
-  border:1px solid #d0d5dd;
-}
-
-.graph-label.yes{
-  color:#166534;
-  border-color:#86efac;
-  background:#f0fdf4;
-}
-
-.graph-label.no{
-  color:#991b1b;
-  border-color:#fca5a5;
-  background:#fef2f2;
-}
-
 .graph-legend{
   display:flex;
   flex-wrap:wrap;
-  gap:10px;
+  gap:12px;
   margin-top:15px;
   color:#667085;
   font-size:11px;
@@ -498,6 +456,7 @@ button.success{
   width:10px;
   height:10px;
   border-radius:50%;
+  background:#fff;
   border:1px solid #98a2b3;
 }
 
@@ -516,9 +475,7 @@ button.success{
   border-color:#fca5a5;
 }
 
-/* =========================================================
-   RESULT GRID
-========================================================= */
+/* RESULT GRID */
 
 .result-grid{
   display:grid;
@@ -559,9 +516,7 @@ button.success{
   color:#175cd3;
 }
 
-/* =========================================================
-   TABLE
-========================================================= */
+/* TABLE */
 
 .table-wrapper{
   overflow-x:auto;
@@ -595,9 +550,7 @@ tr:last-child td{
   border-bottom:0;
 }
 
-/* =========================================================
-   FOOTER
-========================================================= */
+/* FOOTER */
 
 .final-actions{
   display:flex;
@@ -624,9 +577,7 @@ tr:last-child td{
   border-color:var(--primary);
 }
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* RESPONSIVE */
 
 @media(max-width:850px){
 
@@ -664,7 +615,6 @@ tr:last-child td{
   .final-actions a{
     width:100%;
   }
-
 }
 </style>
 </head>
@@ -759,7 +709,7 @@ tr:last-child td{
 </section>
 
 
-<!-- NAV -->
+<!-- NAVIGATION -->
 
 <div class="navigation">
 
@@ -944,7 +894,7 @@ tr:last-child td{
   </div>
 
 
-  <!-- REAL GRAPH -->
+  <!-- PROCESS GRAPH -->
 
   <div class="result-block">
 
@@ -1029,7 +979,7 @@ tr:last-child td{
   </div>
 
 
-  <!-- STEPS -->
+  <!-- PROCESS STEPS -->
 
   <div
     class="result-block"
@@ -1065,7 +1015,7 @@ tr:last-child td{
   </div>
 
 
-  <!-- FLOWS -->
+  <!-- ALTERNATIVE / EXCEPTION -->
 
   <div class="result-grid">
 
@@ -1212,7 +1162,7 @@ let currentResult = null;
 
 
 /* =========================================================
-   HELPERS
+   BASIC HELPERS
 ========================================================= */
 
 function escapeHtml(value){
@@ -1329,7 +1279,10 @@ function textFromValue(value){
     const parts = [];
 
     if(value.title)
-      parts.push("Title: " + value.title);
+      parts.push(
+        "Title: " +
+        value.title
+      );
 
     if(value.description)
       parts.push(
@@ -1372,6 +1325,7 @@ function textFromValue(value){
       );
 
     return parts.join("\n\n");
+
   }
 
   return String(value);
@@ -1454,7 +1408,7 @@ function loadWorkflowContext(){
 
 
 /* =========================================================
-   NORMALIZE RESULT
+   NORMALIZE AI RESULT
 ========================================================= */
 
 function normalizeResult(data){
@@ -1596,26 +1550,8 @@ function normalizeResult(data){
 
 
 /* =========================================================
-   GRAPH ENGINE
+   GRAPH BUILDER
 ========================================================= */
-
-/*
- * This renderer follows the actual graph:
- *
- * START
- *   ↓
- * P01
- *   ↓
- * D01
- *  ↙ ↘
- * NO  YES
- * ↓    ↓
- * END  P02
- *       ↓
- *      D02
- *
- * It does NOT simply render the AI array in sequence.
- */
 
 function buildGraph(result){
 
@@ -1635,41 +1571,11 @@ function buildGraph(result){
     );
 
 
-  /*
-   * Find which step leads to which decision.
-   *
-   * The backend currently returns decisions in
-   * process order. We map each decision to the
-   * closest preceding step.
-   */
-
-  const orderedDecisions =
-    result.decisions;
-
-
-  const decisionAfterStep =
-    new Map();
-
-
-  orderedDecisions.forEach(
-    (decision,index)=>{
-
-      if(result.steps[index]){
-
-        decisionAfterStep.set(
-          result.steps[index].id,
-          decision
-        );
-
-      }
-
-    }
-  );
-
-
   const nodes = new Map();
   const edges = [];
 
+
+  /* START */
 
   nodes.set(
     "START",
@@ -1685,8 +1591,10 @@ function buildGraph(result){
   );
 
 
+  /* STEPS */
+
   result.steps.forEach(
-    step=>{
+    step => {
 
       nodes.set(
         step.id,
@@ -1705,8 +1613,10 @@ function buildGraph(result){
   );
 
 
+  /* DECISIONS */
+
   result.decisions.forEach(
-    decision=>{
+    decision => {
 
       nodes.set(
         decision.id,
@@ -1725,6 +1635,8 @@ function buildGraph(result){
   );
 
 
+  /* END */
+
   nodes.set(
     "END",
     {
@@ -1740,64 +1652,79 @@ function buildGraph(result){
 
 
   /*
-   * Main path:
-   * START → first step
+   * Find parent step for every decision.
+   *
+   * Example:
+   *
+   * D01:
+   * YES -> P04
+   * NO  -> P03
+   *
+   * Earliest branch target = P03.
+   * The process step immediately before P03 is P02.
+   *
+   * Therefore:
+   *
+   * P02 -> D01
    */
 
-  if(result.steps.length){
-
-    edges.push({
-      from:"START",
-      to:result.steps[0].id,
-      label:""
-    });
-
-  }else{
-
-    edges.push({
-      from:"START",
-      to:"END",
-      label:""
-    });
-
-  }
+  const decisionParents =
+    new Map();
 
 
-  /*
-   * Step → decision or next step.
-   */
+  result.decisions.forEach(
+    decision => {
 
-  result.steps.forEach(
-    (step,index)=>{
+      const targetIds = [
+        decision.yesTo,
+        decision.noTo
+      ].filter(
+        id =>
+          id &&
+          id !== "END" &&
+          stepMap.has(id)
+      );
 
-      const decision =
-        decisionAfterStep.get(
-          step.id
+
+      if(!targetIds.length)
+        return;
+
+
+      const targetIndexes =
+        targetIds
+          .map(
+            id =>
+              result.steps.findIndex(
+                step =>
+                  step.id === id
+              )
+          )
+          .filter(
+            index =>
+              index >= 0
+          );
+
+
+      if(!targetIndexes.length)
+        return;
+
+
+      const firstTargetIndex =
+        Math.min(
+          ...targetIndexes
         );
 
 
-      if(decision){
+      const parentIndex =
+        firstTargetIndex - 1;
 
-        edges.push({
-          from:step.id,
-          to:decision.id,
-          label:""
-        });
 
-      }else{
+      if(parentIndex >= 0){
 
-        const next =
-          result.steps[index+1];
-
-        if(next){
-
-          edges.push({
-            from:step.id,
-            to:next.id,
-            label:""
-          });
-
-        }
+        decisionParents.set(
+          decision.id,
+          result.steps[parentIndex].id
+        );
 
       }
 
@@ -1806,30 +1733,190 @@ function buildGraph(result){
 
 
   /*
-   * Decision branches.
+   * START -> first step
+   */
+
+  if(result.steps.length){
+
+    edges.push({
+      from:"START",
+      to:result.steps[0].id
+    });
+
+  }else{
+
+    edges.push({
+      from:"START",
+      to:"END"
+    });
+
+  }
+
+
+  /*
+   * STEP -> DECISION
+   */
+
+  decisionParents.forEach(
+    (parentStep,decisionId) => {
+
+      edges.push({
+        from:parentStep,
+        to:decisionId
+      });
+
+    }
+  );
+
+
+  /*
+   * Build set of steps that are branch targets.
+   */
+
+  const branchTargets =
+    new Set();
+
+
+  result.decisions.forEach(
+    decision => {
+
+      if(
+        decision.yesTo &&
+        decision.yesTo !== "END"
+      ){
+
+        branchTargets.add(
+          decision.yesTo
+        );
+
+      }
+
+
+      if(
+        decision.noTo &&
+        decision.noTo !== "END"
+      ){
+
+        branchTargets.add(
+          decision.noTo
+        );
+
+      }
+
+    }
+  );
+
+
+  /*
+   * STEP -> NEXT STEP
+   *
+   * Only if:
+   *
+   * 1. The step is not followed by a decision.
+   * 2. The next step is not a branch target.
+   */
+
+  result.steps.forEach(
+    (step,index) => {
+
+      const hasDecisionAfter =
+        [...decisionParents.values()]
+          .includes(step.id);
+
+
+      if(hasDecisionAfter)
+        return;
+
+
+      const nextStep =
+        result.steps[index+1];
+
+
+      if(!nextStep)
+        return;
+
+
+      if(
+        branchTargets.has(
+          nextStep.id
+        )
+      ){
+
+        return;
+
+      }
+
+
+      edges.push({
+        from:step.id,
+        to:nextStep.id
+      });
+
+    }
+  );
+
+
+  /*
+   * DECISION -> YES
    */
 
   result.decisions.forEach(
-    decision=>{
+    decision => {
 
       edges.push({
         from:decision.id,
-        to:decision.yesTo || "END",
+        to:
+          decision.yesTo ||
+          "END",
+        branch:"yes",
         label:
           decision.yesLabel ||
-          "YES",
-        branch:"yes"
+          "YES"
       });
 
+
+      /*
+       * DECISION -> NO
+       */
 
       edges.push({
         from:decision.id,
-        to:decision.noTo || "END",
+        to:
+          decision.noTo ||
+          "END",
+        branch:"no",
         label:
           decision.noLabel ||
-          "NO",
-        branch:"no"
+          "NO"
       });
+
+    }
+  );
+
+
+  /*
+   * Any process step without outgoing edge
+   * becomes an END branch.
+   */
+
+  result.steps.forEach(
+    step => {
+
+      const hasOutgoing =
+        edges.some(
+          edge =>
+            edge.from === step.id
+        );
+
+
+      if(!hasOutgoing){
+
+        edges.push({
+          from:step.id,
+          to:"END"
+        });
+
+      }
 
     }
   );
@@ -1861,21 +1948,62 @@ function layoutGraph(graph){
   const outgoing =
     new Map();
 
+  const incoming =
+    new Map();
+
+
   nodes.forEach(
-    node=>{
+    node => {
+
       outgoing.set(
         node.id,
-        edges.filter(
-          edge =>
-            edge.from === node.id
-        )
+        []
       );
+
+      incoming.set(
+        node.id,
+        []
+      );
+
+    }
+  );
+
+
+  edges.forEach(
+    edge => {
+
+      if(!outgoing.has(edge.from))
+        outgoing.set(
+          edge.from,
+          []
+        );
+
+      if(!incoming.has(edge.to))
+        incoming.set(
+          edge.to,
+          []
+        );
+
+
+      outgoing
+        .get(edge.from)
+        .push(edge);
+
+
+      incoming
+        .get(edge.to)
+        .push(edge);
+
     }
   );
 
 
   /*
-   * Assign graph levels using BFS.
+   * Calculate levels.
+   *
+   * We intentionally use the longest path from
+   * START so branch targets remain to the right
+   * of their decision.
    */
 
   const levels =
@@ -1887,37 +2015,51 @@ function layoutGraph(graph){
   );
 
 
-  const queue =
-    ["START"];
+  let changed = true;
+  let guard = 0;
 
 
-  while(queue.length){
+  while(
+    changed &&
+    guard < 100
+  ){
 
-    const current =
-      queue.shift();
-
-    const currentLevel =
-      levels.get(current);
-
-
-    const nextEdges =
-      outgoing.get(current) ||
-      [];
+    changed = false;
+    guard++;
 
 
-    nextEdges.forEach(
-      edge=>{
+    edges.forEach(
+      edge => {
 
-        if(!levels.has(edge.to)){
+        if(
+          !levels.has(
+            edge.from
+          )
+        ){
+
+          return;
+
+        }
+
+
+        const candidate =
+          levels.get(
+            edge.from
+          ) + 1;
+
+
+        if(
+          !levels.has(edge.to) ||
+          candidate >
+            levels.get(edge.to)
+        ){
 
           levels.set(
             edge.to,
-            currentLevel + 1
+            candidate
           );
 
-          queue.push(
-            edge.to
-          );
+          changed = true;
 
         }
 
@@ -1928,18 +2070,21 @@ function layoutGraph(graph){
 
 
   /*
-   * Nodes that were not reachable from START
-   * still need a position.
+   * Fallback for disconnected nodes.
    */
 
   nodes.forEach(
-    node=>{
+    node => {
 
-      if(!levels.has(node.id)){
+      if(
+        !levels.has(
+          node.id
+        )
+      ){
 
         levels.set(
           node.id,
-          1
+          0
         );
 
       }
@@ -1948,22 +2093,32 @@ function layoutGraph(graph){
   );
 
 
+  /*
+   * Group by level.
+   */
+
   const grouped =
     new Map();
 
 
   nodes.forEach(
-    node=>{
+    node => {
 
       const level =
-        levels.get(node.id);
+        levels.get(
+          node.id
+        );
+
 
       if(!grouped.has(level)){
+
         grouped.set(
           level,
           []
         );
+
       }
+
 
       grouped
         .get(level)
@@ -1973,64 +2128,95 @@ function layoutGraph(graph){
   );
 
 
-  const levelCount =
-    Math.max(
-      ...[...grouped.keys()],
-      0
-    );
-
-
-  const columnWidth = 245;
-  const rowHeight = 190;
-
-  const width =
-    Math.max(
-      980,
-      (levelCount + 1) *
-      columnWidth +
-      180
-    );
-
-
-  let maxRows = 1;
-
+  /*
+   * Stable ordering inside columns.
+   */
 
   grouped.forEach(
-    items=>{
+    items => {
 
-      maxRows =
-        Math.max(
-          maxRows,
-          items.length
-        );
+      items.sort(
+        (a,b) => {
+
+          if(a.type === "start")
+            return -1;
+
+          if(b.type === "start")
+            return 1;
+
+          if(a.type === "end")
+            return 1;
+
+          if(b.type === "end")
+            return -1;
+
+          if(a.type === "decision")
+            return 1;
+
+          if(b.type === "decision")
+            return -1;
+
+          return 0;
+
+        }
+      );
 
     }
   );
 
 
-  const height =
+  const columnWidth =
+    245;
+
+  const rowHeight =
+    190;
+
+
+  const maxLevel =
     Math.max(
-      500,
-      maxRows *
-      rowHeight +
-      130
+      ...[
+        ...grouped.keys()
+      ],
+      0
     );
 
 
-  /*
-   * Important:
-   * Horizontal flow is easier to read on desktop.
-   *
-   * Each graph level is a column.
-   * Branches occupy different vertical positions.
-   */
+  const maxRows =
+    Math.max(
+      ...[
+        ...grouped.values()
+      ].map(
+        items =>
+          items.length
+      ),
+      1
+    );
+
+
+  const width =
+    Math.max(
+      1150,
+      (maxLevel+1) *
+        columnWidth +
+        160
+    );
+
+
+  const height =
+    Math.max(
+      650,
+      maxRows *
+        rowHeight +
+        180
+    );
+
 
   const positions =
     new Map();
 
 
   grouped.forEach(
-    (items,level)=>{
+    (items,level) => {
 
       const totalHeight =
         items.length *
@@ -2039,31 +2225,27 @@ function layoutGraph(graph){
 
       const startY =
         Math.max(
-          60,
+          70,
           (height -
             totalHeight) / 2
         );
 
 
       items.forEach(
-        (node,index)=>{
-
-          const x =
-            level *
-            columnWidth +
-            35;
-
-          const y =
-            startY +
-            index *
-            rowHeight;
-
+        (node,index) => {
 
           positions.set(
             node.id,
             {
-              x,
-              y
+              x:
+                40 +
+                level *
+                columnWidth,
+
+              y:
+                startY +
+                index *
+                rowHeight
             }
           );
 
@@ -2084,39 +2266,123 @@ function layoutGraph(graph){
 
 
 /* =========================================================
-   DRAW SVG EDGE
+   SVG ARROWS
 ========================================================= */
+
+function createMarker(
+  id,
+  color
+){
+
+  const marker =
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "marker"
+    );
+
+
+  marker.setAttribute(
+    "id",
+    id
+  );
+
+  marker.setAttribute(
+    "markerWidth",
+    "8"
+  );
+
+  marker.setAttribute(
+    "markerHeight",
+    "8"
+  );
+
+  marker.setAttribute(
+    "refX",
+    "7"
+  );
+
+  marker.setAttribute(
+    "refY",
+    "4"
+  );
+
+  marker.setAttribute(
+    "orient",
+    "auto"
+  );
+
+
+  const path =
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+
+
+  path.setAttribute(
+    "d",
+    "M0,0 L8,4 L0,8 Z"
+  );
+
+  path.setAttribute(
+    "fill",
+    color
+  );
+
+
+  marker.appendChild(
+    path
+  );
+
+
+  return marker;
+
+}
+
 
 function drawEdge(
   svg,
-  fromPosition,
-  toPosition,
-  fromNode,
-  toNode,
+  from,
+  to,
   branch
 ){
 
-  const startX =
-    fromPosition.x +
+  const nodeWidth =
     180;
 
+  const nodeHeight =
+    72;
+
+
+  const startX =
+    from.x +
+    nodeWidth;
+
   const startY =
-    fromPosition.y +
-    35;
+    from.y +
+    nodeHeight / 2;
 
 
   const endX =
-    toPosition.x;
+    to.x;
 
   const endY =
-    toPosition.y +
-    35;
+    to.y +
+    nodeHeight / 2;
 
 
-  const midX =
-    startX +
-    (endX -
-      startX) / 2;
+  const distance =
+    Math.abs(
+      endX -
+      startX
+    );
+
+
+  const curve =
+    Math.max(
+      45,
+      distance / 2
+    );
 
 
   const color =
@@ -2146,8 +2412,8 @@ function drawEdge(
     "d",
     `
       M ${startX} ${startY}
-      C ${midX} ${startY},
-        ${midX} ${endY},
+      C ${startX + curve} ${startY},
+        ${endX - curve} ${endY},
         ${endX} ${endY}
     `
   );
@@ -2158,18 +2424,15 @@ function drawEdge(
     "none"
   );
 
-
   path.setAttribute(
     "stroke",
     color
   );
 
-
   path.setAttribute(
     "stroke-width",
     "2"
   );
-
 
   path.setAttribute(
     "marker-end",
@@ -2182,67 +2445,57 @@ function drawEdge(
   );
 
 
-  /*
-   * Branch label
-   */
-
   if(branch){
 
-    const label =
+    const text =
       document.createElementNS(
         "http://www.w3.org/2000/svg",
         "text"
       );
 
 
-    label.setAttribute(
+    text.setAttribute(
       "x",
       String(
-        midX
+        startX +
+        curve / 2
       )
     );
 
-
-    label.setAttribute(
+    text.setAttribute(
       "y",
       String(
-        (startY +
-          endY) / 2 -
-          6
+        startY -
+        7
       )
     );
 
-
-    label.setAttribute(
+    text.setAttribute(
       "text-anchor",
       "middle"
     );
 
-
-    label.setAttribute(
+    text.setAttribute(
       "font-size",
       "11"
     );
 
-
-    label.setAttribute(
+    text.setAttribute(
       "font-weight",
       "700"
     );
 
-
-    label.setAttribute(
+    text.setAttribute(
       "fill",
       color
     );
 
-
-    label.textContent =
+    text.textContent =
       branch.toUpperCase();
 
 
     svg.appendChild(
-      label
+      text
     );
 
   }
@@ -2290,103 +2543,71 @@ function renderGraph(result){
   );
 
 
-  graphSvg.innerHTML = `
-    <defs>
-
-      <marker
-        id="arrowDefault"
-        markerWidth="8"
-        markerHeight="8"
-        refX="7"
-        refY="4"
-        orient="auto">
-
-        <path
-          d="M0,0 L8,4 L0,8 Z"
-          fill="#98a2b3">
-        </path>
-
-      </marker>
+  graphSvg.innerHTML = "";
 
 
-      <marker
-        id="arrowYes"
-        markerWidth="8"
-        markerHeight="8"
-        refX="7"
-        refY="4"
-        orient="auto">
-
-        <path
-          d="M0,0 L8,4 L0,8 Z"
-          fill="#16a34a">
-        </path>
-
-      </marker>
+  const defs =
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "defs"
+    );
 
 
-      <marker
-        id="arrowNo"
-        markerWidth="8"
-        markerHeight="8"
-        refX="7"
-        refY="4"
-        orient="auto">
+  defs.appendChild(
+    createMarker(
+      "arrowDefault",
+      "#98a2b3"
+    )
+  );
 
-        <path
-          d="M0,0 L8,4 L0,8 Z"
-          fill="#dc2626">
-        </path>
 
-      </marker>
+  defs.appendChild(
+    createMarker(
+      "arrowYes",
+      "#16a34a"
+    )
+  );
 
-    </defs>
-  `;
+
+  defs.appendChild(
+    createMarker(
+      "arrowNo",
+      "#dc2626"
+    )
+  );
+
+
+  graphSvg.appendChild(
+    defs
+  );
 
 
   /*
-   * Draw edges first.
+   * Draw connections first.
    */
 
   graph.edges.forEach(
-    edge=>{
+    edge => {
 
-      const fromPosition =
+      const from =
         layout.positions.get(
           edge.from
         );
 
-      const toPosition =
+      const to =
         layout.positions.get(
           edge.to
         );
 
 
-      if(
-        !fromPosition ||
-        !toPosition
-      ){
+      if(!from || !to)
         return;
-      }
-
-
-      const fromNode =
-        graph.nodes.get(
-          edge.from
-        );
-
-      const toNode =
-        graph.nodes.get(
-          edge.to
-        );
 
 
       drawEdge(
         graphSvg,
-        fromPosition,
-        toPosition,
-        fromNode,
-        toNode,
+        from,
+        to,
         edge.branch
       );
 
@@ -2395,7 +2616,7 @@ function renderGraph(result){
 
 
   /*
-   * Remove old HTML nodes.
+   * Remove previous nodes.
    */
 
   processGraph
@@ -2413,7 +2634,7 @@ function renderGraph(result){
    */
 
   graph.nodes.forEach(
-    node=>{
+    node => {
 
       const position =
         layout.positions.get(
@@ -2446,7 +2667,10 @@ function renderGraph(result){
         "px";
 
 
-      if(node.type === "decision"){
+      if(
+        node.type ===
+        "decision"
+      ){
 
         element.innerHTML = `
 
@@ -2500,7 +2724,7 @@ function renderGraph(result){
 
 
 /* =========================================================
-   LISTS
+   RESULT LISTS
 ========================================================= */
 
 function renderList(
@@ -2512,17 +2736,20 @@ function renderList(
   if(!items.length){
 
     element.innerHTML =
-      `<div class="result-item">
-        No items identified.
-      </div>`;
+      `
+        <div class="result-item">
+          No items identified.
+        </div>
+      `;
 
     return;
+
   }
 
 
   element.innerHTML =
     items.map(
-      (item,index)=>{
+      (item,index) => {
 
         if(objectMode){
 
@@ -2579,18 +2806,22 @@ function renderSteps(steps){
 
   stepsEl.innerHTML =
     steps.map(
-      step=>`
+      step => `
 
         <tr>
 
           <td>
             <strong>
-              ${escapeHtml(step.id)}
+              ${escapeHtml(
+                step.id
+              )}
             </strong>
           </td>
 
           <td>
-            ${escapeHtml(step.title)}
+            ${escapeHtml(
+              step.title
+            )}
           </td>
 
           <td>
@@ -2717,6 +2948,7 @@ async function generateProcessFlow(){
     );
 
     return;
+
   }
 
 
@@ -2894,6 +3126,7 @@ function saveToWorkspace(){
     );
 
     return;
+
   }
 
 
@@ -2916,8 +3149,7 @@ function saveToWorkspace(){
 
 
   if(
-    window.BADataModel &&
-    window.BAWorkflow
+    window.BADataModel
   ){
 
     try{
@@ -3003,11 +3235,11 @@ async function copyProcessFlow(){
       "\nActors / Systems:\n" +
       currentResult.actors
         .map(
-          (x,i)=>
-            `${i+1}. ${
-              typeof x === "string"
-                ? x
-                : JSON.stringify(x)
+          (item,index) =>
+            `${index+1}. ${
+              typeof item === "string"
+                ? item
+                : JSON.stringify(item)
             }`
         )
         .join("\n")
@@ -3022,7 +3254,7 @@ async function copyProcessFlow(){
 
 
   currentResult.steps.forEach(
-    step=>{
+    step => {
 
       lines.push(
         `${step.id}. ${step.title}\n` +
@@ -3031,7 +3263,9 @@ async function copyProcessFlow(){
           step.system ||
           ""
         }\n` +
-        `Action: ${step.action}\n` +
+        `Action: ${
+          step.action
+        }\n` +
         `Expected Result: ${
           step.expectedResult
         }`
@@ -3041,7 +3275,9 @@ async function copyProcessFlow(){
   );
 
 
-  if(currentResult.decisions.length){
+  if(
+    currentResult.decisions.length
+  ){
 
     lines.push(
       "\nDecision Points:"
@@ -3049,7 +3285,7 @@ async function copyProcessFlow(){
 
 
     currentResult.decisions.forEach(
-      decision=>{
+      decision => {
 
         lines.push(
           `${decision.id}. ${
@@ -3069,7 +3305,9 @@ async function copyProcessFlow(){
   }
 
 
-  if(currentResult.alternativeFlows.length){
+  if(
+    currentResult.alternativeFlows.length
+  ){
 
     lines.push(
       "\nAlternative Flows:"
@@ -3077,13 +3315,15 @@ async function copyProcessFlow(){
 
 
     currentResult.alternativeFlows.forEach(
-      item=>{
+      item => {
 
         lines.push(
-          `${item.id}: ${
-            item.trigger
+          `${item.id || ""}: ${
+            item.trigger ||
+            ""
           } → ${
-            item.path
+            item.path ||
+            ""
           }`
         );
 
@@ -3093,7 +3333,9 @@ async function copyProcessFlow(){
   }
 
 
-  if(currentResult.exceptionFlows.length){
+  if(
+    currentResult.exceptionFlows.length
+  ){
 
     lines.push(
       "\nException Flows:"
@@ -3101,13 +3343,15 @@ async function copyProcessFlow(){
 
 
     currentResult.exceptionFlows.forEach(
-      item=>{
+      item => {
 
         lines.push(
-          `${item.id}: ${
-            item.trigger
+          `${item.id || ""}: ${
+            item.trigger ||
+            ""
           } → ${
-            item.path
+            item.path ||
+            ""
           }`
         );
 
@@ -3129,9 +3373,11 @@ async function copyProcessFlow(){
 
 
     setTimeout(
-      ()=>{
+      () => {
+
         copyButton.textContent =
           "Copy Process Flow";
+
       },
       1500
     );
