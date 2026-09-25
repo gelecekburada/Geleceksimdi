@@ -1,1 +1,2660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>BAForge AI - Process Flow Generator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #eef4ff;
+      --text: #172033;
+      --heading: #101828;
+      --muted: #667085;
+      --border: #e4e7ec;
+      --surface: #ffffff;
+      --background: #f6f8fc;
+      --success: #15803d;
+      --success-bg: #ecfdf3;
+      --danger: #b42318;
+      --danger-bg: #fef2f2;
+      --warning: #b54708;
+      --warning-bg: #fffaeb;
+      --shadow-sm: 0 4px 14px rgba(16,24,40,.06);
+      --shadow-md: 0 12px 35px rgba(16,24,40,.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(
+          circle at top left,
+          rgba(37,99,235,.07),
+          transparent 32%
+        ),
+        var(--background);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: 1450px;
+      margin: 0 auto;
+      padding: 28px 22px 80px;
+    }
+
+    /* =========================================================
+       WORKFLOW
+    ========================================================= */
+
+    .workflow-wrapper {
+      margin-bottom: 28px;
+      overflow-x: auto;
+      padding: 5px 2px 12px;
+      scrollbar-width: thin;
+    }
+
+    .workflow {
+      min-width: 1050px;
+      display: flex;
+      align-items: center;
+    }
+
+    .workflow-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #98a2b3;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .workflow-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #d0d5dd;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .workflow-step.active {
+      color: var(--primary);
+    }
+
+    .workflow-step.active .workflow-dot {
+      color: #fff;
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .workflow-step.done {
+      color: var(--success);
+    }
+
+    .workflow-step.done .workflow-dot {
+      color: #fff;
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .workflow-line {
+      height: 1px;
+      width: 38px;
+      background: #d0d5dd;
+      margin: 0 9px;
+      flex-shrink: 0;
+    }
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+
+    .hero {
+      margin-bottom: 28px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(37,99,235,.08);
+      border: 1px solid #c7d7fe;
+      color: #175cd3;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      color: var(--heading);
+      font-size: 40px;
+      line-height: 1.15;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    /* =========================================================
+       NAVIGATION
+    ========================================================= */
+
+    .navigation {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 15px;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      background: #fff;
+      color: #344054;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .nav-button.next {
+      color: #fff;
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .nav-button:hover {
+      transform: translateY(-1px);
+    }
+
+    /* =========================================================
+       CARDS
+    ========================================================= */
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow-md);
+      padding: 28px;
+      margin-bottom: 22px;
+    }
+
+    .card-header {
+      margin-bottom: 20px;
+    }
+
+    .card-header h2 {
+      margin: 0 0 5px;
+      color: var(--heading);
+      font-size: 21px;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =========================================================
+       CONTEXT
+    ========================================================= */
+
+    .context-banner {
+      display: none;
+      margin-bottom: 18px;
+      padding: 13px 15px;
+      border-radius: 10px;
+      border: 1px solid #abefc6;
+      background: var(--success-bg);
+      color: var(--success);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .context-source {
+      margin-top: 5px;
+      color: #667085;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* =========================================================
+       FORM
+    ========================================================= */
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #344054;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      padding: 12px 13px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.1);
+    }
+
+    textarea {
+      min-height: 125px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    /* =========================================================
+       ACTIONS
+    ========================================================= */
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 18px;
+      background: linear-gradient(135deg,#2563eb,#1d4ed8);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      background: #98a2b3;
+      cursor: wait;
+      transform: none;
+    }
+
+    button.secondary {
+      background: #fff;
+      color: #344054;
+      border: 1px solid #d0d5dd;
+    }
+
+    button.success {
+      background: #15803d;
+    }
+
+    /* =========================================================
+       STATUS
+    ========================================================= */
+
+    .status,
+    .error {
+      display: none;
+      margin-top: 15px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: #344054;
+    }
+
+    .error {
+      background: var(--danger-bg);
+      border: 1px solid #fecaca;
+      color: var(--danger);
+    }
+
+    /* =========================================================
+       RESULT
+    ========================================================= */
+
+    #resultSection {
+      display: none;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+
+    .result-header h2 {
+      margin: 0 0 5px;
+      font-size: 24px;
+      color: var(--heading);
+    }
+
+    .result-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .result-pill {
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--primary-light);
+      border: 1px solid #c7d7fe;
+      color: #175cd3;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    /* =========================================================
+       FLOW DIAGRAM
+    ========================================================= */
+
+    .flow-container {
+      overflow-x: auto;
+      padding: 15px 5px 22px;
+    }
+
+    .flow {
+      min-width: max-content;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .flow-node {
+      min-width: 165px;
+      max-width: 230px;
+      padding: 15px 18px;
+      border: 1px solid #c7d7fe;
+      border-radius: 14px;
+      background: #f8fbff;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .flow-node.start,
+    .flow-node.end {
+      border-radius: 999px;
+      background: #f0fdf4;
+      border-color: #abefc6;
+    }
+
+    .flow-node.decision {
+      background: var(--warning-bg);
+      border-color: #fedf89;
+    }
+
+    .flow-node-title {
+      color: #175cd3;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .flow-node.start .flow-node-title,
+    .flow-node.end .flow-node-title {
+      color: var(--success);
+    }
+
+    .flow-node.decision .flow-node-title {
+      color: var(--warning);
+    }
+
+    .flow-node-description {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .flow-arrow {
+      width: 55px;
+      height: 2px;
+      background: #98a2b3;
+      position: relative;
+      flex-shrink: 0;
+      margin: 0 5px;
+    }
+
+    .flow-arrow::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: -4px;
+      border-left: 8px solid #98a2b3;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+    }
+
+    /* =========================================================
+       SECTIONS
+    ========================================================= */
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .result-block {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      background: #fff;
+    }
+
+    .result-block h3 {
+      margin: 0 0 12px;
+      color: var(--heading);
+      font-size: 16px;
+    }
+
+    .result-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .result-item {
+      padding: 11px 12px;
+      border-radius: 9px;
+      background: #f8fafc;
+      border: 1px solid #eaecf0;
+      color: #344054;
+      font-size: 13px;
+    }
+
+    .result-item strong {
+      color: #175cd3;
+    }
+
+    /* =========================================================
+       TABLE
+    ========================================================= */
+
+    .table-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th,
+    td {
+      padding: 12px 13px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475467;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    /* =========================================================
+       FOOTER ACTIONS
+    ========================================================= */
+
+    .final-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .final-actions a {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      padding: 11px 16px;
+      border-radius: 10px;
+      border: 1px solid #d0d5dd;
+      background: #fff;
+      color: #344054;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .final-actions a.next {
+      color: #fff;
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 850px) {
+
+      .input-grid,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 33px;
+      }
+
+      .card {
+        padding: 21px;
+      }
+
+    }
+
+    @media (max-width: 600px) {
+
+      main {
+        padding: 20px 14px 60px;
+      }
+
+      .hero h1 {
+        font-size: 29px;
+      }
+
+      .navigation,
+      .final-actions {
+        flex-direction: column;
+      }
+
+      .nav-button,
+      .final-actions a {
+        width: 100%;
+      }
+
+      .result-header {
+        flex-direction: column;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+<main>
+
+  <!-- =======================================================
+       WORKFLOW
+  ======================================================== -->
+
+  <div class="workflow-wrapper">
+
+    <div class="workflow">
+
+      <div class="workflow-step">
+        <span class="workflow-dot">1</span>
+        Requirement
+      </div>
+
+      <div class="workflow-line"></div>
+
+      <div class="workflow-step">
+        <span class="workflow-dot">2</span>
+        User Story
+      </div>
+
+      <div class="workflow-line"></div>
+
+      <div class="workflow-step">
+        <span class="workflow-dot">3</span>
+        Acceptance Criteria
+      </div>
+
+      <div class="workflow-line"></div>
+
+      <div class="workflow-step">
+        <span class="workflow-dot">4</span>
+        UAT Test Cases
+      </div>
+
+      <div class="workflow-line"></div>
+
+      <div class="workflow-step">
+        <span class="workflow-dot">5</span>
+        Test Data
+      </div>
+
+      <div class="workflow-line"></div>
+
+      <div class="workflow-step active">
+        <span class="workflow-dot">6</span>
+        Process Flow
+      </div>
+
+      <div class="workflow-line"></div>
+
+      <div class="workflow-step">
+        <span class="workflow-dot">7</span>
+        Traceability
+      </div>
+
+      <div class="workflow-line"></div>
+
+      <div class="workflow-step">
+        <span class="workflow-dot">8</span>
+        BA Document
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       HERO
+  ======================================================== -->
+
+  <section class="hero">
+
+    <div class="badge">
+      Process Flow Generator
+    </div>
+
+    <h1>
+      Turn Requirements Into
+      <span>Process Flows</span>
+    </h1>
+
+    <p>
+      Generate a structured business process flow with actors,
+      system interactions, decisions and exception paths.
+    </p>
+
+  </section>
+
+
+  <!-- =======================================================
+       NAVIGATION
+  ======================================================== -->
+
+  <div class="navigation">
+
+    <a
+      class="nav-button"
+      href="/test-data.html">
+      ← Test Data
+    </a>
+
+    <a
+      class="nav-button next"
+      href="/traceability.html">
+      Traceability →
+    </a>
+
+  </div>
+
+
+  <!-- =======================================================
+       INPUT
+  ======================================================== -->
+
+  <section class="card">
+
+    <div class="card-header">
+
+      <h2>
+        Process Context
+      </h2>
+
+      <p>
+        Start directly or use context transferred from previous
+        BAForge workflow steps.
+      </p>
+
+    </div>
+
+
+    <div
+      id="contextBanner"
+      class="context-banner">
+
+      <div id="contextMessage"></div>
+
+      <div
+        id="contextSource"
+        class="context-source">
+      </div>
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="processName">
+        Process Name
+      </label>
+
+      <input
+        id="processName"
+        type="text"
+        placeholder="Example: Bank Account Money Transfer">
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="context">
+        Requirement / Business Context
+      </label>
+
+      <textarea
+        id="context"
+        placeholder="Example: A customer wants to transfer money to another bank account using an IBAN. The system validates the IBAN, checks mandatory information and processes the transfer when all validations are successful."></textarea>
+
+    </div>
+
+
+    <div class="input-grid">
+
+      <div class="field">
+
+        <label for="language">
+          Output Language
+        </label>
+
+        <select id="language">
+
+          <option value="en">
+            English
+          </option>
+
+          <option value="tr">
+            Türkçe
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="detail">
+          Detail Level
+        </label>
+
+        <select id="detail">
+
+          <option value="Basic">
+            Basic
+          </option>
+
+          <option
+            value="Professional"
+            selected>
+            Professional
+          </option>
+
+          <option value="Comprehensive">
+            Comprehensive
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <div class="actions">
+
+      <button
+        id="generateButton"
+        type="button">
+        Generate Process Flow
+      </button>
+
+      <button
+        id="clearButton"
+        type="button"
+        class="secondary">
+        Clear
+      </button>
+
+    </div>
+
+
+    <div
+      id="status"
+      class="status">
+    </div>
+
+    <div
+      id="error"
+      class="error">
+    </div>
+
+  </section>
+
+
+  <!-- =======================================================
+       RESULT
+  ======================================================== -->
+
+  <section
+    id="resultSection"
+    class="card">
+
+    <div class="result-header">
+
+      <div>
+
+        <h2 id="resultTitle">
+          Generated Process Flow
+        </h2>
+
+        <p id="resultDescription">
+          Structured process flow generated from the supplied context.
+        </p>
+
+      </div>
+
+      <div
+        id="resultPill"
+        class="result-pill">
+        Process Flow
+      </div>
+
+    </div>
+
+
+    <!-- FLOW DIAGRAM -->
+
+    <div class="result-block">
+
+      <h3>
+        Process Flow
+      </h3>
+
+      <div class="flow-container">
+
+        <div
+          id="flow"
+          class="flow">
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- DETAILS -->
+
+    <div class="result-grid">
+
+      <div class="result-block">
+
+        <h3>
+          Actors & Systems
+        </h3>
+
+        <div
+          id="actors"
+          class="result-list">
+        </div>
+
+      </div>
+
+
+      <div class="result-block">
+
+        <h3>
+          Decision Points
+        </h3>
+
+        <div
+          id="decisions"
+          class="result-list">
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- STEPS -->
+
+    <div
+      class="result-block"
+      style="margin-top:20px;">
+
+      <h3>
+        Process Steps
+      </h3>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>ID</th>
+              <th>Step</th>
+              <th>Actor / System</th>
+              <th>Action</th>
+              <th>Expected Result</th>
+            </tr>
+
+          </thead>
+
+          <tbody
+            id="steps">
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- EXCEPTIONS -->
+
+    <div class="result-grid">
+
+      <div class="result-block">
+
+        <h3>
+          Alternative Flows
+        </h3>
+
+        <div
+          id="alternatives"
+          class="result-list">
+        </div>
+
+      </div>
+
+
+      <div class="result-block">
+
+        <h3>
+          Exception Flows
+        </h3>
+
+        <div
+          id="exceptions"
+          class="result-list">
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="actions">
+
+      <button
+        id="copyButton"
+        type="button">
+        Copy Process Flow
+      </button>
+
+      <button
+        id="saveButton"
+        type="button"
+        class="success">
+        Save to Workspace
+      </button>
+
+    </div>
+
+
+    <div class="final-actions">
+
+      <a
+        href="/test-data.html">
+        ← Test Data
+      </a>
+
+      <a
+        href="/traceability.html"
+        class="next">
+        Continue to Traceability →
+      </a>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- =========================================================
+     CORE
+========================================================= -->
+
+<script src="/core/data-model.js"></script>
+<script src="/core/workflow.js"></script>
+
+
+<script>
+
+const processNameEl =
+  document.getElementById("processName");
+
+const contextEl =
+  document.getElementById("context");
+
+const languageEl =
+  document.getElementById("language");
+
+const detailEl =
+  document.getElementById("detail");
+
+const generateButton =
+  document.getElementById("generateButton");
+
+const clearButton =
+  document.getElementById("clearButton");
+
+const copyButton =
+  document.getElementById("copyButton");
+
+const saveButton =
+  document.getElementById("saveButton");
+
+const statusEl =
+  document.getElementById("status");
+
+const errorEl =
+  document.getElementById("error");
+
+const resultSection =
+  document.getElementById("resultSection");
+
+const flowEl =
+  document.getElementById("flow");
+
+const actorsEl =
+  document.getElementById("actors");
+
+const decisionsEl =
+  document.getElementById("decisions");
+
+const stepsEl =
+  document.getElementById("steps");
+
+const alternativesEl =
+  document.getElementById("alternatives");
+
+const exceptionsEl =
+  document.getElementById("exceptions");
+
+const contextBanner =
+  document.getElementById("contextBanner");
+
+const contextMessage =
+  document.getElementById("contextMessage");
+
+const contextSource =
+  document.getElementById("contextSource");
+
+
+let currentResult = null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function escapeHtml(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+function parseJSON(value) {
+
+  try {
+
+    return value
+      ? JSON.parse(value)
+      : null;
+
+  } catch {
+
+    return null;
+
+  }
+
+}
+
+
+function readStorage(key) {
+
+  try {
+
+    return parseJSON(
+      sessionStorage.getItem(key)
+    );
+
+  } catch {
+
+    return null;
+
+  }
+
+}
+
+
+function writeStorage(key, value) {
+
+  try {
+
+    sessionStorage.setItem(
+      key,
+      JSON.stringify(value)
+    );
+
+    return true;
+
+  } catch {
+
+    return false;
+
+  }
+
+}
+
+
+function showStatus(message) {
+
+  statusEl.textContent =
+    message;
+
+  statusEl.style.display =
+    "block";
+
+}
+
+
+function hideStatus() {
+
+  statusEl.textContent =
+    "";
+
+  statusEl.style.display =
+    "none";
+
+}
+
+
+function showError(message) {
+
+  errorEl.textContent =
+    message;
+
+  errorEl.style.display =
+    "block";
+
+}
+
+
+function hideError() {
+
+  errorEl.textContent =
+    "";
+
+  errorEl.style.display =
+    "none";
+
+}
+
+
+/* =========================================================
+   CONTEXT EXTRACTION
+========================================================= */
+
+function textFromValue(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+
+    return value
+      .map(item =>
+        textFromValue(item)
+      )
+      .filter(Boolean)
+      .join("\n");
+
+  }
+
+  if (typeof value === "object") {
+
+    const parts = [];
+
+    if (value.title) {
+      parts.push(
+        `Title: ${value.title}`
+      );
+    }
+
+    if (value.description) {
+      parts.push(
+        `Description: ${value.description}`
+      );
+    }
+
+    if (value.requirement) {
+      parts.push(
+        `Requirement: ${value.requirement}`
+      );
+    }
+
+    if (value.summary) {
+      parts.push(
+        `Summary: ${value.summary}`
+      );
+    }
+
+    if (value.story) {
+      parts.push(
+        `User Story: ${value.story}`
+      );
+    }
+
+    if (value.fullStory) {
+      parts.push(
+        `User Story: ${value.fullStory}`
+      );
+    }
+
+    if (value.acceptanceCriteria) {
+
+      parts.push(
+        "Acceptance Criteria:\n" +
+        textFromValue(
+          value.acceptanceCriteria
+        )
+      );
+
+    }
+
+    if (value.cases) {
+
+      parts.push(
+        "Test Cases:\n" +
+        textFromValue(
+          value.cases
+        )
+      );
+
+    }
+
+    if (value.records) {
+
+      parts.push(
+        "Test Data:\n" +
+        textFromValue(
+          value.records
+        )
+      );
+
+    }
+
+    if (value.data) {
+
+      parts.push(
+        textFromValue(
+          value.data
+        )
+      );
+
+    }
+
+    return parts
+      .filter(Boolean)
+      .join("\n\n");
+
+  }
+
+  return String(value);
+
+}
+
+
+function loadWorkflowContext() {
+
+  const candidates = [
+
+    {
+      key: "baforge-test-data",
+      label: "Test Data"
+    },
+
+    {
+      key: "baforge-uat-generated",
+      label: "UAT Test Cases"
+    },
+
+    {
+      key: "baforge-current-uat-context",
+      label: "UAT Context"
+    },
+
+    {
+      key: "baforge-uat-context",
+      label: "UAT Context"
+    },
+
+    {
+      key: "baforge-current-requirement",
+      label: "Requirement"
+    },
+
+    {
+      key: "baforge-user-story-context",
+      label: "User Story"
+    },
+
+    {
+      key: "baforge-acceptance-criteria-draft",
+      label: "Acceptance Criteria"
+    }
+
+  ];
+
+
+  for (const item of candidates) {
+
+    const data =
+      readStorage(item.key);
+
+    if (!data) {
+      continue;
+    }
+
+    const text =
+      textFromValue(data)
+        .trim();
+
+    if (!text) {
+      continue;
+    }
+
+
+    contextEl.value =
+      text;
+
+    contextBanner.style.display =
+      "block";
+
+    contextMessage.textContent =
+      "✓ Previous workflow context loaded.";
+
+    contextSource.textContent =
+      `Source: ${item.label}`;
+
+    return;
+
+  }
+
+}
+
+
+/* =========================================================
+   NORMALIZATION
+========================================================= */
+
+function normalizeArray(value) {
+
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter(Boolean)
+    .map(item => {
+
+      if (typeof item === "string") {
+        return item;
+      }
+
+      return (
+        item.title ||
+        item.name ||
+        item.description ||
+        item.action ||
+        JSON.stringify(item)
+      );
+
+    });
+
+}
+
+
+function normalizeSteps(value) {
+
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.map(
+    (step, index) => {
+
+      if (typeof step === "string") {
+
+        return {
+          id:
+            `P${String(index + 1).padStart(2,"0")}`,
+
+          title:
+            step,
+
+          actor:
+            "",
+
+          action:
+            step,
+
+          expectedResult:
+            ""
+        };
+
+      }
+
+      return {
+
+        id:
+          step.id ||
+          step.stepId ||
+          `P${String(index + 1).padStart(2,"0")}`,
+
+        title:
+          step.title ||
+          step.name ||
+          `Step ${index + 1}`,
+
+        actor:
+          step.actor ||
+          step.system ||
+          step.owner ||
+          "",
+
+        action:
+          step.action ||
+          step.description ||
+          "",
+
+        expectedResult:
+          step.expectedResult ||
+          step.result ||
+          ""
+
+      };
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   RESULT EXTRACTION
+========================================================= */
+
+function normalizeResult(data) {
+
+  /*
+   * Accept several reasonable AI response shapes.
+   */
+
+  const source =
+    data?.processFlow ||
+    data?.flow ||
+    data?.result ||
+    data;
+
+
+  let steps =
+    normalizeSteps(
+      source?.steps ||
+      source?.processSteps ||
+      source?.nodes
+    );
+
+
+  if (!steps.length) {
+
+    steps = [
+
+      {
+        id: "P01",
+        title: "Start",
+        actor: "",
+        action: "Start the process.",
+        expectedResult: ""
+      },
+
+      {
+        id: "P02",
+        title: "Process",
+        actor: "",
+        action:
+          source?.description ||
+          "Execute the required business process.",
+        expectedResult:
+          "Process continues according to the requirement."
+      },
+
+      {
+        id: "P03",
+        title: "End",
+        actor: "",
+        action: "Complete the process.",
+        expectedResult:
+          "Process is completed."
+      }
+
+    ];
+
+  }
+
+
+  return {
+
+    processName:
+      source?.processName ||
+      source?.name ||
+      processNameEl.value.trim() ||
+      "Generated Process Flow",
+
+    description:
+      source?.description ||
+      source?.summary ||
+      "",
+
+    actors:
+      normalizeArray(
+        source?.actors ||
+        source?.systems ||
+        source?.participants
+      ),
+
+    decisions:
+      normalizeArray(
+        source?.decisionPoints ||
+        source?.decisions
+      ),
+
+    steps,
+
+    alternatives:
+      normalizeArray(
+        source?.alternativeFlows ||
+        source?.alternatives
+      ),
+
+    exceptions:
+      normalizeArray(
+        source?.exceptionFlows ||
+        source?.exceptions
+      )
+
+  };
+
+}
+
+
+/* =========================================================
+   FLOW RENDERING
+========================================================= */
+
+function renderFlow(result) {
+
+  const nodes = [];
+
+
+  nodes.push({
+
+    type: "start",
+
+    title: "START",
+
+    description:
+      "Process begins"
+
+  });
+
+
+  result.steps.forEach(
+    (step, index) => {
+
+      nodes.push({
+
+        type:
+          index === result.steps.length - 1
+            ? "end"
+            : "step",
+
+        title:
+          step.title,
+
+        description:
+          step.actor
+            ? `${step.actor} — ${step.action}`
+            : step.action
+
+      });
+
+    }
+  );
+
+
+  if (!result.steps.length) {
+
+    nodes.push({
+
+      type: "end",
+
+      title: "END",
+
+      description:
+        "Process completed"
+
+    });
+
+  }
+
+
+  flowEl.innerHTML =
+    nodes
+      .map(
+        (node, index) => {
+
+          const nodeHtml = `
+            <div class="flow-node ${node.type}">
+              <div class="flow-node-title">
+                ${escapeHtml(node.title)}
+              </div>
+
+              <div class="flow-node-description">
+                ${escapeHtml(node.description)}
+              </div>
+            </div>
+          `;
+
+          const arrow =
+            index < nodes.length - 1
+              ? `<div class="flow-arrow"></div>`
+              : "";
+
+          return (
+            nodeHtml +
+            arrow
+          );
+
+        }
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   LIST RENDERING
+========================================================= */
+
+function renderList(element, items) {
+
+  if (!items.length) {
+
+    element.innerHTML =
+      `<div class="result-item empty">
+        No items identified.
+      </div>`;
+
+    return;
+
+  }
+
+
+  element.innerHTML =
+    items
+      .map(
+        (item, index) => {
+
+          return `
+            <div class="result-item">
+              <strong>${index + 1}.</strong>
+              ${escapeHtml(item)}
+            </div>
+          `;
+
+        }
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   STEP TABLE
+========================================================= */
+
+function renderSteps(steps) {
+
+  stepsEl.innerHTML =
+    steps
+      .map(
+        step => {
+
+          return `
+            <tr>
+
+              <td>
+                <strong>
+                  ${escapeHtml(step.id)}
+                </strong>
+              </td>
+
+              <td>
+                ${escapeHtml(step.title)}
+              </td>
+
+              <td>
+                ${escapeHtml(step.actor)}
+              </td>
+
+              <td>
+                ${escapeHtml(step.action)}
+              </td>
+
+              <td>
+                ${escapeHtml(step.expectedResult)}
+              </td>
+
+            </tr>
+          `;
+
+        }
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   RENDER RESULT
+========================================================= */
+
+function renderResult(result) {
+
+  currentResult =
+    result;
+
+  document.getElementById(
+    "resultTitle"
+  ).textContent =
+    result.processName;
+
+
+  document.getElementById(
+    "resultDescription"
+  ).textContent =
+    result.description ||
+    "Structured process flow generated from the supplied context.";
+
+
+  renderFlow(result);
+
+  renderList(
+    actorsEl,
+    result.actors
+  );
+
+  renderList(
+    decisionsEl,
+    result.decisions
+  );
+
+  renderSteps(
+    result.steps
+  );
+
+  renderList(
+    alternativesEl,
+    result.alternatives
+  );
+
+  renderList(
+    exceptionsEl,
+    result.exceptions
+  );
+
+
+  resultSection.style.display =
+    "block";
+
+}
+
+
+/* =========================================================
+   GENERATE
+========================================================= */
+
+async function generateProcessFlow() {
+
+  hideError();
+  hideStatus();
+
+
+  const context =
+    contextEl.value.trim();
+
+
+  const words =
+    context
+      .split(/\s+/)
+      .filter(Boolean);
+
+
+  if (
+    context.length < 15 ||
+    words.length < 3
+  ) {
+
+    showError(
+
+      languageEl.value === "tr"
+
+        ? "Lütfen en az 15 karakter ve 3 kelime içeren açık bir iş gereksinimi veya süreç açıklaması girin."
+
+        : "Please provide a clear business requirement or process description with at least 15 characters and 3 words."
+
+    );
+
+    return;
+
+  }
+
+
+  const processName =
+    processNameEl.value.trim();
+
+
+  generateButton.disabled =
+    true;
+
+  clearButton.disabled =
+    true;
+
+  showStatus(
+
+    languageEl.value === "tr"
+
+      ? "Process Flow oluşturuluyor..."
+
+      : "Generating process flow..."
+
+  );
+
+
+  const language =
+    languageEl.value;
+
+  const detail =
+    detailEl.value;
+
+
+  const enrichedRequirement = `
+
+Business Process Name:
+${processName || "Auto-detect process name"}
+
+Business Requirement / Context:
+${context}
+
+Process Flow Generation Requirements:
+
+1. Identify the main business process.
+2. Identify relevant actors and systems.
+3. Define the process from START to END.
+4. Create logical process steps.
+5. Identify decision points.
+6. Identify alternative flows.
+7. Identify exception flows.
+8. Do not invent unsupported business rules.
+9. Keep the flow directly connected to the supplied requirement.
+10. Use synthetic/descriptive content only.
+11. Detail level: ${detail}
+12. Output language: ${
+    language === "tr"
+      ? "Turkish"
+      : "English"
+  }
+
+Return structured JSON with this shape:
+
+{
+  "processName": "...",
+  "description": "...",
+  "actors": [],
+  "decisionPoints": [],
+  "steps": [
+    {
+      "id": "P01",
+      "title": "...",
+      "actor": "...",
+      "action": "...",
+      "expectedResult": "..."
+    }
+  ],
+  "alternativeFlows": [],
+  "exceptionFlows": []
+}
+
+Return ONLY valid JSON.
+`;
+
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/generate",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+
+              requirement:
+                enrichedRequirement,
+
+              type:
+                "Functional",
+
+              number:
+                1,
+
+              detail:
+                detail,
+
+              language:
+                language,
+
+              focus:
+                "All",
+
+              priority:
+                "All"
+
+            })
+
+        }
+      );
+
+
+    const raw =
+      await response.text();
+
+
+    let data;
+
+
+    try {
+
+      data =
+        JSON.parse(raw);
+
+    } catch {
+
+      throw new Error(
+
+        language === "tr"
+
+          ? "Sunucudan geçersiz bir cevap geldi."
+
+          : "The server returned an invalid response."
+
+      );
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        (
+          language === "tr"
+            ? "Process Flow oluşturulamadı."
+            : "Process Flow generation failed."
+        )
+      );
+
+    }
+
+
+    /*
+     * Some versions of the existing
+     * backend return JSON inside output.
+     */
+
+    if (
+      data &&
+      typeof data.output === "string"
+    ) {
+
+      try {
+
+        data =
+          JSON.parse(
+            data.output
+          );
+
+      } catch {}
+
+    }
+
+
+    /*
+     * If the backend returns test cases,
+     * try to extract the generated
+     * structured content from the first
+     * available output.
+     */
+
+    if (
+      Array.isArray(data.cases) &&
+      data.cases.length
+    ) {
+
+      const first =
+        data.cases[0];
+
+
+      if (
+        first &&
+        typeof first.testData === "object"
+      ) {
+
+        data =
+          first.testData;
+
+      }
+
+    }
+
+
+    const result =
+      normalizeResult(data);
+
+
+    if (
+      !result.steps.length &&
+      !result.description
+    ) {
+
+      throw new Error(
+
+        language === "tr"
+
+          ? "Yeterli process flow verisi oluşturulamadı."
+
+          : "Insufficient process flow data was generated."
+
+      );
+
+    }
+
+
+    renderResult(result);
+
+
+    writeStorage(
+      "baforge-process-flow",
+      {
+        processName:
+          processName,
+
+        context:
+          context,
+
+        language:
+          language,
+
+        detail:
+          detail,
+
+        result:
+          result,
+
+        generatedAt:
+          new Date().toISOString()
+
+      }
+    );
+
+
+    resultSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      "Process Flow error:",
+      error
+    );
+
+
+    showError(
+      error.message ||
+      (
+        languageEl.value === "tr"
+          ? "Process Flow oluşturulurken bir hata oluştu."
+          : "Something went wrong while generating the Process Flow."
+      )
+    );
+
+  } finally {
+
+    generateButton.disabled =
+      false;
+
+    clearButton.disabled =
+      false;
+
+    hideStatus();
+
+  }
+
+}
+
+
+/* =========================================================
+   SAVE WORKSPACE
+========================================================= */
+
+function saveToWorkspace() {
+
+  if (!currentResult) {
+
+    showError(
+      "Generate a Process Flow before saving."
+    );
+
+    return;
+
+  }
+
+
+  const requirement =
+    contextEl.value.trim();
+
+
+  /*
+   * Save a BA Data Model artifact
+   * when the foundation is available.
+   */
+
+  if (
+    window.BADataModel &&
+    window.BAWorkflow
+  ) {
+
+    try {
+
+      const processFlow =
+        BADataModel.createProcessFlow({
+
+          requirementId:
+            null,
+
+          title:
+            currentResult.processName,
+
+          description:
+            currentResult.description,
+
+          nodes:
+            currentResult.steps,
+
+          connections:
+            []
+
+        });
+
+
+      let workflow;
+
+
+      const storedWorkflow =
+        readStorage(
+          "baforge-workflow-state"
+        );
+
+
+      if (storedWorkflow) {
+
+        try {
+
+          workflow =
+            BAWorkflow.deserialize(
+              storedWorkflow
+            );
+
+        } catch {
+
+          workflow =
+            BAWorkflow.createWorkflowState({
+              currentStep:
+                "process_flow"
+            });
+
+        }
+
+      } else {
+
+        workflow =
+          BAWorkflow.createWorkflowState({
+            currentStep:
+              "process_flow"
+          });
+
+      }
+
+
+      const artifact =
+        BAWorkflow.createWorkflowArtifact({
+
+          id:
+            processFlow.id,
+
+          step:
+            "process_flow",
+
+          entityId:
+            processFlow.id,
+
+          entityType:
+            "process_flow",
+
+          status:
+            "completed",
+
+          data:
+            processFlow
+
+        });
+
+
+      workflow.artifacts.process_flow =
+        artifact;
+
+
+      workflow =
+        BAWorkflow.completeStep(
+          workflow,
+          "process_flow",
+          artifact
+        );
+
+
+      writeStorage(
+        "baforge-workflow-state",
+        workflow
+      );
+
+
+      writeStorage(
+        "baforge-process-flow-artifact",
+        processFlow
+      );
+
+    } catch (error) {
+
+      console.warn(
+        "Workspace save warning:",
+        error
+      );
+
+    }
+
+  }
+
+
+  writeStorage(
+    "baforge-process-flow",
+    {
+      processName:
+        currentResult.processName,
+
+      requirement:
+        requirement,
+
+      result:
+        currentResult,
+
+      savedAt:
+        new Date().toISOString()
+
+    }
+  );
+
+
+  showStatus(
+    languageEl.value === "tr"
+      ? "Process Flow workspace'e kaydedildi."
+      : "Process Flow saved to workspace."
+  );
+
+}
+
+
+/* =========================================================
+   COPY
+========================================================= */
+
+async function copyProcessFlow() {
+
+  if (!currentResult) {
+    return;
+  }
+
+
+  const lines = [];
+
+
+  lines.push(
+    `Process: ${currentResult.processName}`
+  );
+
+
+  if (currentResult.description) {
+
+    lines.push(
+      `\nDescription:\n${currentResult.description}`
+    );
+
+  }
+
+
+  if (currentResult.actors.length) {
+
+    lines.push(
+      `\nActors / Systems:\n` +
+      currentResult.actors
+        .map(
+          (x, i) =>
+            `${i + 1}. ${x}`
+        )
+        .join("\n")
+    );
+
+  }
+
+
+  lines.push(
+    "\nProcess Steps:"
+  );
+
+
+  currentResult.steps.forEach(
+    step => {
+
+      lines.push(
+        `${step.id}. ${step.title}\n` +
+        `Actor/System: ${step.actor}\n` +
+        `Action: ${step.action}\n` +
+        `Expected Result: ${step.expectedResult}`
+      );
+
+    }
+  );
+
+
+  if (currentResult.decisions.length) {
+
+    lines.push(
+      `\nDecision Points:\n` +
+      currentResult.decisions
+        .map(
+          (x, i) =>
+            `${i + 1}. ${x}`
+        )
+        .join("\n")
+    );
+
+  }
+
+
+  if (currentResult.alternatives.length) {
+
+    lines.push(
+      `\nAlternative Flows:\n` +
+      currentResult.alternatives
+        .map(
+          (x, i) =>
+            `${i + 1}. ${x}`
+        )
+        .join("\n")
+    );
+
+  }
+
+
+  if (currentResult.exceptions.length) {
+
+    lines.push(
+      `\nException Flows:\n` +
+      currentResult.exceptions
+        .map(
+          (x, i) =>
+            `${i + 1}. ${x}`
+        )
+        .join("\n")
+    );
+
+  }
+
+
+  const text =
+    lines.join("\n");
+
+
+  try {
+
+    await navigator.clipboard.writeText(
+      text
+    );
+
+
+    copyButton.textContent =
+      "Copied ✓";
+
+
+    setTimeout(() => {
+
+      copyButton.textContent =
+        "Copy Process Flow";
+
+    }, 1500);
+
+
+  } catch {
+
+    showError(
+      "Unable to copy Process Flow."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+function clearForm() {
+
+  processNameEl.value =
+    "";
+
+  contextEl.value =
+    "";
+
+  currentResult =
+    null;
+
+  resultSection.style.display =
+    "none";
+
+  contextBanner.style.display =
+    "none";
+
+  hideStatus();
+
+  hideError();
+
+
+  try {
+
+    sessionStorage.removeItem(
+      "baforge-process-flow"
+    );
+
+  } catch {}
+
+
+  processNameEl.focus();
+
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+generateButton.addEventListener(
+  "click",
+  generateProcessFlow
+);
+
+clearButton.addEventListener(
+  "click",
+  clearForm
+);
+
+copyButton.addEventListener(
+  "click",
+  copyProcessFlow
+);
+
+saveButton.addEventListener(
+  "click",
+  saveToWorkspace
+);
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+loadWorkflowContext();
+
+</script>
+
+<script src="/nav.js"></script>
+
+</body>
+</html>
