@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>BAForge AI - Test Data Generator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --text: #172033;
+      --muted: #667085;
+      --border: #e4e7ec;
+      --surface: #ffffff;
+      --background: #f6f8fc;
+      --success: #15803d;
+      --success-bg: #ecfdf3;
+      --danger: #b42318;
+      --danger-bg: #fef2f2;
+      --shadow-md: 0 12px 35px rgba(16, 24, 40, 0.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(
+          circle at top left,
+          rgba(37, 99, 235, 0.07),
+          transparent 32%
+        ),
+        var(--background);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: 1240px;
+      margin: 35px auto 70px;
+      padding: 0 20px;
+    }
+
+    /* WORKFLOW */
+
+    .workflow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding: 8px 5px 18px;
+      margin-bottom: 25px;
+      scrollbar-width: thin;
+    }
+
+    .workflow-step {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      color: #98a2b3;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .workflow-number {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid #d0d5dd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      margin-right: 7px;
+    }
+
+    .workflow-step.active {
+      color: var(--primary);
+    }
+
+    .workflow-step.active .workflow-number {
+      color: #fff;
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .workflow-line {
+      width: 45px;
+      height: 1px;
+      background: #d0d5dd;
+      margin: 0 10px;
+      flex-shrink: 0;
+    }
+
+    /* HERO */
+
+    .hero {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.09);
+      border: 1px solid #c7d7fe;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 13px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 42px;
+      line-height: 1.15;
+      letter-spacing: -1.2px;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    /* NAVIGATION */
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      padding: 10px 15px;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      background: #fff;
+      color: #344054;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .nav-button.next {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* CARD */
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow-md);
+      padding: 28px;
+      margin-bottom: 22px;
+    }
+
+    .card-title {
+      margin: 0 0 5px;
+      font-size: 21px;
+    }
+
+    .card-description {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .context-status {
+      display: none;
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #abefc6;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #344054;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+      font-size: 14px;
+      padding: 13px 14px;
+    }
+
+    textarea {
+      min-height: 170px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    /* OPTIONS */
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    /* ACTIONS */
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 13px 19px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      background: #94a3b8;
+      cursor: wait;
+      transform: none;
+    }
+
+    .secondary {
+      background: #fff;
+      color: #344054;
+      border: 1px solid #d0d5dd;
+    }
+
+    /* STATUS */
+
+    .loading,
+    .error {
+      display: none;
+      margin-top: 15px;
+      padding: 13px 15px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .loading {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: #344054;
+    }
+
+    .error {
+      background: var(--danger-bg);
+      border: 1px solid #fecaca;
+      color: var(--danger);
+    }
+
+    /* RESULTS */
+
+    .result {
+      display: none;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .result-header h2 {
+      margin: 0 0 5px;
+      font-size: 24px;
+    }
+
+    .result-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .count-pill {
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #eef4ff;
+      border: 1px solid #c7d7fe;
+      color: #175cd3;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th,
+    td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475467;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .type-pill {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #eff8ff;
+      color: #175cd3;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .empty {
+      color: #98a2b3;
+      font-style: italic;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 950px) {
+      .options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 650px) {
+      main {
+        margin-top: 25px;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .actions button {
+        width: 100%;
+      }
+
+      .navigation {
+        flex-direction: column;
+      }
+
+      .nav-button {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<main>
+
+  <!-- WORKFLOW -->
+
+  <div class="workflow">
+
+    <div class="workflow-step">
+      <span class="workflow-number">1</span>
+      Requirement
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">2</span>
+      User Story
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">3</span>
+      Acceptance Criteria
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">4</span>
+      UAT Test Cases
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step active">
+      <span class="workflow-number">5</span>
+      Test Data
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">6</span>
+      Process Flow
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">7</span>
+      Traceability
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-number">8</span>
+      BA Document
+    </div>
+
+  </div>
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="badge">
+      Test Data Generator
+    </div>
+
+    <h1>
+      Generate <span>Professional Test Data</span>
+    </h1>
+
+    <p>
+      Create realistic, structured and scenario-focused test data
+      for functional, negative and boundary testing.
+    </p>
+
+  </section>
+
+
+  <!-- NAVIGATION -->
+
+  <div class="navigation">
+
+    <a
+      class="nav-button"
+      href="/uat.html">
+      ← UAT Test Cases
+    </a>
+
+    <a
+      class="nav-button next"
+      href="/process-flow.html">
+      Process Flow →
+    </a>
+
+  </div>
+
+
+  <!-- INPUT -->
+
+  <section class="card">
+
+    <h2 class="card-title">
+      Test Data Context
+    </h2>
+
+    <p class="card-description">
+      Start directly or use context from the previous workflow step.
+      You can edit the context before generating data.
+    </p>
+
+    <div
+      id="contextStatus"
+      class="context-status">
+    </div>
+
+    <label for="context">
+      Requirement / Test Context
+    </label>
+
+    <textarea
+      id="context"
+      placeholder="Example: A customer wants to transfer money to another bank account using an IBAN. The transfer should be completed when the IBAN is valid. Invalid or incomplete IBAN information should be rejected."></textarea>
+
+
+    <div class="options">
+
+      <div>
+        <label for="scenario">
+          Scenario Type
+        </label>
+
+        <select id="scenario">
+          <option value="all">All Scenarios</option>
+          <option value="positive">Positive</option>
+          <option value="negative">Negative</option>
+          <option value="boundary">Boundary</option>
+        </select>
+      </div>
+
+
+      <div>
+        <label for="domain">
+          Data Domain
+        </label>
+
+        <select id="domain">
+          <option value="auto">Auto Detect</option>
+          <option value="banking">Banking / Payments</option>
+          <option value="customer">Customer</option>
+          <option value="api">API / Integration</option>
+          <option value="generic">Generic</option>
+        </select>
+      </div>
+
+
+      <div>
+        <label for="count">
+          Number of Records
+        </label>
+
+        <select id="count">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+        </select>
+      </div>
+
+
+      <div>
+        <label for="language">
+          Output Language
+        </label>
+
+        <select id="language">
+          <option value="en">English</option>
+          <option value="tr">Türkçe</option>
+        </select>
+      </div>
+
+    </div>
+
+
+    <div class="actions">
+
+      <button
+        id="generateButton"
+        type="button">
+        Generate Test Data
+      </button>
+
+      <button
+        id="clearButton"
+        class="secondary"
+        type="button">
+        Clear
+      </button>
+
+    </div>
+
+
+    <div
+      id="loading"
+      class="loading">
+      AI is generating professional test data...
+    </div>
+
+    <div
+      id="error"
+      class="error">
+    </div>
+
+  </section>
+
+
+  <!-- RESULTS -->
+
+  <section
+    id="result"
+    class="card result">
+
+    <div class="result-header">
+
+      <div>
+        <h2>
+          Generated Test Data
+        </h2>
+
+        <p>
+          Structured synthetic data generated from the selected scenarios.
+        </p>
+      </div>
+
+      <div
+        id="countPill"
+        class="count-pill">
+        0 records
+      </div>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead id="tableHead">
+        </thead>
+
+        <tbody id="tableBody">
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <div class="result-actions">
+
+      <button
+        id="copyButton"
+        type="button">
+        Copy Data
+      </button>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<script src="/core/data-model.js"></script>
+
+<script>
+
+const contextEl =
+  document.getElementById("context");
+
+const scenarioEl =
+  document.getElementById("scenario");
+
+const domainEl =
+  document.getElementById("domain");
+
+const countEl =
+  document.getElementById("count");
+
+const languageEl =
+  document.getElementById("language");
+
+const generateButton =
+  document.getElementById("generateButton");
+
+const clearButton =
+  document.getElementById("clearButton");
+
+const copyButton =
+  document.getElementById("copyButton");
+
+const loadingEl =
+  document.getElementById("loading");
+
+const errorEl =
+  document.getElementById("error");
+
+const resultEl =
+  document.getElementById("result");
+
+const tableHead =
+  document.getElementById("tableHead");
+
+const tableBody =
+  document.getElementById("tableBody");
+
+const countPill =
+  document.getElementById("countPill");
+
+const contextStatus =
+  document.getElementById("contextStatus");
+
+
+let generatedRows = [];
+
+
+/* -----------------------------------------
+   HELPERS
+----------------------------------------- */
+
+function escapeHtml(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+function showError(message) {
+
+  errorEl.textContent =
+    message;
+
+  errorEl.style.display =
+    "block";
+
+}
+
+
+function hideError() {
+
+  errorEl.textContent =
+    "";
+
+  errorEl.style.display =
+    "none";
+
+}
+
+
+function getStorage(key) {
+
+  try {
+
+    const value =
+      sessionStorage.getItem(key);
+
+    if (!value) {
+      return null;
+    }
+
+    return JSON.parse(value);
+
+  } catch {
+
+    return null;
+
+  }
+
+}
+
+
+/* -----------------------------------------
+   CONTEXT
+----------------------------------------- */
+
+function stringifyContext(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+
+    return value
+      .map(item =>
+        typeof item === "string"
+          ? item
+          : JSON.stringify(item)
+      )
+      .join("\n");
+
+  }
+
+  if (typeof value === "object") {
+
+    const parts = [];
+
+    if (value.title) {
+      parts.push(
+        `Title: ${value.title}`
+      );
+    }
+
+    if (value.description) {
+      parts.push(
+        `Description: ${value.description}`
+      );
+    }
+
+    if (value.story) {
+      parts.push(
+        `User Story: ${value.story}`
+      );
+    }
+
+    if (value.summary) {
+      parts.push(
+        `Summary: ${value.summary}`
+      );
+    }
+
+    if (value.requirement) {
+      parts.push(
+        `Requirement: ${value.requirement}`
+      );
+    }
+
+    if (value.acceptanceCriteria) {
+
+      parts.push(
+        `Acceptance Criteria:\n${
+          stringifyContext(
+            value.acceptanceCriteria
+          )
+        }`
+      );
+
+    }
+
+    if (value.testCases) {
+
+      parts.push(
+        `Test Cases:\n${
+          stringifyContext(
+            value.testCases
+          )
+        }`
+      );
+
+    }
+
+    return parts.join("\n\n");
+
+  }
+
+  return String(value);
+
+}
+
+
+function loadContext() {
+
+  const keys = [
+    "baforge-uat-generated",
+    "baforge-uat-context",
+    "baforge-current-uat-context",
+    "baforge-current-requirement",
+    "baforge-user-story-context",
+    "baforge-acceptance-criteria-draft"
+  ];
+
+  for (const key of keys) {
+
+    const value =
+      getStorage(key);
+
+    if (!value) {
+      continue;
+    }
+
+    const text =
+      stringifyContext(value);
+
+    if (text.trim()) {
+
+      contextEl.value =
+        text.trim();
+
+      contextStatus.textContent =
+        "✓ Existing BA context loaded. You can edit it before generating test data.";
+
+      contextStatus.style.display =
+        "block";
+
+      return;
+
+    }
+
+  }
+
+}
+
+
+/* -----------------------------------------
+   RESULT NORMALIZATION
+----------------------------------------- */
+
+function normalizeRows(data) {
+
+  if (!data) {
+    return [];
+  }
+
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  if (Array.isArray(data.records)) {
+    return data.records;
+  }
+
+  if (Array.isArray(data.testData)) {
+    return data.testData;
+  }
+
+  if (Array.isArray(data.data)) {
+    return data.data;
+  }
+
+  if (Array.isArray(data.cases)) {
+
+    return data.cases.map(testCase => {
+
+      return {
+        scenario:
+          scenarioEl.value,
+
+        title:
+          testCase.title || "",
+
+        testData:
+          testCase.testData || "",
+
+        expectedPurpose:
+          testCase.expectedResult || ""
+      };
+
+    });
+
+  }
+
+  return [];
+
+}
+
+
+/* -----------------------------------------
+   RENDER
+----------------------------------------- */
+
+function renderRows(rows) {
+
+  generatedRows =
+    rows;
+
+  if (!rows.length) {
+
+    tableHead.innerHTML =
+      "<tr><th>Data</th></tr>";
+
+    tableBody.innerHTML =
+      `<tr>
+        <td class="empty">
+          No structured records were returned.
+        </td>
+      </tr>`;
+
+    countPill.textContent =
+      "0 records";
+
+    return;
+
+  }
+
+
+  const keys = [
+    ...new Set(
+      rows.flatMap(row =>
+        typeof row === "object" &&
+        row !== null
+          ? Object.keys(row)
+          : ["value"]
+      )
+    )
+  ];
+
+
+  tableHead.innerHTML = `
+    <tr>
+      ${keys
+        .map(
+          key =>
+            `<th>${escapeHtml(key)}</th>`
+        )
+        .join("")}
+    </tr>
+  `;
+
+
+  tableBody.innerHTML =
+    rows
+      .map(row => {
+
+        return `
+          <tr>
+            ${keys
+              .map(key => {
+
+                let value =
+                  row?.[key];
+
+                if (
+                  value === undefined ||
+                  value === null
+                ) {
+                  value = "";
+                }
+
+                if (
+                  typeof value === "object"
+                ) {
+
+                  value =
+                    JSON.stringify(
+                      value,
+                      null,
+                      2
+                    );
+
+                }
+
+                return `
+                  <td>
+                    ${escapeHtml(value)}
+                  </td>
+                `;
+
+              })
+              .join("")}
+          </tr>
+        `;
+
+      })
+      .join("");
+
+
+  countPill.textContent =
+    `${rows.length} records`;
+
+}
+
+
+/* -----------------------------------------
+   GENERATE
+----------------------------------------- */
+
+async function generateData() {
+
+  hideError();
+
+  const context =
+    contextEl.value.trim();
+
+  /*
+   * IMPORTANT:
+   * Backend /api/generate expects
+   * "requirement", not "prompt".
+   */
+
+  const words =
+    context
+      .split(/\s+/)
+      .filter(Boolean);
+
+  if (
+    context.length < 15 ||
+    words.length < 3
+  ) {
+
+    showError(
+      languageEl.value === "tr"
+        ? "Lütfen en az 15 karakter ve 3 kelime içeren açık bir gereksinim girin."
+        : "Please provide a clear requirement with at least 15 characters and 3 words."
+    );
+
+    return;
+
+  }
+
+
+  generateButton.disabled =
+    true;
+
+  clearButton.disabled =
+    true;
+
+  loadingEl.style.display =
+    "block";
+
+  resultEl.style.display =
+    "none";
+
+
+  const scenario =
+    scenarioEl.value;
+
+  const domain =
+    domainEl.value;
+
+  const count =
+    Number(countEl.value);
+
+  const language =
+    languageEl.value;
+
+
+  /*
+   * We enrich the requirement sent
+   * to the existing test-generation
+   * endpoint so that generated
+   * test data is related to the
+   * selected domain/scenario.
+   */
+
+  const enrichedRequirement = `
+
+${context}
+
+Test Data Generation Context:
+- Purpose: Generate synthetic test data for QA/UAT testing.
+- Scenario Type: ${scenario}
+- Data Domain: ${domain}
+- Requested Records: ${count}
+- Output Language: ${
+    language === "tr"
+      ? "Turkish"
+      : "English"
+  }
+
+Test Data Rules:
+- Use realistic but synthetic values.
+- Never use real personal data.
+- Keep data directly related to the requirement.
+- For banking/payments, use banking-appropriate synthetic values.
+- Do not introduce unsupported currencies or countries.
+- Do not invent business rules.
+- Negative data must clearly show why it is invalid.
+- Boundary data must clearly represent a boundary condition.
+`;
+
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/generate",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+
+              /*
+               * THIS IS THE FIX.
+               * Previously only "prompt"
+               * was sent.
+               */
+
+              requirement:
+                enrichedRequirement,
+
+              type:
+                "Functional",
+
+              number:
+                count,
+
+              detail:
+                "Professional",
+
+              language:
+                language,
+
+              focus:
+                "All",
+
+              priority:
+                "All"
+
+            })
+        }
+      );
+
+
+    const raw =
+      await response.text();
+
+
+    let data;
+
+    try {
+
+      data =
+        JSON.parse(raw);
+
+    } catch {
+
+      throw new Error(
+        language === "tr"
+          ? "Sunucudan geçersiz bir cevap geldi."
+          : "The server returned an invalid response."
+      );
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        (
+          language === "tr"
+            ? "Test verisi oluşturulamadı."
+            : "Test data generation failed."
+        )
+      );
+
+    }
+
+
+    const rows =
+      normalizeRows(data);
+
+
+    if (!rows.length) {
+
+      throw new Error(
+        language === "tr"
+          ? "Yapılandırılmış test verisi oluşturulamadı."
+          : "No structured test data was returned."
+      );
+
+    }
+
+
+    renderRows(rows);
+
+    resultEl.style.display =
+      "block";
+
+
+    try {
+
+      sessionStorage.setItem(
+        "baforge-test-data",
+
+        JSON.stringify({
+
+          context,
+
+          scenario,
+
+          domain,
+
+          language,
+
+          records:
+            rows,
+
+          generatedAt:
+            new Date().toISOString()
+
+        })
+      );
+
+    } catch {}
+
+
+    resultEl.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      "Test Data error:",
+      error
+    );
+
+    showError(
+      error.message ||
+      (
+        language === "tr"
+          ? "Test verisi oluşturulurken bir hata oluştu."
+          : "Something went wrong while generating test data."
+      )
+    );
+
+  } finally {
+
+    generateButton.disabled =
+      false;
+
+    clearButton.disabled =
+      false;
+
+    loadingEl.style.display =
+      "none";
+
+  }
+
+}
+
+
+/* -----------------------------------------
+   CLEAR
+----------------------------------------- */
+
+function clearForm() {
+
+  contextEl.value =
+    "";
+
+  generatedRows =
+    [];
+
+  resultEl.style.display =
+    "none";
+
+  contextStatus.style.display =
+    "none";
+
+  hideError();
+
+  try {
+
+    sessionStorage.removeItem(
+      "baforge-test-data"
+    );
+
+  } catch {}
+
+  contextEl.focus();
+
+}
+
+
+/* -----------------------------------------
+   COPY
+----------------------------------------- */
+
+async function copyData() {
+
+  if (!generatedRows.length) {
+    return;
+  }
+
+
+  const text =
+    generatedRows
+      .map(row =>
+        Object.entries(row)
+          .map(
+            ([key, value]) =>
+              `${key}: ${
+                typeof value === "object"
+                  ? JSON.stringify(value)
+                  : value
+              }`
+          )
+          .join(" | ")
+      )
+      .join("\n");
+
+
+  try {
+
+    await navigator.clipboard.writeText(
+      text
+    );
+
+    copyButton.textContent =
+      "Copied ✓";
+
+    setTimeout(() => {
+
+      copyButton.textContent =
+        "Copy Data";
+
+    }, 1500);
+
+  } catch {
+
+    showError(
+      languageEl.value === "tr"
+        ? "Veriler kopyalanamadı."
+        : "Unable to copy data."
+    );
+
+  }
+
+}
+
+
+/* -----------------------------------------
+   EVENTS
+----------------------------------------- */
+
+generateButton.addEventListener(
+  "click",
+  generateData
+);
+
+clearButton.addEventListener(
+  "click",
+  clearForm
+);
+
+copyButton.addEventListener(
+  "click",
+  copyData
+);
+
+
+/* -----------------------------------------
+   INIT
+----------------------------------------- */
+
+loadContext();
+
+</script>
+
+<script src="/nav.js"></script>
+
+</body>
+</html>
