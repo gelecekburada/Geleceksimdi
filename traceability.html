@@ -1,1 +1,2852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAForge AI - Traceability Matrix</title>
 
+<style>
+*{
+  box-sizing:border-box;
+}
+
+:root{
+  --primary:#2563eb;
+  --primary-dark:#1d4ed8;
+  --text:#172033;
+  --heading:#101828;
+  --muted:#667085;
+  --border:#e4e7ec;
+  --surface:#ffffff;
+  --background:#f6f8fc;
+  --success:#15803d;
+  --success-bg:#ecfdf3;
+  --danger:#b42318;
+  --danger-bg:#fef2f2;
+  --warning:#b54708;
+  --warning-bg:#fffaeb;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--background);
+  color:var(--text);
+}
+
+main{
+  max-width:1450px;
+  margin:auto;
+  padding:28px 22px 80px;
+}
+
+/* =====================================================
+   WORKFLOW
+===================================================== */
+
+.workflow-wrapper{
+  overflow-x:auto;
+  margin-bottom:28px;
+  padding-bottom:10px;
+}
+
+.workflow{
+  min-width:1050px;
+  display:flex;
+  align-items:center;
+}
+
+.workflow-step{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#98a2b3;
+  font-size:12px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.workflow-dot{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  border:1px solid #d0d5dd;
+}
+
+.workflow-step.active{
+  color:var(--primary);
+}
+
+.workflow-step.active .workflow-dot{
+  color:#fff;
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+.workflow-line{
+  width:38px;
+  height:1px;
+  background:#d0d5dd;
+  margin:0 9px;
+}
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+  margin-bottom:24px;
+}
+
+.badge{
+  display:inline-flex;
+  padding:7px 12px;
+  border-radius:999px;
+  background:#eef4ff;
+  border:1px solid #c7d7fe;
+  color:#175cd3;
+  font-size:11px;
+  font-weight:800;
+  margin-bottom:12px;
+}
+
+.hero h1{
+  margin:0 0 10px;
+  color:var(--heading);
+  font-size:40px;
+  line-height:1.15;
+}
+
+.hero h1 span{
+  color:var(--primary);
+}
+
+.hero p{
+  max-width:850px;
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+/* =====================================================
+   NAV
+===================================================== */
+
+.navigation{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.nav-button{
+  display:inline-flex;
+  padding:10px 15px;
+  border-radius:10px;
+  border:1px solid #d0d5dd;
+  background:#fff;
+  color:#344054;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:700;
+}
+
+.nav-button.next{
+  color:#fff;
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:0 12px 35px rgba(16,24,40,.07);
+  padding:28px;
+  margin-bottom:22px;
+}
+
+.card-header{
+  margin-bottom:20px;
+}
+
+.card-header h2{
+  margin:0 0 5px;
+  color:var(--heading);
+  font-size:21px;
+}
+
+.card-header p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+.summary-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+
+.summary-card{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:17px;
+  background:#fff;
+}
+
+.summary-label{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+}
+
+.summary-value{
+  margin-top:5px;
+  color:var(--heading);
+  font-size:25px;
+  font-weight:800;
+}
+
+.summary-card.success{
+  background:var(--success-bg);
+  border-color:#abefc6;
+}
+
+.summary-card.success .summary-value{
+  color:var(--success);
+}
+
+.summary-card.warning{
+  background:var(--warning-bg);
+  border-color:#fedf89;
+}
+
+.summary-card.warning .summary-value{
+  color:var(--warning);
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.status-banner{
+  display:none;
+  margin-bottom:20px;
+  padding:13px 15px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.status-banner.success{
+  background:var(--success-bg);
+  border:1px solid #abefc6;
+  color:var(--success);
+}
+
+.status-banner.warning{
+  background:var(--warning-bg);
+  border:1px solid #fedf89;
+  color:var(--warning);
+}
+
+/* =====================================================
+   TRACEABILITY CHAIN
+===================================================== */
+
+.chain-wrapper{
+  overflow-x:auto;
+  padding:10px 4px 18px;
+}
+
+.chain{
+  min-width:1050px;
+  display:flex;
+  align-items:center;
+}
+
+.chain-node{
+  min-width:145px;
+  max-width:175px;
+  min-height:105px;
+  padding:15px 12px;
+  border-radius:14px;
+  background:#fff;
+  border:1px solid #d0d5dd;
+  box-shadow:0 4px 12px rgba(16,24,40,.06);
+  text-align:center;
+}
+
+.chain-node.complete{
+  border-color:#86efac;
+  background:#f0fdf4;
+}
+
+.chain-node.partial{
+  border-color:#f5c451;
+  background:#fffbeb;
+}
+
+.chain-node.empty{
+  border-color:#fca5a5;
+  background:#fff7f7;
+}
+
+.chain-number{
+  width:28px;
+  height:28px;
+  margin:0 auto 8px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#eef4ff;
+  color:#175cd3;
+  font-size:11px;
+  font-weight:800;
+}
+
+.chain-title{
+  color:var(--heading);
+  font-size:12px;
+  font-weight:800;
+}
+
+.chain-count{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.chain-status{
+  margin-top:8px;
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.chain-node.complete .chain-status{
+  color:var(--success);
+}
+
+.chain-node.partial .chain-status{
+  color:var(--warning);
+}
+
+.chain-node.empty .chain-status{
+  color:var(--danger);
+}
+
+.chain-arrow{
+  flex:0 0 35px;
+  height:2px;
+  background:#98a2b3;
+  position:relative;
+  margin:0 7px;
+}
+
+.chain-arrow::after{
+  content:"";
+  position:absolute;
+  right:-1px;
+  top:-4px;
+  border-left:7px solid #98a2b3;
+  border-top:5px solid transparent;
+  border-bottom:5px solid transparent;
+}
+
+/* =====================================================
+   MATRIX
+===================================================== */
+
+.matrix-wrapper{
+  overflow-x:auto;
+  border:1px solid var(--border);
+  border-radius:14px;
+}
+
+table{
+  width:100%;
+  min-width:1150px;
+  border-collapse:collapse;
+}
+
+th,
+td{
+  padding:13px 14px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  vertical-align:top;
+  font-size:12px;
+}
+
+th{
+  background:#f8fafc;
+  color:#475467;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+tr:last-child td{
+  border-bottom:0;
+}
+
+.artifact-id{
+  color:#175cd3;
+  font-weight:800;
+}
+
+.artifact-title{
+  color:var(--heading);
+  font-weight:700;
+}
+
+.link-cell{
+  color:#344054;
+}
+
+.linked{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 8px;
+  border-radius:7px;
+  background:#f0fdf4;
+  border:1px solid #bbf7d0;
+  color:var(--success);
+  font-size:10px;
+  font-weight:800;
+}
+
+.not-linked{
+  display:inline-flex;
+  align-items:center;
+  padding:5px 8px;
+  border-radius:7px;
+  background:#fff7f7;
+  border:1px solid #fecaca;
+  color:var(--danger);
+  font-size:10px;
+  font-weight:800;
+}
+
+/* =====================================================
+   COVERAGE
+===================================================== */
+
+.coverage-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.coverage-block{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+}
+
+.coverage-block h3{
+  margin:0 0 15px;
+  font-size:16px;
+  color:var(--heading);
+}
+
+.coverage-row{
+  margin-bottom:15px;
+}
+
+.coverage-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:7px;
+  color:#344054;
+  font-size:12px;
+  font-weight:700;
+}
+
+.progress{
+  height:9px;
+  border-radius:999px;
+  background:#eaecf0;
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  border-radius:999px;
+  background:var(--primary);
+}
+
+.progress-bar.success{
+  background:#16a34a;
+}
+
+.progress-bar.warning{
+  background:#f59e0b;
+}
+
+/* =====================================================
+   GAPS
+===================================================== */
+
+.gap-list{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.gap-item{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:12px;
+  border:1px solid #fed7aa;
+  border-radius:10px;
+  background:#fffaf0;
+}
+
+.gap-icon{
+  width:24px;
+  height:24px;
+  flex:0 0 24px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fef3c7;
+  color:var(--warning);
+  font-size:11px;
+  font-weight:800;
+}
+
+.gap-content{
+  color:#475467;
+  font-size:12px;
+}
+
+.gap-content strong{
+  display:block;
+  margin-bottom:2px;
+  color:#344054;
+}
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:22px;
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:12px 18px;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:#fff;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+button.secondary{
+  background:#fff;
+  color:#344054;
+  border:1px solid #d0d5dd;
+}
+
+button.success{
+  background:#15803d;
+}
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.empty-state{
+  padding:35px 20px;
+  border:1px dashed #d0d5dd;
+  border-radius:13px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* =====================================================
+   FINAL NAV
+===================================================== */
+
+.final-actions{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:24px;
+}
+
+.final-actions a{
+  display:inline-flex;
+  padding:11px 16px;
+  border-radius:10px;
+  border:1px solid #d0d5dd;
+  background:#fff;
+  color:#344054;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:700;
+}
+
+.final-actions a.next{
+  color:#fff;
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:950px){
+
+  .summary-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .coverage-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:650px){
+
+  main{
+    padding:20px 14px 60px;
+  }
+
+  .hero h1{
+    font-size:30px;
+  }
+
+  .summary-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .navigation,
+  .final-actions{
+    flex-direction:column;
+  }
+
+  .nav-button,
+  .final-actions a{
+    width:100%;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<main>
+
+<!-- =====================================================
+     WORKFLOW
+===================================================== -->
+
+<div class="workflow-wrapper">
+
+  <div class="workflow">
+
+    <div class="workflow-step">
+      <span class="workflow-dot">1</span>
+      Requirement
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-dot">2</span>
+      User Story
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-dot">3</span>
+      Acceptance Criteria
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-dot">4</span>
+      UAT Test Cases
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-dot">5</span>
+      Test Data
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-dot">6</span>
+      Process Flow
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step active">
+      <span class="workflow-dot">7</span>
+      Traceability
+    </div>
+
+    <div class="workflow-line"></div>
+
+    <div class="workflow-step">
+      <span class="workflow-dot">8</span>
+      BA Document
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+  <div class="badge">
+    Traceability Matrix
+  </div>
+
+  <h1>
+    Connect Requirements to
+    <span>Delivery Artifacts</span>
+  </h1>
+
+  <p>
+    Trace the relationship between requirements, user stories,
+    acceptance criteria, test cases, test data and process flows
+    in one structured view.
+  </p>
+
+</section>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<div class="navigation">
+
+  <a
+    class="nav-button"
+    href="/process-flow.html">
+    ← Process Flow
+  </a>
+
+  <a
+    class="nav-button next"
+    href="/document.html">
+    BA Document →
+  </a>
+
+</div>
+
+
+<!-- =====================================================
+     STATUS
+===================================================== -->
+
+<div
+  id="statusBanner"
+  class="status-banner">
+</div>
+
+
+<!-- =====================================================
+     SUMMARY
+===================================================== -->
+
+<section class="card">
+
+  <div class="card-header">
+
+    <h2>
+      Traceability Overview
+    </h2>
+
+    <p>
+      Current workflow coverage based on available workspace artifacts.
+    </p>
+
+  </div>
+
+  <div class="summary-grid">
+
+    <div class="summary-card">
+
+      <div class="summary-label">
+        Requirements
+      </div>
+
+      <div
+        id="requirementCount"
+        class="summary-value">
+        0
+      </div>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <div class="summary-label">
+        User Stories
+      </div>
+
+      <div
+        id="userStoryCount"
+        class="summary-value">
+        0
+      </div>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <div class="summary-label">
+        Acceptance Criteria
+      </div>
+
+      <div
+        id="acCount"
+        class="summary-value">
+        0
+      </div>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <div class="summary-label">
+        Test Cases
+      </div>
+
+      <div
+        id="testCaseCount"
+        class="summary-value">
+        0
+      </div>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <div class="summary-label">
+        Test Data
+      </div>
+
+      <div
+        id="testDataCount"
+        class="summary-value">
+        0
+      </div>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <div class="summary-label">
+        Process Flows
+      </div>
+
+      <div
+        id="processFlowCount"
+        class="summary-value">
+        0
+      </div>
+
+    </div>
+
+
+    <div
+      id="coverageSummaryCard"
+      class="summary-card success">
+
+      <div class="summary-label">
+        Coverage
+      </div>
+
+      <div
+        id="coveragePercent"
+        class="summary-value">
+        0%
+      </div>
+
+    </div>
+
+
+    <div
+      id="gapSummaryCard"
+      class="summary-card warning">
+
+      <div class="summary-label">
+        Traceability Gaps
+      </div>
+
+      <div
+        id="gapCount"
+        class="summary-value">
+        0
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     CHAIN
+===================================================== -->
+
+<section class="card">
+
+  <div class="card-header">
+
+    <h2>
+      Traceability Chain
+    </h2>
+
+    <p>
+      The complete BA workflow from requirement to process flow.
+    </p>
+
+  </div>
+
+
+  <div class="chain-wrapper">
+
+    <div
+      id="chain"
+      class="chain">
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     MATRIX
+===================================================== -->
+
+<section class="card">
+
+  <div class="card-header">
+
+    <h2>
+      Traceability Matrix
+    </h2>
+
+    <p>
+      Each row represents an artifact and its connected downstream artifacts.
+    </p>
+
+  </div>
+
+
+  <div
+    id="matrixEmpty"
+    class="empty-state"
+    style="display:none;">
+    No workflow artifacts are available yet.
+  </div>
+
+
+  <div
+    id="matrixWrapper"
+    class="matrix-wrapper">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Requirement
+          </th>
+
+          <th>
+            User Story
+          </th>
+
+          <th>
+            Acceptance Criteria
+          </th>
+
+          <th>
+            UAT Test Cases
+          </th>
+
+          <th>
+            Test Data
+          </th>
+
+          <th>
+            Process Flow
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="matrixBody">
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     COVERAGE
+===================================================== -->
+
+<section class="card">
+
+  <div class="card-header">
+
+    <h2>
+      Coverage Analysis
+    </h2>
+
+    <p>
+      Visibility into how far each requirement has progressed through the workflow.
+    </p>
+
+  </div>
+
+
+  <div class="coverage-grid">
+
+    <div
+      id="coverageByStep"
+      class="coverage-block">
+
+      <h3>
+        Workflow Coverage
+      </h3>
+
+    </div>
+
+
+    <div class="coverage-block">
+
+      <h3>
+        Traceability Gaps
+      </h3>
+
+      <div
+        id="gapList"
+        class="gap-list">
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     ACTIONS
+===================================================== -->
+
+<section class="card">
+
+  <div class="actions">
+
+    <button
+      id="refreshButton"
+      type="button">
+      Refresh Traceability
+    </button>
+
+    <button
+      id="copyButton"
+      type="button">
+      Copy Matrix
+    </button>
+
+    <button
+      id="saveButton"
+      type="button"
+      class="success">
+      Save Traceability
+    </button>
+
+  </div>
+
+
+  <div class="final-actions">
+
+    <a href="/process-flow.html">
+      ← Process Flow
+    </a>
+
+    <a
+      href="/document.html"
+      class="next">
+      Continue to BA Document →
+    </a>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<script src="/core/data-model.js"></script>
+<script src="/core/workflow.js"></script>
+
+<script>
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function parseJSON(value){
+
+  try{
+    return value
+      ? JSON.parse(value)
+      : null;
+  }catch{
+    return null;
+  }
+
+}
+
+
+function readStorage(key){
+
+  try{
+    return parseJSON(
+      sessionStorage.getItem(key)
+    );
+  }catch{
+    return null;
+  }
+
+}
+
+
+function writeStorage(key,value){
+
+  try{
+
+    sessionStorage.setItem(
+      key,
+      JSON.stringify(value)
+    );
+
+  }catch{}
+
+}
+
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+   DATA SOURCES
+===================================================== */
+
+const sources = {
+
+  requirement:[
+    "baforge-current-requirement"
+  ],
+
+  userStory:[
+    "baforge-user-story-context",
+    "baforge-user-story"
+  ],
+
+  acceptanceCriteria:[
+    "baforge-acceptance-criteria-draft",
+    "baforge-acceptance-criteria"
+  ],
+
+  uat:[
+    "baforge-uat-generated",
+    "baforge-uat-context",
+    "baforge-current-uat-context"
+  ],
+
+  testData:[
+    "baforge-test-data"
+  ],
+
+  processFlow:[
+    "baforge-process-flow",
+    "baforge-process-flow-artifact"
+  ]
+
+};
+
+
+/* =====================================================
+   LOAD FIRST AVAILABLE
+===================================================== */
+
+function loadFirst(keys){
+
+  for(
+    const key of keys
+  ){
+
+    const data =
+      readStorage(key);
+
+    if(data)
+      return data;
+
+  }
+
+  return null;
+
+}
+
+
+/* =====================================================
+   NORMALIZE COLLECTION
+===================================================== */
+
+function asArray(value){
+
+  if(!value)
+    return [];
+
+  if(Array.isArray(value))
+    return value;
+
+  if(
+    Array.isArray(
+      value.items
+    )
+  ){
+
+    return value.items;
+
+  }
+
+  if(
+    Array.isArray(
+      value.records
+    )
+  ){
+
+    return value.records;
+
+  }
+
+  if(
+    Array.isArray(
+      value.cases
+    )
+  ){
+
+    return value.cases;
+
+  }
+
+  return [value];
+
+}
+
+
+/* =====================================================
+   BUILD ARTIFACT MODEL
+===================================================== */
+
+function buildArtifacts(){
+
+  const raw = {
+
+    requirement:
+      loadFirst(
+        sources.requirement
+      ),
+
+    userStory:
+      loadFirst(
+        sources.userStory
+      ),
+
+    acceptanceCriteria:
+      loadFirst(
+        sources.acceptanceCriteria
+      ),
+
+    uat:
+      loadFirst(
+        sources.uat
+      ),
+
+    testData:
+      loadFirst(
+        sources.testData
+      ),
+
+    processFlow:
+      loadFirst(
+        sources.processFlow
+      )
+
+  };
+
+
+  const artifacts = {
+
+    requirements:[],
+    userStories:[],
+    acceptanceCriteria:[],
+    testCases:[],
+    testData:[],
+    processFlows:[]
+
+  };
+
+
+  /* REQUIREMENT */
+
+  if(raw.requirement){
+
+    const requirement =
+      raw.requirement.requirement ||
+      raw.requirement;
+
+
+    artifacts.requirements =
+      asArray(
+        requirement
+      );
+
+  }
+
+
+  /* USER STORY */
+
+  if(raw.userStory){
+
+    let stories =
+      raw.userStory.userStories ||
+      raw.userStory.stories ||
+      raw.userStory.result ||
+      raw.userStory;
+
+
+    artifacts.userStories =
+      asArray(stories);
+
+  }
+
+
+  /* ACCEPTANCE CRITERIA */
+
+  if(raw.acceptanceCriteria){
+
+    let criteria =
+      raw.acceptanceCriteria.acceptanceCriteria ||
+      raw.acceptanceCriteria.criteria ||
+      raw.acceptanceCriteria.items ||
+      raw.acceptanceCriteria.result ||
+      raw.acceptanceCriteria;
+
+
+    artifacts.acceptanceCriteria =
+      asArray(criteria);
+
+  }
+
+
+  /* UAT */
+
+  if(raw.uat){
+
+    let cases =
+      raw.uat.cases ||
+      raw.uat.testCases ||
+      raw.uat.generated ||
+      raw.uat.result ||
+      raw.uat;
+
+
+    artifacts.testCases =
+      asArray(cases);
+
+  }
+
+
+  /* TEST DATA */
+
+  if(raw.testData){
+
+    let data =
+      raw.testData.records ||
+      raw.testData.testData ||
+      raw.testData.result ||
+      raw.testData;
+
+
+    artifacts.testData =
+      asArray(data);
+
+  }
+
+
+  /* PROCESS FLOW */
+
+  if(raw.processFlow){
+
+    let flow =
+      raw.processFlow.result ||
+      raw.processFlow.processFlow ||
+      raw.processFlow;
+
+
+    artifacts.processFlows =
+      asArray(flow);
+
+  }
+
+
+  return artifacts;
+
+}
+
+
+/* =====================================================
+   FILTER INVALID OBJECTS
+===================================================== */
+
+function cleanArtifacts(artifacts){
+
+  Object.keys(artifacts)
+    .forEach(
+      key => {
+
+        artifacts[key] =
+          artifacts[key]
+            .filter(
+              item =>
+                item &&
+                typeof item === "object"
+            );
+
+      }
+    );
+
+  return artifacts;
+
+}
+
+
+/* =====================================================
+   COUNTS
+===================================================== */
+
+function getCounts(artifacts){
+
+  return {
+
+    requirements:
+      artifacts.requirements.length,
+
+    userStories:
+      artifacts.userStories.length,
+
+    acceptanceCriteria:
+      artifacts.acceptanceCriteria.length,
+
+    testCases:
+      artifacts.testCases.length,
+
+    testData:
+      artifacts.testData.length,
+
+    processFlows:
+      artifacts.processFlows.length
+
+  };
+
+}
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+function renderSummary(
+  artifacts
+){
+
+  const counts =
+    getCounts(
+      artifacts
+    );
+
+
+  document.getElementById(
+    "requirementCount"
+  ).textContent =
+    counts.requirements;
+
+
+  document.getElementById(
+    "userStoryCount"
+  ).textContent =
+    counts.userStories;
+
+
+  document.getElementById(
+    "acCount"
+  ).textContent =
+    counts.acceptanceCriteria;
+
+
+  document.getElementById(
+    "testCaseCount"
+  ).textContent =
+    counts.testCases;
+
+
+  document.getElementById(
+    "testDataCount"
+  ).textContent =
+    counts.testData;
+
+
+  document.getElementById(
+    "processFlowCount"
+  ).textContent =
+    counts.processFlows;
+
+
+  /*
+   * Six workflow artifact categories.
+   */
+
+  const present =
+    [
+      counts.requirements,
+      counts.userStories,
+      counts.acceptanceCriteria,
+      counts.testCases,
+      counts.testData,
+      counts.processFlows
+    ]
+    .filter(
+      count =>
+        count > 0
+    )
+    .length;
+
+
+  const coverage =
+    Math.round(
+      (
+        present / 6
+      ) * 100
+    );
+
+
+  document.getElementById(
+    "coveragePercent"
+  ).textContent =
+    coverage + "%";
+
+
+  const gaps =
+    6 - present;
+
+
+  document.getElementById(
+    "gapCount"
+  ).textContent =
+    gaps;
+
+
+  const coverageCard =
+    document.getElementById(
+      "coverageSummaryCard"
+    );
+
+
+  const gapCard =
+    document.getElementById(
+      "gapSummaryCard"
+    );
+
+
+  coverageCard.className =
+    "summary-card " +
+    (
+      coverage === 100
+        ? "success"
+        : "warning"
+    );
+
+
+  gapCard.className =
+    "summary-card " +
+    (
+      gaps === 0
+        ? "success"
+        : "warning"
+    );
+
+}
+
+
+/* =====================================================
+   CHAIN
+===================================================== */
+
+function renderChain(
+  artifacts
+){
+
+  const chain =
+    document.getElementById(
+      "chain"
+    );
+
+
+  const items = [
+
+    {
+      title:"Requirement",
+      count:
+        artifacts.requirements.length
+    },
+
+    {
+      title:"User Story",
+      count:
+        artifacts.userStories.length
+    },
+
+    {
+      title:"Acceptance Criteria",
+      count:
+        artifacts.acceptanceCriteria.length
+    },
+
+    {
+      title:"UAT Test Cases",
+      count:
+        artifacts.testCases.length
+    },
+
+    {
+      title:"Test Data",
+      count:
+        artifacts.testData.length
+    },
+
+    {
+      title:"Process Flow",
+      count:
+        artifacts.processFlows.length
+    }
+
+  ];
+
+
+  let html = "";
+
+
+  items.forEach(
+    (item,index) => {
+
+      let state =
+        item.count > 0
+          ? "complete"
+          : "empty";
+
+
+      html += `
+
+        <div class="chain-node ${state}">
+
+          <div class="chain-number">
+            ${index+1}
+          </div>
+
+          <div class="chain-title">
+            ${escapeHtml(
+              item.title
+            )}
+          </div>
+
+          <div class="chain-count">
+            ${item.count}
+            artifact${item.count === 1 ? "" : "s"}
+          </div>
+
+          <div class="chain-status">
+            ${
+              item.count > 0
+                ? "Available"
+                : "Missing"
+            }
+          </div>
+
+        </div>
+
+      `;
+
+
+      if(
+        index <
+        items.length - 1
+      ){
+
+        html += `
+          <div class="chain-arrow"></div>
+        `;
+
+      }
+
+    }
+  );
+
+
+  chain.innerHTML =
+    html;
+
+}
+
+
+/* =====================================================
+   DISPLAY VALUE
+===================================================== */
+
+function artifactId(
+  item,
+  prefix,
+  index
+){
+
+  return (
+    item.id ||
+    item[prefix + "Id"] ||
+    item.testCaseId ||
+    prefix.toUpperCase() +
+    "-" +
+    String(index+1)
+      .padStart(3,"0")
+  );
+
+}
+
+
+function artifactTitle(
+  item,
+  fallback
+){
+
+  return (
+    item.title ||
+    item.name ||
+    item.description ||
+    item.story ||
+    item.question ||
+    fallback
+  );
+
+}
+
+
+/* =====================================================
+   MATRIX
+===================================================== */
+
+function renderMatrix(
+  artifacts
+){
+
+  const body =
+    document.getElementById(
+      "matrixBody"
+    );
+
+
+  const hasAny =
+    Object.values(
+      artifacts
+    ).some(
+      list =>
+        list.length
+    );
+
+
+  if(!hasAny){
+
+    document.getElementById(
+      "matrixWrapper"
+    ).style.display =
+      "none";
+
+    document.getElementById(
+      "matrixEmpty"
+    ).style.display =
+      "block";
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "matrixWrapper"
+  ).style.display =
+    "block";
+
+
+  document.getElementById(
+    "matrixEmpty"
+  ).style.display =
+    "none";
+
+
+  const requirement =
+    artifacts.requirements[0];
+
+
+  const userStory =
+    artifacts.userStories[0];
+
+
+  const ac =
+    artifacts.acceptanceCriteria[0];
+
+
+  const testCase =
+    artifacts.testCases[0];
+
+
+  const testData =
+    artifacts.testData[0];
+
+
+  const processFlow =
+    artifacts.processFlows[0];
+
+
+  body.innerHTML = `
+
+    <tr>
+
+      <td>
+        ${
+          requirement
+            ? `
+              <div class="linked">
+                ✓ Linked
+              </div>
+
+              <div class="artifact-id">
+                ${escapeHtml(
+                  artifactId(
+                    requirement,
+                    "req",
+                    0
+                  )
+                )}
+              </div>
+
+              <div class="artifact-title">
+                ${escapeHtml(
+                  artifactTitle(
+                    requirement,
+                    "Requirement"
+                  )
+                )}
+              </div>
+            `
+            : `
+              <div class="not-linked">
+                Missing
+              </div>
+            `
+        }
+      </td>
+
+
+      <td>
+
+        ${
+          userStory
+            ? `
+              <div class="linked">
+                ✓ Linked
+              </div>
+
+              <div class="artifact-id">
+                ${escapeHtml(
+                  artifactId(
+                    userStory,
+                    "us",
+                    0
+                  )
+                )}
+              </div>
+
+              <div class="artifact-title">
+                ${escapeHtml(
+                  artifactTitle(
+                    userStory,
+                    "User Story"
+                  )
+                )}
+              </div>
+            `
+            : `
+              <div class="not-linked">
+                Missing
+              </div>
+            `
+        }
+
+      </td>
+
+
+      <td>
+
+        ${
+          ac
+            ? `
+              <div class="linked">
+                ✓ Linked
+              </div>
+
+              <div class="artifact-id">
+                ${escapeHtml(
+                  artifactId(
+                    ac,
+                    "ac",
+                    0
+                  )
+                )}
+              </div>
+
+              <div class="artifact-title">
+                ${escapeHtml(
+                  artifactTitle(
+                    ac,
+                    "Acceptance Criterion"
+                  )
+                )}
+              </div>
+            `
+            : `
+              <div class="not-linked">
+                Missing
+              </div>
+            `
+        }
+
+      </td>
+
+
+      <td>
+
+        ${
+          testCase
+            ? `
+              <div class="linked">
+                ✓ Linked
+              </div>
+
+              <div class="artifact-id">
+                ${escapeHtml(
+                  artifactId(
+                    testCase,
+                    "tc",
+                    0
+                  )
+                )}
+              </div>
+
+              <div class="artifact-title">
+                ${escapeHtml(
+                  artifactTitle(
+                    testCase,
+                    "Test Case"
+                  )
+                )}
+              </div>
+            `
+            : `
+              <div class="not-linked">
+                Missing
+              </div>
+            `
+        }
+
+      </td>
+
+
+      <td>
+
+        ${
+          testData
+            ? `
+              <div class="linked">
+                ✓ Available
+              </div>
+
+              <div class="artifact-title">
+                Test Data
+              </div>
+            `
+            : `
+              <div class="not-linked">
+                Missing
+              </div>
+            `
+        }
+
+      </td>
+
+
+      <td>
+
+        ${
+          processFlow
+            ? `
+              <div class="linked">
+                ✓ Available
+              </div>
+
+              <div class="artifact-title">
+                ${escapeHtml(
+                  artifactTitle(
+                    processFlow,
+                    "Process Flow"
+                  )
+                )}
+              </div>
+            `
+            : `
+              <div class="not-linked">
+                Missing
+              </div>
+            `
+        }
+
+      </td>
+
+    </tr>
+
+  `;
+
+}
+
+
+/* =====================================================
+   COVERAGE
+===================================================== */
+
+function renderCoverage(
+  artifacts
+){
+
+  const coverage =
+    document.getElementById(
+      "coverageByStep"
+    );
+
+
+  const steps = [
+
+    {
+      name:"Requirement",
+      count:
+        artifacts.requirements.length
+    },
+
+    {
+      name:"User Story",
+      count:
+        artifacts.userStories.length
+    },
+
+    {
+      name:"Acceptance Criteria",
+      count:
+        artifacts.acceptanceCriteria.length
+    },
+
+    {
+      name:"UAT Test Cases",
+      count:
+        artifacts.testCases.length
+    },
+
+    {
+      name:"Test Data",
+      count:
+        artifacts.testData.length
+    },
+
+    {
+      name:"Process Flow",
+      count:
+        artifacts.processFlows.length
+    }
+
+  ];
+
+
+  const maximum =
+    Math.max(
+      ...steps.map(
+        step =>
+          step.count
+      ),
+      1
+    );
+
+
+  coverage.innerHTML = `
+
+    <h3>
+      Workflow Coverage
+    </h3>
+
+    ${
+      steps.map(
+        step => {
+
+          const percentage =
+            step.count > 0
+              ? Math.max(
+                  12,
+                  Math.round(
+                    (
+                      step.count /
+                      maximum
+                    ) * 100
+                  )
+                )
+              : 0;
+
+
+          return `
+
+            <div class="coverage-row">
+
+              <div class="coverage-top">
+
+                <span>
+                  ${escapeHtml(
+                    step.name
+                  )}
+                </span>
+
+                <span>
+                  ${step.count}
+                </span>
+
+              </div>
+
+              <div class="progress">
+
+                <div
+                  class="progress-bar ${
+                    step.count
+                      ? "success"
+                      : "warning"
+                  }"
+                  style="width:${percentage}%">
+                </div>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      ).join("")
+    }
+
+  `;
+
+}
+
+
+/* =====================================================
+   GAPS
+===================================================== */
+
+function renderGaps(
+  artifacts
+){
+
+  const gaps = [];
+
+
+  if(
+    !artifacts.requirements.length
+  ){
+
+    gaps.push({
+      title:"Requirement is missing",
+      text:
+        "Create or load a Requirement before building full traceability."
+    });
+
+  }
+
+
+  if(
+    !artifacts.userStories.length
+  ){
+
+    gaps.push({
+      title:"User Story is missing",
+      text:
+        "The requirement currently has no visible User Story artifact."
+    });
+
+  }
+
+
+  if(
+    !artifacts.acceptanceCriteria.length
+  ){
+
+    gaps.push({
+      title:"Acceptance Criteria is missing",
+      text:
+        "No Acceptance Criteria artifact is available."
+    });
+
+  }
+
+
+  if(
+    !artifacts.testCases.length
+  ){
+
+    gaps.push({
+      title:"UAT Test Cases are missing",
+      text:
+        "No generated UAT Test Cases are available."
+    });
+
+  }
+
+
+  if(
+    !artifacts.testData.length
+  ){
+
+    gaps.push({
+      title:"Test Data is missing",
+      text:
+        "No Test Data artifact is available."
+    });
+
+  }
+
+
+  if(
+    !artifacts.processFlows.length
+  ){
+
+    gaps.push({
+      title:"Process Flow is missing",
+      text:
+        "No Process Flow artifact is available."
+    });
+
+  }
+
+
+  const list =
+    document.getElementById(
+      "gapList"
+    );
+
+
+  if(!gaps.length){
+
+    list.innerHTML = `
+
+      <div class="gap-item"
+           style="
+             border-color:#abefc6;
+             background:#f0fdf4;
+           ">
+
+        <div
+          class="gap-icon"
+          style="
+            background:#dcfce7;
+            color:#15803d;
+          ">
+          ✓
+        </div>
+
+        <div class="gap-content">
+
+          <strong>
+            No major gaps detected
+          </strong>
+
+          All workflow artifact categories are available.
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    gaps.map(
+      gap => `
+
+        <div class="gap-item">
+
+          <div class="gap-icon">
+            !
+          </div>
+
+          <div class="gap-content">
+
+            <strong>
+              ${escapeHtml(
+                gap.title
+              )}
+            </strong>
+
+            ${escapeHtml(
+              gap.text
+            )}
+
+          </div>
+
+        </div>
+
+      `
+    ).join("");
+
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+function renderStatus(
+  artifacts
+){
+
+  const banner =
+    document.getElementById(
+      "statusBanner"
+    );
+
+
+  const counts =
+    getCounts(
+      artifacts
+    );
+
+
+  const present =
+    Object.values(
+      counts
+    ).filter(
+      count =>
+        count > 0
+    ).length;
+
+
+  banner.style.display =
+    "block";
+
+
+  if(present === 6){
+
+    banner.className =
+      "status-banner success";
+
+    banner.textContent =
+      "✓ Full workflow traceability is available across all current artifact categories.";
+
+  }else{
+
+    banner.className =
+      "status-banner warning";
+
+    banner.textContent =
+      "⚠ Traceability is partially available. Missing artifacts are shown in the gap analysis below.";
+
+  }
+
+}
+
+
+/* =====================================================
+   REFRESH
+===================================================== */
+
+function refreshTraceability(){
+
+  const artifacts =
+    cleanArtifacts(
+      buildArtifacts()
+    );
+
+
+  renderSummary(
+    artifacts
+  );
+
+  renderChain(
+    artifacts
+  );
+
+  renderMatrix(
+    artifacts
+  );
+
+  renderCoverage(
+    artifacts
+  );
+
+  renderGaps(
+    artifacts
+  );
+
+  renderStatus(
+    artifacts
+  );
+
+
+  writeStorage(
+    "baforge-traceability",
+    {
+      artifacts,
+      generatedAt:
+        new Date().toISOString()
+    }
+  );
+
+}
+
+
+/* =====================================================
+   COPY
+===================================================== */
+
+async function copyMatrix(){
+
+  const artifacts =
+    cleanArtifacts(
+      buildArtifacts()
+    );
+
+
+  const lines = [];
+
+  lines.push(
+    "BAForge AI - Traceability Matrix"
+  );
+
+  lines.push(
+    "================================"
+  );
+
+
+  const names = [
+
+    [
+      "Requirement",
+      artifacts.requirements
+    ],
+
+    [
+      "User Story",
+      artifacts.userStories
+    ],
+
+    [
+      "Acceptance Criteria",
+      artifacts.acceptanceCriteria
+    ],
+
+    [
+      "UAT Test Cases",
+      artifacts.testCases
+    ],
+
+    [
+      "Test Data",
+      artifacts.testData
+    ],
+
+    [
+      "Process Flow",
+      artifacts.processFlows
+    ]
+
+  ];
+
+
+  names.forEach(
+    ([name,list]) => {
+
+      lines.push(
+        `${name}: ${list.length}`
+      );
+
+    }
+  );
+
+
+  lines.push(
+    ""
+  );
+
+
+  lines.push(
+    "Traceability Chain:"
+  );
+
+
+  lines.push(
+    "Requirement → User Story → Acceptance Criteria → UAT Test Cases → Test Data → Process Flow"
+  );
+
+
+  try{
+
+    await navigator.clipboard.writeText(
+      lines.join("\n")
+    );
+
+
+    const button =
+      document.getElementById(
+        "copyButton"
+      );
+
+
+    button.textContent =
+      "Copied ✓";
+
+
+    setTimeout(
+      () => {
+
+        button.textContent =
+          "Copy Matrix";
+
+      },
+      1500
+    );
+
+  }catch{
+
+    alert(
+      "Unable to copy traceability matrix."
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SAVE
+===================================================== */
+
+function saveTraceability(){
+
+  const artifacts =
+    cleanArtifacts(
+      buildArtifacts()
+    );
+
+
+  const payload = {
+
+    type:
+      "traceability",
+
+    createdAt:
+      new Date().toISOString(),
+
+    artifacts
+
+  };
+
+
+  writeStorage(
+    "baforge-traceability",
+    payload
+  );
+
+
+  if(
+    window.BADataModel &&
+    window.BADataModel.createTraceabilityLink
+  ){
+
+    try{
+
+      const links = [];
+
+      /*
+       * Create high-level links between
+       * available workflow categories.
+       */
+
+      const pairs = [
+
+        [
+          artifacts.requirements,
+          artifacts.userStories,
+          "requirement",
+          "user_story"
+        ],
+
+        [
+          artifacts.userStories,
+          artifacts.acceptanceCriteria,
+          "user_story",
+          "acceptance_criteria"
+        ],
+
+        [
+          artifacts.acceptanceCriteria,
+          artifacts.testCases,
+          "acceptance_criteria",
+          "uat"
+        ],
+
+        [
+          artifacts.testCases,
+          artifacts.testData,
+          "uat",
+          "test_data"
+        ],
+
+        [
+          artifacts.testData,
+          artifacts.processFlows,
+          "test_data",
+          "process_flow"
+        ]
+
+      ];
+
+
+      pairs.forEach(
+        pair => {
+
+          const [
+            fromList,
+            toList,
+            fromType,
+            toType
+          ] = pair;
+
+
+          if(
+            !fromList.length ||
+            !toList.length
+          )
+            return;
+
+
+          const from =
+            fromList[0];
+
+          const to =
+            toList[0];
+
+
+          try{
+
+            links.push(
+              BADataModel
+                .createTraceabilityLink({
+
+                  sourceId:
+                    from.id ||
+                    null,
+
+                  sourceType:
+                    fromType,
+
+                  targetId:
+                    to.id ||
+                    null,
+
+                  targetType:
+                    toType,
+
+                  relationship:
+                    "supports"
+
+                })
+            );
+
+          }catch{}
+
+        }
+      );
+
+
+      writeStorage(
+        "baforge-traceability-links",
+        links
+      );
+
+    }catch(error){
+
+      console.warn(
+        "Traceability link warning:",
+        error
+      );
+
+    }
+
+  }
+
+
+  const banner =
+    document.getElementById(
+      "statusBanner"
+    );
+
+
+  banner.style.display =
+    "block";
+
+  banner.className =
+    "status-banner success";
+
+  banner.textContent =
+    "✓ Traceability matrix saved to workspace.";
+
+}
+
+
+/* =====================================================
+   EVENTS
+===================================================== */
+
+document
+  .getElementById(
+    "refreshButton"
+  )
+  .addEventListener(
+    "click",
+    refreshTraceability
+  );
+
+
+document
+  .getElementById(
+    "copyButton"
+  )
+  .addEventListener(
+    "click",
+    copyMatrix
+  );
+
+
+document
+  .getElementById(
+    "saveButton"
+  )
+  .addEventListener(
+    "click",
+    saveTraceability
+  );
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+refreshTraceability();
+
+</script>
+
+<script src="/nav.js"></script>
+
+</body>
+</html>
