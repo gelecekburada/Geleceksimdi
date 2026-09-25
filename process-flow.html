@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>BAForge AI - Process Flow Generator</title>
 
 <style>
@@ -39,7 +40,9 @@ main{
   padding:28px 22px 80px;
 }
 
-/* WORKFLOW */
+/* =========================================================
+   WORKFLOW
+========================================================= */
 
 .workflow-wrapper{
   overflow-x:auto;
@@ -91,7 +94,9 @@ main{
   margin:0 9px;
 }
 
-/* HERO */
+/* =========================================================
+   HERO
+========================================================= */
 
 .hero{
   margin-bottom:25px;
@@ -126,7 +131,9 @@ main{
   color:var(--muted);
 }
 
-/* NAV */
+/* =========================================================
+   NAV
+========================================================= */
 
 .navigation{
   display:flex;
@@ -153,7 +160,9 @@ main{
   border-color:var(--primary);
 }
 
-/* CARD */
+/* =========================================================
+   CARD
+========================================================= */
 
 .card{
   background:var(--surface);
@@ -180,7 +189,9 @@ main{
   font-size:13px;
 }
 
-/* CONTEXT */
+/* =========================================================
+   CONTEXT
+========================================================= */
 
 .context-banner{
   display:none;
@@ -201,7 +212,9 @@ main{
   font-weight:500;
 }
 
-/* FORM */
+/* =========================================================
+   FORM
+========================================================= */
 
 .field{
   margin-bottom:18px;
@@ -248,7 +261,9 @@ textarea{
   gap:18px;
 }
 
-/* BUTTONS */
+/* =========================================================
+   BUTTONS
+========================================================= */
 
 .actions{
   display:flex;
@@ -287,7 +302,9 @@ button.success{
   background:#15803d;
 }
 
-/* STATUS */
+/* =========================================================
+   STATUS
+========================================================= */
 
 .status,
 .error{
@@ -311,7 +328,9 @@ button.success{
   color:var(--danger);
 }
 
-/* RESULT */
+/* =========================================================
+   RESULT
+========================================================= */
 
 #resultSection{
   display:none;
@@ -347,7 +366,166 @@ button.success{
   font-weight:800;
 }
 
-/* FLOW */
+/* =========================================================
+   REAL PROCESS GRAPH
+========================================================= */
+
+.flow-wrapper{
+  overflow:auto;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#fbfcfe;
+  padding:20px;
+}
+
+.process-graph{
+  position:relative;
+  min-width:980px;
+  min-height:500px;
+}
+
+.graph-svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  overflow:visible;
+}
+
+.graph-node{
+  position:absolute;
+  width:180px;
+  min-height:70px;
+  padding:12px 14px;
+  border:1px solid #c7d7fe;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 4px 12px rgba(16,24,40,.08);
+  text-align:center;
+  z-index:2;
+}
+
+.graph-node.start,
+.graph-node.end{
+  border-radius:999px;
+  background:#f0fdf4;
+  border-color:#86efac;
+}
+
+.graph-node.start .graph-title,
+.graph-node.end .graph-title{
+  color:var(--success);
+}
+
+.graph-node.step .graph-title{
+  color:#175cd3;
+}
+
+.graph-node.decision{
+  width:150px;
+  height:150px;
+  min-height:150px;
+  border-color:#f5c451;
+  background:var(--warning-bg);
+  transform:rotate(45deg);
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.graph-node.decision .graph-inner{
+  transform:rotate(-45deg);
+  width:110px;
+}
+
+.graph-node.decision .graph-title{
+  color:var(--warning);
+}
+
+.graph-title{
+  font-size:13px;
+  font-weight:800;
+}
+
+.graph-description{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.4;
+}
+
+.graph-label{
+  position:absolute;
+  z-index:4;
+  padding:4px 7px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:800;
+  background:#fff;
+  border:1px solid #d0d5dd;
+}
+
+.graph-label.yes{
+  color:#166534;
+  border-color:#86efac;
+  background:#f0fdf4;
+}
+
+.graph-label.no{
+  color:#991b1b;
+  border-color:#fca5a5;
+  background:#fef2f2;
+}
+
+.graph-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:15px;
+  color:#667085;
+  font-size:11px;
+}
+
+.legend-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.legend-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  border:1px solid #98a2b3;
+}
+
+.legend-dot.decision{
+  background:#fef3c7;
+  border-color:#f5c451;
+}
+
+.legend-dot.success{
+  background:#dcfce7;
+  border-color:#86efac;
+}
+
+.legend-dot.error{
+  background:#fee2e2;
+  border-color:#fca5a5;
+}
+
+/* =========================================================
+   RESULT GRID
+========================================================= */
+
+.result-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-top:20px;
+}
 
 .result-block{
   border:1px solid var(--border);
@@ -360,161 +538,6 @@ button.success{
   margin:0 0 14px;
   color:var(--heading);
   font-size:16px;
-}
-
-.flow-scroll{
-  overflow-x:auto;
-  padding:10px 5px 25px;
-}
-
-.flow-map{
-  min-width:850px;
-}
-
-.flow-row{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  min-height:72px;
-}
-
-.flow-node{
-  min-width:155px;
-  max-width:230px;
-  padding:13px 16px;
-  text-align:center;
-  border:1px solid #c7d7fe;
-  border-radius:13px;
-  background:#f8fbff;
-  box-shadow:0 3px 10px rgba(16,24,40,.06);
-}
-
-.flow-node.start,
-.flow-node.end{
-  border-radius:999px;
-  background:#f0fdf4;
-  border-color:#abefc6;
-}
-
-.flow-node.decision{
-  background:var(--warning-bg);
-  border-color:#fedf89;
-  transform:rotate(45deg);
-  min-width:145px;
-  min-height:145px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.flow-node.decision .decision-inner{
-  transform:rotate(-45deg);
-}
-
-.flow-title{
-  color:#175cd3;
-  font-size:13px;
-  font-weight:800;
-}
-
-.flow-node.start .flow-title,
-.flow-node.end .flow-title{
-  color:var(--success);
-}
-
-.flow-node.decision .flow-title{
-  color:var(--warning);
-}
-
-.flow-desc{
-  margin-top:4px;
-  color:var(--muted);
-  font-size:11px;
-}
-
-.flow-arrow{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-width:65px;
-  color:#667085;
-  font-size:11px;
-  font-weight:800;
-}
-
-.flow-arrow-line{
-  width:42px;
-  height:2px;
-  background:#98a2b3;
-  position:relative;
-}
-
-.flow-arrow-line:after{
-  content:"";
-  position:absolute;
-  right:-1px;
-  top:-4px;
-  border-left:8px solid #98a2b3;
-  border-top:5px solid transparent;
-  border-bottom:5px solid transparent;
-}
-
-.branch-section{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-  margin:8px 0 18px;
-}
-
-.branch{
-  border:1px dashed #d0d5dd;
-  border-radius:13px;
-  padding:15px;
-  background:#fcfcfd;
-}
-
-.branch.yes{
-  border-color:#86efac;
-  background:#f0fdf4;
-}
-
-.branch.no{
-  border-color:#fca5a5;
-  background:#fef2f2;
-}
-
-.branch-label{
-  display:inline-flex;
-  padding:5px 9px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:800;
-  margin-bottom:9px;
-}
-
-.branch.yes .branch-label{
-  background:#dcfce7;
-  color:#166534;
-}
-
-.branch.no .branch-label{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-.branch-text{
-  color:#344054;
-  font-size:13px;
-}
-
-/* GRID */
-
-.result-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-  margin-top:20px;
 }
 
 .result-list{
@@ -536,7 +559,9 @@ button.success{
   color:#175cd3;
 }
 
-/* TABLE */
+/* =========================================================
+   TABLE
+========================================================= */
 
 .table-wrapper{
   overflow-x:auto;
@@ -570,7 +595,9 @@ tr:last-child td{
   border-bottom:0;
 }
 
-/* FINAL */
+/* =========================================================
+   FOOTER
+========================================================= */
 
 .final-actions{
   display:flex;
@@ -597,12 +624,14 @@ tr:last-child td{
   border-color:var(--primary);
 }
 
-/* RESPONSIVE */
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
 @media(max-width:850px){
+
   .input-grid,
-  .result-grid,
-  .branch-section{
+  .result-grid{
     grid-template-columns:1fr;
   }
 
@@ -616,6 +645,7 @@ tr:last-child td{
 }
 
 @media(max-width:600px){
+
   main{
     padding:20px 14px 60px;
   }
@@ -634,6 +664,7 @@ tr:last-child td{
   .final-actions a{
     width:100%;
   }
+
 }
 </style>
 </head>
@@ -645,6 +676,7 @@ tr:last-child td{
 <!-- WORKFLOW -->
 
 <div class="workflow-wrapper">
+
   <div class="workflow">
 
     <div class="workflow-step">
@@ -702,6 +734,7 @@ tr:last-child td{
     </div>
 
   </div>
+
 </div>
 
 
@@ -726,7 +759,7 @@ tr:last-child td{
 </section>
 
 
-<!-- NAVIGATION -->
+<!-- NAV -->
 
 <div class="navigation">
 
@@ -911,7 +944,7 @@ tr:last-child td{
   </div>
 
 
-  <!-- FLOW -->
+  <!-- REAL GRAPH -->
 
   <div class="result-block">
 
@@ -919,11 +952,42 @@ tr:last-child td{
       Process Flow
     </h3>
 
-    <div class="flow-scroll">
+    <div class="flow-wrapper">
 
       <div
-        id="flowMap"
-        class="flow-map">
+        id="processGraph"
+        class="process-graph">
+
+        <svg
+          id="graphSvg"
+          class="graph-svg"
+          aria-hidden="true">
+        </svg>
+
+      </div>
+
+      <div class="graph-legend">
+
+        <div class="legend-item">
+          <span class="legend-dot success"></span>
+          Start / End
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-dot"></span>
+          Process Step
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-dot decision"></span>
+          Decision
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-dot error"></span>
+          Negative / Exception Branch
+        </div>
+
       </div>
 
     </div>
@@ -1001,7 +1065,7 @@ tr:last-child td{
   </div>
 
 
-  <!-- ALTERNATIVE / EXCEPTION -->
+  <!-- FLOWS -->
 
   <div class="result-grid">
 
@@ -1075,8 +1139,11 @@ tr:last-child td{
 <script src="/core/data-model.js"></script>
 <script src="/core/workflow.js"></script>
 
-
 <script>
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
 const processNameEl =
   document.getElementById("processName");
@@ -1111,8 +1178,11 @@ const errorEl =
 const resultSection =
   document.getElementById("resultSection");
 
-const flowMap =
-  document.getElementById("flowMap");
+const processGraph =
+  document.getElementById("processGraph");
+
+const graphSvg =
+  document.getElementById("graphSvg");
 
 const actorsEl =
   document.getElementById("actors");
@@ -1186,12 +1256,10 @@ function readStorage(key){
 function writeStorage(key,value){
 
   try{
-
     sessionStorage.setItem(
       key,
       JSON.stringify(value)
     );
-
   }catch{}
 
 }
@@ -1241,13 +1309,11 @@ function hideError(){
 
 function textFromValue(value){
 
-  if(!value){
+  if(!value)
     return "";
-  }
 
-  if(typeof value === "string"){
+  if(typeof value === "string")
     return value;
-  }
 
   if(Array.isArray(value)){
 
@@ -1266,27 +1332,43 @@ function textFromValue(value){
       parts.push("Title: " + value.title);
 
     if(value.description)
-      parts.push("Description: " + value.description);
+      parts.push(
+        "Description: " +
+        value.description
+      );
 
     if(value.requirement)
-      parts.push("Requirement: " + value.requirement);
+      parts.push(
+        "Requirement: " +
+        value.requirement
+      );
 
     if(value.summary)
-      parts.push("Summary: " + value.summary);
+      parts.push(
+        "Summary: " +
+        value.summary
+      );
 
     if(value.story)
-      parts.push("User Story: " + value.story);
+      parts.push(
+        "User Story: " +
+        value.story
+      );
 
     if(value.acceptanceCriteria)
       parts.push(
         "Acceptance Criteria:\n" +
-        textFromValue(value.acceptanceCriteria)
+        textFromValue(
+          value.acceptanceCriteria
+        )
       );
 
     if(value.cases)
       parts.push(
         "Test Cases:\n" +
-        textFromValue(value.cases)
+        textFromValue(
+          value.cases
+        )
       );
 
     return parts.join("\n\n");
@@ -1362,7 +1444,8 @@ function loadWorkflowContext(){
       "✓ Previous workflow context loaded.";
 
     contextSource.textContent =
-      "Source: " + item.label;
+      "Source: " +
+      item.label;
 
     return;
   }
@@ -1371,7 +1454,7 @@ function loadWorkflowContext(){
 
 
 /* =========================================================
-   NORMALIZE RESPONSE
+   NORMALIZE RESULT
 ========================================================= */
 
 function normalizeResult(data){
@@ -1379,68 +1462,112 @@ function normalizeResult(data){
   const source =
     data?.processFlow ||
     data?.result ||
-    data;
+    data ||
+    {};
+
 
   const steps =
-    Array.isArray(source?.steps)
-      ? source.steps.map((step,index)=>({
+    Array.isArray(source.steps)
+      ? source.steps.map(
+          (step,index)=>({
 
-          id:
-            step.id ||
-            "P" +
-            String(index+1).padStart(2,"0"),
+            id:
+              step.id ||
+              "P" +
+              String(index+1)
+                .padStart(2,"0"),
 
-          title:
-            step.title ||
-            step.name ||
-            "Process Step " + (index+1),
+            title:
+              step.title ||
+              step.name ||
+              "Process Step " +
+              (index+1),
 
-          actor:
-            step.actor || "",
+            actor:
+              step.actor ||
+              "",
 
-          system:
-            step.system || "",
+            system:
+              step.system ||
+              "",
 
-          action:
-            step.action ||
-            step.description ||
-            "",
+            action:
+              step.action ||
+              step.description ||
+              "",
 
-          expectedResult:
-            step.expectedResult ||
-            step.result ||
-            ""
+            expectedResult:
+              step.expectedResult ||
+              step.result ||
+              ""
 
-        }))
+          })
+        )
       : [];
 
 
   const decisions =
-    Array.isArray(source?.decisions)
-      ? source.decisions
+    Array.isArray(source.decisions)
+      ? source.decisions.map(
+          (decision,index)=>({
+
+            id:
+              decision.id ||
+              "D" +
+              String(index+1)
+                .padStart(2,"0"),
+
+            question:
+              decision.question ||
+              decision.condition ||
+              "",
+
+            condition:
+              decision.condition ||
+              decision.question ||
+              "",
+
+            yesLabel:
+              decision.yesLabel ||
+              "YES",
+
+            yesTo:
+              decision.yesTo ||
+              "END",
+
+            noLabel:
+              decision.noLabel ||
+              "NO",
+
+            noTo:
+              decision.noTo ||
+              "END"
+
+          })
+        )
       : [];
 
 
   return {
 
     processName:
-      source?.processName ||
+      source.processName ||
       processNameEl.value.trim() ||
       "Generated Process Flow",
 
     description:
-      source?.description ||
+      source.description ||
       "",
 
     actors:
-      Array.isArray(source?.actors)
+      Array.isArray(source.actors)
         ? source.actors
         : [],
 
     start:
-      source?.start || {
+      source.start || {
         id:"START",
-        label:"Start"
+        label:"START"
       },
 
     steps,
@@ -1448,19 +1575,19 @@ function normalizeResult(data){
     decisions,
 
     alternativeFlows:
-      Array.isArray(source?.alternativeFlows)
+      Array.isArray(source.alternativeFlows)
         ? source.alternativeFlows
         : [],
 
     exceptionFlows:
-      Array.isArray(source?.exceptionFlows)
+      Array.isArray(source.exceptionFlows)
         ? source.exceptionFlows
         : [],
 
     end:
-      source?.end || {
+      source.end || {
         id:"END",
-        label:"End"
+        label:"END"
       }
 
   };
@@ -1469,183 +1596,208 @@ function normalizeResult(data){
 
 
 /* =========================================================
-   FLOW NODE
+   GRAPH ENGINE
 ========================================================= */
 
-function nodeHtml(
-  title,
-  description,
-  type=""
-){
+/*
+ * This renderer follows the actual graph:
+ *
+ * START
+ *   ↓
+ * P01
+ *   ↓
+ * D01
+ *  ↙ ↘
+ * NO  YES
+ * ↓    ↓
+ * END  P02
+ *       ↓
+ *      D02
+ *
+ * It does NOT simply render the AI array in sequence.
+ */
 
-  return `
-    <div class="flow-node ${type}">
+function buildGraph(result){
 
-      <div class="flow-title">
-        ${escapeHtml(title)}
-      </div>
-
-      ${
-        description
-          ? `
-            <div class="flow-desc">
-              ${escapeHtml(description)}
-            </div>
-          `
-          : ""
-      }
-
-    </div>
-  `;
-
-}
-
-
-function arrowHtml(label=""){
-
-  return `
-    <div class="flow-arrow">
-
-      <span>
-        ${label
-          ? escapeHtml(label)
-          : ""}
-
-        <span class="flow-arrow-line"></span>
-      </span>
-
-    </div>
-  `;
-
-}
-
-
-/* =========================================================
-   BRANCHING FLOW
-========================================================= */
-
-function renderFlow(result){
-
-  let html = "";
-
-
-  /*
-   * START
-   */
-
-  html += `
-    <div class="flow-row">
-
-      ${nodeHtml(
-        result.start.label || "START",
-        "Process begins",
-        "start"
-      )}
-
-    </div>
-  `;
-
-
-  /*
-   * Steps + decisions
-   *
-   * The backend supplies decision targets.
-   * We display the decision and its YES/NO branches.
-   */
-
-  const decisionMap =
+  const stepMap =
     new Map(
-      result.decisions.map(
-        decision => [
-          decision.id,
-          decision
-        ]
+      result.steps.map(
+        step => [step.id,step]
       )
     );
 
 
+  const decisionMap =
+    new Map(
+      result.decisions.map(
+        decision => [decision.id,decision]
+      )
+    );
+
+
+  /*
+   * Find which step leads to which decision.
+   *
+   * The backend currently returns decisions in
+   * process order. We map each decision to the
+   * closest preceding step.
+   */
+
+  const orderedDecisions =
+    result.decisions;
+
+
+  const decisionAfterStep =
+    new Map();
+
+
+  orderedDecisions.forEach(
+    (decision,index)=>{
+
+      if(result.steps[index]){
+
+        decisionAfterStep.set(
+          result.steps[index].id,
+          decision
+        );
+
+      }
+
+    }
+  );
+
+
+  const nodes = new Map();
+  const edges = [];
+
+
+  nodes.set(
+    "START",
+    {
+      id:"START",
+      type:"start",
+      title:
+        result.start.label ||
+        "START",
+      description:
+        "Process begins"
+    }
+  );
+
+
+  result.steps.forEach(
+    step=>{
+
+      nodes.set(
+        step.id,
+        {
+          id:step.id,
+          type:"step",
+          title:step.title,
+          description:
+            step.actor ||
+            step.system ||
+            step.action
+        }
+      );
+
+    }
+  );
+
+
+  result.decisions.forEach(
+    decision=>{
+
+      nodes.set(
+        decision.id,
+        {
+          id:decision.id,
+          type:"decision",
+          title:
+            decision.question ||
+            decision.condition ||
+            "Decision",
+          description:""
+        }
+      );
+
+    }
+  );
+
+
+  nodes.set(
+    "END",
+    {
+      id:"END",
+      type:"end",
+      title:
+        result.end.label ||
+        "END",
+      description:
+        "Process completed"
+    }
+  );
+
+
+  /*
+   * Main path:
+   * START → first step
+   */
+
+  if(result.steps.length){
+
+    edges.push({
+      from:"START",
+      to:result.steps[0].id,
+      label:""
+    });
+
+  }else{
+
+    edges.push({
+      from:"START",
+      to:"END",
+      label:""
+    });
+
+  }
+
+
+  /*
+   * Step → decision or next step.
+   */
+
   result.steps.forEach(
     (step,index)=>{
 
-      html += `
-        <div class="flow-row">
-
-          ${nodeHtml(
-            step.title,
-            step.actor ||
-            step.system ||
-            step.action,
-            ""
-          )}
-
-        </div>
-      `;
-
-
       const decision =
-        result.decisions[index];
+        decisionAfterStep.get(
+          step.id
+        );
 
 
       if(decision){
 
-        html += `
-          <div class="flow-row">
+        edges.push({
+          from:step.id,
+          to:decision.id,
+          label:""
+        });
 
-            ${nodeHtml(
-              decision.question ||
-              decision.condition ||
-              "Decision",
-              "",
-              "decision"
-            )}
+      }else{
 
-          </div>
+        const next =
+          result.steps[index+1];
 
-          <div class="branch-section">
+        if(next){
 
-            <div class="branch yes">
+          edges.push({
+            from:step.id,
+            to:next.id,
+            label:""
+          });
 
-              <div class="branch-label">
-                YES
-              </div>
-
-              <div class="branch-text">
-                ${
-                  escapeHtml(
-                    "→ " +
-                    getTargetLabel(
-                      decision.yesTo,
-                      result
-                    )
-                  )
-                }
-              </div>
-
-            </div>
-
-
-            <div class="branch no">
-
-              <div class="branch-label">
-                NO
-              </div>
-
-              <div class="branch-text">
-                ${
-                  escapeHtml(
-                    "→ " +
-                    getTargetLabel(
-                      decision.noTo,
-                      result
-                    )
-                  )
-                }
-              </div>
-
-            </div>
-
-          </div>
-        `;
+        }
 
       }
 
@@ -1654,48 +1806,696 @@ function renderFlow(result){
 
 
   /*
-   * END
+   * Decision branches.
    */
 
-  html += `
-    <div class="flow-row">
+  result.decisions.forEach(
+    decision=>{
 
-      ${nodeHtml(
-        result.end.label || "END",
-        "Process completed",
-        "end"
-      )}
+      edges.push({
+        from:decision.id,
+        to:decision.yesTo || "END",
+        label:
+          decision.yesLabel ||
+          "YES",
+        branch:"yes"
+      });
 
-    </div>
-  `;
+
+      edges.push({
+        from:decision.id,
+        to:decision.noTo || "END",
+        label:
+          decision.noLabel ||
+          "NO",
+        branch:"no"
+      });
+
+    }
+  );
 
 
-  flowMap.innerHTML =
-    html;
+  return {
+    nodes,
+    edges,
+    stepMap,
+    decisionMap
+  };
 
 }
 
 
-function getTargetLabel(
-  target,
-  result
-){
+/* =========================================================
+   GRAPH LAYOUT
+========================================================= */
 
-  if(target === "END"){
-    return "END";
-  }
+function layoutGraph(graph){
 
-  const step =
-    result.steps.find(
-      item =>
-        item.id === target
+  const nodes =
+    [...graph.nodes.values()];
+
+  const edges =
+    graph.edges;
+
+
+  const outgoing =
+    new Map();
+
+  nodes.forEach(
+    node=>{
+      outgoing.set(
+        node.id,
+        edges.filter(
+          edge =>
+            edge.from === node.id
+        )
+      );
+    }
+  );
+
+
+  /*
+   * Assign graph levels using BFS.
+   */
+
+  const levels =
+    new Map();
+
+  levels.set(
+    "START",
+    0
+  );
+
+
+  const queue =
+    ["START"];
+
+
+  while(queue.length){
+
+    const current =
+      queue.shift();
+
+    const currentLevel =
+      levels.get(current);
+
+
+    const nextEdges =
+      outgoing.get(current) ||
+      [];
+
+
+    nextEdges.forEach(
+      edge=>{
+
+        if(!levels.has(edge.to)){
+
+          levels.set(
+            edge.to,
+            currentLevel + 1
+          );
+
+          queue.push(
+            edge.to
+          );
+
+        }
+
+      }
     );
 
-  if(step){
-    return `${step.id} - ${step.title}`;
   }
 
-  return target || "END";
+
+  /*
+   * Nodes that were not reachable from START
+   * still need a position.
+   */
+
+  nodes.forEach(
+    node=>{
+
+      if(!levels.has(node.id)){
+
+        levels.set(
+          node.id,
+          1
+        );
+
+      }
+
+    }
+  );
+
+
+  const grouped =
+    new Map();
+
+
+  nodes.forEach(
+    node=>{
+
+      const level =
+        levels.get(node.id);
+
+      if(!grouped.has(level)){
+        grouped.set(
+          level,
+          []
+        );
+      }
+
+      grouped
+        .get(level)
+        .push(node);
+
+    }
+  );
+
+
+  const levelCount =
+    Math.max(
+      ...[...grouped.keys()],
+      0
+    );
+
+
+  const columnWidth = 245;
+  const rowHeight = 190;
+
+  const width =
+    Math.max(
+      980,
+      (levelCount + 1) *
+      columnWidth +
+      180
+    );
+
+
+  let maxRows = 1;
+
+
+  grouped.forEach(
+    items=>{
+
+      maxRows =
+        Math.max(
+          maxRows,
+          items.length
+        );
+
+    }
+  );
+
+
+  const height =
+    Math.max(
+      500,
+      maxRows *
+      rowHeight +
+      130
+    );
+
+
+  /*
+   * Important:
+   * Horizontal flow is easier to read on desktop.
+   *
+   * Each graph level is a column.
+   * Branches occupy different vertical positions.
+   */
+
+  const positions =
+    new Map();
+
+
+  grouped.forEach(
+    (items,level)=>{
+
+      const totalHeight =
+        items.length *
+        rowHeight;
+
+
+      const startY =
+        Math.max(
+          60,
+          (height -
+            totalHeight) / 2
+        );
+
+
+      items.forEach(
+        (node,index)=>{
+
+          const x =
+            level *
+            columnWidth +
+            35;
+
+          const y =
+            startY +
+            index *
+            rowHeight;
+
+
+          positions.set(
+            node.id,
+            {
+              x,
+              y
+            }
+          );
+
+        }
+      );
+
+    }
+  );
+
+
+  return {
+    positions,
+    width,
+    height
+  };
+
+}
+
+
+/* =========================================================
+   DRAW SVG EDGE
+========================================================= */
+
+function drawEdge(
+  svg,
+  fromPosition,
+  toPosition,
+  fromNode,
+  toNode,
+  branch
+){
+
+  const startX =
+    fromPosition.x +
+    180;
+
+  const startY =
+    fromPosition.y +
+    35;
+
+
+  const endX =
+    toPosition.x;
+
+  const endY =
+    toPosition.y +
+    35;
+
+
+  const midX =
+    startX +
+    (endX -
+      startX) / 2;
+
+
+  const color =
+    branch === "yes"
+      ? "#16a34a"
+      : branch === "no"
+        ? "#dc2626"
+        : "#98a2b3";
+
+
+  const markerId =
+    branch === "yes"
+      ? "arrowYes"
+      : branch === "no"
+        ? "arrowNo"
+        : "arrowDefault";
+
+
+  const path =
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+
+
+  path.setAttribute(
+    "d",
+    `
+      M ${startX} ${startY}
+      C ${midX} ${startY},
+        ${midX} ${endY},
+        ${endX} ${endY}
+    `
+  );
+
+
+  path.setAttribute(
+    "fill",
+    "none"
+  );
+
+
+  path.setAttribute(
+    "stroke",
+    color
+  );
+
+
+  path.setAttribute(
+    "stroke-width",
+    "2"
+  );
+
+
+  path.setAttribute(
+    "marker-end",
+    `url(#${markerId})`
+  );
+
+
+  svg.appendChild(
+    path
+  );
+
+
+  /*
+   * Branch label
+   */
+
+  if(branch){
+
+    const label =
+      document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text"
+      );
+
+
+    label.setAttribute(
+      "x",
+      String(
+        midX
+      )
+    );
+
+
+    label.setAttribute(
+      "y",
+      String(
+        (startY +
+          endY) / 2 -
+          6
+      )
+    );
+
+
+    label.setAttribute(
+      "text-anchor",
+      "middle"
+    );
+
+
+    label.setAttribute(
+      "font-size",
+      "11"
+    );
+
+
+    label.setAttribute(
+      "font-weight",
+      "700"
+    );
+
+
+    label.setAttribute(
+      "fill",
+      color
+    );
+
+
+    label.textContent =
+      branch.toUpperCase();
+
+
+    svg.appendChild(
+      label
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDER GRAPH
+========================================================= */
+
+function renderGraph(result){
+
+  const graph =
+    buildGraph(result);
+
+  const layout =
+    layoutGraph(graph);
+
+
+  processGraph.style.width =
+    layout.width +
+    "px";
+
+  processGraph.style.height =
+    layout.height +
+    "px";
+
+
+  graphSvg.setAttribute(
+    "viewBox",
+    `0 0 ${layout.width} ${layout.height}`
+  );
+
+
+  graphSvg.setAttribute(
+    "width",
+    layout.width
+  );
+
+
+  graphSvg.setAttribute(
+    "height",
+    layout.height
+  );
+
+
+  graphSvg.innerHTML = `
+    <defs>
+
+      <marker
+        id="arrowDefault"
+        markerWidth="8"
+        markerHeight="8"
+        refX="7"
+        refY="4"
+        orient="auto">
+
+        <path
+          d="M0,0 L8,4 L0,8 Z"
+          fill="#98a2b3">
+        </path>
+
+      </marker>
+
+
+      <marker
+        id="arrowYes"
+        markerWidth="8"
+        markerHeight="8"
+        refX="7"
+        refY="4"
+        orient="auto">
+
+        <path
+          d="M0,0 L8,4 L0,8 Z"
+          fill="#16a34a">
+        </path>
+
+      </marker>
+
+
+      <marker
+        id="arrowNo"
+        markerWidth="8"
+        markerHeight="8"
+        refX="7"
+        refY="4"
+        orient="auto">
+
+        <path
+          d="M0,0 L8,4 L0,8 Z"
+          fill="#dc2626">
+        </path>
+
+      </marker>
+
+    </defs>
+  `;
+
+
+  /*
+   * Draw edges first.
+   */
+
+  graph.edges.forEach(
+    edge=>{
+
+      const fromPosition =
+        layout.positions.get(
+          edge.from
+        );
+
+      const toPosition =
+        layout.positions.get(
+          edge.to
+        );
+
+
+      if(
+        !fromPosition ||
+        !toPosition
+      ){
+        return;
+      }
+
+
+      const fromNode =
+        graph.nodes.get(
+          edge.from
+        );
+
+      const toNode =
+        graph.nodes.get(
+          edge.to
+        );
+
+
+      drawEdge(
+        graphSvg,
+        fromPosition,
+        toPosition,
+        fromNode,
+        toNode,
+        edge.branch
+      );
+
+    }
+  );
+
+
+  /*
+   * Remove old HTML nodes.
+   */
+
+  processGraph
+    .querySelectorAll(
+      ".graph-node"
+    )
+    .forEach(
+      node =>
+        node.remove()
+    );
+
+
+  /*
+   * Render nodes.
+   */
+
+  graph.nodes.forEach(
+    node=>{
+
+      const position =
+        layout.positions.get(
+          node.id
+        );
+
+
+      if(!position)
+        return;
+
+
+      const element =
+        document.createElement(
+          "div"
+        );
+
+
+      element.className =
+        "graph-node " +
+        node.type;
+
+
+      element.style.left =
+        position.x +
+        "px";
+
+
+      element.style.top =
+        position.y +
+        "px";
+
+
+      if(node.type === "decision"){
+
+        element.innerHTML = `
+
+          <div class="graph-inner">
+
+            <div class="graph-title">
+              ${escapeHtml(
+                node.title
+              )}
+            </div>
+
+          </div>
+
+        `;
+
+      }else{
+
+        element.innerHTML = `
+
+          <div class="graph-title">
+            ${escapeHtml(
+              node.title
+            )}
+          </div>
+
+          ${
+            node.description
+              ? `
+                <div class="graph-description">
+                  ${escapeHtml(
+                    node.description
+                  )}
+                </div>
+              `
+              : ""
+          }
+
+        `;
+
+      }
+
+
+      processGraph.appendChild(
+        element
+      );
+
+    }
+  );
+
 }
 
 
@@ -1745,6 +2545,7 @@ function renderList(
           `;
 
         }
+
 
         return `
           <div class="result-item">
@@ -1801,11 +2602,15 @@ function renderSteps(steps){
           </td>
 
           <td>
-            ${escapeHtml(step.action)}
+            ${escapeHtml(
+              step.action
+            )}
           </td>
 
           <td>
-            ${escapeHtml(step.expectedResult)}
+            ${escapeHtml(
+              step.expectedResult
+            )}
           </td>
 
         </tr>
@@ -1825,6 +2630,7 @@ function renderResult(result){
   currentResult =
     result;
 
+
   document.getElementById(
     "resultTitle"
   ).textContent =
@@ -1838,7 +2644,7 @@ function renderResult(result){
     "Structured business process generated from the supplied context.";
 
 
-  renderFlow(result);
+  renderGraph(result);
 
 
   renderList(
@@ -1934,11 +2740,6 @@ async function generateProcessFlow(){
 
   try{
 
-    /*
-     * IMPORTANT:
-     * Dedicated Process Flow API.
-     */
-
     const response =
       await fetch(
         "/api/process-flow",
@@ -1995,11 +2796,7 @@ async function generateProcessFlow(){
 
       throw new Error(
         data.error ||
-        (
-          languageEl.value === "tr"
-            ? "Process Flow oluşturulamadı."
-            : "Process Flow generation failed."
-        )
+        "Process Flow generation failed."
       );
 
     }
@@ -2118,10 +2915,6 @@ function saveToWorkspace(){
   );
 
 
-  /*
-   * Foundation integration.
-   */
-
   if(
     window.BADataModel &&
     window.BAWorkflow
@@ -2211,9 +3004,11 @@ async function copyProcessFlow(){
       currentResult.actors
         .map(
           (x,i)=>
-            `${i+1}. ${typeof x==="string"
-              ? x
-              : JSON.stringify(x)}`
+            `${i+1}. ${
+              typeof x === "string"
+                ? x
+                : JSON.stringify(x)
+            }`
         )
         .join("\n")
     );
@@ -2231,9 +3026,15 @@ async function copyProcessFlow(){
 
       lines.push(
         `${step.id}. ${step.title}\n` +
-        `Actor/System: ${step.actor || step.system}\n` +
+        `Actor/System: ${
+          step.actor ||
+          step.system ||
+          ""
+        }\n` +
         `Action: ${step.action}\n` +
-        `Expected Result: ${step.expectedResult}`
+        `Expected Result: ${
+          step.expectedResult
+        }`
       );
 
     }
@@ -2251,9 +3052,15 @@ async function copyProcessFlow(){
       decision=>{
 
         lines.push(
-          `${decision.id}. ${decision.question}\n` +
-          `YES → ${decision.yesTo}\n` +
-          `NO → ${decision.noTo}`
+          `${decision.id}. ${
+            decision.question
+          }\n` +
+          `YES → ${
+            decision.yesTo
+          }\n` +
+          `NO → ${
+            decision.noTo
+          }`
         );
 
       }
@@ -2273,7 +3080,11 @@ async function copyProcessFlow(){
       item=>{
 
         lines.push(
-          `${item.id}: ${item.trigger} → ${item.path}`
+          `${item.id}: ${
+            item.trigger
+          } → ${
+            item.path
+          }`
         );
 
       }
@@ -2293,7 +3104,11 @@ async function copyProcessFlow(){
       item=>{
 
         lines.push(
-          `${item.id}: ${item.trigger} → ${item.path}`
+          `${item.id}: ${
+            item.trigger
+          } → ${
+            item.path
+          }`
         );
 
       }
@@ -2356,6 +3171,7 @@ function clearForm(){
   hideStatus();
   hideError();
 
+
   try{
 
     sessionStorage.removeItem(
@@ -2363,6 +3179,7 @@ function clearForm(){
     );
 
   }catch{}
+
 
   processNameEl.focus();
 
