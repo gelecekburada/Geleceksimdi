@@ -1,0 +1,2932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BAForge AI - BA Document</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+:root{
+  --primary:#2563eb;
+  --primary-dark:#1d4ed8;
+  --text:#172033;
+  --heading:#101828;
+  --muted:#667085;
+  --border:#e4e7ec;
+  --surface:#ffffff;
+  --background:#f6f8fc;
+  --success:#15803d;
+  --success-bg:#ecfdf3;
+  --warning:#b54708;
+  --warning-bg:#fffaeb;
+  --danger:#b42318;
+  --danger-bg:#fef2f2;
+}
+
+body{
+  margin:0;
+  background:var(--background);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+main{
+  max-width:1450px;
+  margin:auto;
+  padding:28px 22px 70px;
+}
+
+/* WORKFLOW */
+
+.workflow-wrapper{
+  overflow-x:auto;
+  margin-bottom:25px;
+  padding-bottom:8px;
+}
+
+.workflow{
+  min-width:1050px;
+  display:flex;
+  align-items:center;
+}
+
+.workflow-step{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  white-space:nowrap;
+  color:#98a2b3;
+  font-size:12px;
+  font-weight:700;
+}
+
+.workflow-step.active{
+  color:var(--primary);
+}
+
+.workflow-dot{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  border:1px solid #d0d5dd;
+}
+
+.workflow-step.active .workflow-dot{
+  color:#fff;
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+.workflow-line{
+  width:35px;
+  height:1px;
+  background:#d0d5dd;
+  margin:0 8px;
+}
+
+/* HERO */
+
+.hero{
+  margin-bottom:20px;
+}
+
+.badge{
+  display:inline-block;
+  padding:7px 11px;
+  border-radius:999px;
+  background:#eef4ff;
+  border:1px solid #c7d7fe;
+  color:#175cd3;
+  font-size:11px;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.hero h1{
+  margin:0 0 8px;
+  color:var(--heading);
+  font-size:38px;
+  line-height:1.15;
+}
+
+.hero h1 span{
+  color:var(--primary);
+}
+
+.hero p{
+  max-width:900px;
+  margin:0;
+  color:var(--muted);
+  line-height:1.55;
+}
+
+/* NAV */
+
+.navigation{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.nav-button{
+  display:inline-flex;
+  padding:10px 15px;
+  border-radius:10px;
+  border:1px solid #d0d5dd;
+  background:#fff;
+  color:#344054;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:700;
+}
+
+.nav-button.next{
+  color:#fff;
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+/* STATUS */
+
+.status{
+  display:none;
+  padding:13px 15px;
+  border-radius:10px;
+  margin-bottom:18px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.status.success{
+  display:block;
+  color:var(--success);
+  background:var(--success-bg);
+  border:1px solid #abefc6;
+}
+
+.status.warning{
+  display:block;
+  color:var(--warning);
+  background:var(--warning-bg);
+  border:1px solid #fedf89;
+}
+
+.status.error{
+  display:block;
+  color:var(--danger);
+  background:var(--danger-bg);
+  border:1px solid #fecaca;
+}
+
+/* CARD */
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:17px;
+  box-shadow:0 10px 30px rgba(16,24,40,.06);
+  padding:25px;
+  margin-bottom:20px;
+}
+
+.card-header{
+  margin-bottom:18px;
+}
+
+.card-header h2{
+  margin:0 0 5px;
+  color:var(--heading);
+  font-size:20px;
+}
+
+.card-header p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* DOCUMENT CONFIG */
+
+.form-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:15px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.field.full{
+  grid-column:1 / -1;
+}
+
+label{
+  color:#344054;
+  font-size:11px;
+  font-weight:800;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  border:1px solid #d0d5dd;
+  border-radius:10px;
+  background:#fff;
+  color:#172033;
+  font-family:inherit;
+  font-size:13px;
+  padding:11px 12px;
+  outline:none;
+}
+
+textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+
+/* ARTIFACT STATUS */
+
+.artifact-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.artifact{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:15px;
+  background:#fff;
+}
+
+.artifact.available{
+  border-color:#86efac;
+  background:#f0fdf4;
+}
+
+.artifact.missing{
+  border-color:#fed7aa;
+  background:#fffbeb;
+}
+
+.artifact-title{
+  font-size:12px;
+  font-weight:800;
+  color:var(--heading);
+}
+
+.artifact-count{
+  margin-top:7px;
+  font-size:21px;
+  font-weight:800;
+  color:var(--primary);
+}
+
+.artifact-status{
+  margin-top:4px;
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.available .artifact-status{
+  color:var(--success);
+}
+
+.missing .artifact-status{
+  color:var(--warning);
+}
+
+/* DOCUMENT */
+
+.document{
+  background:#fff;
+  border:1px solid #dfe3e8;
+  border-radius:12px;
+  padding:40px;
+}
+
+.document-header{
+  border-bottom:2px solid #e4e7ec;
+  padding-bottom:25px;
+  margin-bottom:28px;
+}
+
+.document-header h2{
+  margin:0 0 10px;
+  color:#101828;
+  font-size:30px;
+}
+
+.document-meta{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  color:#667085;
+  font-size:11px;
+}
+
+.document-section{
+  margin-bottom:30px;
+}
+
+.document-section h3{
+  margin:0 0 12px;
+  padding-bottom:8px;
+  border-bottom:1px solid #eaecf0;
+  color:#101828;
+  font-size:18px;
+}
+
+.document-section h4{
+  margin:16px 0 7px;
+  color:#344054;
+  font-size:13px;
+}
+
+.document-section p{
+  margin:7px 0;
+  color:#475467;
+  font-size:13px;
+  line-height:1.65;
+}
+
+.document-section ul{
+  margin:8px 0;
+  padding-left:22px;
+}
+
+.document-section li{
+  margin-bottom:7px;
+  color:#475467;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.story-box{
+  padding:14px;
+  border:1px solid #dbe5ff;
+  border-left:4px solid var(--primary);
+  border-radius:9px;
+  background:#f8faff;
+  color:#344054;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.requirement-box{
+  padding:15px;
+  background:#f8fafc;
+  border:1px solid #eaecf0;
+  border-radius:10px;
+  color:#344054;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.table-wrapper{
+  overflow-x:auto;
+  border:1px solid var(--border);
+  border-radius:10px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+}
+
+th,
+td{
+  padding:10px 12px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  vertical-align:top;
+  font-size:11px;
+}
+
+th{
+  background:#f8fafc;
+  color:#475467;
+  font-size:10px;
+  text-transform:uppercase;
+}
+
+tr:last-child td{
+  border-bottom:0;
+}
+
+.empty{
+  padding:20px;
+  border:1px dashed #d0d5dd;
+  border-radius:10px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* ACTIONS */
+
+.actions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+}
+
+button{
+  border:0;
+  border-radius:9px;
+  padding:11px 16px;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+button.secondary{
+  background:#fff;
+  color:#344054;
+  border:1px solid #d0d5dd;
+}
+
+button.success{
+  background:#15803d;
+}
+
+button.warning{
+  background:#b54708;
+}
+
+/* BOTTOM */
+
+.bottom-nav{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:20px;
+}
+
+.bottom-nav a{
+  padding:10px 15px;
+  border-radius:9px;
+  border:1px solid #d0d5dd;
+  background:#fff;
+  color:#344054;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:700;
+}
+
+.bottom-nav a.next{
+  color:#fff;
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+/* PRINT */
+
+@media print{
+
+  body{
+    background:#fff;
+  }
+
+  main{
+    max-width:none;
+    padding:0;
+  }
+
+  .workflow-wrapper,
+  .navigation,
+  .status,
+  #configCard,
+  #artifactCard,
+  .actions,
+  .bottom-nav{
+    display:none !important;
+  }
+
+  .card{
+    box-shadow:none;
+    border:0;
+    padding:0;
+  }
+
+  .document{
+    border:0;
+    padding:0;
+  }
+
+}
+
+/* RESPONSIVE */
+
+@media(max-width:950px){
+
+  .form-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .artifact-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:650px){
+
+  main{
+    padding:18px 12px 55px;
+  }
+
+  .hero h1{
+    font-size:29px;
+  }
+
+  .navigation,
+  .bottom-nav{
+    flex-direction:column;
+  }
+
+  .nav-button,
+  .bottom-nav a{
+    width:100%;
+  }
+
+  .form-grid,
+  .artifact-grid{
+    grid-template-columns:1fr;
+  }
+
+  .document{
+    padding:20px;
+  }
+
+  .document-meta{
+    grid-template-columns:1fr;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<main>
+
+<!-- WORKFLOW -->
+
+<div class="workflow-wrapper">
+
+<div class="workflow">
+
+<div class="workflow-step">
+<span class="workflow-dot">1</span>
+Requirement
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">2</span>
+User Story
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">3</span>
+Acceptance Criteria
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">4</span>
+UAT Test Cases
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">5</span>
+Test Data
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">6</span>
+Process Flow
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step">
+<span class="workflow-dot">7</span>
+Traceability
+</div>
+
+<div class="workflow-line"></div>
+
+<div class="workflow-step active">
+<span class="workflow-dot">8</span>
+BA Document
+</div>
+
+</div>
+
+</div>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+<div class="badge">
+BA Document Generator
+</div>
+
+<h1>
+Turn BA Artifacts Into a
+<span>Professional Document.</span>
+</h1>
+
+<p>
+Compile the available requirements, user stories, acceptance criteria,
+UAT scenarios, test data and process flows into a structured Business
+Analysis document.
+</p>
+
+</section>
+
+
+<!-- NAV -->
+
+<div class="navigation">
+
+<a
+class="nav-button"
+href="/traceability.html">
+← Traceability
+</a>
+
+</div>
+
+
+<div
+id="status"
+class="status">
+</div>
+
+
+<!-- CONFIG -->
+
+<section
+id="configCard"
+class="card">
+
+<div class="card-header">
+
+<h2>
+Document Configuration
+</h2>
+
+<p>
+Define the document title and presentation preferences.
+</p>
+
+</div>
+
+
+<div class="form-grid">
+
+<div class="field">
+
+<label for="documentTitle">
+Document Title
+</label>
+
+<input
+id="documentTitle"
+type="text"
+value="Business Analysis Document"
+placeholder="Enter document title">
+
+</div>
+
+
+<div class="field">
+
+<label for="language">
+Language
+</label>
+
+<select id="language">
+
+<option value="en">
+English
+</option>
+
+<option value="tr">
+Türkçe
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label for="detail">
+Detail Level
+</label>
+
+<select id="detail">
+
+<option value="Professional">
+Professional
+</option>
+
+<option value="Comprehensive">
+Comprehensive
+</option>
+
+<option value="Basic">
+Basic
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field full">
+
+<label for="objective">
+Document Objective
+</label>
+
+<textarea
+id="objective"
+placeholder="Optional: Describe the purpose of this document."></textarea>
+
+</div>
+
+</div>
+
+<br>
+
+<div class="actions">
+
+<button id="generateButton">
+Generate BA Document
+</button>
+
+<button
+id="clearButton"
+class="secondary">
+Clear
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ARTIFACT STATUS -->
+
+<section
+id="artifactCard"
+class="card">
+
+<div class="card-header">
+
+<h2>
+Available BA Artifacts
+</h2>
+
+<p>
+The document is generated from artifacts currently available in the browser workspace.
+</p>
+
+</div>
+
+
+<div
+id="artifactGrid"
+class="artifact-grid">
+</div>
+
+</section>
+
+
+<!-- DOCUMENT -->
+
+<section class="card">
+
+<div class="document" id="document">
+
+<div class="document-header">
+
+<h2 id="docTitle">
+Business Analysis Document
+</h2>
+
+<div class="document-meta">
+
+<div>
+<strong>Document Type</strong><br>
+Business Analysis
+</div>
+
+<div>
+<strong>Generated</strong><br>
+<span id="generatedDate">—</span>
+</div>
+
+<div>
+<strong>Detail</strong><br>
+<span id="generatedDetail">Professional</span>
+</div>
+
+</div>
+
+</div>
+
+
+<div
+id="documentContent">
+
+<div class="empty">
+Click <strong>Generate BA Document</strong> to compile the available BA artifacts.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ACTIONS -->
+
+<section class="card">
+
+<div class="actions">
+
+<button
+id="copyButton">
+Copy Document
+</button>
+
+<button
+id="printButton"
+class="secondary">
+Print / Save as PDF
+</button>
+
+<button
+id="saveButton"
+class="success">
+Save to Workspace
+</button>
+
+</div>
+
+
+<div class="bottom-nav">
+
+<a href="/traceability.html">
+← Traceability
+</a>
+
+<a
+href="/index.html"
+class="next">
+Back to BAForge Home →
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+
+<script>
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function safeParse(value){
+
+  try{
+    return JSON.parse(value);
+  }catch{
+    return null;
+  }
+
+}
+
+
+function safeString(value){
+
+  if(
+    value === null ||
+    value === undefined
+  ){
+    return "";
+  }
+
+  return String(value);
+
+}
+
+
+function escapeHtml(value){
+
+  return safeString(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function isObject(value){
+
+  return (
+    value &&
+    typeof value === "object"
+  );
+
+}
+
+
+function arrayify(value){
+
+  if(!value)
+    return [];
+
+  if(Array.isArray(value))
+    return value;
+
+  return [value];
+
+}
+
+
+function objectText(obj){
+
+  if(
+    obj === null ||
+    obj === undefined
+  )
+    return "";
+
+  if(
+    typeof obj === "string"
+  )
+    return obj;
+
+  if(
+    typeof obj !== "object"
+  )
+    return "";
+
+  const fields=[
+    "title",
+    "name",
+    "description",
+    "story",
+    "requirement",
+    "summary",
+    "objective",
+    "processName"
+  ];
+
+  return fields
+    .map(
+      field =>
+        typeof obj[field] === "string"
+          ? obj[field]
+          : ""
+    )
+    .filter(Boolean)
+    .join(" ");
+
+}
+
+
+/* =====================================================
+   STORAGE
+===================================================== */
+
+function readStorage(){
+
+  const result=[];
+
+
+  for(
+    let i=0;
+    i<sessionStorage.length;
+    i++
+  ){
+
+    const key =
+      sessionStorage.key(i);
+
+    if(!key)
+      continue;
+
+
+    const raw =
+      sessionStorage.getItem(key);
+
+    if(!raw)
+      continue;
+
+
+    const parsed =
+      safeParse(raw);
+
+
+    if(parsed){
+
+      result.push({
+        key,
+        value:parsed
+      });
+
+    }
+
+  }
+
+
+  return result;
+
+}
+
+
+/* =====================================================
+   DETECT ARTIFACTS
+===================================================== */
+
+function collectArtifacts(){
+
+  const result={
+
+    requirements:[],
+    userStories:[],
+    acceptanceCriteria:[],
+    testCases:[],
+    testData:[],
+    processFlows:[]
+
+  };
+
+
+  const seen={
+
+    requirements:new Set(),
+    userStories:new Set(),
+    acceptanceCriteria:new Set(),
+    testCases:new Set(),
+    testData:new Set(),
+    processFlows:new Set()
+
+  };
+
+
+  function add(
+    type,
+    item
+  ){
+
+    if(!isObject(item))
+      return;
+
+
+    const text =
+      objectText(item)
+        .trim();
+
+
+    if(!text)
+      return;
+
+
+    const id =
+      item.id ||
+      item.testCaseId ||
+      item.requirementId ||
+      item.userStoryId ||
+      item.acceptanceCriterionId ||
+      item.processName ||
+      text
+        .toLowerCase()
+        .slice(0,180);
+
+
+    if(
+      seen[type].has(id)
+    )
+      return;
+
+
+    seen[type].add(id);
+
+    result[type].push(item);
+
+  }
+
+
+  function inspect(
+    object,
+    key
+  ){
+
+    if(!isObject(object))
+      return;
+
+
+    const lower =
+      key.toLowerCase();
+
+
+    /*
+     * Containers
+     */
+
+    const containerMap={
+
+      requirements:"requirements",
+      requirement:"requirements",
+
+      userStories:"userStories",
+      userStory:"userStories",
+
+      acceptanceCriteria:"acceptanceCriteria",
+      criteria:"acceptanceCriteria",
+
+      testCases:"testCases",
+      cases:"testCases",
+
+      testData:"testData",
+      records:"testData",
+
+      processFlows:"processFlows",
+      processFlow:"processFlows"
+
+    };
+
+
+    Object.keys(
+      containerMap
+    ).forEach(
+      field => {
+
+        const value =
+          object[field];
+
+
+        if(
+          Array.isArray(value)
+        ){
+
+          value.forEach(
+            item => {
+
+              add(
+                containerMap[field],
+                item
+              );
+
+            }
+          );
+
+        }else if(
+          isObject(value)
+        ){
+
+          add(
+            containerMap[field],
+            value
+          );
+
+        }
+
+      }
+    );
+
+
+    /*
+     * Requirement
+     */
+
+    if(
+      lower.includes("requirement")
+      &&
+      (
+        object.description ||
+        object.analysis ||
+        object.priority
+      )
+    ){
+
+      add(
+        "requirements",
+        object
+      );
+
+    }
+
+
+    /*
+     * User Story
+     */
+
+    if(
+      lower.includes("user-story")
+      ||
+      lower.includes("user_story")
+      ||
+      lower.includes("userstory")
+    ){
+
+      if(
+        object.story ||
+        object.role ||
+        object.goal
+      ){
+
+        add(
+          "userStories",
+          object
+        );
+
+      }
+
+    }
+
+
+    /*
+     * Acceptance Criteria
+     */
+
+    if(
+      object.given &&
+      object.when &&
+      object.then
+    ){
+
+      add(
+        "acceptanceCriteria",
+        object
+      );
+
+    }
+
+
+    /*
+     * UAT
+     */
+
+    if(
+      object.testCaseId ||
+      (
+        object.expectedResult &&
+        object.steps
+      )
+    ){
+
+      add(
+        "testCases",
+        object
+      );
+
+    }
+
+
+    /*
+     * Test Data
+     */
+
+    if(
+      lower.includes("test-data")
+      ||
+      lower.includes("test_data")
+      ||
+      lower.includes("testdata")
+    ){
+
+      add(
+        "testData",
+        object
+      );
+
+    }
+
+
+    /*
+     * Process Flow
+     */
+
+    if(
+      (
+        object.processName ||
+        object.nodes
+      )
+      &&
+      (
+        object.steps ||
+        object.nodes ||
+        object.connections
+      )
+    ){
+
+      add(
+        "processFlows",
+        object
+      );
+
+    }
+
+  }
+
+
+  readStorage()
+    .forEach(
+      entry => {
+
+        inspect(
+          entry.value,
+          entry.key
+        );
+
+
+        /*
+         * One additional recursive
+         * pass for nested objects.
+         */
+
+        function walk(
+          value,
+          path
+        ){
+
+          if(
+            !isObject(value)
+          )
+            return;
+
+
+          if(
+            path.length > 6
+          )
+            return;
+
+
+          inspect(
+            value,
+            path.join(".")
+          );
+
+
+          Object.keys(value)
+            .forEach(
+              key => {
+
+                walk(
+                  value[key],
+                  path.concat(key)
+                );
+
+              }
+            );
+
+        }
+
+
+        walk(
+          entry.value,
+          [entry.key]
+        );
+
+      }
+    );
+
+
+  return result;
+
+}
+
+
+/* =====================================================
+   ARTIFACT CARDS
+===================================================== */
+
+function renderArtifactCards(
+  data
+){
+
+  const items=[
+
+    [
+      "Requirements",
+      data.requirements.length
+    ],
+
+    [
+      "User Stories",
+      data.userStories.length
+    ],
+
+    [
+      "Acceptance Criteria",
+      data.acceptanceCriteria.length
+    ],
+
+    [
+      "UAT Test Cases",
+      data.testCases.length
+    ],
+
+    [
+      "Test Data",
+      data.testData.length
+    ],
+
+    [
+      "Process Flows",
+      data.processFlows.length
+    ]
+
+  ];
+
+
+  document.getElementById(
+    "artifactGrid"
+  ).innerHTML =
+
+    items.map(
+      ([name,count]) => `
+
+        <div class="artifact ${
+          count
+            ? "available"
+            : "missing"
+        }">
+
+          <div class="artifact-title">
+            ${escapeHtml(name)}
+          </div>
+
+          <div class="artifact-count">
+            ${count}
+          </div>
+
+          <div class="artifact-status">
+            ${
+              count
+                ? "Available"
+                : "Not Available"
+            }
+          </div>
+
+        </div>
+
+      `
+    ).join("");
+
+}
+
+
+/* =====================================================
+   FIRST ITEM
+===================================================== */
+
+function first(
+  list
+){
+
+  return (
+    Array.isArray(list) &&
+    list.length
+  )
+    ? list[0]
+    : null;
+
+}
+
+
+/* =====================================================
+   REQUIREMENT
+===================================================== */
+
+function renderRequirement(
+  item
+){
+
+  if(!item){
+
+    return `
+
+      <div class="empty">
+        No Requirement artifact is currently available.
+      </div>
+
+    `;
+
+  }
+
+
+  const title =
+    item.title ||
+    "Business Requirement";
+
+
+  const description =
+    item.description ||
+    item.requirement ||
+    item.summary ||
+    "No requirement description available.";
+
+
+  const analysis =
+    item.analysis || {};
+
+
+  const rules =
+    arrayify(
+      analysis.businessRules
+    );
+
+
+  const assumptions =
+    arrayify(
+      analysis.assumptions
+    );
+
+
+  const questions =
+    arrayify(
+      analysis.openQuestions
+    );
+
+
+  return `
+
+    <div class="document-section">
+
+      <h3>
+        1. Requirement
+      </h3>
+
+      <h4>
+        ${escapeHtml(title)}
+      </h4>
+
+      <div class="requirement-box">
+        ${escapeHtml(description)}
+      </div>
+
+      ${
+        rules.length
+          ? `
+            <h4>Business Rules</h4>
+
+            <ul>
+              ${
+                rules.map(
+                  item =>
+                    `<li>${escapeHtml(
+                      typeof item === "string"
+                        ? item
+                        : item.description || item.rule || JSON.stringify(item)
+                    )}</li>`
+                ).join("")
+              }
+            </ul>
+          `
+          : ""
+      }
+
+      ${
+        assumptions.length
+          ? `
+            <h4>Assumptions</h4>
+
+            <ul>
+              ${
+                assumptions.map(
+                  item =>
+                    `<li>${escapeHtml(
+                      typeof item === "string"
+                        ? item
+                        : item.description || JSON.stringify(item)
+                    )}</li>`
+                ).join("")
+              }
+            </ul>
+          `
+          : ""
+      }
+
+      ${
+        questions.length
+          ? `
+            <h4>Open Questions</h4>
+
+            <ul>
+              ${
+                questions.map(
+                  item =>
+                    `<li>${escapeHtml(
+                      typeof item === "string"
+                        ? item
+                        : item.question || item.description || JSON.stringify(item)
+                    )}</li>`
+                ).join("")
+              }
+            </ul>
+          `
+          : ""
+      }
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   USER STORY
+===================================================== */
+
+function renderUserStory(
+  item
+){
+
+  if(!item){
+
+    return `
+
+      <div class="document-section">
+
+        <h3>
+          2. User Story
+        </h3>
+
+        <div class="empty">
+          No User Story artifact is currently available.
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  const story =
+    item.story ||
+    `As a ${item.role || "user"}, I want ${item.goal || "to complete the requested process"} so that ${item.benefit || "the business objective can be achieved"}.`;
+
+
+  return `
+
+    <div class="document-section">
+
+      <h3>
+        2. User Story
+      </h3>
+
+      <div class="story-box">
+        ${escapeHtml(story)}
+      </div>
+
+      ${
+        item.priority
+          ? `
+            <h4>
+              Priority
+            </h4>
+
+            <p>
+              ${escapeHtml(item.priority)}
+            </p>
+          `
+          : ""
+      }
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   ACCEPTANCE CRITERIA
+===================================================== */
+
+function renderAcceptanceCriteria(
+  list
+){
+
+  if(!list.length){
+
+    return `
+
+      <div class="document-section">
+
+        <h3>
+          3. Acceptance Criteria
+        </h3>
+
+        <div class="empty">
+          No Acceptance Criteria artifacts are currently available.
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  return `
+
+    <div class="document-section">
+
+      <h3>
+        3. Acceptance Criteria
+      </h3>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>ID</th>
+              <th>Given</th>
+              <th>When</th>
+              <th>Then</th>
+              <th>Priority</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${
+              list.map(
+                (item,index) => `
+
+                  <tr>
+
+                    <td>
+                      AC-${String(index+1).padStart(3,"0")}
+                    </td>
+
+                    <td>
+                      ${escapeHtml(item.given || "—")}
+                    </td>
+
+                    <td>
+                      ${escapeHtml(item.when || "—")}
+                    </td>
+
+                    <td>
+                      ${escapeHtml(item.then || item.description || "—")}
+                    </td>
+
+                    <td>
+                      ${escapeHtml(item.priority || "—")}
+                    </td>
+
+                  </tr>
+
+                `
+              ).join("")
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   UAT
+===================================================== */
+
+function renderUAT(
+  list
+){
+
+  if(!list.length){
+
+    return `
+
+      <div class="document-section">
+
+        <h3>
+          4. UAT Test Cases
+        </h3>
+
+        <div class="empty">
+          No UAT Test Cases artifacts are currently available.
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  return `
+
+    <div class="document-section">
+
+      <h3>
+        4. UAT Test Cases
+      </h3>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Steps</th>
+              <th>Expected Result</th>
+              <th>Priority</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${
+              list.map(
+                (item,index) => {
+
+                  let steps =
+                    item.steps;
+
+
+                  if(
+                    Array.isArray(steps)
+                  ){
+
+                    steps =
+                      steps.join(
+                        " → "
+                      );
+
+                  }
+
+
+                  return `
+
+                    <tr>
+
+                      <td>
+                        ${escapeHtml(
+                          item.testCaseId ||
+                          item.id ||
+                          `TC-${String(index+1).padStart(3,"0")}`
+                        )}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          item.title ||
+                          item.name ||
+                          "Test Case"
+                        )}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          steps || "—"
+                        )}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          item.expectedResult ||
+                          item.expected ||
+                          "—"
+                        )}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          item.priority ||
+                          "—"
+                        )}
+                      </td>
+
+                    </tr>
+
+                  `;
+
+                }
+              ).join("")
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   TEST DATA
+===================================================== */
+
+function renderTestData(
+  list
+){
+
+  if(!list.length){
+
+    return `
+
+      <div class="document-section">
+
+        <h3>
+          5. Test Data
+        </h3>
+
+        <div class="empty">
+          No Test Data artifact is currently available.
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  const item =
+    first(list);
+
+
+  let records =
+    item.records ||
+    item.data ||
+    item.testData ||
+    [];
+
+
+  if(
+    !Array.isArray(records)
+  ){
+
+    records =
+      [records];
+
+  }
+
+
+  if(!records.length){
+
+    return `
+
+      <div class="document-section">
+
+        <h3>
+          5. Test Data
+        </h3>
+
+        <div class="empty">
+          Test Data artifact detected, but no records are available for display.
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  const columns =
+    Object.keys(
+      records[0] || {}
+    );
+
+
+  return `
+
+    <div class="document-section">
+
+      <h3>
+        5. Test Data
+      </h3>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              ${
+                columns.map(
+                  column =>
+                    `<th>${escapeHtml(column)}</th>`
+                ).join("")
+              }
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${
+              records.slice(0,20).map(
+                record => `
+
+                  <tr>
+
+                    ${
+                      columns.map(
+                        column => `
+
+                          <td>
+                            ${escapeHtml(
+                              typeof record[column] === "object"
+                                ? JSON.stringify(record[column])
+                                : record[column]
+                            )}
+                          </td>
+
+                        `
+                      ).join("")
+                    }
+
+                  </tr>
+
+                `
+              ).join("")
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   PROCESS FLOW
+===================================================== */
+
+function renderProcessFlow(
+  list
+){
+
+  if(!list.length){
+
+    return `
+
+      <div class="document-section">
+
+        <h3>
+          6. Process Flow
+        </h3>
+
+        <div class="empty">
+          No Process Flow artifact is currently available.
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  const item =
+    first(list);
+
+
+  const processName =
+    item.processName ||
+    item.title ||
+    "Business Process";
+
+
+  const description =
+    item.description ||
+    item.objective ||
+    "";
+
+
+  const steps =
+    arrayify(
+      item.steps
+    );
+
+
+  return `
+
+    <div class="document-section">
+
+      <h3>
+        6. Process Flow
+      </h3>
+
+      <h4>
+        ${escapeHtml(processName)}
+      </h4>
+
+      ${
+        description
+          ? `
+            <p>
+              ${escapeHtml(description)}
+            </p>
+          `
+          : ""
+      }
+
+
+      ${
+        steps.length
+          ? `
+
+            <div class="table-wrapper">
+
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th>ID</th>
+                    <th>Step</th>
+                    <th>Actor / System</th>
+                    <th>Action</th>
+                    <th>Expected Result</th>
+                  </tr>
+
+                </thead>
+
+                <tbody>
+
+                  ${
+                    steps.map(
+                      (step,index) => `
+
+                        <tr>
+
+                          <td>
+                            ${escapeHtml(
+                              step.id ||
+                              `P${String(index+1).padStart(2,"0")}`
+                            )}
+                          </td>
+
+                          <td>
+                            ${escapeHtml(
+                              step.name ||
+                              step.title ||
+                              `Step ${index+1}`
+                            )}
+                          </td>
+
+                          <td>
+                            ${escapeHtml(
+                              step.actor ||
+                              step.system ||
+                              step.actorSystem ||
+                              "—"
+                            )}
+                          </td>
+
+                          <td>
+                            ${escapeHtml(
+                              step.action ||
+                              step.description ||
+                              "—"
+                            )}
+                          </td>
+
+                          <td>
+                            ${escapeHtml(
+                              step.expectedResult ||
+                              step.result ||
+                              "—"
+                            )}
+                          </td>
+
+                        </tr>
+
+                      `
+                    ).join("")
+                  }
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+          `
+          : `
+            <div class="empty">
+              Process Flow detected, but structured steps are not available.
+            </div>
+          `
+      }
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   TRACEABILITY
+===================================================== */
+
+function renderTraceability(
+  data
+){
+
+  const available=[
+    data.requirements.length,
+    data.userStories.length,
+    data.acceptanceCriteria.length,
+    data.testCases.length,
+    data.testData.length,
+    data.processFlows.length
+  ].filter(
+    count =>
+      count > 0
+  ).length;
+
+
+  const coverage =
+    Math.round(
+      available / 6 * 100
+    );
+
+
+  return `
+
+    <div class="document-section">
+
+      <h3>
+        7. Traceability Summary
+      </h3>
+
+      <p>
+        The current workspace contains
+        <strong>${available} of 6</strong>
+        major BA artifact categories.
+        Overall workflow artifact coverage is
+        <strong>${coverage}%</strong>.
+      </p>
+
+      <ul>
+
+        <li>
+          Requirements:
+          ${data.requirements.length}
+        </li>
+
+        <li>
+          User Stories:
+          ${data.userStories.length}
+        </li>
+
+        <li>
+          Acceptance Criteria:
+          ${data.acceptanceCriteria.length}
+        </li>
+
+        <li>
+          UAT Test Cases:
+          ${data.testCases.length}
+        </li>
+
+        <li>
+          Test Data:
+          ${data.testData.length}
+        </li>
+
+        <li>
+          Process Flows:
+          ${data.processFlows.length}
+        </li>
+
+      </ul>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   DOCUMENT GENERATION
+===================================================== */
+
+function generateDocument(){
+
+  const data =
+    collectArtifacts();
+
+
+  renderArtifactCards(
+    data
+  );
+
+
+  const title =
+    document.getElementById(
+      "documentTitle"
+    ).value.trim()
+    ||
+    "Business Analysis Document";
+
+
+  const objective =
+    document.getElementById(
+      "objective"
+    ).value.trim();
+
+
+  const detail =
+    document.getElementById(
+      "detail"
+    ).value;
+
+
+  document.getElementById(
+    "docTitle"
+  ).textContent =
+    title;
+
+
+  document.getElementById(
+    "generatedDate"
+  ).textContent =
+    new Date()
+      .toLocaleDateString();
+
+
+  document.getElementById(
+    "generatedDetail"
+  ).textContent =
+    detail;
+
+
+  const requirement =
+    first(
+      data.requirements
+    );
+
+
+  let content="";
+
+
+  if(objective){
+
+    content += `
+
+      <div class="document-section">
+
+        <h3>
+          Document Objective
+        </h3>
+
+        <p>
+          ${escapeHtml(objective)}
+        </p>
+
+      </div>
+
+    `;
+
+  }
+
+
+  content +=
+    renderRequirement(
+      requirement
+    );
+
+
+  content +=
+    renderUserStory(
+      first(
+        data.userStories
+      )
+    );
+
+
+  content +=
+    renderAcceptanceCriteria(
+      data.acceptanceCriteria
+    );
+
+
+  content +=
+    renderUAT(
+      data.testCases
+    );
+
+
+  content +=
+    renderTestData(
+      data.testData
+    );
+
+
+  content +=
+    renderProcessFlow(
+      data.processFlows
+    );
+
+
+  content +=
+    renderTraceability(
+      data
+    );
+
+
+  content += `
+
+    <div class="document-section">
+
+      <h3>
+        8. Notes
+      </h3>
+
+      <p>
+        This document was compiled from the BAForge AI workspace artifacts
+        currently available in the browser session. Missing artifacts are
+        intentionally identified rather than being invented.
+      </p>
+
+    </div>
+
+  `;
+
+
+  document.getElementById(
+    "documentContent"
+  ).innerHTML =
+    content;
+
+
+  /*
+   * Save generated document
+   * snapshot for future screens.
+   */
+
+  try{
+
+    sessionStorage.setItem(
+      "baforge-ba-document",
+      JSON.stringify({
+
+        title,
+
+        objective,
+
+        detail,
+
+        language:
+          document.getElementById(
+            "language"
+          ).value,
+
+        generatedAt:
+          new Date().toISOString(),
+
+        artifacts:data
+
+      })
+    );
+
+  }catch{}
+
+
+  const status =
+    document.getElementById(
+      "status"
+    );
+
+
+  status.className =
+    "status success";
+
+  status.style.display =
+    "block";
+
+
+  const total =
+    Object.values(data)
+      .reduce(
+        (
+          sum,
+          list
+        ) =>
+          sum + list.length,
+        0
+      );
+
+
+  status.textContent =
+    `✓ BA Document generated from ${total} detected artifact record(s).`;
+
+}
+
+
+/* =====================================================
+   COPY
+===================================================== */
+
+async function copyDocument(){
+
+  const documentElement =
+    document.getElementById(
+      "document"
+    );
+
+
+  const text =
+    documentElement.innerText;
+
+
+  try{
+
+    await navigator.clipboard.writeText(
+      text
+    );
+
+
+    const button =
+      document.getElementById(
+        "copyButton"
+      );
+
+
+    button.textContent =
+      "Copied ✓";
+
+
+    setTimeout(
+      () => {
+
+        button.textContent =
+          "Copy Document";
+
+      },
+      1500
+    );
+
+  }catch{
+
+    alert(
+      "Unable to copy the document."
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SAVE
+===================================================== */
+
+function saveDocument(){
+
+  const data =
+    collectArtifacts();
+
+
+  const title =
+    document.getElementById(
+      "documentTitle"
+    ).value.trim()
+    ||
+    "Business Analysis Document";
+
+
+  try{
+
+    sessionStorage.setItem(
+      "baforge-ba-document",
+      JSON.stringify({
+
+        title,
+
+        objective:
+          document.getElementById(
+            "objective"
+          ).value,
+
+        language:
+          document.getElementById(
+            "language"
+          ).value,
+
+        detail:
+          document.getElementById(
+            "detail"
+          ).value,
+
+        generatedAt:
+          new Date().toISOString(),
+
+        artifacts:data
+
+      })
+    );
+
+
+    const status =
+      document.getElementById(
+        "status"
+      );
+
+
+    status.className =
+      "status success";
+
+    status.style.display =
+      "block";
+
+    status.textContent =
+      "✓ BA Document saved to the workspace.";
+
+  }catch{
+
+    alert(
+      "Unable to save the document."
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   CLEAR
+===================================================== */
+
+function clearDocument(){
+
+  document.getElementById(
+    "documentTitle"
+  ).value =
+    "Business Analysis Document";
+
+
+  document.getElementById(
+    "objective"
+  ).value =
+    "";
+
+
+  document.getElementById(
+    "documentContent"
+  ).innerHTML = `
+
+    <div class="empty">
+      Click <strong>Generate BA Document</strong>
+      to compile the available BA artifacts.
+    </div>
+
+  `;
+
+
+  document.getElementById(
+    "docTitle"
+  ).textContent =
+    "Business Analysis Document";
+
+
+  document.getElementById(
+    "generatedDate"
+  ).textContent =
+    "—";
+
+
+  const status =
+    document.getElementById(
+      "status"
+    );
+
+
+  status.className =
+    "status";
+
+
+  status.style.display =
+    "none";
+
+}
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+function init(){
+
+  const data =
+    collectArtifacts();
+
+
+  renderArtifactCards(
+    data
+  );
+
+
+  /*
+   * Restore previous document
+   * configuration if available.
+   */
+
+  const saved =
+    safeParse(
+      sessionStorage.getItem(
+        "baforge-ba-document"
+      )
+    );
+
+
+  if(saved){
+
+    if(saved.title){
+
+      document.getElementById(
+        "documentTitle"
+      ).value =
+        saved.title;
+
+    }
+
+
+    if(saved.objective){
+
+      document.getElementById(
+        "objective"
+      ).value =
+        saved.objective;
+
+    }
+
+
+    if(saved.detail){
+
+      document.getElementById(
+        "detail"
+      ).value =
+        saved.detail;
+
+    }
+
+
+    if(saved.language){
+
+      document.getElementById(
+        "language"
+      ).value =
+        saved.language;
+
+    }
+
+  }
+
+}
+
+
+document
+  .getElementById(
+    "generateButton"
+  )
+  .addEventListener(
+    "click",
+    generateDocument
+  );
+
+
+document
+  .getElementById(
+    "clearButton"
+  )
+  .addEventListener(
+    "click",
+    clearDocument
+  );
+
+
+document
+  .getElementById(
+    "copyButton"
+  )
+  .addEventListener(
+    "click",
+    copyDocument
+  );
+
+
+document
+  .getElementById(
+    "printButton"
+  )
+  .addEventListener(
+    "click",
+    () => window.print()
+  );
+
+
+document
+  .getElementById(
+    "saveButton"
+  )
+  .addEventListener(
+    "click",
+    saveDocument
+  );
+
+
+init();
+
+</script>
+
+<script src="/nav.js"></script>
+
+</body>
+</html>
