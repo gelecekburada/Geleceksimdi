@@ -27,14 +27,8 @@
       --success: #15803d;
       --success-bg: #ecfdf3;
 
-      --warning: #b54708;
-      --warning-bg: #fffaeb;
-
       --danger: #b42318;
       --danger-bg: #fef2f2;
-
-      --info: #175cd3;
-      --info-bg: #eff8ff;
 
       --shadow-sm: 0 4px 14px rgba(16, 24, 40, 0.06);
       --shadow-md: 0 12px 35px rgba(16, 24, 40, 0.08);
@@ -64,7 +58,7 @@
 
     .hero {
       text-align: center;
-      margin-bottom: 38px;
+      margin-bottom: 32px;
     }
 
     .badge {
@@ -126,12 +120,10 @@
 
       font-size: 22px;
       color: #101828;
-
-      letter-spacing: -0.3px;
     }
 
     .card-description {
-      margin: 0 0 24px;
+      margin: 0 0 22px;
 
       color: var(--muted);
       font-size: 14px;
@@ -147,56 +139,328 @@
       font-size: 14px;
     }
 
-    textarea {
-      width: 100%;
+    /*
+      ======================================================
+      MULTIMODAL COMPOSER
+      ======================================================
+    */
 
-      min-height: 210px;
-
-      padding: 16px;
-
+    .composer {
       border: 1px solid #d0d5dd;
-      border-radius: 12px;
+      border-radius: 16px;
 
-      font-size: 15px;
-      line-height: 1.6;
+      background: #ffffff;
 
-      resize: vertical;
-
-      background: #fff;
-      color: var(--text);
+      overflow: visible;
 
       transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease;
     }
 
-    textarea::placeholder {
-      color: #98a2b3;
-    }
-
-    textarea:hover {
-      border-color: #98a2b3;
-    }
-
-    textarea:focus {
-      outline: none;
-
+    .composer:focus-within {
       border-color: var(--primary);
 
       box-shadow:
         0 0 0 4px rgba(37, 99, 235, 0.10);
     }
 
-    .input-meta {
+    textarea {
+      width: 100%;
+      min-height: 150px;
+
+      padding: 17px 17px 10px;
+
+      border: 0;
+      outline: none;
+
+      font-size: 15px;
+      line-height: 1.6;
+
+      resize: vertical;
+
+      background: transparent;
+      color: var(--text);
+    }
+
+    textarea::placeholder {
+      color: #98a2b3;
+    }
+
+    .source-chip {
+      display: none;
+
+      align-items: center;
+      gap: 10px;
+
+      margin: 0 14px 12px;
+
+      padding: 10px 12px;
+
+      background: #f8fafc;
+
+      border: 1px solid var(--border);
+      border-radius: 11px;
+    }
+
+    .source-chip.visible {
       display: flex;
+    }
+
+    .source-icon {
+      font-size: 20px;
+    }
+
+    .source-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .source-name {
+      font-size: 13px;
+      font-weight: 800;
+
+      color: #344054;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .source-meta {
+      margin-top: 2px;
+
+      color: #98a2b3;
+      font-size: 11px;
+    }
+
+    .remove-source {
+      border: 0;
+      background: transparent;
+
+      color: #98a2b3;
+
+      padding: 4px 7px;
+
+      font-size: 19px;
+
+      cursor: pointer;
+    }
+
+    .remove-source:hover {
+      color: #344054;
+    }
+
+    .composer-toolbar {
+      display: flex;
+
       justify-content: space-between;
       align-items: center;
 
-      margin-top: 8px;
+      gap: 12px;
 
+      padding: 10px 12px;
+
+      border-top: 1px solid #eef0f3;
+
+      background: #fbfcfe;
+
+      border-radius: 0 0 16px 16px;
+    }
+
+    .toolbar-left,
+    .toolbar-right {
+      display: flex;
+
+      align-items: center;
+
+      gap: 9px;
+    }
+
+    .toolbar-left {
+      min-width: 0;
+    }
+
+    .input-hint {
       color: #98a2b3;
       font-size: 12px;
     }
+
+    .character-count {
+      color: #98a2b3;
+
+      font-size: 12px;
+
+      white-space: nowrap;
+    }
+
+    /*
+      ======================================================
+      ATTACHMENT MENU
+      ======================================================
+    */
+
+    .plus-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .icon-button {
+      width: 40px;
+      height: 40px;
+
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 0;
+
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+
+      background: #ffffff;
+      color: #344054;
+
+      font-size: 25px;
+      line-height: 1;
+
+      cursor: pointer;
+
+      box-shadow: none;
+
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease;
+    }
+
+    .icon-button:hover {
+      background: #f8fafc;
+
+      border-color: #98a2b3;
+    }
+
+    .attach-menu {
+      display: none;
+
+      position: absolute;
+
+      left: 0;
+      bottom: 50px;
+
+      width: 210px;
+
+      padding: 7px;
+
+      background: #ffffff;
+
+      border: 1px solid var(--border);
+      border-radius: 13px;
+
+      box-shadow:
+        0 14px 32px rgba(16, 24, 40, 0.16);
+
+      z-index: 50;
+    }
+
+    .attach-menu.open {
+      display: block;
+    }
+
+    .attach-option {
+      width: 100%;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      padding: 11px 12px;
+
+      border: 0;
+      border-radius: 9px;
+
+      background: #ffffff;
+      color: #344054;
+
+      text-align: left;
+
+      font-size: 14px;
+
+      cursor: pointer;
+    }
+
+    .attach-option:hover {
+      background: #f8fafc;
+
+      color: #172033;
+    }
+
+    /*
+      ======================================================
+      SEND BUTTON
+      ======================================================
+    */
+
+    .send-button {
+      width: 42px;
+      height: 42px;
+
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 0;
+
+      border: 0;
+      border-radius: 11px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #2563eb,
+          #1d4ed8
+        );
+
+      color: white;
+
+      font-size: 19px;
+      font-weight: 800;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 6px 16px rgba(37, 99, 235, 0.22);
+
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .send-button:hover {
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 9px 20px rgba(37, 99, 235, 0.28);
+    }
+
+    .send-button:disabled {
+      background: #94a3b8;
+
+      box-shadow: none;
+
+      cursor: wait;
+
+      transform: none;
+    }
+
+    /*
+      ======================================================
+      OPTIONS
+      ======================================================
+    */
 
     .options {
       display: grid;
@@ -223,14 +487,6 @@
       font-size: 14px;
 
       cursor: pointer;
-
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-    }
-
-    select:hover {
-      border-color: #98a2b3;
     }
 
     select:focus {
@@ -244,126 +500,74 @@
 
     .actions {
       display: flex;
+
       gap: 12px;
 
-      margin-top: 24px;
-    }
-
-    button {
-      border: none;
-
-      padding: 14px 20px;
-
-      border-radius: 11px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #2563eb,
-          #1d4ed8
-        );
-
-      color: white;
-
-      font-size: 15px;
-      font-weight: 700;
-
-      cursor: pointer;
-
-      box-shadow:
-        0 6px 16px rgba(37, 99, 235, 0.22);
-
-      transition:
-        transform 0.15s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
-    }
-
-    button:hover {
-      background:
-        linear-gradient(
-          135deg,
-          #1d4ed8,
-          #1e40af
-        );
-
-      transform: translateY(-1px);
-
-      box-shadow:
-        0 9px 20px rgba(37, 99, 235, 0.28);
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
-    button:disabled {
-      background: #94a3b8;
-
-      box-shadow: none;
-
-      cursor: wait;
-
-      transform: none;
+      margin-top: 20px;
     }
 
     .secondary-button {
-      background: #ffffff;
-
-      color: #344054;
+      padding: 13px 20px;
 
       border: 1px solid #d0d5dd;
+      border-radius: 11px;
 
-      box-shadow: none;
+      background: #ffffff;
+      color: #344054;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      cursor: pointer;
     }
 
     .secondary-button:hover {
       background: #f8fafc;
 
-      color: #172033;
-
       border-color: #98a2b3;
-
-      box-shadow: none;
     }
 
-    .loading {
+    /*
+      ======================================================
+      STATUS
+      ======================================================
+    */
+
+    .loading,
+    .error {
       display: none;
 
-      margin-top: 18px;
+      margin-top: 17px;
 
       padding: 14px 16px;
 
+      border-radius: 10px;
+
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .loading {
       color: #344054;
 
       background: #f8fafc;
 
       border: 1px solid var(--border);
-
-      border-radius: 10px;
-
-      font-weight: 600;
     }
 
     .error {
-      display: none;
-
-      margin-top: 18px;
-
-      padding: 14px 16px;
-
       background: var(--danger-bg);
 
       color: var(--danger);
 
       border: 1px solid #fecaca;
-
-      border-radius: 10px;
-
-      font-size: 14px;
-
-      font-weight: 600;
     }
+
+    /*
+      ======================================================
+      RESULT
+      ======================================================
+    */
 
     .result {
       display: none;
@@ -386,8 +590,6 @@
       font-size: 27px;
 
       color: #101828;
-
-      letter-spacing: -0.4px;
     }
 
     .result-header p {
@@ -401,14 +603,11 @@
     .status-pill {
       display: inline-flex;
 
-      align-items: center;
-
       padding: 7px 11px;
 
       border-radius: 999px;
 
       font-size: 12px;
-
       font-weight: 800;
 
       background: var(--success-bg);
@@ -419,6 +618,103 @@
 
       white-space: nowrap;
     }
+
+    /*
+      ======================================================
+      DETECTED REQUIREMENTS
+      ======================================================
+    */
+
+    .detected-section {
+      display: none;
+
+      margin-bottom: 25px;
+
+      padding: 20px;
+
+      border: 1px solid #dbe5ff;
+      border-radius: 14px;
+
+      background: #f8faff;
+    }
+
+    .detected-section h3 {
+      margin: 0 0 6px;
+
+      color: #101828;
+
+      font-size: 18px;
+    }
+
+    .detected-description {
+      margin: 0 0 16px;
+
+      color: #667085;
+
+      font-size: 13px;
+    }
+
+    .detected-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 12px;
+    }
+
+    .detected-card {
+      padding: 16px;
+
+      background: #ffffff;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .detected-card h4 {
+      margin: 0 0 7px;
+
+      color: #101828;
+
+      font-size: 15px;
+    }
+
+    .detected-card p {
+      margin: 0 0 13px;
+
+      color: #667085;
+
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .use-requirement {
+      width: 100%;
+
+      padding: 10px 12px;
+
+      border: 1px solid #bfd0f8;
+      border-radius: 9px;
+
+      background: #eef4ff;
+      color: #1d4ed8;
+
+      font-size: 13px;
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+    .use-requirement:hover {
+      background: #e3ebff;
+    }
+
+    /*
+      ======================================================
+      SCORES
+      ======================================================
+    */
 
     .score-grid {
       display: grid;
@@ -435,7 +731,6 @@
       padding: 20px;
 
       border: 1px solid var(--border);
-
       border-radius: 14px;
 
       background: #ffffff;
@@ -447,7 +742,6 @@
       color: #667085;
 
       font-size: 12px;
-
       font-weight: 800;
 
       text-transform: uppercase;
@@ -508,108 +802,11 @@
       transition: width 0.5s ease;
     }
 
-    .analysis-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-      gap: 18px;
-    }
-
-    .analysis-box {
-      background: #f8fafc;
-
-      border: 1px solid var(--border);
-
-      border-radius: 14px;
-
-      padding: 20px;
-    }
-
-    .analysis-box.full {
-      grid-column: 1 / -1;
-    }
-
-    .analysis-box h3 {
-      margin: 0 0 13px;
-
-      font-size: 17px;
-
-      color: #101828;
-    }
-
-    .analysis-box p {
-      margin: 0;
-
-      color: #475467;
-
-      line-height: 1.65;
-    }
-
-    .list {
-      margin: 0;
-
-      padding-left: 21px;
-    }
-
-    .list li {
-      margin-bottom: 9px;
-
-      color: #475467;
-
-      line-height: 1.55;
-    }
-
-    .list li:last-child {
-      margin-bottom: 0;
-    }
-
-    .empty {
-      color: #98a2b3;
-
-      font-style: italic;
-
-      font-size: 14px;
-    }
-
-    .priority {
-      display: inline-flex;
-
-      padding: 4px 9px;
-
-      border-radius: 999px;
-
-      font-size: 11px;
-
-      font-weight: 800;
-
-      text-transform: uppercase;
-    }
-
-    .priority-high {
-      color: #b42318;
-
-      background: #fef3f2;
-
-      border: 1px solid #fecdca;
-    }
-
-    .priority-medium {
-      color: #b54708;
-
-      background: #fffaeb;
-
-      border: 1px solid #fedf89;
-    }
-
-    .priority-low {
-      color: #175cd3;
-
-      background: #eff8ff;
-
-      border: 1px solid #b2ddff;
-    }
+    /*
+      ======================================================
+      SUMMARY
+      ======================================================
+    */
 
     .summary-box {
       background:
@@ -656,11 +853,119 @@
       font-weight: 500;
     }
 
+    /*
+      ======================================================
+      ANALYSIS
+      ======================================================
+    */
+
+    .analysis-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 18px;
+    }
+
+    .analysis-box {
+      background: #f8fafc;
+
+      border: 1px solid var(--border);
+      border-radius: 14px;
+
+      padding: 20px;
+    }
+
+    .analysis-box.full {
+      grid-column: 1 / -1;
+    }
+
+    .analysis-box h3 {
+      margin: 0 0 13px;
+
+      font-size: 17px;
+
+      color: #101828;
+    }
+
+    .analysis-box p {
+      margin: 0;
+
+      color: #475467;
+
+      line-height: 1.65;
+    }
+
+    .list {
+      margin: 0;
+
+      padding-left: 21px;
+    }
+
+    .list li {
+      margin-bottom: 9px;
+
+      color: #475467;
+
+      line-height: 1.55;
+    }
+
+    .empty {
+      color: #98a2b3;
+
+      font-style: italic;
+
+      font-size: 14px;
+    }
+
+    .priority {
+      display: inline-flex;
+
+      padding: 4px 9px;
+
+      border-radius: 999px;
+
+      font-size: 11px;
+      font-weight: 800;
+
+      text-transform: uppercase;
+    }
+
+    .priority-high {
+      color: #b42318;
+
+      background: #fef3f2;
+
+      border: 1px solid #fecdca;
+    }
+
+    .priority-medium {
+      color: #b54708;
+
+      background: #fffaeb;
+
+      border: 1px solid #fedf89;
+    }
+
+    .priority-low {
+      color: #175cd3;
+
+      background: #eff8ff;
+
+      border: 1px solid #b2ddff;
+    }
+
+    /*
+      ======================================================
+      SOURCE
+      ======================================================
+    */
+
     .source-box {
       background: #ffffff;
 
       border: 1px solid var(--border);
-
       border-radius: 12px;
 
       padding: 16px;
@@ -672,7 +977,6 @@
       color: #667085;
 
       font-size: 11px;
-
       font-weight: 800;
 
       text-transform: uppercase;
@@ -691,6 +995,23 @@
 
       font-size: 14px;
     }
+
+    .saved-indicator {
+      display: none;
+
+      margin-top: 12px;
+
+      color: var(--success);
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /*
+      ======================================================
+      NEXT ACTIONS
+      ======================================================
+    */
 
     .next-actions {
       display: grid;
@@ -711,22 +1032,14 @@
       background: #ffffff;
 
       border: 1px solid var(--border);
-
       border-radius: 14px;
 
       padding: 17px;
 
       color: #172033;
-
-      transition:
-        transform 0.15s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
     }
 
     .next-action:hover {
-      transform: translateY(-1px);
-
       border-color: #bfd0f8;
 
       box-shadow: var(--shadow-sm);
@@ -736,7 +1049,6 @@
       color: #667085;
 
       font-size: 11px;
-
       font-weight: 800;
 
       text-transform: uppercase;
@@ -754,34 +1066,22 @@
       color: #101828;
     }
 
-    .saved-indicator {
-      display: none;
-
-      margin-top: 12px;
-
-      color: var(--success);
-
-      font-size: 13px;
-
-      font-weight: 700;
-    }
-
     @media (max-width: 900px) {
 
       .score-grid,
-      .next-actions {
-        grid-template-columns:
-          1fr;
+      .next-actions,
+      .detected-grid {
+        grid-template-columns: 1fr;
       }
 
       .analysis-grid {
-        grid-template-columns:
-          1fr;
+        grid-template-columns: 1fr;
       }
 
       .analysis-box.full {
         grid-column: auto;
       }
+
     }
 
     @media (max-width: 700px) {
@@ -803,8 +1103,15 @@
       }
 
       .options {
-        grid-template-columns:
-          1fr;
+        grid-template-columns: 1fr;
+      }
+
+      .composer-toolbar {
+        align-items: flex-end;
+      }
+
+      .input-hint {
+        display: none;
       }
 
       .actions {
@@ -818,6 +1125,7 @@
       .result-header {
         flex-direction: column;
       }
+
     }
   </style>
 </head>
@@ -839,56 +1147,190 @@
       </h1>
 
       <p id="pageSubtitle">
-        Turn raw business requirements into a structured analysis with clarity,
-        completeness, testability and actionable gaps.
+        Use text, PDF documents or images as context.
+        Add instructions only when you need them.
       </p>
 
     </section>
 
 
-    <!-- INPUT -->
+    <!-- ==================================================
+         MULTIMODAL INPUT
+         ================================================== -->
 
     <section class="card">
 
       <h2
         class="card-title"
         id="inputTitle">
-        Requirement Analysis
+        What would you like BAForge AI to analyze?
       </h2>
 
       <p
         class="card-description"
         id="inputDescription">
-        Paste the original business requirement below. The analyzer will
-        identify what is clear, what is missing and what should be clarified.
+        Write a requirement, attach a PDF or image, or use both.
+        A written instruction is optional when a source is attached.
       </p>
 
 
-      <label
-        for="requirement"
-        id="requirementLabel">
-        Requirement
-      </label>
+      <div class="composer">
 
-      <textarea
-        id="requirement"
-        maxlength="10000"
-        placeholder="Example: The customer should be able to transfer money to another bank account using IBAN."
-        spellcheck="true"></textarea>
+        <textarea
+          id="requirement"
+          maxlength="10000"
+          placeholder="Tell BAForge AI what you want to analyze..."
+          spellcheck="true"></textarea>
 
-      <div class="input-meta">
 
-        <span id="inputHint">
-          Be specific about the business need.
-        </span>
+        <!-- ATTACHED SOURCE -->
 
-        <span>
-          <span id="characterCount">0</span>
-          / 10000
-        </span>
+        <div
+          id="sourceChip"
+          class="source-chip">
+
+          <div
+            id="sourceIcon"
+            class="source-icon">
+            📄
+          </div>
+
+          <div class="source-info">
+
+            <div
+              id="sourceName"
+              class="source-name">
+            </div>
+
+            <div
+              id="sourceMeta"
+              class="source-meta">
+            </div>
+
+          </div>
+
+          <button
+            id="removeSource"
+            class="remove-source"
+            type="button"
+            aria-label="Remove attachment">
+            ×
+          </button>
+
+        </div>
+
+
+        <!-- COMPOSER TOOLBAR -->
+
+        <div class="composer-toolbar">
+
+          <div class="toolbar-left">
+
+            <div class="plus-wrap">
+
+              <button
+                id="attachButton"
+                class="icon-button"
+                type="button"
+                aria-label="Add source">
+                +
+              </button>
+
+
+              <div
+                id="attachMenu"
+                class="attach-menu">
+
+                <button
+                  id="pdfOption"
+                  class="attach-option"
+                  type="button">
+                  📄
+                  <span id="pdfOptionText">
+                    Upload PDF
+                  </span>
+                </button>
+
+                <button
+                  id="imageOption"
+                  class="attach-option"
+                  type="button">
+                  🖼️
+                  <span id="imageOptionText">
+                    Upload Image
+                  </span>
+                </button>
+
+                <button
+                  id="cameraOption"
+                  class="attach-option"
+                  type="button">
+                  📷
+                  <span id="cameraOptionText">
+                    Take Photo
+                  </span>
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <span
+              id="inputHint"
+              class="input-hint">
+              Optional instruction: focus on limits, rules, gaps or specific sections.
+            </span>
+
+          </div>
+
+
+          <div class="toolbar-right">
+
+            <span
+              id="characterCount"
+              class="character-count">
+              0 / 10000
+            </span>
+
+            <button
+              id="analyzeButton"
+              class="send-button"
+              type="button"
+              aria-label="Analyze">
+              ➤
+            </button>
+
+          </div>
+
+        </div>
 
       </div>
 
+
+      <!-- FILE INPUTS -->
+
+      <input
+        id="pdfInput"
+        type="file"
+        accept="application/pdf,.pdf"
+        hidden>
+
+      <input
+        id="imageInput"
+        type="file"
+        accept="image/*"
+        hidden>
+
+      <input
+        id="cameraInput"
+        type="file"
+        accept="image/*"
+        capture="environment"
+        hidden>
+
+
+      <!-- OPTIONS -->
 
       <div class="options">
 
@@ -949,12 +1391,6 @@
       <div class="actions">
 
         <button
-          id="analyzeButton"
-          type="button">
-          Analyze Requirement
-        </button>
-
-        <button
           id="clearButton"
           class="secondary-button"
           type="button">
@@ -967,7 +1403,7 @@
       <div
         id="loading"
         class="loading">
-        AI is analyzing the requirement...
+        AI is analyzing your input...
       </div>
 
 
@@ -979,7 +1415,9 @@
     </section>
 
 
-    <!-- RESULT -->
+    <!-- ==================================================
+         RESULT
+         ================================================== -->
 
     <section
       id="result"
@@ -994,7 +1432,7 @@
           </h2>
 
           <p id="resultSubtitle">
-            Structured analysis generated from the original requirement.
+            Structured analysis generated from your input.
           </p>
 
         </div>
@@ -1003,6 +1441,31 @@
           id="statusPill"
           class="status-pill">
           Analysis Complete
+        </div>
+
+      </div>
+
+
+      <!-- MULTIPLE REQUIREMENTS -->
+
+      <div
+        id="detectedSection"
+        class="detected-section">
+
+        <h3 id="detectedTitle">
+          Requirements Found
+        </h3>
+
+        <p
+          id="detectedDescription"
+          class="detected-description">
+          Multiple requirements were detected in the source.
+          Select one to use as the current workspace requirement.
+        </p>
+
+        <div
+          id="detectedGrid"
+          class="detected-grid">
         </div>
 
       </div>
@@ -1132,7 +1595,6 @@
 
       <div class="analysis-grid">
 
-
         <div class="analysis-box">
 
           <h3 id="typeTitle">
@@ -1245,14 +1707,14 @@
       </div>
 
 
-      <!-- ORIGINAL REQUIREMENT -->
+      <!-- SOURCE -->
 
       <div class="source-box">
 
         <div
           class="source-label"
           id="sourceLabel">
-          Original Requirement
+          Analyzed Input
         </div>
 
         <div
@@ -1270,11 +1732,9 @@
       </div>
 
 
-      <!-- NEXT STEPS -->
+      <!-- NEXT -->
 
-      <div
-        class="next-actions"
-        id="nextActions">
+      <div class="next-actions">
 
         <a
           class="next-action"
@@ -1344,6 +1804,12 @@
 
   <script>
 
+    /*
+      ======================================================
+      TRANSLATIONS
+      ======================================================
+    */
+
     const translations = {
 
       en: {
@@ -1355,22 +1821,19 @@
           "Analyze Requirements Before You Build",
 
         subtitle:
-          "Turn raw business requirements into a structured analysis with clarity, completeness, testability and actionable gaps.",
+          "Use text, PDF documents or images as context. Add instructions only when you need them.",
 
         inputTitle:
-          "Requirement Analysis",
+          "What would you like BAForge AI to analyze?",
 
         inputDescription:
-          "Paste the original business requirement below. The analyzer will identify what is clear, what is missing and what should be clarified.",
-
-        requirement:
-          "Requirement",
+          "Write a requirement, attach a PDF or image, or use both. A written instruction is optional when a source is attached.",
 
         placeholder:
-          "Example: The customer should be able to transfer money to another bank account using IBAN.",
+          "Tell BAForge AI what you want to analyze...",
 
-        inputHint:
-          "Be specific about the business need.",
+        hint:
+          "Optional instruction: focus on limits, rules, gaps or specific sections.",
 
         language:
           "Output Language",
@@ -1378,29 +1841,44 @@
         detail:
           "Analysis Depth",
 
-        analyze:
-          "Analyze Requirement",
-
         clear:
           "Clear",
 
         loading:
-          "AI is analyzing the requirement...",
+          "AI is analyzing your input...",
 
         validation:
-          "Please provide a clear requirement with at least 15 characters and 3 words.",
+          "Add some text or attach a PDF or image before analyzing.",
+
+        fileTooLarge:
+          "The file is too large. Please use a file up to 4 MB.",
+
+        fileType:
+          "Only PDF and image files are supported.",
+
+        fileReady:
+          "Ready to analyze",
 
         genericError:
-          "Something went wrong while analyzing the requirement.",
+          "Something went wrong while analyzing your input.",
 
         result:
           "Requirement Analysis",
 
         resultSubtitle:
-          "Structured analysis generated from the original requirement.",
+          "Structured analysis generated from your input.",
 
         complete:
           "Analysis Complete",
+
+        detected:
+          "Requirements Found",
+
+        detectedDescription:
+          "Multiple requirements were detected in the source. Select one to use as the current workspace requirement.",
+
+        useRequirement:
+          "Use This Requirement",
 
         clarity:
           "Clarity",
@@ -1442,10 +1920,13 @@
           "Analyst Notes",
 
         source:
-          "Original Requirement",
+          "Analyzed Input",
 
         saved:
           "✓ Requirement saved to the current workspace context.",
+
+        selected:
+          "✓ Requirement selected for the current workspace.",
 
         next:
           "Next Step",
@@ -1462,11 +1943,17 @@
         generateUat:
           "Generate UAT Test Cases →",
 
-        empty:
-          "-",
+        pdf:
+          "Upload PDF",
 
-        serverError:
-          "Requirement analysis service is currently unavailable."
+        image:
+          "Upload Image",
+
+        camera:
+          "Take Photo",
+
+        empty:
+          "-"
 
       },
 
@@ -1480,22 +1967,19 @@
           "Geliştirmeden Önce Gereksinimi Analiz Et",
 
         subtitle:
-          "Ham iş gereksinimlerini açıklık, bütünlük, test edilebilirlik ve kapsam boşlukları açısından yapılandırılmış analize dönüştürün.",
+          "Metin, PDF veya görsel kullanın. Talimat vermek zorunlu değildir.",
 
         inputTitle:
-          "Gereksinim Analizi",
+          "BAForge AI neyi analiz etsin?",
 
         inputDescription:
-          "Orijinal iş gereksinimini aşağıya yapıştırın. Analyzer; net olan noktaları, eksik bilgileri ve açıklığa kavuşturulması gereken alanları belirler.",
-
-        requirement:
-          "Gereksinim",
+          "Gereksinimi yazın, PDF veya görsel ekleyin ya da ikisini birlikte kullanın. Dosya eklediğinizde yazılı talimat zorunlu değildir.",
 
         placeholder:
-          "Örnek: Müşteri IBAN kullanarak başka bir banka hesabına para transferi yapabilmelidir.",
+          "BAForge AI'a neyi analiz etmesini istediğinizi yazın...",
 
-        inputHint:
-          "İş ihtiyacını mümkün olduğunca net ifade edin.",
+        hint:
+          "İsteğe bağlı: limitlere, kurallara, eksiklere veya belirli bölümlere odaklan.",
 
         language:
           "Çıktı Dili",
@@ -1503,29 +1987,44 @@
         detail:
           "Analiz Derinliği",
 
-        analyze:
-          "Gereksinimi Analiz Et",
-
         clear:
           "Temizle",
 
         loading:
-          "AI gereksinimi analiz ediyor...",
+          "AI girdinizi analiz ediyor...",
 
         validation:
-          "Lütfen en az 15 karakter ve 3 kelime içeren açık bir gereksinim girin.",
+          "Analiz için metin yazın veya PDF/görsel ekleyin.",
+
+        fileTooLarge:
+          "Dosya çok büyük. Lütfen 4 MB'a kadar bir dosya kullanın.",
+
+        fileType:
+          "Yalnızca PDF ve görsel dosyaları desteklenir.",
+
+        fileReady:
+          "Analize hazır",
 
         genericError:
-          "Gereksinim analiz edilirken bir hata oluştu.",
+          "Girdi analiz edilirken bir hata oluştu.",
 
         result:
           "Gereksinim Analizi",
 
         resultSubtitle:
-          "Orijinal gereksinimden oluşturulan yapılandırılmış analiz.",
+          "Girdinizden oluşturulan yapılandırılmış analiz.",
 
         complete:
           "Analiz Tamamlandı",
+
+        detected:
+          "Bulunan Gereksinimler",
+
+        detectedDescription:
+          "Kaynakta birden fazla gereksinim bulundu. Workspace'te kullanmak istediğiniz gereksinimi seçebilirsiniz.",
+
+        useRequirement:
+          "Bu Gereksinimi Kullan",
 
         clarity:
           "Açıklık",
@@ -1567,10 +2066,13 @@
           "Analist Notları",
 
         source:
-          "Orijinal Gereksinim",
+          "Analiz Edilen Girdi",
 
         saved:
           "✓ Gereksinim mevcut workspace bağlamına kaydedildi.",
+
+        selected:
+          "✓ Gereksinim mevcut workspace için seçildi.",
 
         next:
           "Sonraki Adım",
@@ -1587,52 +2089,84 @@
         generateUat:
           "UAT Test Case'leri Oluştur →",
 
-        empty:
-          "-",
+        pdf:
+          "PDF Yükle",
 
-        serverError:
-          "Requirement analysis servisi şu anda kullanılamıyor."
+        image:
+          "Görsel Yükle",
+
+        camera:
+          "Fotoğraf Çek",
+
+        empty:
+          "-"
 
       }
 
     };
 
 
+    /*
+      ======================================================
+      ELEMENTS
+      ======================================================
+    */
+
     const languageEl =
       document.getElementById("language");
-
 
     const requirementEl =
       document.getElementById("requirement");
 
-
     const detailEl =
       document.getElementById("detail");
-
 
     const analyzeButton =
       document.getElementById("analyzeButton");
 
-
     const clearButton =
       document.getElementById("clearButton");
-
 
     const loadingEl =
       document.getElementById("loading");
 
-
     const errorEl =
       document.getElementById("error");
-
 
     const resultEl =
       document.getElementById("result");
 
-
     const characterCount =
       document.getElementById("characterCount");
 
+    const attachButton =
+      document.getElementById("attachButton");
+
+    const attachMenu =
+      document.getElementById("attachMenu");
+
+    const pdfInput =
+      document.getElementById("pdfInput");
+
+    const imageInput =
+      document.getElementById("imageInput");
+
+    const cameraInput =
+      document.getElementById("cameraInput");
+
+
+    let selectedFile =
+      null;
+
+    let detectedRequirements =
+      [];
+
+
+    /*
+      ======================================================
+      HELPERS
+      ======================================================
+    */
 
     function t(key) {
 
@@ -1659,18 +2193,63 @@
     function updateCharacterCount() {
 
       characterCount.textContent =
-        requirementEl.value.length;
+        `${requirementEl.value.length} / 10000`;
 
     }
 
 
+    function showError(message) {
+
+      errorEl.textContent =
+        message;
+
+      errorEl.style.display =
+        "block";
+
+    }
+
+
+    function hideError() {
+
+      errorEl.textContent =
+        "";
+
+      errorEl.style.display =
+        "none";
+
+    }
+
+
+    function normalizeScore(value) {
+
+      const score =
+        Number(value);
+
+      if (!Number.isFinite(score)) {
+        return 0;
+      }
+
+      return Math.max(
+        0,
+        Math.min(
+          100,
+          Math.round(score)
+        )
+      );
+
+    }
+
+
+    /*
+      ======================================================
+      LANGUAGE
+      ======================================================
+    */
+
     function updateLanguage() {
 
-      const lang =
-        languageEl.value;
-
       document.documentElement.lang =
-        lang;
+        languageEl.value;
 
 
       document.getElementById("badge")
@@ -1698,18 +2277,13 @@
         t("inputDescription");
 
 
-      document.getElementById("requirementLabel")
-        .textContent =
-        t("requirement");
-
-
       requirementEl.placeholder =
         t("placeholder");
 
 
       document.getElementById("inputHint")
         .textContent =
-        t("inputHint");
+        t("hint");
 
 
       document.getElementById("languageLabel")
@@ -1722,16 +2296,27 @@
         t("detail");
 
 
-      analyzeButton.textContent =
-        t("analyze");
-
-
       clearButton.textContent =
         t("clear");
 
 
       loadingEl.textContent =
         t("loading");
+
+
+      document.getElementById("pdfOptionText")
+        .textContent =
+        t("pdf");
+
+
+      document.getElementById("imageOptionText")
+        .textContent =
+        t("image");
+
+
+      document.getElementById("cameraOptionText")
+        .textContent =
+        t("camera");
 
 
       document.getElementById("resultTitle")
@@ -1747,6 +2332,16 @@
       document.getElementById("statusPill")
         .textContent =
         t("complete");
+
+
+      document.getElementById("detectedTitle")
+        .textContent =
+        t("detected");
+
+
+      document.getElementById("detectedDescription")
+        .textContent =
+        t("detectedDescription");
 
 
       document.getElementById("clarityLabel")
@@ -1849,61 +2444,207 @@
         t("generateUat");
 
 
-      if (
-        document.getElementById("savedIndicator")
-          .style.display !== "none"
-      ) {
+      updateSourceChip();
 
-        document.getElementById("savedIndicator")
-          .textContent =
-          t("saved");
+    }
+
+
+    /*
+      ======================================================
+      ATTACHMENTS
+      ======================================================
+    */
+
+    function updateSourceChip() {
+
+      const chip =
+        document.getElementById("sourceChip");
+
+
+      if (!selectedFile) {
+
+        chip.classList.remove(
+          "visible"
+        );
+
+        return;
 
       }
 
-    }
+
+      const isPdf =
+        selectedFile.type ===
+          "application/pdf" ||
+        selectedFile.name
+          .toLowerCase()
+          .endsWith(".pdf");
 
 
-    function showError(message) {
-
-      errorEl.textContent =
-        message;
-
-      errorEl.style.display =
-        "block";
-
-    }
+      document.getElementById(
+        "sourceIcon"
+      ).textContent =
+        isPdf
+          ? "📄"
+          : "🖼️";
 
 
-    function hideError() {
-
-      errorEl.textContent =
-        "";
-
-      errorEl.style.display =
-        "none";
-
-    }
+      document.getElementById(
+        "sourceName"
+      ).textContent =
+        selectedFile.name;
 
 
-    function normalizeScore(value) {
+      document.getElementById(
+        "sourceMeta"
+      ).textContent =
+        `${(
+          selectedFile.size /
+          1024 /
+          1024
+        ).toFixed(2)} MB · ${t("fileReady")}`;
 
-      const score =
-        Number(value);
 
-      if (!Number.isFinite(score)) {
-        return 0;
-      }
-
-      return Math.max(
-        0,
-        Math.min(
-          100,
-          Math.round(score)
-        )
+      chip.classList.add(
+        "visible"
       );
 
     }
 
+
+    function selectFile(file) {
+
+      if (!file) {
+        return;
+      }
+
+
+      if (
+        file.size >
+        4 * 1024 * 1024
+      ) {
+
+        showError(
+          t("fileTooLarge")
+        );
+
+        return;
+
+      }
+
+
+      const isPdf =
+        file.type ===
+          "application/pdf" ||
+        file.name
+          .toLowerCase()
+          .endsWith(".pdf");
+
+
+      const isImage =
+        file.type
+          .startsWith("image/");
+
+
+      if (
+        !isPdf &&
+        !isImage
+      ) {
+
+        showError(
+          t("fileType")
+        );
+
+        return;
+
+      }
+
+
+      selectedFile =
+        file;
+
+
+      hideError();
+
+      updateSourceChip();
+
+
+      attachMenu.classList.remove(
+        "open"
+      );
+
+    }
+
+
+    function removeFile() {
+
+      selectedFile =
+        null;
+
+
+      pdfInput.value =
+        "";
+
+      imageInput.value =
+        "";
+
+      cameraInput.value =
+        "";
+
+
+      updateSourceChip();
+
+    }
+
+
+    function fileToDataUrl(file) {
+
+      return new Promise(
+        (
+          resolve,
+          reject
+        ) => {
+
+          const reader =
+            new FileReader();
+
+
+          reader.onload =
+            () => {
+
+              resolve(
+                reader.result
+              );
+
+            };
+
+
+          reader.onerror =
+            () => {
+
+              reject(
+                new Error(
+                  "Unable to read file."
+                )
+              );
+
+            };
+
+
+          reader.readAsDataURL(
+            file
+          );
+
+        }
+      );
+
+    }
+
+
+    /*
+      ======================================================
+      RENDERING
+      ======================================================
+    */
 
     function renderScore(
       value,
@@ -1915,13 +2656,15 @@
         normalizeScore(value);
 
 
-      document.getElementById(scoreId)
-        .textContent =
+      document.getElementById(
+        scoreId
+      ).textContent =
         score;
 
 
-      document.getElementById(barId)
-        .style.width =
+      document.getElementById(
+        barId
+      ).style.width =
         `${score}%`;
 
     }
@@ -1947,38 +2690,19 @@
         <ul class="list">
           ${
             items
-              .map(item => {
-
-                if (
-                  item === null ||
-                  item === undefined
-                ) {
-                  return "";
-                }
-
-                if (
-                  typeof item === "object"
-                ) {
-
-                  return `
-                    <li>
-                      ${escapeHtml(
-                        JSON.stringify(
-                          item
-                        )
-                      )}
-                    </li>
-                  `;
-
-                }
-
-                return `
+              .map(
+                item => `
                   <li>
-                    ${escapeHtml(item)}
+                    ${
+                      escapeHtml(
+                        typeof item === "object"
+                          ? JSON.stringify(item)
+                          : item
+                      )
+                    }
                   </li>
-                `;
-
-              })
+                `
+              )
               .join("")
           }
         </ul>
@@ -2074,102 +2798,158 @@
     }
 
 
+    /*
+      ======================================================
+      WORKSPACE
+      ======================================================
+    */
+
     function saveRequirementToWorkspace(
       data,
-      originalRequirement
+      originalRequirement,
+      sourceInfo
     ) {
 
       if (
         !window.BADataModel ||
         typeof window.BADataModel
-          .createRequirement !== "function"
+          .createRequirement !==
+          "function"
       ) {
+
         return;
+
       }
 
 
       const requirement =
-        window.BADataModel.createRequirement({
+        window.BADataModel
+          .createRequirement({
 
-          title:
-            data.title ||
-            data.summary ||
-            "Requirement",
+            title:
+              data.title ||
+              data.summary ||
+              "Requirement",
 
-          description:
-            originalRequirement,
+            description:
+              originalRequirement ||
+              data.summary ||
+              "",
 
-          source:
-            "Requirement Analyzer",
+            source:
+              sourceInfo?.name
+                ? `Requirement Analyzer · ${sourceInfo.name}`
+                : "Requirement Analyzer",
 
-          priority:
-            String(
-              data.priority ||
-              "medium"
-            ).toLowerCase(),
+            priority:
+              String(
+                data.priority ||
+                "medium"
+              ).toLowerCase(),
 
-          analysis: {
+            requirementType:
+              data.requirementType ||
+              "Other",
 
-            clarityScore:
-              normalizeScore(
-                data.clarityScore
-              ),
+            analysis: {
 
-            completenessScore:
-              normalizeScore(
-                data.completenessScore
-              ),
+              clarityScore:
+                normalizeScore(
+                  data.clarityScore
+                ),
 
-            testabilityScore:
-              normalizeScore(
-                data.testabilityScore
-              ),
+              completenessScore:
+                normalizeScore(
+                  data.completenessScore
+                ),
 
-            ambiguities:
-              Array.isArray(
-                data.ambiguities
-              )
-                ? data.ambiguities
-                : [],
+              testabilityScore:
+                normalizeScore(
+                  data.testabilityScore
+                ),
 
-            missingInformation:
-              Array.isArray(
-                data.missingInformation
-              )
-                ? data.missingInformation
-                : [],
+              ambiguities:
+                Array.isArray(
+                  data.ambiguities
+                )
+                  ? data.ambiguities
+                  : [],
 
-            assumptions:
-              Array.isArray(
-                data.assumptions
-              )
-                ? data.assumptions
-                : [],
+              missingInformation:
+                Array.isArray(
+                  data.missingInformation
+                )
+                  ? data.missingInformation
+                  : [],
 
-            businessRules:
-              Array.isArray(
-                data.businessRules
-              )
-                ? data.businessRules
-                : [],
+              assumptions:
+                Array.isArray(
+                  data.assumptions
+                )
+                  ? data.assumptions
+                  : [],
 
-            openQuestions:
-              Array.isArray(
-                data.openQuestions
-              )
-                ? data.openQuestions
-                : [],
+              businessRules:
+                Array.isArray(
+                  data.businessRules
+                )
+                  ? data.businessRules
+                  : [],
 
-            edgeCases:
-              Array.isArray(
-                data.edgeCases
-              )
-                ? data.edgeCases
-                : []
+              openQuestions:
+                Array.isArray(
+                  data.openQuestions
+                )
+                  ? data.openQuestions
+                  : [],
 
-          }
+              edgeCases:
+                Array.isArray(
+                  data.edgeCases
+                )
+                  ? data.edgeCases
+                  : [],
 
-        });
+              analystNotes:
+                Array.isArray(
+                  data.analystNotes
+                )
+                  ? data.analystNotes
+                  : [
+                      data.analystNotes
+                    ].filter(Boolean)
+
+            }
+
+          });
+
+
+      /*
+        Backward compatibility.
+
+        Until core/data-model.js is upgraded,
+        explicitly preserve these new fields.
+      */
+
+      requirement.requirementType =
+        data.requirementType ||
+        requirement.requirementType ||
+        "Other";
+
+
+      requirement.analysis =
+        requirement.analysis ||
+        {};
+
+
+      requirement.analysis.analystNotes =
+        Array.isArray(
+          data.analystNotes
+        )
+          ? data.analystNotes
+          : [
+              data.analystNotes
+            ].filter(Boolean);
 
 
       try {
@@ -2181,10 +2961,21 @@
           )
         );
 
+
+        sessionStorage.setItem(
+          "baforge-analyzer-source",
+          JSON.stringify(
+            sourceInfo ||
+            {}
+          )
+        );
+
+
         document.getElementById(
           "savedIndicator"
         ).style.display =
           "block";
+
 
         document.getElementById(
           "savedIndicator"
@@ -2203,10 +2994,259 @@
     }
 
 
+    /*
+      ======================================================
+      DETECTED REQUIREMENTS
+      ======================================================
+    */
+
+    function renderDetectedRequirements(
+      items
+    ) {
+
+      detectedRequirements =
+        Array.isArray(items)
+          ? items
+          : [];
+
+
+      const section =
+        document.getElementById(
+          "detectedSection"
+        );
+
+
+      const grid =
+        document.getElementById(
+          "detectedGrid"
+        );
+
+
+      if (
+        detectedRequirements.length <= 1
+      ) {
+
+        section.style.display =
+          "none";
+
+        grid.innerHTML =
+          "";
+
+        return;
+
+      }
+
+
+      section.style.display =
+        "block";
+
+
+      grid.innerHTML =
+        detectedRequirements
+          .map(
+            (
+              item,
+              index
+            ) => {
+
+              const title =
+                item.title ||
+                `Requirement ${index + 1}`;
+
+
+              const text =
+                item.requirement ||
+                item.description ||
+                item.summary ||
+                "";
+
+
+              return `
+                <div class="detected-card">
+
+                  <h4>
+                    ${escapeHtml(title)}
+                  </h4>
+
+                  <p>
+                    ${escapeHtml(text)}
+                  </p>
+
+                  <button
+                    type="button"
+                    class="use-requirement"
+                    data-index="${index}">
+                    ${escapeHtml(t("useRequirement"))}
+                  </button>
+
+                </div>
+              `;
+
+            }
+          )
+          .join("");
+
+
+      grid
+        .querySelectorAll(
+          ".use-requirement"
+        )
+        .forEach(
+          button => {
+
+            button.addEventListener(
+              "click",
+              () => {
+
+                selectDetectedRequirement(
+                  Number(
+                    button.dataset.index
+                  )
+                );
+
+              }
+            );
+
+          }
+        );
+
+    }
+
+
+    function selectDetectedRequirement(
+      index
+    ) {
+
+      const item =
+        detectedRequirements[index];
+
+
+      if (!item) {
+        return;
+      }
+
+
+      const text =
+        item.requirement ||
+        item.description ||
+        item.summary ||
+        item.title ||
+        "";
+
+
+      requirementEl.value =
+        text;
+
+
+      updateCharacterCount();
+
+
+      const workspaceData = {
+
+        title:
+          item.title ||
+          "Requirement",
+
+        summary:
+          item.summary ||
+          text,
+
+        requirementType:
+          item.requirementType ||
+          "Other",
+
+        priority:
+          item.priority ||
+          "Unknown",
+
+        clarityScore:
+          item.clarityScore ??
+          0,
+
+        completenessScore:
+          item.completenessScore ??
+          0,
+
+        testabilityScore:
+          item.testabilityScore ??
+          0,
+
+        ambiguities:
+          item.ambiguities ||
+          [],
+
+        missingInformation:
+          item.missingInformation ||
+          [],
+
+        assumptions:
+          item.assumptions ||
+          [],
+
+        businessRules:
+          item.businessRules ||
+          [],
+
+        openQuestions:
+          item.openQuestions ||
+          [],
+
+        edgeCases:
+          item.edgeCases ||
+          [],
+
+        analystNotes:
+          item.analystNotes ||
+          []
+
+      };
+
+
+      saveRequirementToWorkspace(
+        workspaceData,
+        text,
+        selectedFile
+          ? {
+              name:
+                selectedFile.name,
+
+              type:
+                selectedFile.type
+            }
+          : null
+      );
+
+
+      document.getElementById(
+        "savedIndicator"
+      ).textContent =
+        t("selected");
+
+
+      document.getElementById(
+        "savedIndicator"
+      ).style.display =
+        "block";
+
+    }
+
+
+    /*
+      ======================================================
+      MAIN RESULT
+      ======================================================
+    */
+
     function renderResult(
       data,
-      originalRequirement
+      originalRequirement,
+      sourceInfo
     ) {
+
+      renderDetectedRequirements(
+        data.detectedRequirements
+      );
+
 
       renderScore(
         data.clarityScore,
@@ -2307,15 +3347,41 @@
         );
 
 
+      let sourceText =
+        originalRequirement ||
+        data.primaryRequirement ||
+        data.summary ||
+        "";
+
+
+      if (
+        sourceInfo?.name
+      ) {
+
+        sourceText =
+          sourceInfo.name +
+          (
+            sourceText
+              ? `\n\n${sourceText}`
+              : ""
+          );
+
+      }
+
+
       document.getElementById(
         "sourceRequirement"
       ).textContent =
-        originalRequirement;
+        sourceText;
 
 
       saveRequirementToWorkspace(
         data,
-        originalRequirement
+        data.primaryRequirement ||
+        originalRequirement ||
+        data.summary ||
+        "",
+        sourceInfo
       );
 
 
@@ -2331,7 +3397,13 @@
     }
 
 
-    async function analyzeRequirement() {
+    /*
+      ======================================================
+      ANALYZE
+      ======================================================
+    */
+
+    async function analyzeInput() {
 
       hideError();
 
@@ -2340,15 +3412,14 @@
         requirementEl.value.trim();
 
 
-      const words =
-        requirement
-          .split(/\s+/)
-          .filter(Boolean);
-
+      /*
+        Important:
+        Text is NOT mandatory when a file exists.
+      */
 
       if (
-        requirement.length < 15 ||
-        words.length < 3
+        !requirement &&
+        !selectedFile
       ) {
 
         showError(
@@ -2384,16 +3455,52 @@
 
       try {
 
+        let source =
+          null;
+
+
+        if (
+          selectedFile
+        ) {
+
+          const dataUrl =
+            await fileToDataUrl(
+              selectedFile
+            );
+
+
+          source = {
+
+            name:
+              selectedFile.name,
+
+            type:
+              selectedFile.type,
+
+            size:
+              selectedFile.size,
+
+            data:
+              dataUrl
+
+          };
+
+        }
+
+
         const response =
           await fetch(
             "/api/requirement-analyzer",
             {
 
-              method: "POST",
+              method:
+                "POST",
 
               headers: {
+
                 "Content-Type":
                   "application/json"
+
               },
 
               body:
@@ -2401,11 +3508,16 @@
 
                   requirement,
 
+                  instruction:
+                    requirement,
+
                   language:
                     languageEl.value,
 
                   detail:
-                    detailEl.value
+                    detailEl.value,
+
+                  source
 
                 })
 
@@ -2434,11 +3546,13 @@
         }
 
 
-        if (!response.ok) {
+        if (
+          !response.ok
+        ) {
 
           throw new Error(
             data.error ||
-            t("serverError")
+            t("genericError")
           );
 
         }
@@ -2446,7 +3560,8 @@
 
         if (
           !data ||
-          typeof data !== "object"
+          typeof data !==
+          "object"
         ) {
 
           throw new Error(
@@ -2458,7 +3573,16 @@
 
         renderResult(
           data,
-          requirement
+          requirement,
+          source
+            ? {
+                name:
+                  source.name,
+
+                type:
+                  source.type
+              }
+            : null
         );
 
 
@@ -2480,8 +3604,10 @@
         analyzeButton.disabled =
           false;
 
+
         clearButton.disabled =
           false;
+
 
         loadingEl.style.display =
           "none";
@@ -2491,26 +3617,183 @@
     }
 
 
+    /*
+      ======================================================
+      CLEAR
+      ======================================================
+    */
+
     function clearForm() {
 
       requirementEl.value =
         "";
 
+
+      selectedFile =
+        null;
+
+
+      detectedRequirements =
+        [];
+
+
+      pdfInput.value =
+        "";
+
+      imageInput.value =
+        "";
+
+      cameraInput.value =
+        "";
+
+
       updateCharacterCount();
+
+      updateSourceChip();
 
       hideError();
 
+
       resultEl.style.display =
         "none";
+
 
       document.getElementById(
         "savedIndicator"
       ).style.display =
         "none";
 
+
+      document.getElementById(
+        "detectedSection"
+      ).style.display =
+        "none";
+
+
       requirementEl.focus();
 
     }
+
+
+    /*
+      ======================================================
+      EVENTS
+      ======================================================
+    */
+
+    attachButton.addEventListener(
+      "click",
+      event => {
+
+        event.stopPropagation();
+
+
+        attachMenu.classList.toggle(
+          "open"
+        );
+
+      }
+    );
+
+
+    document.addEventListener(
+      "click",
+      event => {
+
+        if (
+          !event.target.closest(
+            ".plus-wrap"
+          )
+        ) {
+
+          attachMenu.classList.remove(
+            "open"
+          );
+
+        }
+
+      }
+    );
+
+
+    document.getElementById(
+      "pdfOption"
+    ).addEventListener(
+      "click",
+      () => {
+
+        pdfInput.click();
+
+      }
+    );
+
+
+    document.getElementById(
+      "imageOption"
+    ).addEventListener(
+      "click",
+      () => {
+
+        imageInput.click();
+
+      }
+    );
+
+
+    document.getElementById(
+      "cameraOption"
+    ).addEventListener(
+      "click",
+      () => {
+
+        cameraInput.click();
+
+      }
+    );
+
+
+    pdfInput.addEventListener(
+      "change",
+      event => {
+
+        selectFile(
+          event.target.files[0]
+        );
+
+      }
+    );
+
+
+    imageInput.addEventListener(
+      "change",
+      event => {
+
+        selectFile(
+          event.target.files[0]
+        );
+
+      }
+    );
+
+
+    cameraInput.addEventListener(
+      "change",
+      event => {
+
+        selectFile(
+          event.target.files[0]
+        );
+
+      }
+    );
+
+
+    document.getElementById(
+      "removeSource"
+    ).addEventListener(
+      "click",
+      removeFile
+    );
 
 
     requirementEl.addEventListener(
@@ -2527,7 +3810,7 @@
 
     analyzeButton.addEventListener(
       "click",
-      analyzeRequirement
+      analyzeInput
     );
 
 
@@ -2542,14 +3825,17 @@
       event => {
 
         if (
-          (event.ctrlKey ||
-            event.metaKey) &&
-          event.key === "Enter"
+          (
+            event.ctrlKey ||
+            event.metaKey
+          ) &&
+          event.key ===
+            "Enter"
         ) {
 
           event.preventDefault();
 
-          analyzeRequirement();
+          analyzeInput();
 
         }
 
@@ -2557,9 +3843,17 @@
     );
 
 
+    /*
+      ======================================================
+      INITIALIZE
+      ======================================================
+    */
+
     updateLanguage();
 
     updateCharacterCount();
+
+    updateSourceChip();
 
   </script>
 
