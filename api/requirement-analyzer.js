@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
       String(body.requirement || "").trim();
 
     const instruction =
-      String(body.instruction || requirement || "").trim();
+      String(body.instruction || "").trim();
 
     const language =
       body.language || "en";
@@ -26,14 +26,16 @@ module.exports = async (req, res) => {
       body.source || null;
 
 
-    // -----------------------------------------
+    // =========================================================
     // VALIDATION
-    // -----------------------------------------
+    // =========================================================
 
     if (!["tr", "en"].includes(language)) {
+
       return res.status(400).json({
         error: "Invalid language."
       });
+
     }
 
 
@@ -44,9 +46,11 @@ module.exports = async (req, res) => {
         "Comprehensive"
       ].includes(detail)
     ) {
+
       return res.status(400).json({
         error: "Invalid detail level."
       });
+
     }
 
 
@@ -62,14 +66,15 @@ module.exports = async (req, res) => {
 
 
     /*
-      TEXT IS OPTIONAL.
+      Valid combinations:
 
-      The user may provide:
-      - text only
-      - PDF only
-      - image only
-      - text + PDF
-      - text + image
+      1. Text only
+      2. PDF only
+      3. Image only
+      4. Text + PDF
+      5. Text + Image
+      6. Instruction + PDF
+      7. Instruction + Image
     */
 
     if (!hasText && !hasSource) {
@@ -84,11 +89,27 @@ module.exports = async (req, res) => {
     }
 
 
-    // -----------------------------------------
+    // =========================================================
     // TEXT VALIDATION
-    // -----------------------------------------
+    // =========================================================
 
-    if (hasText) {
+    /*
+      Text is required only when there is NO attachment.
+
+      If a PDF/image exists, the text may be:
+
+      "4-7. sayfaları incele"
+
+      or
+
+      "IBAN kurallarına odaklan"
+
+      or
+
+      completely empty.
+    */
+
+    if (hasText && !hasSource) {
 
       const words =
         requirement
@@ -101,29 +122,21 @@ module.exports = async (req, res) => {
         words.length < 3
       ) {
 
-        /*
-          If a file is also attached, short text
-          is allowed because it may simply be
-          an instruction such as:
-
-          "Focus on pages 4-7"
-        */
-
-        if (!hasSource) {
-
-          return res.status(400).json({
-            error:
-              language === "tr"
-                ? "Lütfen en az 15 karakter ve 3 kelime içeren açık bir gereksinim girin."
-                : "Please provide a clear requirement with at least 15 characters and 3 words."
-          });
-
-        }
+        return res.status(400).json({
+          error:
+            language === "tr"
+              ? "Lütfen en az 15 karakter ve 3 kelime içeren açık bir gereksinim girin."
+              : "Please provide a clear requirement with at least 15 characters and 3 words."
+        });
 
       }
 
     }
 
+
+    // =========================================================
+    // LANGUAGE
+    // =========================================================
 
     const outputLanguage =
       language === "tr"
@@ -131,9 +144,9 @@ module.exports = async (req, res) => {
         : "English";
 
 
-    // -----------------------------------------
-    // DETAIL INSTRUCTIONS
-    // -----------------------------------------
+    // =========================================================
+    // DETAIL
+    // =========================================================
 
     let detailInstruction = "";
 
@@ -143,33 +156,36 @@ module.exports = async (req, res) => {
       detailInstruction = `
 Generate a concise analysis.
 
-Keep each list focused on the most important items.
+Keep lists focused on the most important findings.
 Avoid unnecessary explanations.
 `;
 
     } else if (detail === "Comprehensive") {
 
       detailInstruction = `
-Generate a comprehensive professional BA analysis.
+Generate a comprehensive professional Business Analysis.
 
-Identify relevant:
+Be thorough when identifying:
+
 - ambiguities
 - missing information
 - assumptions
 - business rules
 - open questions
 - edge cases
+- distinct requirements
 
-Be thorough, but do not invent facts that are not supported by the source.
+Do not invent information.
 `;
 
     } else {
 
       detailInstruction = `
-Generate a professional Business Analyst level analysis.
+Generate a professional Senior Business Analyst level analysis.
 
-Focus on practical information that can be used for:
-- refinement
+Focus on information useful for:
+
+- requirements refinement
 - development
 - testing
 - stakeholder clarification
@@ -179,103 +195,154 @@ Focus on practical information that can be used for:
     }
 
 
-    // -----------------------------------------
+    // =========================================================
     // SOURCE TYPE
-    // -----------------------------------------
+    // =========================================================
 
-    let sourceType =
-      "text";
+    let sourceType = "text";
+
+
+    let sourceMime = "";
+
+    let sourceName = "";
+
+    let sourceData = "";
 
 
     if (hasSource) {
 
-      const type =
+      sourceMime =
         String(
           source.type || ""
         ).toLowerCase();
 
-      const name =
+      sourceName =
         String(
           source.name || ""
-        ).toLowerCase();
+        ).trim();
+
+      sourceData =
+        String(
+          source.data || ""
+        ).trim();
 
 
       if (
-        type === "application/pdf" ||
-        name.endsWith(".pdf")
+        sourceMime === "application/pdf" ||
+        sourceName.toLowerCase().endsWith(".pdf") ||
+        sourceData.startsWith("data:application/pdf")
       ) {
 
-        sourceType =
-          "pdf";
+        sourceType = "pdf";
 
       } else if (
-        type.startsWith("image/")
+        sourceMime.startsWith("image/") ||
+        sourceData.startsWith("data:image/")
       ) {
 
-        sourceType =
-          "image";
+        sourceType = "image";
+
+      } else {
+
+        return res.status(400).json({
+          error:
+            language === "tr"
+              ? "Desteklenmeyen dosya türü."
+              : "Unsupported file type."
+        });
 
       }
 
     }
 
 
-    // -----------------------------------------
+    // =========================================================
+    // USER REQUEST
+    // =========================================================
+
+    const userRequest =
+      instruction ||
+      requirement ||
+      (
+        sourceType === "pdf"
+          ? "Analyze the attached PDF."
+          : sourceType === "image"
+            ? "Analyze the attached image."
+            : "Analyze the provided requirement."
+      );
+
+
+    // =========================================================
     // ANALYSIS PROMPT
-    // -----------------------------------------
+    // =========================================================
 
     const prompt = `
 
 You are an expert Senior Business Analyst and Requirements Engineer.
 
-You are analyzing a business requirement and/or an attached source document.
+You have been given a user request and may also have an attached document or image.
 
-SOURCE TYPE:
+=========================================================
+SOURCE
+=========================================================
 
+Source type:
 ${sourceType}
 
-USER INSTRUCTION:
-
-${instruction || "No additional instruction was provided."}
-
+Source filename:
+${sourceName || "Not provided"}
 
 IMPORTANT:
 
-If a PDF or image is attached, inspect the source itself.
+If an attachment exists, the ATTACHMENT IS THE PRIMARY SOURCE OF TRUTH.
 
-The user may intentionally provide ONLY a document without writing a requirement.
+You MUST inspect and analyze the actual attached PDF or image before producing the analysis.
 
-In that case:
+Do not analyze only the user's instruction.
 
-1. Read the document/image.
-2. Identify relevant business requirements.
-3. Identify explicit business rules.
-4. Identify important constraints.
-5. Identify ambiguities.
-6. Identify missing information.
-7. Identify open questions.
-8. Identify edge cases.
-9. Determine whether multiple requirements exist.
+The user's instruction tells you WHAT TO LOOK FOR in the attachment.
 
-If the user provides an instruction such as:
+=========================================================
+USER REQUEST
+=========================================================
 
-"Analyze pages 4-7"
+${userRequest}
 
-"Focus on transaction limits"
+=========================================================
+HOW TO INTERPRET THE REQUEST
+=========================================================
 
-"Look for approval rules"
+If the user says:
 
-"Check the requirements related to IBAN"
+"4-7. sayfaları incele"
 
-then focus the analysis accordingly.
+then inspect those pages.
 
-Do NOT require the user to manually copy the document text.
+If the user says:
 
-If page numbers are explicitly mentioned by the user, use them as the requested scope.
+"Para transferi kurallarına bak"
 
-Do NOT invent page references when they are not available.
+then inspect the attachment for rules related to money transfers.
+
+If the user says:
+
+"IBAN ile ilgili gereksinimleri bul"
+
+then identify requirements related to IBAN.
+
+If the user provides only a PDF/image and no text:
+
+Analyze the attachment itself.
+
+Do NOT ask the user to copy the document text.
+
+=========================================================
+IMPORTANT ANALYSIS RULES
+=========================================================
 
 Do NOT invent facts.
+
+Do NOT invent requirements.
 
 Do NOT invent business rules.
 
@@ -287,55 +354,129 @@ Do NOT invent dates.
 
 Do NOT invent regulatory requirements.
 
-Do NOT invent user roles unless the source indicates them.
+Do NOT invent user roles.
 
 Do NOT assume technical implementation.
 
-Do NOT turn missing information into a confirmed business rule.
+Do NOT turn missing information into a confirmed rule.
 
-Business rules must contain only rules explicitly stated or directly supported by the source.
+Only identify a business rule when it is explicitly stated
+or directly supported by the attachment.
 
-Edge cases may be proposed as scenarios to consider, but must NOT be presented as confirmed business rules.
+Edge cases may be proposed as scenarios to consider,
+but they must NOT be presented as confirmed business rules.
 
-Scores must reflect the quality of the actual requirement/source information.
+Distinguish carefully between:
 
-Be critical but practical.
+- actual requirement
+- business rule
+- explanatory information
+- background information
+- assumption
+- open question
+- ambiguity
 
-Avoid duplicate items.
+A document may contain many paragraphs that are NOT requirements.
+
+Do not turn every paragraph or sentence into a requirement.
+
+=========================================================
+MULTIPLE REQUIREMENTS
+=========================================================
+
+If the attachment contains multiple clearly distinguishable
+business requirements, identify them under:
+
+detectedRequirements
+
+Do NOT create artificial requirements simply by splitting
+every sentence.
+
+Only include genuinely distinct requirements.
+
+=========================================================
+SCORING
+=========================================================
+
+clarityScore:
+
+How clearly the requirement or source expresses the intended
+business behavior or need.
+
+completenessScore:
+
+How much necessary business information is actually provided.
+
+testabilityScore:
+
+How easily the identified requirement can be converted
+into objective test scenarios.
+
+Score range:
+
+0-100.
+
+Use:
+
+90-100 = very clear and sufficiently detailed
+
+70-89 = mostly clear with some clarification needed
+
+40-69 = partially defined with meaningful gaps
+
+0-39 = highly ambiguous or insufficiently defined
+
+
+For priority:
+
+Use "Unknown" when the source does not provide enough
+information to determine priority.
+
+Do NOT invent priority based only on the domain.
+
+For requirementType:
+
+Choose the type that best represents the actual source.
+
+Possible values:
+
+Functional
+Non-Functional
+Business Rule
+Regulatory
+Data
+Integration
+Process
+Other
+
+Do NOT classify something as regulatory merely because
+it concerns banking or finance.
+
+=========================================================
+OUTPUT LANGUAGE
+=========================================================
+
+All human-readable output must be in:
+
+${outputLanguage}
+
+=========================================================
+DETAIL LEVEL
+=========================================================
 
 ${detailInstruction}
 
-
-MULTIPLE REQUIREMENTS:
-
-If the source contains multiple clearly distinguishable requirements, identify them.
-
-Return them under "detectedRequirements".
-
-Each detected requirement should contain:
-
-- title
-- requirement
-- summary
-- requirementType
-- priority
-
-Do not create artificial requirements simply by splitting every sentence.
-
-Only include distinct business requirements.
-
-
-OUTPUT LANGUAGE:
-
-All human-readable output must be in ${outputLanguage}.
-
+=========================================================
+OUTPUT
+=========================================================
 
 Return ONLY valid JSON.
 
 Do not return Markdown.
-Do not return code fences.
-Do not add explanations before or after the JSON.
 
+Do not return code fences.
+
+Do not add explanations before or after the JSON.
 
 The JSON must have exactly this structure:
 
@@ -344,7 +485,7 @@ The JSON must have exactly this structure:
 
   "summary": "clear summary",
 
-  "primaryRequirement": "the main requirement identified from the input",
+  "primaryRequirement": "the main requirement identified from the source",
 
   "requirementType": "Functional | Non-Functional | Business Rule | Regulatory | Data | Integration | Process | Other",
 
@@ -356,33 +497,19 @@ The JSON must have exactly this structure:
 
   "testabilityScore": 0,
 
-  "ambiguities": [
-    "..."
-  ],
+  "ambiguities": [],
 
-  "missingInformation": [
-    "..."
-  ],
+  "missingInformation": [],
 
-  "assumptions": [
-    "..."
-  ],
+  "assumptions": [],
 
-  "businessRules": [
-    "..."
-  ],
+  "businessRules": [],
 
-  "openQuestions": [
-    "..."
-  ],
+  "openQuestions": [],
 
-  "edgeCases": [
-    "..."
-  ],
+  "edgeCases": [],
 
-  "analystNotes": [
-    "..."
-  ],
+  "analystNotes": [],
 
   "detectedRequirements": [
     {
@@ -395,150 +522,53 @@ The JSON must have exactly this structure:
   ]
 }
 
-
-SCORING GUIDANCE:
-
-clarityScore:
-How clearly the requirement expresses the intended behavior or business need.
-
-completenessScore:
-How much necessary business information is actually provided.
-
-testabilityScore:
-How easily the requirement can be converted into objective test scenarios.
-
-Score range:
-0-100.
-
-
-90-100:
-Very clear and sufficiently detailed.
-
-70-89:
-Mostly clear but some clarification is needed.
-
-40-69:
-Partially defined with meaningful gaps.
-
-0-39:
-Highly ambiguous or insufficiently defined.
-
-
-For priority:
-
-Use "Unknown" when the source does not provide enough information to determine priority.
-
-Do not invent priority based only on the domain.
-
-
-For requirementType:
-
-Choose the type that best represents the actual wording/source.
-
-Do not classify something as regulatory merely because it concerns banking or finance unless regulatory behavior is explicitly stated.
-
-
-IMPORTANT:
-
-A document may contain information that is NOT a requirement.
-
-Do not turn every paragraph, heading or sentence into a requirement.
-
-Distinguish between:
-
-- requirement
-- business rule
-- explanatory information
-- assumption
-- open question
-- background information
-
 `;
 
 
-    // -----------------------------------------
-    // OPENAI INPUT
-    // -----------------------------------------
+    // =========================================================
+    // BUILD OPENAI INPUT
+    // =========================================================
 
-    const input = [];
-
-
-    /*
-      TEXT / INSTRUCTION
-    */
-
-    input.push({
-      role: "user",
-
-      content: [
-        {
-          type: "input_text",
-          text: prompt
-        }
-      ]
-
-    });
+    const content = [];
 
 
     /*
-      ATTACHED SOURCE
-
-      PDF:
-      input_file
-
-      IMAGE:
-      input_image
+      IMPORTANT:
+      Put the attachment FIRST so the model receives the
+      actual source before the natural-language instruction.
     */
 
     if (hasSource) {
 
-      const sourceData =
-        source.data;
+      if (sourceType === "pdf") {
 
+        content.push({
 
-      const sourceMime =
-        String(
-          source.type || ""
-        ).toLowerCase();
-
-
-      const sourceName =
-        String(
-          source.name || ""
-        ).toLowerCase();
-
-
-      const isPdf =
-        sourceMime ===
-          "application/pdf" ||
-        sourceName.endsWith(".pdf");
-
-
-      if (isPdf) {
-
-        input[0].content.push({
-
-          type:
-            "input_file",
+          type: "input_file",
 
           filename:
-            source.name ||
+            sourceName ||
             "document.pdf",
 
           file_data:
-            sourceData
+            sourceData,
+
+          detail:
+            "high"
 
         });
 
-      } else {
+      } else if (sourceType === "image") {
 
-        input[0].content.push({
+        content.push({
 
-          type:
-            "input_image",
+          type: "input_image",
 
           image_url:
-            sourceData
+            sourceData,
+
+          detail:
+            "high"
 
         });
 
@@ -547,17 +577,41 @@ Distinguish between:
     }
 
 
-    // -----------------------------------------
+    /*
+      Put the instruction AFTER the attachment.
+    */
+
+    content.push({
+
+      type: "input_text",
+
+      text: prompt
+
+    });
+
+
+    const input = [
+
+      {
+        role: "user",
+
+        content
+
+      }
+
+    ];
+
+
+    // =========================================================
     // OPENAI REQUEST
-    // -----------------------------------------
+    // =========================================================
 
     const response =
       await fetch(
         "https://api.openai.com/v1/responses",
         {
 
-          method:
-            "POST",
+          method: "POST",
 
           headers: {
 
@@ -575,7 +629,10 @@ Distinguish between:
               model:
                 "gpt-5.6-luna",
 
-              input
+              input,
+
+              store:
+                false
 
             })
 
@@ -586,6 +643,10 @@ Distinguish between:
     const data =
       await response.json();
 
+
+    // =========================================================
+    // OPENAI ERROR
+    // =========================================================
 
     if (!response.ok) {
 
@@ -608,27 +669,40 @@ Distinguish between:
     }
 
 
-    // -----------------------------------------
-    // EXTRACT MODEL OUTPUT
-    // -----------------------------------------
+    // =========================================================
+    // EXTRACT OUTPUT
+    // =========================================================
 
-    const text =
-      data.output
-        ?.flatMap(
-          item =>
-            item.content || []
-        )
-        ?.filter(
-          item =>
-            item.type ===
-            "output_text"
-        )
-        ?.map(
-          item =>
-            item.text
-        )
-        ?.join("") ||
-      "";
+    let text =
+      String(
+        data.output_text || ""
+      ).trim();
+
+
+    /*
+      Fallback for Responses API output
+    */
+
+    if (!text) {
+
+      text =
+        data.output
+          ?.flatMap(
+            item =>
+              item.content || []
+          )
+          ?.filter(
+            item =>
+              item.type === "output_text"
+          )
+          ?.map(
+            item =>
+              item.text || ""
+          )
+          ?.join("")
+          ?.trim() || "";
+
+    }
 
 
     if (!text) {
@@ -643,9 +717,9 @@ Distinguish between:
     }
 
 
-    // -----------------------------------------
+    // =========================================================
     // CLEAN JSON
-    // -----------------------------------------
+    // =========================================================
 
     let cleanText =
       text.trim();
@@ -674,9 +748,9 @@ Distinguish between:
     }
 
 
-    // -----------------------------------------
+    // =========================================================
     // PARSE JSON
-    // -----------------------------------------
+    // =========================================================
 
     let result;
 
@@ -706,13 +780,11 @@ Distinguish between:
     }
 
 
-    // -----------------------------------------
+    // =========================================================
     // HELPERS
-    // -----------------------------------------
+    // =========================================================
 
-    function cleanString(
-      value
-    ) {
+    function cleanString(value) {
 
       return String(
         value ?? ""
@@ -721,9 +793,7 @@ Distinguish between:
     }
 
 
-    function cleanArray(
-      value
-    ) {
+    function cleanArray(value) {
 
       if (
         !Array.isArray(value)
@@ -735,9 +805,12 @@ Distinguish between:
 
 
       return value
+
         .map(
-          cleanString
+          item =>
+            cleanString(item)
         )
+
         .filter(
           Boolean
         );
@@ -745,18 +818,14 @@ Distinguish between:
     }
 
 
-    function cleanScore(
-      value
-    ) {
+    function cleanScore(value) {
 
       const score =
         Number(value);
 
 
       if (
-        !Number.isFinite(
-          score
-        )
+        !Number.isFinite(score)
       ) {
 
         return 0;
@@ -768,24 +837,24 @@ Distinguish between:
         0,
         Math.min(
           100,
-          Math.round(
-            score
-          )
+          Math.round(score)
         )
       );
 
     }
 
 
-    // -----------------------------------------
+    // =========================================================
     // DETECTED REQUIREMENTS
-    // -----------------------------------------
+    // =========================================================
 
     const detectedRequirements =
       Array.isArray(
         result.detectedRequirements
       )
+
         ? result.detectedRequirements
+
             .map(
               item => ({
 
@@ -819,16 +888,18 @@ Distinguish between:
 
               })
             )
+
             .filter(
               item =>
                 item.requirement
             )
+
         : [];
 
 
-    // -----------------------------------------
+    // =========================================================
     // NORMALIZE RESULT
-    // -----------------------------------------
+    // =========================================================
 
     const normalized = {
 
@@ -917,9 +988,9 @@ Distinguish between:
     };
 
 
-    // -----------------------------------------
+    // =========================================================
     // RESPONSE
-    // -----------------------------------------
+    // =========================================================
 
     return res.status(200).json(
       normalized
@@ -937,6 +1008,7 @@ Distinguish between:
     return res.status(500).json({
 
       error:
+        error?.message ||
         "Internal server error"
 
     });
