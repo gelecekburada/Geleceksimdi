@@ -57,9 +57,13 @@
       padding: 0 20px;
     }
 
+    /* ======================================================
+       HERO
+    ====================================================== */
+
     .hero {
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 22px;
     }
 
     .badge {
@@ -93,6 +97,61 @@
       font-size: 18px;
       max-width: 760px;
       margin: 0 auto;
+    }
+
+    /* ======================================================
+       TOOL INFO CARD
+       Common pattern for all BAForge tools.
+    ====================================================== */
+
+    .tool-info {
+      max-width: 980px;
+      margin: 0 auto 28px;
+      padding: 17px 19px;
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      background: linear-gradient(
+        135deg,
+        #f8faff,
+        #ffffff
+      );
+      border: 1px solid #dbe5ff;
+      border-left: 4px solid var(--primary);
+      border-radius: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tool-info-icon {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .tool-info-content {
+      min-width: 0;
+    }
+
+    .tool-info-title {
+      margin: 0 0 4px;
+      color: #101828;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .tool-info-text {
+      margin: 0;
+      color: #667085;
+      font-size: 13px;
+      line-height: 1.65;
     }
 
     /* ======================================================
@@ -934,6 +993,10 @@
         font-size: 16px;
       }
 
+      .tool-info {
+        padding: 15px;
+      }
+
       .card {
         padding: 20px;
       }
@@ -982,6 +1045,10 @@
 
   <main>
 
+    <!-- ==================================================
+         HERO
+         ================================================== -->
+
     <section class="hero">
 
       <div
@@ -1003,6 +1070,44 @@
 
 
     <!-- ==================================================
+         TOOL INFO
+         Common BAForge pattern:
+         "What is this tool for?"
+         ================================================== -->
+
+    <section
+      class="tool-info"
+      aria-labelledby="toolInfoTitle">
+
+      <div
+        class="tool-info-icon"
+        aria-hidden="true">
+        ?
+      </div>
+
+      <div class="tool-info-content">
+
+        <h2
+          class="tool-info-title"
+          id="toolInfoTitle">
+          What does this tool do?
+        </h2>
+
+        <p
+          class="tool-info-text"
+          id="toolInfoText">
+          Requirement Analyzer examines a raw requirement and identifies
+          ambiguity, missing information, assumptions, business rules,
+          edge cases and testability concerns before the requirement moves
+          into the delivery workflow.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
          WORKFLOW
          Analyzer is a pre-work entry point.
          It is NOT one of the 8 workflow steps.
@@ -1011,11 +1116,15 @@
     <section class="workflow-wrapper">
 
       <div class="workflow-context">
-        <span class="workflow-context-dot"></span>
+
+        <span
+          class="workflow-context-dot">
+        </span>
 
         <span id="workflowContextText">
           Analyzer is the entry point. The delivery workflow starts with Requirement.
         </span>
+
       </div>
 
       <div class="workflow-scroll">
@@ -1252,30 +1361,41 @@
                   id="pdfOption"
                   class="attach-option"
                   type="button">
+
                   📄
+
                   <span id="pdfOptionText">
                     Upload PDF
                   </span>
+
                 </button>
+
 
                 <button
                   id="imageOption"
                   class="attach-option"
                   type="button">
+
                   🖼️
+
                   <span id="imageOptionText">
                     Upload Image
                   </span>
+
                 </button>
+
 
                 <button
                   id="cameraOption"
                   class="attach-option"
                   type="button">
+
                   📷
+
                   <span id="cameraOptionText">
                     Take Photo
                   </span>
+
                 </button>
 
               </div>
@@ -1485,7 +1605,7 @@
 
             <span id="clarityScore">0</span>
 
-            <span>/ 100</span>
+            <span id="clarityMax">/ 100</span>
 
           </div>
 
@@ -1513,7 +1633,7 @@
 
             <span id="completenessScore">0</span>
 
-            <span>/ 100</span>
+            <span id="completenessMax">/ 100</span>
 
           </div>
 
@@ -1541,7 +1661,7 @@
 
             <span id="testabilityScore">0</span>
 
-            <span>/ 100</span>
+            <span id="testabilityMax">/ 100</span>
 
           </div>
 
@@ -1797,6 +1917,12 @@
         subtitle:
           "Use text, PDF documents or images as context. Add instructions only when you need them.",
 
+        toolInfoTitle:
+          "What does this tool do?",
+
+        toolInfoText:
+          "Requirement Analyzer examines a raw requirement and identifies ambiguity, missing information, assumptions, business rules, edge cases and testability concerns before the requirement moves into the delivery workflow.",
+
         workflowContext:
           "Analyzer is the entry point. The delivery workflow starts with Requirement.",
 
@@ -1883,6 +2009,15 @@
         useRequirement:
           "Use This Requirement",
 
+        requirementFallback:
+          "Requirement",
+
+        other:
+          "Other",
+
+        unknown:
+          "Unknown",
+
         clarity:
           "Clarity",
 
@@ -1958,6 +2093,15 @@
         camera:
           "Take Photo",
 
+        removeAttachment:
+          "Remove attachment",
+
+        addSource:
+          "Add source",
+
+        analyze:
+          "Analyze",
+
         empty:
           "-"
 
@@ -1967,7 +2111,7 @@
       tr: {
 
         badge:
-          "Requirement Analyzer",
+          "Gereksinim Analizi",
 
         title:
           "Geliştirmeden Önce Gereksinimi Analiz Et",
@@ -1975,18 +2119,24 @@
         subtitle:
           "Metin, PDF veya görsel kullanın. Talimat vermek yalnızca gerektiğinde kullanılmalıdır.",
 
+        toolInfoTitle:
+          "Bu araç ne işe yarar?",
+
+        toolInfoText:
+          "Gereksinim Analizörü, ham gereksinimi inceleyerek geliştirme sürecine geçmeden önce belirsizlikleri, eksik bilgileri, varsayımları, iş kurallarını, uç durumları ve test edilebilirlik sorunlarını belirler.",
+
         workflowContext:
-          "Analyzer giriş noktasıdır. Ana iş akışı Requirement adımıyla başlar.",
+          "Gereksinim Analizörü giriş noktasıdır. Ana iş akışı Gereksinim adımıyla başlar.",
 
         workflow: {
-          requirement: "Requirement",
-          userStory: "User Story",
-          acceptanceCriteria: "Acceptance Criteria",
-          uat: "UAT Test Case'leri",
-          testData: "Test Data",
-          processFlow: "Process Flow",
-          traceability: "Traceability",
-          document: "BA Document"
+          requirement: "Gereksinim",
+          userStory: "Kullanıcı Hikâyesi",
+          acceptanceCriteria: "Kabul Kriterleri",
+          uat: "UAT Test Senaryoları",
+          testData: "Test Verileri",
+          processFlow: "Süreç Akışı",
+          traceability: "İzlenebilirlik",
+          document: "BA Dokümanı"
         },
 
         inputTitle:
@@ -1996,7 +2146,7 @@
           "Gereksinimi yazın, PDF veya görsel ekleyin ya da ikisini birlikte kullanın. Dosya eklediğinizde yazılı talimat zorunlu değildir.",
 
         placeholder:
-          "BAForge AI'a neyi analiz etmesini istediğinizi yazın...",
+          "BAForge AI'ın analiz etmesini istediğiniz gereksinimi yazın...",
 
         hint:
           "İsteğe bağlı: limitlere, kurallara, eksiklere veya belirli bölümlere odaklan.",
@@ -2056,10 +2206,19 @@
           "Bulunan Gereksinimler",
 
         detectedDescription:
-          "Kaynakta birden fazla gereksinim bulundu. Workspace'te kullanmak istediğiniz gereksinimi seçebilirsiniz.",
+          "Kaynakta birden fazla gereksinim bulundu. Çalışma alanında kullanmak istediğiniz gereksinimi seçebilirsiniz.",
 
         useRequirement:
           "Bu Gereksinimi Kullan",
+
+        requirementFallback:
+          "Gereksinim",
+
+        other:
+          "Diğer",
+
+        unknown:
+          "Bilinmiyor",
 
         clarity:
           "Açıklık",
@@ -2074,7 +2233,7 @@
           "Özet",
 
         type:
-          "Gereksinim Tipi",
+          "Gereksinim Türü",
 
         priority:
           "Öncelik",
@@ -2095,7 +2254,7 @@
           "Açık Sorular",
 
         edgeCases:
-          "Edge Case'ler",
+          "Uç Durumlar",
 
         notes:
           "Analist Notları",
@@ -2104,10 +2263,10 @@
           "Analiz Edilen Girdi",
 
         saved:
-          "✓ Gereksinim BAForge workspace'e kaydedildi.",
+          "✓ Gereksinim BAForge çalışma alanına kaydedildi.",
 
         selected:
-          "✓ Gereksinim mevcut workspace için seçildi.",
+          "✓ Gereksinim mevcut çalışma alanı için seçildi.",
 
         next:
           "Sonraki Adım",
@@ -2119,13 +2278,13 @@
           "Devam Et",
 
         continueRequirement:
-          "Requirement'a Devam Et →",
+          "Gereksinime Devam Et →",
 
         generateStory:
-          "User Story Oluştur →",
+          "Kullanıcı Hikâyesi Oluştur →",
 
         generateCriteria:
-          "Acceptance Criteria Oluştur →",
+          "Kabul Kriterleri Oluştur →",
 
         pdf:
           "PDF Yükle",
@@ -2136,8 +2295,18 @@
         camera:
           "Fotoğraf Çek",
 
+        removeAttachment:
+          "Ekli dosyayı kaldır",
+
+        addSource:
+          "Kaynak ekle",
+
+        analyze:
+          "Analiz et",
+
         empty:
           "-"
+
       }
 
     };
@@ -2226,14 +2395,11 @@
         pageTranslations[language] ||
         pageTranslations.en;
 
-
       const parts =
         key.split(".");
 
-
       let value =
         dictionary;
-
 
       for (
         const part of parts
@@ -2251,7 +2417,6 @@
 
       }
 
-
       if (
         value !== undefined &&
         value !== null
@@ -2261,11 +2426,35 @@
 
       }
 
+      /*
+       * Fallback for nested English keys.
+       */
+
+      let fallback =
+        pageTranslations.en;
+
+      for (
+        const part of parts
+      ) {
+
+        if (
+          fallback === undefined ||
+          fallback === null
+        ) {
+          break;
+        }
+
+        fallback =
+          fallback[part];
+
+      }
 
       return (
-        pageTranslations.en[key] ||
-        key
-      );
+        fallback !== undefined &&
+        fallback !== null
+      )
+        ? fallback
+        : key;
 
     }
 
@@ -2276,11 +2465,9 @@
         window.BAForgeI18n ||
         window.BAI18n;
 
-
       if (!i18n) {
         return;
       }
-
 
       try {
 
@@ -2329,7 +2516,6 @@
       ).textContent =
         t("workflowContext");
 
-
       const labels = {
 
         requirement:
@@ -2358,7 +2544,6 @@
 
       };
 
-
       document
         .querySelectorAll(
           "[data-workflow-label]"
@@ -2368,7 +2553,6 @@
 
             const key =
               element.dataset.workflowLabel;
-
 
             if (
               labels[key]
@@ -2387,6 +2571,38 @@
 
     /*
       ======================================================
+      ACCESSIBILITY / COMMON LABELS
+      ======================================================
+    */
+
+    function updateAccessibilityLabels() {
+
+      document.getElementById(
+        "removeSource"
+      ).setAttribute(
+        "aria-label",
+        t("removeAttachment")
+      );
+
+      document.getElementById(
+        "attachButton"
+      ).setAttribute(
+        "aria-label",
+        t("addSource")
+      );
+
+      document.getElementById(
+        "analyzeButton"
+      ).setAttribute(
+        "aria-label",
+        t("analyze")
+      );
+
+    }
+
+
+    /*
+      ======================================================
       LANGUAGE
       ======================================================
     */
@@ -2395,8 +2611,16 @@
 
       syncCoreLanguage();
 
-      document.documentElement.lang =
+      const language =
         currentLanguage();
+
+      document.documentElement.lang =
+        language;
+
+      document.title =
+        language === "tr"
+          ? "BAForge AI - Gereksinim Analizi"
+          : "BAForge AI - Requirement Analyzer";
 
 
       document.getElementById("badge")
@@ -2410,6 +2634,22 @@
       document.getElementById("pageSubtitle")
         .textContent =
         t("subtitle");
+
+
+      /*
+       * Tool information card
+       */
+
+      document.getElementById(
+        "toolInfoTitle"
+      ).textContent =
+        t("toolInfoTitle");
+
+      document.getElementById(
+        "toolInfoText"
+      ).textContent =
+        t("toolInfoText");
+
 
       updateWorkflowLanguage();
 
@@ -2439,7 +2679,7 @@
 
 
       /*
-       * Localize select option labels.
+       * Localize language select options.
        * Values remain stable for the API.
        */
 
@@ -2454,15 +2694,23 @@
         );
 
       if (englishOption) {
+
         englishOption.textContent =
           t("languageEnglish");
+
       }
 
       if (turkishOption) {
+
         turkishOption.textContent =
           t("languageTurkish");
+
       }
 
+
+      /*
+       * Localize detail select options.
+       */
 
       const basicOption =
         detailEl.querySelector(
@@ -2480,18 +2728,24 @@
         );
 
       if (basicOption) {
+
         basicOption.textContent =
           t("detailBasic");
+
       }
 
       if (professionalOption) {
+
         professionalOption.textContent =
           t("detailProfessional");
+
       }
 
       if (comprehensiveOption) {
+
         comprehensiveOption.textContent =
           t("detailComprehensive");
+
       }
 
 
@@ -2512,6 +2766,11 @@
       document.getElementById("cameraOptionText")
         .textContent =
         t("camera");
+
+
+      /*
+       * Result area
+       */
 
       document.getElementById("resultTitle")
         .textContent =
@@ -2614,6 +2873,9 @@
         t("generateCriteria");
 
 
+      updateAccessibilityLabels();
+
+
       if (
         detectedRequirements.length > 1
       ) {
@@ -2642,7 +2904,6 @@
         document.getElementById(
           "sourceChip"
         );
-
 
       if (!selectedFile) {
 
@@ -2744,7 +3005,6 @@
 
       selectedFile =
         file;
-
 
       hideError();
 
@@ -3036,7 +3296,7 @@
       const value =
         String(
           priority ||
-          t("empty")
+          t("unknown")
         );
 
 
@@ -3102,7 +3362,7 @@
 
         title:
           analysis.title ||
-          "Requirement",
+          t("requirementFallback"),
 
         summary:
           analysis.summary ||
@@ -3111,11 +3371,11 @@
         requirementType:
           analysis.requirementType ||
           analysis.type ||
-          "Other",
+          t("other"),
 
         priority:
           analysis.priority ||
-          "Unknown",
+          t("unknown"),
 
         clarityScore:
           normalizeScore(
@@ -3287,6 +3547,9 @@
 
       /*
        * Prefer the centralized Artifact Store.
+       *
+       * The legacy sessionStorage bridge is kept
+       * temporarily for older workflow screens.
        */
 
       if (
@@ -3363,7 +3626,7 @@
                     detailEl.value,
 
                   analyzerVersion:
-                    "1.1",
+                    "1.2",
 
                   detectedRequirementCount:
                     normalized
@@ -3403,7 +3666,7 @@
                     detailEl.value,
 
                   analyzerVersion:
-                    "1.1",
+                    "1.2",
 
                   detectedRequirementCount:
                     normalized
@@ -3680,7 +3943,7 @@
 
               const title =
                 item.title ||
-                `Requirement ${index + 1}`;
+                `${t("requirementFallback")} ${index + 1}`;
 
 
               const text =
@@ -4420,7 +4683,40 @@
 
     languageEl.addEventListener(
       "change",
-      updateLanguage
+      () => {
+
+        syncCoreLanguage();
+
+        updateLanguage();
+
+        /*
+         * Inform the rest of BAForge that the
+         * page language changed.
+         */
+        try {
+
+          window.dispatchEvent(
+            new CustomEvent(
+              "baforge:language-changed",
+              {
+                detail: {
+                  language:
+                    currentLanguage()
+                }
+              }
+            )
+          );
+
+        } catch (error) {
+
+          console.warn(
+            "Could not dispatch language event:",
+            error
+          );
+
+        }
+
+      }
     );
 
 
@@ -4460,7 +4756,7 @@
 
     /*
       ======================================================
-      GLOBAL LANGUAGE EVENT
+      GLOBAL LANGUAGE EVENTS
       ======================================================
     */
 
@@ -4481,6 +4777,37 @@
             lang;
 
           updateLanguage();
+
+        }
+
+      }
+    );
+
+
+    window.addEventListener(
+      "baforge:language-changed",
+      event => {
+
+        const lang =
+          event.detail?.language;
+
+
+        if (
+          lang === "tr" ||
+          lang === "en"
+        ) {
+
+          if (
+            languageEl.value !==
+            lang
+          ) {
+
+            languageEl.value =
+              lang;
+
+            updateLanguage();
+
+          }
 
         }
 
