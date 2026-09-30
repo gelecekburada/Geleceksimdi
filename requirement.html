@@ -190,7 +190,7 @@
       border-color: #abefc6;
     }
 
-    .workflow-step.clickable:hover .workflow-dot {
+    .workflow-step:hover .workflow-dot {
       border-color: var(--primary);
     }
 
@@ -260,7 +260,7 @@
     }
 
     /* -----------------------------------------
-       TOP NAVIGATION
+       STEP NAVIGATION
     ----------------------------------------- */
 
     .step-navigation {
@@ -651,7 +651,7 @@
     }
 
     /* -----------------------------------------
-       STATUS / PILLS
+       STATUS
     ----------------------------------------- */
 
     .status-pill {
@@ -1025,41 +1025,34 @@
 
   <main>
 
-    <!-- WORKFLOW -->
-
     <div class="workflow-wrapper">
-
       <div
         class="workflow"
         id="workflow">
-
       </div>
-
     </div>
 
 
-    <!-- HERO -->
-
     <section class="hero">
 
-      <div class="badge">
+      <div
+        class="badge"
+        id="pageBadge">
         Requirement Workspace
       </div>
 
-      <h1>
+      <h1 id="pageTitle">
         Define a
         <span>Professional Requirement</span>
       </h1>
 
-      <p>
+      <p id="pageDescription">
         Review the analyzed requirement, refine its content and prepare it
         for the next step in the BAForge AI workflow.
       </p>
 
     </section>
 
-
-    <!-- STEP NAVIGATION -->
 
     <div class="step-navigation">
 
@@ -1080,19 +1073,23 @@
     </div>
 
 
-    <!-- MAIN REQUIREMENT -->
-
-    <section class="card">
+    <section
+      id="requirementCard"
+      class="card">
 
       <div class="card-header">
 
         <div>
 
-          <h2 class="card-title">
+          <h2
+            class="card-title"
+            id="requirementCardTitle">
             Requirement
           </h2>
 
-          <p class="card-description">
+          <p
+            class="card-description"
+            id="requirementCardDescription">
             This requirement was prepared from the Requirement Analyzer.
             You can review and refine it before continuing.
           </p>
@@ -1118,13 +1115,13 @@
       </div>
 
 
-      <!-- BASIC INFORMATION -->
-
       <div class="form-grid">
 
         <div class="field">
 
-          <label for="title">
+          <label
+            for="title"
+            id="titleLabel">
             Requirement Title
           </label>
 
@@ -1139,7 +1136,9 @@
 
         <div class="field">
 
-          <label for="requirementType">
+          <label
+            for="requirementType"
+            id="typeLabel">
             Requirement Type
           </label>
 
@@ -1184,7 +1183,9 @@
 
         <div class="field">
 
-          <label for="priority">
+          <label
+            for="priority"
+            id="priorityLabel">
             Priority
           </label>
 
@@ -1215,7 +1216,9 @@
 
       <div class="description-field">
 
-        <label for="description">
+        <label
+          for="description"
+          id="descriptionLabel">
           Requirement Description
         </label>
 
@@ -1224,16 +1227,18 @@
           maxlength="10000"
           placeholder="Describe the business requirement clearly..."></textarea>
 
-        <div class="field-help">
+        <div
+          class="field-help"
+          id="descriptionHelp">
           This is the requirement that will be used by downstream BA tools.
         </div>
 
       </div>
 
 
-      <!-- ANALYSIS -->
-
-      <h3 class="section-title">
+      <h3
+        class="section-title"
+        id="qualityTitle">
         Requirement Quality
       </h3>
 
@@ -1242,7 +1247,9 @@
 
         <div class="score-card">
 
-          <div class="score-label">
+          <div
+            class="score-label"
+            id="clarityLabel">
             Clarity
           </div>
 
@@ -1272,7 +1279,9 @@
 
         <div class="score-card">
 
-          <div class="score-label">
+          <div
+            class="score-label"
+            id="completenessLabel">
             Completeness
           </div>
 
@@ -1302,7 +1311,9 @@
 
         <div class="score-card">
 
-          <div class="score-label">
+          <div
+            class="score-label"
+            id="testabilityLabel">
             Testability
           </div>
 
@@ -1332,19 +1343,18 @@
       </div>
 
 
-      <!-- ANALYSIS DETAILS -->
-
-      <h3 class="section-title">
+      <h3
+        class="section-title"
+        id="analysisTitle">
         Analysis Details
       </h3>
 
 
       <div class="analysis-grid">
 
-
         <div class="analysis-box">
 
-          <h3>
+          <h3 id="ambiguitiesTitle">
             Ambiguities
           </h3>
 
@@ -1352,7 +1362,9 @@
             id="ambiguities"
             placeholder="One item per line..."></textarea>
 
-          <div class="analysis-help">
+          <div
+            class="analysis-help"
+            id="ambiguitiesHelp">
             Unclear or potentially ambiguous statements.
           </div>
 
@@ -1361,7 +1373,7 @@
 
         <div class="analysis-box">
 
-          <h3>
+          <h3 id="missingTitle">
             Missing Information
           </h3>
 
@@ -1369,7 +1381,9 @@
             id="missingInformation"
             placeholder="One item per line..."></textarea>
 
-          <div class="analysis-help">
+          <div
+            class="analysis-help"
+            id="missingHelp">
             Information that may be required before implementation.
           </div>
 
@@ -1378,7 +1392,7 @@
 
         <div class="analysis-box">
 
-          <h3>
+          <h3 id="assumptionsTitle">
             Assumptions
           </h3>
 
@@ -1386,7 +1400,9 @@
             id="assumptions"
             placeholder="One item per line..."></textarea>
 
-          <div class="analysis-help">
+          <div
+            class="analysis-help"
+            id="assumptionsHelp">
             Reasonable assumptions that are not confirmed requirements.
           </div>
 
@@ -1395,7 +1411,7 @@
 
         <div class="analysis-box">
 
-          <h3>
+          <h3 id="businessRulesTitle">
             Business Rules
           </h3>
 
@@ -1403,7 +1419,9 @@
             id="businessRules"
             placeholder="One item per line..."></textarea>
 
-          <div class="analysis-help">
+          <div
+            class="analysis-help"
+            id="businessRulesHelp">
             Rules explicitly supported by the requirement.
           </div>
 
@@ -1412,7 +1430,7 @@
 
         <div class="analysis-box">
 
-          <h3>
+          <h3 id="openQuestionsTitle">
             Open Questions
           </h3>
 
@@ -1420,7 +1438,9 @@
             id="openQuestions"
             placeholder="One item per line..."></textarea>
 
-          <div class="analysis-help">
+          <div
+            class="analysis-help"
+            id="openQuestionsHelp">
             Questions that should be clarified with stakeholders.
           </div>
 
@@ -1429,7 +1449,7 @@
 
         <div class="analysis-box">
 
-          <h3>
+          <h3 id="edgeCasesTitle">
             Edge Cases
           </h3>
 
@@ -1437,7 +1457,9 @@
             id="edgeCases"
             placeholder="One item per line..."></textarea>
 
-          <div class="analysis-help">
+          <div
+            class="analysis-help"
+            id="edgeCasesHelp">
             Scenarios that should be considered during refinement and testing.
           </div>
 
@@ -1446,7 +1468,7 @@
 
         <div class="analysis-box full">
 
-          <h3>
+          <h3 id="analystNotesTitle">
             Analyst Notes
           </h3>
 
@@ -1454,7 +1476,9 @@
             id="analystNotes"
             placeholder="One item per line..."></textarea>
 
-          <div class="analysis-help">
+          <div
+            class="analysis-help"
+            id="analystNotesHelp">
             Practical observations and recommendations from the BA analysis.
           </div>
 
@@ -1463,11 +1487,11 @@
       </div>
 
 
-      <!-- ORIGINAL SOURCE -->
-
       <div class="source-box">
 
-        <div class="source-label">
+        <div
+          class="source-label"
+          id="sourceLabel">
           Original Requirement
         </div>
 
@@ -1480,8 +1504,6 @@
       </div>
 
 
-      <!-- MESSAGES -->
-
       <div
         id="successMessage"
         class="message success">
@@ -1492,8 +1514,6 @@
         class="message error">
       </div>
 
-
-      <!-- ACTIONS -->
 
       <div class="actions">
 
@@ -1531,25 +1551,25 @@
     </section>
 
 
-    <!-- EMPTY STATE -->
-
     <section
       id="emptyState"
       class="card empty-state"
       style="display:none;">
 
-      <h2>
+      <h2 id="emptyTitle">
         No Requirement Loaded
       </h2>
 
-      <p>
-        Start with the Requirement Analyzer to analyze a raw business
-        requirement before creating the Requirement artifact.
+      <p id="emptyDescription">
+        No requirement is currently available in the workspace.
+        You can start from the Requirement Analyzer or create a
+        requirement directly here.
       </p>
 
       <a
         class="step-link"
-        href="/requirement-analyzer.html">
+        href="/requirement-analyzer.html"
+        id="emptyAnalyzerLink">
         ← Open Requirement Analyzer
       </a>
 
@@ -1558,804 +1578,1833 @@
   </main>
 
 
-  <!-- CORE -->
-
   <script src="/core/data-model.js"></script>
-
+  <script src="/core/artifact-store.js"></script>
   <script src="/core/workflow.js"></script>
+  <script src="/core/i18n.js"></script>
 
 
   <script>
 
-    /* -----------------------------------------
-       STORAGE KEYS
-    ----------------------------------------- */
-
-    const REQUIREMENT_KEY =
-      "baforge-current-requirement";
-
-    const WORKFLOW_KEY =
-      "baforge-workflow-state";
-
-
-    /* -----------------------------------------
-       ELEMENTS
-    ----------------------------------------- */
-
-    const titleEl =
-      document.getElementById(
-        "title"
-      );
-
-    const descriptionEl =
-      document.getElementById(
-        "description"
-      );
-
-    const requirementTypeEl =
-      document.getElementById(
-        "requirementType"
-      );
-
-    const priorityEl =
-      document.getElementById(
-        "priority"
-      );
-
-    const clarityScoreEl =
-      document.getElementById(
-        "clarityScore"
-      );
-
-    const completenessScoreEl =
-      document.getElementById(
-        "completenessScore"
-      );
-
-    const testabilityScoreEl =
-      document.getElementById(
-        "testabilityScore"
-      );
-
-    const clarityBarEl =
-      document.getElementById(
-        "clarityBar"
-      );
-
-    const completenessBarEl =
-      document.getElementById(
-        "completenessBar"
-      );
-
-    const testabilityBarEl =
-      document.getElementById(
-        "testabilityBar"
-      );
-
-    const ambiguitiesEl =
-      document.getElementById(
-        "ambiguities"
-      );
-
-    const missingInformationEl =
-      document.getElementById(
-        "missingInformation"
-      );
-
-    const assumptionsEl =
-      document.getElementById(
-        "assumptions"
-      );
-
-    const businessRulesEl =
-      document.getElementById(
-        "businessRules"
-      );
-
-    const openQuestionsEl =
-      document.getElementById(
-        "openQuestions"
-      );
-
-    const edgeCasesEl =
-      document.getElementById(
-        "edgeCases"
-      );
-
-    const analystNotesEl =
-      document.getElementById(
-        "analystNotes"
-      );
-
-    const sourceRequirementEl =
-      document.getElementById(
-        "sourceRequirement"
-      );
+    (() => {
 
-    const requirementIdEl =
-      document.getElementById(
-        "requirementId"
-      );
+      "use strict";
 
-    const statusPillEl =
-      document.getElementById(
-        "statusPill"
-      );
-
-    const successMessageEl =
-      document.getElementById(
-        "successMessage"
-      );
 
-    const errorMessageEl =
-      document.getElementById(
-        "errorMessage"
-      );
+      /* -----------------------------------------
+         STORAGE
+      ----------------------------------------- */
 
-    const emptyStateEl =
-      document.getElementById(
-        "emptyState"
-      );
+      const REQUIREMENT_KEY =
+        "baforge-current-requirement";
 
-    const saveButton =
-      document.getElementById(
-        "saveButton"
-      );
+      const WORKFLOW_KEY =
+        "baforge-workflow-state";
 
-    const clearButton =
-      document.getElementById(
-        "clearButton"
-      );
 
-    const continueButton =
-      document.getElementById(
-        "continueButton"
-      );
+      /* -----------------------------------------
+         TRANSLATIONS
+      ----------------------------------------- */
 
+      const translations = {
 
-    /* -----------------------------------------
-       HELPERS
-    ----------------------------------------- */
+        en: {
 
-    function safeParse(
-      value
-    ) {
+          badge:
+            "Requirement Workspace",
 
-      if (!value) {
-        return null;
-      }
+          title:
+            "Define a ",
 
-      try {
+          titleHighlight:
+            "Professional Requirement",
 
-        return JSON.parse(
-          value
-        );
+          description:
+            "Review the analyzed requirement, refine its content and prepare it for the next step in the BAForge AI workflow.",
 
-      } catch {
+          previous:
+            "← Requirement Analyzer",
 
-        return null;
+          next:
+            "User Story →",
 
-      }
+          requirement:
+            "Requirement",
 
-    }
+          requirementDescription:
+            "This requirement was prepared from the Requirement Analyzer. You can review and refine it before continuing.",
 
+          newRequirement:
+            "New Requirement",
 
-    function normalizeArray(
-      value
-    ) {
+          draft:
+            "Draft",
 
-      if (
-        !Array.isArray(value)
-      ) {
-        return [];
-      }
+          requirementTitle:
+            "Requirement Title",
 
-      return value
-        .map(item => {
+          titlePlaceholder:
+            "Enter a clear requirement title",
 
-          if (
-            item === null ||
-            item === undefined
-          ) {
-            return "";
-          }
+          requirementType:
+            "Requirement Type",
 
-          if (
-            typeof item ===
-            "object"
-          ) {
+          priority:
+            "Priority",
 
-            return JSON.stringify(
-              item
-            );
+          descriptionLabel:
+            "Requirement Description",
 
-          }
+          descriptionPlaceholder:
+            "Describe the business requirement clearly...",
 
-          return String(
-            item
-          );
+          descriptionHelp:
+            "This is the requirement that will be used by downstream BA tools.",
 
-        })
-        .map(
-          item =>
-            item.trim()
-        )
-        .filter(Boolean);
+          quality:
+            "Requirement Quality",
 
-    }
+          clarity:
+            "Clarity",
 
+          completeness:
+            "Completeness",
 
-    function arrayToText(
-      value
-    ) {
+          testability:
+            "Testability",
 
-      return normalizeArray(
-        value
-      ).join("\n");
+          analysis:
+            "Analysis Details",
 
-    }
+          ambiguities:
+            "Ambiguities",
 
+          ambiguitiesPlaceholder:
+            "One item per line...",
 
-    function textToArray(
-      value
-    ) {
+          ambiguitiesHelp:
+            "Unclear or potentially ambiguous statements.",
 
-      return String(
-        value || ""
-      )
-        .split(/\r?\n/)
-        .map(
-          item =>
-            item.trim()
-        )
-        .filter(Boolean);
+          missing:
+            "Missing Information",
 
-    }
+          missingPlaceholder:
+            "One item per line...",
 
+          missingHelp:
+            "Information that may be required before implementation.",
 
-    function normalizeScore(
-      value
-    ) {
+          assumptions:
+            "Assumptions",
 
-      const score =
-        Number(value);
+          assumptionsHelp:
+            "Reasonable assumptions that are not confirmed requirements.",
 
-      if (
-        !Number.isFinite(score)
-      ) {
-        return 0;
-      }
+          businessRules:
+            "Business Rules",
 
-      return Math.max(
-        0,
-        Math.min(
-          100,
-          Math.round(score)
-        )
-      );
+          businessRulesHelp:
+            "Rules explicitly supported by the requirement.",
 
-    }
+          openQuestions:
+            "Open Questions",
 
+          openQuestionsHelp:
+            "Questions that should be clarified with stakeholders.",
 
-    function showSuccess(
-      message
-    ) {
+          edgeCases:
+            "Edge Cases",
 
-      successMessageEl.textContent =
-        message;
+          edgeCasesHelp:
+            "Scenarios that should be considered during refinement and testing.",
 
-      successMessageEl.style.display =
-        "block";
+          analystNotes:
+            "Analyst Notes",
 
-      errorMessageEl.style.display =
-        "none";
+          analystNotesHelp:
+            "Practical observations and recommendations from the BA analysis.",
 
-    }
+          original:
+            "Original Requirement",
 
+          noOriginal:
+            "No original requirement loaded.",
 
-    function showError(
-      message
-    ) {
+          clear:
+            "Clear",
 
-      errorMessageEl.textContent =
-        message;
+          save:
+            "Save Requirement",
 
-      errorMessageEl.style.display =
-        "block";
+          continue:
+            "User Story →",
 
-      successMessageEl.style.display =
-        "none";
+          emptyTitle:
+            "No Requirement Loaded",
 
-    }
+          emptyDescription:
+            "No requirement is currently available in the workspace. You can start from the Requirement Analyzer or create a requirement directly here.",
 
+          openAnalyzer:
+            "← Open Requirement Analyzer",
 
-    function hideMessages() {
+          titleRequired:
+            "Please enter a requirement title.",
 
-      successMessageEl.style.display =
-        "none";
+          descriptionRequired:
+            "Please enter a requirement description.",
 
-      errorMessageEl.style.display =
-        "none";
+          saved:
+            "Requirement saved successfully.",
 
-    }
+          cleared:
+            "Requirement workspace cleared.",
 
+          clearConfirm:
+            "Clear the current requirement and analysis data?",
 
-    function updateScore(
-      score,
-      valueElement,
-      barElement
-    ) {
+          functional:
+            "Functional",
 
-      const normalized =
-        normalizeScore(score);
+          nonFunctional:
+            "Non-Functional",
 
-      valueElement.textContent =
-        normalized;
+          businessRule:
+            "Business Rule",
 
-      barElement.style.width =
-        `${normalized}%`;
+          regulatory:
+            "Regulatory",
 
-    }
+          data:
+            "Data",
 
+          integration:
+            "Integration",
 
-    /* -----------------------------------------
-       WORKFLOW
-    ----------------------------------------- */
+          process:
+            "Process",
 
-    function loadWorkflow() {
+          other:
+            "Other",
 
-      const stored =
-        sessionStorage.getItem(
-          WORKFLOW_KEY
-        );
+          high:
+            "High",
 
-      if (stored) {
+          medium:
+            "Medium",
 
-        const parsed =
-          safeParse(
-            stored
-          );
+          low:
+            "Low",
 
-        if (parsed) {
+          unknown:
+            "Unknown",
 
-          return BAWorkflow.deserialize(
-            parsed
-          );
+          statusDraft:
+            "Draft"
+        },
 
+
+        tr: {
+
+          badge:
+            "Gereksinim Çalışma Alanı",
+
+          title:
+            "Profesyonel Bir ",
+
+          titleHighlight:
+            "Gereksinim Tanımlayın",
+
+          description:
+            "Analiz edilmiş gereksinimi gözden geçirin, içeriğini geliştirin ve BAForge AI iş akışındaki sonraki adıma hazırlayın.",
+
+          previous:
+            "← Gereksinim Analizi",
+
+          next:
+            "Kullanıcı Hikâyesi →",
+
+          requirement:
+            "Gereksinim",
+
+          requirementDescription:
+            "Bu gereksinim Gereksinim Analizi ekranından hazırlandı. Devam etmeden önce içeriği gözden geçirip düzenleyebilirsiniz.",
+
+          newRequirement:
+            "Yeni Gereksinim",
+
+          draft:
+            "Taslak",
+
+          requirementTitle:
+            "Gereksinim Başlığı",
+
+          titlePlaceholder:
+            "Açık ve anlaşılır bir gereksinim başlığı girin",
+
+          requirementType:
+            "Gereksinim Türü",
+
+          priority:
+            "Öncelik",
+
+          descriptionLabel:
+            "Gereksinim Açıklaması",
+
+          descriptionPlaceholder:
+            "İş gereksinimini açık ve anlaşılır şekilde açıklayın...",
+
+          descriptionHelp:
+            "Bu gereksinim sonraki BA araçlarında kullanılacaktır.",
+
+          quality:
+            "Gereksinim Kalitesi",
+
+          clarity:
+            "Netlik",
+
+          completeness:
+            "Eksiksizlik",
+
+          testability:
+            "Test Edilebilirlik",
+
+          analysis:
+            "Analiz Detayları",
+
+          ambiguities:
+            "Belirsizlikler",
+
+          ambiguitiesPlaceholder:
+            "Her maddeyi ayrı satıra yazın...",
+
+          ambiguitiesHelp:
+            "Belirsiz veya farklı yorumlanabilecek ifadeler.",
+
+          missing:
+            "Eksik Bilgiler",
+
+          missingPlaceholder:
+            "Her maddeyi ayrı satıra yazın...",
+
+          missingHelp:
+            "Geliştirmeye başlanmadan önce ihtiyaç duyulabilecek bilgiler.",
+
+          assumptions:
+            "Varsayımlar",
+
+          assumptionsHelp:
+            "Kesinleşmiş gereksinim olmayan ancak makul kabul edilen varsayımlar.",
+
+          businessRules:
+            "İş Kuralları",
+
+          businessRulesHelp:
+            "Gereksinim tarafından desteklenen iş kuralları.",
+
+          openQuestions:
+            "Açık Sorular",
+
+          openQuestionsHelp:
+            "Paydaşlarla netleştirilmesi gereken sorular.",
+
+          edgeCases:
+            "Uç Durumlar",
+
+          edgeCasesHelp:
+            "Analiz, geliştirme ve test sırasında dikkate alınması gereken senaryolar.",
+
+          analystNotes:
+            "Analist Notları",
+
+          analystNotesHelp:
+            "BA analizi sırasında ortaya çıkan gözlemler ve öneriler.",
+
+          original:
+            "Orijinal Gereksinim",
+
+          noOriginal:
+            "Orijinal gereksinim yüklenmedi.",
+
+          clear:
+            "Temizle",
+
+          save:
+            "Gereksinimi Kaydet",
+
+          continue:
+            "Kullanıcı Hikâyesi →",
+
+          emptyTitle:
+            "Gereksinim Bulunamadı",
+
+          emptyDescription:
+            "Çalışma alanında mevcut bir gereksinim bulunamadı. Gereksinim Analizi ekranından başlayabilir veya buradan doğrudan bir gereksinim oluşturabilirsiniz.",
+
+          openAnalyzer:
+            "← Gereksinim Analizini Aç",
+
+          titleRequired:
+            "Lütfen gereksinim başlığını girin.",
+
+          descriptionRequired:
+            "Lütfen gereksinim açıklamasını girin.",
+
+          saved:
+            "Gereksinim başarıyla kaydedildi.",
+
+          cleared:
+            "Gereksinim çalışma alanı temizlendi.",
+
+          clearConfirm:
+            "Mevcut gereksinim ve analiz verileri temizlensin mi?",
+
+          functional:
+            "Fonksiyonel",
+
+          nonFunctional:
+            "Fonksiyonel Olmayan",
+
+          businessRule:
+            "İş Kuralı",
+
+          regulatory:
+            "Regülasyon",
+
+          data:
+            "Veri",
+
+          integration:
+            "Entegrasyon",
+
+          process:
+            "Süreç",
+
+          other:
+            "Diğer",
+
+          high:
+            "Yüksek",
+
+          medium:
+            "Orta",
+
+          low:
+            "Düşük",
+
+          unknown:
+            "Bilinmiyor",
+
+          statusDraft:
+            "Taslak"
         }
-
-      }
-
-      return BAWorkflow.createWorkflowState({
-        currentStep:
-          "requirement"
-      });
-
-    }
-
-
-    function saveWorkflow(
-      workflow
-    ) {
-
-      sessionStorage.setItem(
-        WORKFLOW_KEY,
-        BAWorkflow.serialize(
-          workflow
-        )
-      );
-
-    }
-
-
-    function renderWorkflow(
-      workflow
-    ) {
-
-      const container =
-        document.getElementById(
-          "workflow"
-        );
-
-      container.innerHTML =
-        "";
-
-      const definition =
-        BAWorkflow.getWorkflowDefinition();
-
-      definition.forEach(
-        (item, index) => {
-
-          const status =
-            BAWorkflow.getStepStatus(
-              workflow,
-              item.step
-            );
-
-          const step =
-            document.createElement(
-              "a"
-            );
-
-          step.className =
-            "workflow-step";
-
-          step.dataset.step =
-            item.step;
-
-          if (
-            status ===
-            "current"
-          ) {
-
-            step.classList.add(
-              "active"
-            );
-
-          }
-
-          if (
-            status ===
-            "completed"
-          ) {
-
-            step.classList.add(
-              "completed"
-            );
-
-          }
-
-          /*
-           * Only the Requirement step is
-           * directly active in this page.
-           * Other existing pages will be
-           * connected later.
-           */
-
-          step.href =
-            getStepUrl(
-              item.step
-            );
-
-          step.innerHTML = `
-            <span class="workflow-dot">
-              ${status === "completed"
-                ? "✓"
-                : index + 1}
-            </span>
-
-            <span class="workflow-label">
-              ${escapeHtml(
-                item.label
-              )}
-            </span>
-          `;
-
-          container.appendChild(
-            step
-          );
-
-          if (
-            index <
-            definition.length - 1
-          ) {
-
-            const line =
-              document.createElement(
-                "div"
-              );
-
-            line.className =
-              "workflow-line";
-
-            container.appendChild(
-              line
-            );
-
-          }
-
-        }
-      );
-
-    }
-
-
-    function getStepUrl(
-      step
-    ) {
-
-      const urls = {
-
-        requirement:
-          "/requirement.html",
-
-        user_story:
-          "/user-story.html",
-
-        acceptance_criteria:
-          "/acceptance-criteria.html",
-
-        uat:
-          "/uat.html",
-
-        test_data:
-          "/test-data.html",
-
-        process_flow:
-          "/process-flow.html",
-
-        traceability:
-          "/traceability.html",
-
-        document:
-          "/ba-documents.html"
 
       };
 
-      return (
-        urls[step] ||
-        "#"
-      );
 
-    }
+      function getLanguage() {
+
+        let lang =
+          localStorage.getItem(
+            "baforge-language"
+          ) || "en";
+
+        if (
+          window.BAI18n &&
+          typeof window.BAI18n.getLanguage ===
+          "function"
+        ) {
+
+          try {
+
+            lang =
+              window.BAI18n.getLanguage() ||
+              lang;
+
+          } catch {}
+
+        }
+
+        return lang === "tr"
+          ? "tr"
+          : "en";
+
+      }
 
 
-    /* -----------------------------------------
-       REQUIREMENT LOADING
-    ----------------------------------------- */
-
-    let currentRequirement =
-      null;
+      let language =
+        getLanguage();
 
 
-    function loadRequirement() {
+      function t(key) {
 
-      const stored =
-        sessionStorage.getItem(
-          REQUIREMENT_KEY
+        return (
+          translations[language]?.[key] ??
+          translations.en[key] ??
+          key
         );
 
-      const parsed =
-        safeParse(
-          stored
+      }
+
+
+      /* -----------------------------------------
+         ELEMENTS
+      ----------------------------------------- */
+
+      const titleEl =
+        document.getElementById("title");
+
+      const descriptionEl =
+        document.getElementById("description");
+
+      const requirementTypeEl =
+        document.getElementById("requirementType");
+
+      const priorityEl =
+        document.getElementById("priority");
+
+      const clarityScoreEl =
+        document.getElementById("clarityScore");
+
+      const completenessScoreEl =
+        document.getElementById("completenessScore");
+
+      const testabilityScoreEl =
+        document.getElementById("testabilityScore");
+
+      const clarityBarEl =
+        document.getElementById("clarityBar");
+
+      const completenessBarEl =
+        document.getElementById("completenessBar");
+
+      const testabilityBarEl =
+        document.getElementById("testabilityBar");
+
+      const ambiguitiesEl =
+        document.getElementById("ambiguities");
+
+      const missingInformationEl =
+        document.getElementById("missingInformation");
+
+      const assumptionsEl =
+        document.getElementById("assumptions");
+
+      const businessRulesEl =
+        document.getElementById("businessRules");
+
+      const openQuestionsEl =
+        document.getElementById("openQuestions");
+
+      const edgeCasesEl =
+        document.getElementById("edgeCases");
+
+      const analystNotesEl =
+        document.getElementById("analystNotes");
+
+      const sourceRequirementEl =
+        document.getElementById("sourceRequirement");
+
+      const requirementIdEl =
+        document.getElementById("requirementId");
+
+      const statusPillEl =
+        document.getElementById("statusPill");
+
+      const successMessageEl =
+        document.getElementById("successMessage");
+
+      const errorMessageEl =
+        document.getElementById("errorMessage");
+
+      const emptyStateEl =
+        document.getElementById("emptyState");
+
+      const requirementCardEl =
+        document.getElementById("requirementCard");
+
+      const saveButton =
+        document.getElementById("saveButton");
+
+      const clearButton =
+        document.getElementById("clearButton");
+
+      const continueButton =
+        document.getElementById("continueButton");
+
+
+      /* -----------------------------------------
+         SAFE HELPERS
+      ----------------------------------------- */
+
+      function safeParse(value) {
+
+        if (!value) {
+          return null;
+        }
+
+        try {
+          return JSON.parse(value);
+        } catch {
+          return null;
+        }
+
+      }
+
+
+      function normalizeArray(value) {
+
+        if (!Array.isArray(value)) {
+          return [];
+        }
+
+        return value
+          .map(item => {
+
+            if (
+              item === null ||
+              item === undefined
+            ) {
+              return "";
+            }
+
+            if (
+              typeof item === "object"
+            ) {
+
+              return JSON.stringify(
+                item
+              );
+
+            }
+
+            return String(item);
+
+          })
+          .map(
+            item => item.trim()
+          )
+          .filter(Boolean);
+
+      }
+
+
+      function arrayToText(value) {
+
+        return normalizeArray(value)
+          .join("\n");
+
+      }
+
+
+      function textToArray(value) {
+
+        return String(value || "")
+          .split(/\r?\n/)
+          .map(
+            item => item.trim()
+          )
+          .filter(Boolean);
+
+      }
+
+
+      function normalizeScore(value) {
+
+        const score =
+          Number(value);
+
+        if (
+          !Number.isFinite(score)
+        ) {
+          return 0;
+        }
+
+        return Math.max(
+          0,
+          Math.min(
+            100,
+            Math.round(score)
+          )
         );
 
-      if (
-        !parsed ||
-        typeof parsed !==
-        "object"
+      }
+
+
+      function escapeHtml(value) {
+
+        return String(
+          value ?? ""
+        )
+          .replace(
+            /&/g,
+            "&amp;"
+          )
+          .replace(
+            /</g,
+            "&lt;"
+          )
+          .replace(
+            />/g,
+            "&gt;"
+          )
+          .replace(
+            /"/g,
+            "&quot;"
+          )
+          .replace(
+            /'/g,
+            "&#039;"
+          );
+
+      }
+
+
+      function updateScore(
+        score,
+        valueElement,
+        barElement
       ) {
+
+        const normalized =
+          normalizeScore(score);
+
+        valueElement.textContent =
+          normalized;
+
+        barElement.style.width =
+          `${normalized}%`;
+
+      }
+
+
+      function showSuccess(message) {
+
+        successMessageEl.textContent =
+          message;
+
+        successMessageEl.style.display =
+          "block";
+
+        errorMessageEl.style.display =
+          "none";
+
+      }
+
+
+      function showError(message) {
+
+        errorMessageEl.textContent =
+          message;
+
+        errorMessageEl.style.display =
+          "block";
+
+        successMessageEl.style.display =
+          "none";
+
+      }
+
+
+      function hideMessages() {
+
+        successMessageEl.style.display =
+          "none";
+
+        errorMessageEl.style.display =
+          "none";
+
+      }
+
+
+      /* -----------------------------------------
+         LANGUAGE
+      ----------------------------------------- */
+
+      function applyLanguage() {
+
+        language =
+          getLanguage();
+
+        document.documentElement.lang =
+          language;
+
+        document.title =
+          language === "tr"
+            ? "BAForge AI - Gereksinim"
+            : "BAForge AI - Requirement";
+
+
+        document.getElementById(
+          "pageBadge"
+        ).textContent =
+          t("badge");
+
+
+        document.getElementById(
+          "pageTitle"
+        ).innerHTML =
+          `${t("title")}<span>${t("titleHighlight")}</span>`;
+
+
+        document.getElementById(
+          "pageDescription"
+        ).textContent =
+          t("description");
+
+
+        document.getElementById(
+          "previousStep"
+        ).textContent =
+          t("previous");
+
+
+        document.getElementById(
+          "nextStep"
+        ).textContent =
+          t("next");
+
+
+        document.getElementById(
+          "requirementCardTitle"
+        ).textContent =
+          t("requirement");
+
+
+        document.getElementById(
+          "requirementCardDescription"
+        ).textContent =
+          t("requirementDescription");
+
+
+        if (
+          !currentRequirement
+        ) {
+
+          requirementIdEl.textContent =
+            t("newRequirement");
+
+        }
+
+
+        if (
+          !currentRequirement
+        ) {
+
+          statusPillEl.textContent =
+            t("draft");
+
+        }
+
+
+        document.getElementById(
+          "titleLabel"
+        ).textContent =
+          t("requirementTitle");
+
+
+        titleEl.placeholder =
+          t("titlePlaceholder");
+
+
+        document.getElementById(
+          "typeLabel"
+        ).textContent =
+          t("requirementType");
+
+
+        document.getElementById(
+          "priorityLabel"
+        ).textContent =
+          t("priority");
+
+
+        document.getElementById(
+          "descriptionLabel"
+        ).textContent =
+          t("descriptionLabel");
+
+
+        descriptionEl.placeholder =
+          t("descriptionPlaceholder");
+
+
+        document.getElementById(
+          "descriptionHelp"
+        ).textContent =
+          t("descriptionHelp");
+
+
+        document.getElementById(
+          "qualityTitle"
+        ).textContent =
+          t("quality");
+
+
+        document.getElementById(
+          "clarityLabel"
+        ).textContent =
+          t("clarity");
+
+
+        document.getElementById(
+          "completenessLabel"
+        ).textContent =
+          t("completeness");
+
+
+        document.getElementById(
+          "testabilityLabel"
+        ).textContent =
+          t("testability");
+
+
+        document.getElementById(
+          "analysisTitle"
+        ).textContent =
+          t("analysis");
+
+
+        document.getElementById(
+          "ambiguitiesTitle"
+        ).textContent =
+          t("ambiguities");
+
+
+        ambiguitiesEl.placeholder =
+          t("ambiguitiesPlaceholder");
+
+
+        document.getElementById(
+          "ambiguitiesHelp"
+        ).textContent =
+          t("ambiguitiesHelp");
+
+
+        document.getElementById(
+          "missingTitle"
+        ).textContent =
+          t("missing");
+
+
+        missingInformationEl.placeholder =
+          t("missingPlaceholder");
+
+
+        document.getElementById(
+          "missingHelp"
+        ).textContent =
+          t("missingHelp");
+
+
+        document.getElementById(
+          "assumptionsTitle"
+        ).textContent =
+          t("assumptions");
+
+
+        document.getElementById(
+          "assumptionsHelp"
+        ).textContent =
+          t("assumptionsHelp");
+
+
+        document.getElementById(
+          "businessRulesTitle"
+        ).textContent =
+          t("businessRules");
+
+
+        document.getElementById(
+          "businessRulesHelp"
+        ).textContent =
+          t("businessRulesHelp");
+
+
+        document.getElementById(
+          "openQuestionsTitle"
+        ).textContent =
+          t("openQuestions");
+
+
+        document.getElementById(
+          "openQuestionsHelp"
+        ).textContent =
+          t("openQuestionsHelp");
+
+
+        document.getElementById(
+          "edgeCasesTitle"
+        ).textContent =
+          t("edgeCases");
+
+
+        document.getElementById(
+          "edgeCasesHelp"
+        ).textContent =
+          t("edgeCasesHelp");
+
+
+        document.getElementById(
+          "analystNotesTitle"
+        ).textContent =
+          t("analystNotes");
+
+
+        document.getElementById(
+          "analystNotesHelp"
+        ).textContent =
+          t("analystNotesHelp");
+
+
+        document.getElementById(
+          "sourceLabel"
+        ).textContent =
+          t("original");
+
+
+        if (
+          !currentRequirement
+        ) {
+
+          sourceRequirementEl.textContent =
+            t("noOriginal");
+
+        }
+
+
+        clearButton.textContent =
+          t("clear");
+
+
+        saveButton.textContent =
+          t("save");
+
+
+        continueButton.textContent =
+          t("continue");
+
+
+        document.getElementById(
+          "emptyTitle"
+        ).textContent =
+          t("emptyTitle");
+
+
+        document.getElementById(
+          "emptyDescription"
+        ).textContent =
+          t("emptyDescription");
+
+
+        document.getElementById(
+          "emptyAnalyzerLink"
+        ).textContent =
+          t("openAnalyzer");
+
+
+        updateSelectLabels();
+
+      }
+
+
+      function updateSelectLabels() {
+
+        const typeLabels = {
+
+          Functional:
+            t("functional"),
+
+          "Non-Functional":
+            t("nonFunctional"),
+
+          "Business Rule":
+            t("businessRule"),
+
+          Regulatory:
+            t("regulatory"),
+
+          Data:
+            t("data"),
+
+          Integration:
+            t("integration"),
+
+          Process:
+            t("process"),
+
+          Other:
+            t("other")
+
+        };
+
+
+        Array.from(
+          requirementTypeEl.options
+        ).forEach(option => {
+
+          if (
+            typeLabels[option.value]
+          ) {
+
+            option.textContent =
+              typeLabels[option.value];
+
+          }
+
+        });
+
+
+        const priorityLabels = {
+
+          high:
+            t("high"),
+
+          medium:
+            t("medium"),
+
+          low:
+            t("low"),
+
+          unknown:
+            t("unknown")
+
+        };
+
+
+        Array.from(
+          priorityEl.options
+        ).forEach(option => {
+
+          if (
+            priorityLabels[option.value]
+          ) {
+
+            option.textContent =
+              priorityLabels[option.value];
+
+          }
+
+        });
+
+      }
+
+
+      /* -----------------------------------------
+         WORKFLOW
+      ----------------------------------------- */
+
+      function loadWorkflow() {
+
+        const stored =
+          sessionStorage.getItem(
+            WORKFLOW_KEY
+          );
+
+        if (stored) {
+
+          const parsed =
+            safeParse(stored);
+
+          if (
+            parsed &&
+            window.BAWorkflow
+          ) {
+
+            try {
+
+              return BAWorkflow.deserialize(
+                parsed
+              );
+
+            } catch {}
+
+          }
+
+        }
+
+
+        return BAWorkflow.createWorkflowState({
+          currentStep:
+            "requirement"
+        });
+
+      }
+
+
+      function saveWorkflow(workflow) {
+
+        sessionStorage.setItem(
+          WORKFLOW_KEY,
+          BAWorkflow.serialize(
+            workflow
+          )
+        );
+
+      }
+
+
+      function getStepUrl(step) {
+
+        const urls = {
+
+          requirement:
+            "/requirement.html",
+
+          user_story:
+            "/user-story.html",
+
+          acceptance_criteria:
+            "/acceptance-criteria.html",
+
+          uat:
+            "/uat.html",
+
+          test_data:
+            "/test-data.html",
+
+          process_flow:
+            "/process-flow.html",
+
+          traceability:
+            "/traceability.html",
+
+          document:
+            "/document.html"
+
+        };
+
+        return (
+          urls[step] ||
+          "#"
+        );
+
+      }
+
+
+      function renderWorkflow(workflow) {
+
+        const container =
+          document.getElementById(
+            "workflow"
+          );
+
+        container.innerHTML =
+          "";
+
+        const definition =
+          BAWorkflow.getWorkflowDefinition();
+
+
+        definition.forEach(
+          (item, index) => {
+
+            const status =
+              BAWorkflow.getStepStatus(
+                workflow,
+                item.step
+              );
+
+
+            const step =
+              document.createElement(
+                "a"
+              );
+
+            step.className =
+              "workflow-step";
+
+            step.href =
+              getStepUrl(
+                item.step
+              );
+
+
+            if (
+              status === "current"
+            ) {
+
+              step.classList.add(
+                "active"
+              );
+
+            }
+
+
+            if (
+              status === "completed"
+            ) {
+
+              step.classList.add(
+                "completed"
+              );
+
+            }
+
+
+            step.innerHTML = `
+
+              <span class="workflow-dot">
+
+                ${
+                  status === "completed"
+                    ? "✓"
+                    : index + 1
+                }
+
+              </span>
+
+              <span class="workflow-label">
+                ${escapeHtml(
+                  item.label
+                )}
+              </span>
+
+            `;
+
+
+            container.appendChild(
+              step
+            );
+
+
+            if (
+              index <
+              definition.length - 1
+            ) {
+
+              const line =
+                document.createElement(
+                  "div"
+                );
+
+              line.className =
+                "workflow-line";
+
+              container.appendChild(
+                line
+              );
+
+            }
+
+          }
+        );
+
+      }
+
+
+      /* -----------------------------------------
+         REQUIREMENT SOURCES
+      ----------------------------------------- */
+
+      let currentRequirement =
+        null;
+
+
+      function normalizeArtifact(
+        artifact
+      ) {
+
+        if (
+          !artifact ||
+          typeof artifact !==
+          "object"
+        ) {
+          return null;
+        }
+
+
+        const content =
+          artifact.content &&
+          typeof artifact.content ===
+          "object"
+            ? artifact.content
+            : artifact;
+
+
+        const metadata =
+          artifact.metadata &&
+          typeof artifact.metadata ===
+          "object"
+            ? artifact.metadata
+            : {};
+
+
+        const analysis =
+          content.analysis ||
+          artifact.analysis ||
+          {};
+
+
+        return {
+
+          ...content,
+
+          id:
+            artifact.id ||
+            content.id ||
+            null,
+
+          type:
+            artifact.type ||
+            content.type ||
+            "requirement",
+
+          createdAt:
+            artifact.createdAt ||
+            content.createdAt,
+
+          updatedAt:
+            artifact.updatedAt ||
+            content.updatedAt,
+
+          version:
+            artifact.version ||
+            content.version ||
+            1,
+
+          status:
+            artifact.status ||
+            content.status ||
+            "draft",
+
+          metadata,
+
+          analysis
+
+        };
+
+      }
+
+
+      function findRequirementInArtifactStore() {
+
+        if (
+          !window.BAArtifactStore
+        ) {
+          return null;
+        }
+
+
+        try {
+
+          if (
+            typeof
+              BAArtifactStore.getByType !==
+            "function"
+          ) {
+            return null;
+          }
+
+
+          const artifacts =
+            BAArtifactStore.getByType(
+              "requirement"
+            ) || [];
+
+
+          if (
+            !Array.isArray(
+              artifacts
+            ) ||
+            artifacts.length === 0
+          ) {
+            return null;
+          }
+
+
+          /*
+           * Prefer the analyzer-created
+           * requirement when available.
+           */
+
+          const analyzerArtifact =
+            artifacts.find(
+              artifact =>
+                artifact?.metadata
+                  ?.sourceKey ===
+                "requirement-analyzer-current"
+            );
+
+
+          const selected =
+            analyzerArtifact ||
+            artifacts[
+              artifacts.length - 1
+            ];
+
+
+          return normalizeArtifact(
+            selected
+          );
+
+        } catch (error) {
+
+          console.warn(
+            "BAForge Artifact Store read failed.",
+            error
+          );
+
+          return null;
+
+        }
+
+      }
+
+
+      function loadRequirement() {
+
+        /*
+         * 1. Prefer canonical Artifact Store.
+         */
+
+        const artifactRequirement =
+          findRequirementInArtifactStore();
+
+
+        if (
+          artifactRequirement
+        ) {
+
+          currentRequirement =
+            artifactRequirement;
+
+          /*
+           * Keep the legacy bridge
+           * synchronized for downstream
+           * screens during migration.
+           */
+
+          sessionStorage.setItem(
+            REQUIREMENT_KEY,
+            JSON.stringify(
+              artifactRequirement
+            )
+          );
+
+          return true;
+
+        }
+
+
+        /*
+         * 2. Legacy sessionStorage fallback.
+         */
+
+        const stored =
+          sessionStorage.getItem(
+            REQUIREMENT_KEY
+          );
+
+
+        const parsed =
+          safeParse(stored);
+
+
+        if (
+          parsed &&
+          typeof parsed ===
+          "object"
+        ) {
+
+          currentRequirement =
+            parsed;
+
+          return true;
+
+        }
+
 
         return false;
 
       }
 
-      currentRequirement =
-        parsed;
 
-      return true;
+      /* -----------------------------------------
+         POPULATE
+      ----------------------------------------- */
 
-    }
+      function populateRequirement() {
+
+        if (
+          !currentRequirement
+        ) {
+          return;
+        }
 
 
-    function populateRequirement() {
+        const analysis =
+          currentRequirement.analysis ||
+          {};
 
-      if (
-        !currentRequirement
-      ) {
-        return;
+
+        titleEl.value =
+          currentRequirement.title ||
+          "";
+
+
+        descriptionEl.value =
+          currentRequirement.description ||
+          currentRequirement.requirement ||
+          "";
+
+
+        const type =
+          currentRequirement.requirementType ||
+          currentRequirement.type ||
+          "Functional";
+
+
+        requirementTypeEl.value =
+          [
+            "Functional",
+            "Non-Functional",
+            "Business Rule",
+            "Regulatory",
+            "Data",
+            "Integration",
+            "Process",
+            "Other"
+          ].includes(type)
+            ? type
+            : "Other";
+
+
+        const priority =
+          String(
+            currentRequirement.priority ||
+            "medium"
+          ).toLowerCase();
+
+
+        priorityEl.value =
+          [
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ].includes(priority)
+            ? priority
+            : "unknown";
+
+
+        updateScore(
+          analysis.clarityScore,
+          clarityScoreEl,
+          clarityBarEl
+        );
+
+
+        updateScore(
+          analysis.completenessScore,
+          completenessScoreEl,
+          completenessBarEl
+        );
+
+
+        updateScore(
+          analysis.testabilityScore,
+          testabilityScoreEl,
+          testabilityBarEl
+        );
+
+
+        ambiguitiesEl.value =
+          arrayToText(
+            analysis.ambiguities
+          );
+
+
+        missingInformationEl.value =
+          arrayToText(
+            analysis.missingInformation
+          );
+
+
+        assumptionsEl.value =
+          arrayToText(
+            analysis.assumptions
+          );
+
+
+        businessRulesEl.value =
+          arrayToText(
+            analysis.businessRules
+          );
+
+
+        openQuestionsEl.value =
+          arrayToText(
+            analysis.openQuestions
+          );
+
+
+        edgeCasesEl.value =
+          arrayToText(
+            analysis.edgeCases
+          );
+
+
+        analystNotesEl.value =
+          arrayToText(
+            analysis.analystNotes
+          );
+
+
+        sourceRequirementEl.textContent =
+          currentRequirement.sourceRequirement ||
+          currentRequirement.source?.text ||
+          currentRequirement.description ||
+          currentRequirement.requirement ||
+          t("noOriginal");
+
+
+        requirementIdEl.textContent =
+          currentRequirement.id ||
+          t("newRequirement");
+
+
+        const status =
+          currentRequirement.status ||
+          "draft";
+
+
+        statusPillEl.textContent =
+          status === "draft"
+            ? t("statusDraft")
+            : String(status);
+
       }
 
-      const analysis =
-        currentRequirement.analysis ||
-        {};
 
-      titleEl.value =
-        currentRequirement.title ||
-        "";
+      /* -----------------------------------------
+         BUILD REQUIREMENT
+      ----------------------------------------- */
 
-      descriptionEl.value =
-        currentRequirement.description ||
-        "";
+      function buildRequirement() {
 
-      const type =
-        currentRequirement.requirementType ||
-        currentRequirement.type ||
-        "Functional";
-
-      requirementTypeEl.value =
-        [
-          "Functional",
-          "Non-Functional",
-          "Business Rule",
-          "Regulatory",
-          "Data",
-          "Integration",
-          "Process",
-          "Other"
-        ].includes(type)
-          ? type
-          : "Other";
+        const existingId =
+          currentRequirement?.id ||
+          null;
 
 
-      const priority =
-        String(
-          currentRequirement.priority ||
-          "medium"
-        ).toLowerCase();
-
-      priorityEl.value =
-        [
-          "high",
-          "medium",
-          "low",
-          "unknown"
-        ].includes(priority)
-          ? priority
-          : "unknown";
+        const previousAnalysis =
+          currentRequirement?.analysis ||
+          {};
 
 
-      updateScore(
-        analysis.clarityScore,
-        clarityScoreEl,
-        clarityBarEl
-      );
+        const analysis = {
 
-      updateScore(
-        analysis.completenessScore,
-        completenessScoreEl,
-        completenessBarEl
-      );
+          clarityScore:
+            normalizeScore(
+              previousAnalysis.clarityScore
+            ),
 
-      updateScore(
-        analysis.testabilityScore,
-        testabilityScoreEl,
-        testabilityBarEl
-      );
+          completenessScore:
+            normalizeScore(
+              previousAnalysis.completenessScore
+            ),
 
+          testabilityScore:
+            normalizeScore(
+              previousAnalysis.testabilityScore
+            ),
 
-      ambiguitiesEl.value =
-        arrayToText(
-          analysis.ambiguities
-        );
+          ambiguities:
+            textToArray(
+              ambiguitiesEl.value
+            ),
 
-      missingInformationEl.value =
-        arrayToText(
-          analysis.missingInformation
-        );
+          missingInformation:
+            textToArray(
+              missingInformationEl.value
+            ),
 
-      assumptionsEl.value =
-        arrayToText(
-          analysis.assumptions
-        );
+          assumptions:
+            textToArray(
+              assumptionsEl.value
+            ),
 
-      businessRulesEl.value =
-        arrayToText(
-          analysis.businessRules
-        );
+          businessRules:
+            textToArray(
+              businessRulesEl.value
+            ),
 
-      openQuestionsEl.value =
-        arrayToText(
-          analysis.openQuestions
-        );
+          openQuestions:
+            textToArray(
+              openQuestionsEl.value
+            ),
 
-      edgeCasesEl.value =
-        arrayToText(
-          analysis.edgeCases
-        );
+          edgeCases:
+            textToArray(
+              edgeCasesEl.value
+            ),
 
+          analystNotes:
+            textToArray(
+              analystNotesEl.value
+            )
 
-      analystNotesEl.value =
-        arrayToText(
-          analysis.analystNotes
-        );
-
-
-      sourceRequirementEl.textContent =
-        currentRequirement.description ||
-        "No original requirement loaded.";
+        };
 
 
-      requirementIdEl.textContent =
-        currentRequirement.id ||
-        "New Requirement";
+        let requirement;
 
 
-      const status =
-        currentRequirement.status ||
-        "draft";
-
-      statusPillEl.textContent =
-        status.charAt(0).toUpperCase() +
-        status.slice(1);
-
-    }
-
-
-    /* -----------------------------------------
-       SAVE REQUIREMENT
-    ----------------------------------------- */
-
-    function buildRequirement() {
-
-      const existingId =
-        currentRequirement?.id ||
-        null;
-
-      const analysis = {
-
-        clarityScore:
-          normalizeScore(
-            currentRequirement?.analysis
-              ?.clarityScore
-          ),
-
-        completenessScore:
-          normalizeScore(
-            currentRequirement?.analysis
-              ?.completenessScore
-          ),
-
-        testabilityScore:
-          normalizeScore(
-            currentRequirement?.analysis
-              ?.testabilityScore
-          ),
-
-        ambiguities:
-          textToArray(
-            ambiguitiesEl.value
-          ),
-
-        missingInformation:
-          textToArray(
-            missingInformationEl.value
-          ),
-
-        assumptions:
-          textToArray(
-            assumptionsEl.value
-          ),
-
-        businessRules:
-          textToArray(
-            businessRulesEl.value
-          ),
-
-        openQuestions:
-          textToArray(
-            openQuestionsEl.value
-          ),
-
-        edgeCases:
-          textToArray(
-            edgeCasesEl.value
-          ),
-
-        analystNotes:
-          textToArray(
-            analystNotesEl.value
-          )
-
-      };
-
-
-      let requirement;
-
-
-      if (
-        window.BADataModel &&
-        typeof
-          window.BADataModel
-            .createRequirement ===
+        if (
+          window.BADataModel &&
+          typeof
+            BADataModel.createRequirement ===
           "function"
-      ) {
+        ) {
 
-        requirement =
-          window.BADataModel.createRequirement({
+          requirement =
+            BADataModel.createRequirement({
+
+              id:
+                existingId,
+
+              title:
+                titleEl.value.trim(),
+
+              description:
+                descriptionEl.value.trim(),
+
+              source:
+                currentRequirement?.source ||
+                "Requirement Workspace",
+
+              priority:
+                priorityEl.value,
+
+              analysis
+
+            });
+
+        } else {
+
+          requirement = {
 
             id:
-              existingId,
+              existingId ||
+              `REQ_${Date.now()}`,
+
+            type:
+              "requirement",
+
+            createdAt:
+              currentRequirement?.createdAt ||
+              new Date().toISOString(),
+
+            updatedAt:
+              new Date().toISOString(),
+
+            version:
+              currentRequirement?.version ||
+              1,
+
+            status:
+              "draft",
 
             title:
               titleEl.value.trim(),
@@ -2372,295 +3421,541 @@
 
             analysis
 
-          });
+          };
 
-      } else {
-
-        requirement = {
-
-          id:
-            existingId ||
-            `REQ_${Date.now()}`,
-
-          type:
-            "requirement",
-
-          createdAt:
-            currentRequirement?.createdAt ||
-            new Date().toISOString(),
-
-          updatedAt:
-            new Date().toISOString(),
-
-          version:
-            currentRequirement?.version ||
-            1,
-
-          status:
-            "draft",
-
-          title:
-            titleEl.value.trim(),
-
-          description:
-            descriptionEl.value.trim(),
-
-          source:
-            currentRequirement?.source ||
-            "Requirement Workspace",
-
-          priority:
-            priorityEl.value,
-
-          analysis
-
-        };
-
-      }
+        }
 
 
-      /*
-       * The current Data Model intentionally
-       * keeps the core requirement structure.
-       * These fields preserve the analyzer
-       * classification and analyst notes.
-       */
-
-      requirement.requirementType =
-        requirementTypeEl.value;
-
-      requirement.analysis.analystNotes =
-        analysis.analystNotes;
+        requirement.requirementType =
+          requirementTypeEl.value;
 
 
-      return requirement;
-
-    }
-
-
-    function saveRequirement(
-      showMessage = true
-    ) {
-
-      hideMessages();
+        requirement.analysis =
+          requirement.analysis ||
+          analysis;
 
 
-      const title =
-        titleEl.value.trim();
-
-      const description =
-        descriptionEl.value.trim();
+        requirement.analysis.analystNotes =
+          analysis.analystNotes;
 
 
-      if (!title) {
+        /*
+         * Preserve analyzer context.
+         */
 
-        showError(
-          "Please enter a requirement title."
-        );
+        if (
+          currentRequirement?.summary
+        ) {
 
-        titleEl.focus();
+          requirement.summary =
+            currentRequirement.summary;
 
-        return null;
+        }
+
+
+        if (
+          currentRequirement?.sourceRequirement
+        ) {
+
+          requirement.sourceRequirement =
+            currentRequirement.sourceRequirement;
+
+        }
+
+
+        if (
+          currentRequirement?.metadata
+        ) {
+
+          requirement.metadata =
+            {
+              ...currentRequirement.metadata,
+              sourceKey:
+                "requirement-workspace"
+            };
+
+        } else {
+
+          requirement.metadata = {
+
+            sourceKey:
+              "requirement-workspace"
+
+          };
+
+        }
+
+
+        return requirement;
 
       }
 
 
-      if (!description) {
+      /* -----------------------------------------
+         ARTIFACT STORE SAVE
+      ----------------------------------------- */
 
-        showError(
-          "Please enter a requirement description."
-        );
+      function saveToArtifactStore(
+        requirement
+      ) {
 
-        descriptionEl.focus();
+        if (
+          !window.BAArtifactStore
+        ) {
+          return false;
+        }
 
-        return null;
+
+        try {
+
+          if (
+            typeof BAArtifactStore.getByType !==
+            "function"
+          ) {
+            return false;
+          }
+
+
+          const artifacts =
+            BAArtifactStore.getByType(
+              "requirement"
+            ) || [];
+
+
+          const existing =
+            artifacts.find(
+              artifact =>
+                artifact?.id ===
+                requirement.id
+            );
+
+
+          if (
+            existing &&
+            typeof BAArtifactStore.update ===
+            "function"
+          ) {
+
+            BAArtifactStore.update(
+              existing.id,
+              {
+                ...requirement,
+
+                content:
+                  {
+                    ...requirement
+                  },
+
+                metadata:
+                  {
+                    ...(existing.metadata || {}),
+                    sourceKey:
+                      "requirement-workspace"
+                  }
+              }
+            );
+
+            return true;
+
+          }
+
+
+          if (
+            typeof BAArtifactStore.create ===
+            "function"
+          ) {
+
+            BAArtifactStore.create(
+              "requirement",
+              {
+                ...requirement
+              },
+              {
+                sourceKey:
+                  "requirement-workspace",
+
+                source:
+                  requirement.source ||
+                  "Requirement Workspace"
+              }
+            );
+
+            return true;
+
+          }
+
+        } catch (error) {
+
+          console.warn(
+            "BAForge Artifact Store save failed.",
+            error
+          );
+
+        }
+
+
+        return false;
 
       }
 
 
-      const requirement =
-        buildRequirement();
+      /* -----------------------------------------
+         SAVE
+      ----------------------------------------- */
+
+      function saveRequirement(
+        showMessage = true
+      ) {
+
+        hideMessages();
 
 
-      /*
-       * Keep a clean requirement context
-       * for downstream screens.
-       */
+        const title =
+          titleEl.value.trim();
 
-      sessionStorage.setItem(
-        REQUIREMENT_KEY,
-        JSON.stringify(
+
+        const description =
+          descriptionEl.value.trim();
+
+
+        if (!title) {
+
+          showError(
+            t("titleRequired")
+          );
+
+          titleEl.focus();
+
+          return null;
+
+        }
+
+
+        if (!description) {
+
+          showError(
+            t("descriptionRequired")
+          );
+
+          descriptionEl.focus();
+
+          return null;
+
+        }
+
+
+        const requirement =
+          buildRequirement();
+
+
+        /*
+         * Canonical workspace storage.
+         */
+
+        saveToArtifactStore(
           requirement
-        )
-      );
+        );
 
 
-      currentRequirement =
-        requirement;
+        /*
+         * Temporary compatibility bridge.
+         */
 
-
-      requirementIdEl.textContent =
-        requirement.id;
-
-      statusPillEl.textContent =
-        "Draft";
-
-
-      /*
-       * Update workflow.
-       */
-
-      const workflow =
-        loadWorkflow();
-
-
-      workflow.currentStep =
-        "requirement";
-
-
-      BAWorkflow.completeStep(
-        workflow,
-        "requirement",
-        {
-          entityId:
-            requirement.id,
-
-          entityType:
-            "requirement",
-
-          status:
-            "completed",
-
-          data:
+        sessionStorage.setItem(
+          REQUIREMENT_KEY,
+          JSON.stringify(
             requirement
+          )
+        );
+
+
+        currentRequirement =
+          requirement;
+
+
+        requirementIdEl.textContent =
+          requirement.id;
+
+
+        statusPillEl.textContent =
+          t("statusDraft");
+
+
+        /*
+         * Workflow state.
+         */
+
+        const workflow =
+          loadWorkflow();
+
+
+        workflow.currentStep =
+          "requirement";
+
+
+        BAWorkflow.completeStep(
+          workflow,
+          "requirement",
+          {
+            entityId:
+              requirement.id,
+
+            entityType:
+              "requirement",
+
+            status:
+              "completed",
+
+            data:
+              requirement
+          }
+        );
+
+
+        saveWorkflow(
+          workflow
+        );
+
+
+        renderWorkflow(
+          workflow
+        );
+
+
+        if (showMessage) {
+
+          showSuccess(
+            t("saved")
+          );
+
+        }
+
+
+        return requirement;
+
+      }
+
+
+      /* -----------------------------------------
+         CLEAR
+      ----------------------------------------- */
+
+      function clearRequirement() {
+
+        const confirmed =
+          window.confirm(
+            t("clearConfirm")
+          );
+
+
+        if (!confirmed) {
+          return;
+        }
+
+
+        sessionStorage.removeItem(
+          REQUIREMENT_KEY
+        );
+
+
+        currentRequirement =
+          null;
+
+
+        titleEl.value =
+          "";
+
+        descriptionEl.value =
+          "";
+
+        requirementTypeEl.value =
+          "Functional";
+
+        priorityEl.value =
+          "unknown";
+
+
+        ambiguitiesEl.value =
+          "";
+
+        missingInformationEl.value =
+          "";
+
+        assumptionsEl.value =
+          "";
+
+        businessRulesEl.value =
+          "";
+
+        openQuestionsEl.value =
+          "";
+
+        edgeCasesEl.value =
+          "";
+
+        analystNotesEl.value =
+          "";
+
+
+        updateScore(
+          0,
+          clarityScoreEl,
+          clarityBarEl
+        );
+
+
+        updateScore(
+          0,
+          completenessScoreEl,
+          completenessBarEl
+        );
+
+
+        updateScore(
+          0,
+          testabilityScoreEl,
+          testabilityBarEl
+        );
+
+
+        requirementIdEl.textContent =
+          t("newRequirement");
+
+
+        statusPillEl.textContent =
+          t("statusDraft");
+
+
+        sourceRequirementEl.textContent =
+          t("noOriginal");
+
+
+        hideMessages();
+
+
+        const workflow =
+          loadWorkflow();
+
+
+        try {
+
+          BAWorkflow.resetStep(
+            workflow,
+            "requirement"
+          );
+
+        } catch {}
+
+
+        workflow.currentStep =
+          "requirement";
+
+
+        saveWorkflow(
+          workflow
+        );
+
+
+        renderWorkflow(
+          workflow
+        );
+
+
+        showSuccess(
+          t("cleared")
+        );
+
+      }
+
+
+      /* -----------------------------------------
+         CONTINUE
+      ----------------------------------------- */
+
+      function continueToUserStory() {
+
+        const requirement =
+          saveRequirement(false);
+
+
+        if (!requirement) {
+          return;
+        }
+
+
+        window.location.href =
+          "/user-story.html";
+
+      }
+
+
+      /* -----------------------------------------
+         EVENTS
+      ----------------------------------------- */
+
+      saveButton.addEventListener(
+        "click",
+        () => {
+
+          saveRequirement(true);
+
         }
       );
 
 
-      saveWorkflow(
-        workflow
+      clearButton.addEventListener(
+        "click",
+        clearRequirement
       );
 
 
-      renderWorkflow(
-        workflow
+      continueButton.addEventListener(
+        "click",
+        continueToUserStory
       );
 
 
-      if (showMessage) {
+      /* -----------------------------------------
+         INITIALIZE
+      ----------------------------------------- */
 
-        showSuccess(
-          "Requirement saved successfully."
-        );
+      applyLanguage();
+
+
+      const hasRequirement =
+        loadRequirement();
+
+
+      if (hasRequirement) {
+
+        emptyStateEl.style.display =
+          "none";
+
+        requirementCardEl.style.display =
+          "block";
+
+        populateRequirement();
+
+      } else {
+
+        /*
+         * Direct entry is allowed.
+         * The page remains usable instead
+         * of forcing the user back to Analyzer.
+         */
+
+        emptyStateEl.style.display =
+          "block";
+
+        requirementCardEl.style.display =
+          "none";
 
       }
-
-
-      return requirement;
-
-    }
-
-
-    /* -----------------------------------------
-       CLEAR
-    ----------------------------------------- */
-
-    function clearRequirement() {
-
-      const confirmed =
-        window.confirm(
-          "Clear the current requirement and analysis data?"
-        );
-
-      if (!confirmed) {
-        return;
-      }
-
-
-      sessionStorage.removeItem(
-        REQUIREMENT_KEY
-      );
-
-
-      currentRequirement =
-        null;
-
-
-      titleEl.value =
-        "";
-
-      descriptionEl.value =
-        "";
-
-      requirementTypeEl.value =
-        "Functional";
-
-      priorityEl.value =
-        "unknown";
-
-
-      ambiguitiesEl.value =
-        "";
-
-      missingInformationEl.value =
-        "";
-
-      assumptionsEl.value =
-        "";
-
-      businessRulesEl.value =
-        "";
-
-      openQuestionsEl.value =
-        "";
-
-      edgeCasesEl.value =
-        "";
-
-      analystNotesEl.value =
-        "";
-
-
-      updateScore(
-        0,
-        clarityScoreEl,
-        clarityBarEl
-      );
-
-      updateScore(
-        0,
-        completenessScoreEl,
-        completenessBarEl
-      );
-
-      updateScore(
-        0,
-        testabilityScoreEl,
-        testabilityBarEl
-      );
-
-
-      requirementIdEl.textContent =
-        "New Requirement";
-
-      statusPillEl.textContent =
-        "Draft";
-
-      sourceRequirementEl.textContent =
-        "No original requirement loaded.";
-
-
-      hideMessages();
 
 
       const workflow =
         loadWorkflow();
 
-
-      BAWorkflow.resetStep(
-        workflow,
-        "requirement"
-      );
 
       workflow.currentStep =
         "requirement";
@@ -2676,147 +3971,35 @@
       );
 
 
-      showSuccess(
-        "Requirement workspace cleared."
-      );
-
-    }
-
-
-    /* -----------------------------------------
-       CONTINUE
-    ----------------------------------------- */
-
-    function continueToUserStory() {
-
-      const requirement =
-        saveRequirement(
-          false
-        );
-
-
-      if (!requirement) {
-        return;
-      }
-
-
-      window.location.href =
-        "/user-story.html";
-
-    }
-
-
-    /* -----------------------------------------
-       EVENTS
-    ----------------------------------------- */
-
-    saveButton.addEventListener(
-      "click",
-      () => {
-
-        saveRequirement(
-          true
-        );
-
-      }
-    );
-
-
-    clearButton.addEventListener(
-      "click",
-      clearRequirement
-    );
-
-
-    continueButton.addEventListener(
-      "click",
-      continueToUserStory
-    );
-
-
-    /* -----------------------------------------
-       ESCAPE HTML
-    ----------------------------------------- */
-
-    function escapeHtml(
-      value
-    ) {
-
-      return String(
-        value ?? ""
-      )
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
-
-    }
-
-
-    /* -----------------------------------------
-       INITIALIZE
-    ----------------------------------------- */
-
-    const hasRequirement =
-      loadRequirement();
-
-
-    if (
-      !hasRequirement
-    ) {
-
       /*
-       * Keep the page usable even when
-       * opened directly.
+       * If the shared language selector
+       * changes language and nav.js reloads,
+       * this also keeps the page compatible
+       * with pages that dispatch the event.
        */
 
-      emptyStateEl.style.display =
-        "block";
+      window.addEventListener(
+        "baforge:language-ready",
+        event => {
 
-      document.querySelector(
-        ".card:not(#emptyState)"
-      ).style.display =
-        "none";
+          if (
+            event?.detail?.language
+          ) {
 
-    } else {
+            language =
+              event.detail.language ===
+              "tr"
+                ? "tr"
+                : "en";
 
-      populateRequirement();
+            applyLanguage();
 
-    }
+          }
 
+        }
+      );
 
-    const workflow =
-      loadWorkflow();
-
-
-    workflow.currentStep =
-      "requirement";
-
-
-    saveWorkflow(
-      workflow
-    );
-
-
-    renderWorkflow(
-      workflow
-    );
+    })();
 
   </script>
 
