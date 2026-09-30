@@ -53,13 +53,13 @@
 
     main {
       max-width: 1240px;
-      margin: 52px auto;
+      margin: 42px auto;
       padding: 0 20px;
     }
 
     .hero {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     .badge {
@@ -95,6 +95,119 @@
       margin: 0 auto;
     }
 
+    /* ======================================================
+       WORKFLOW
+    ====================================================== */
+
+    .workflow-wrapper {
+      margin: 0 auto 30px;
+      max-width: 1180px;
+    }
+
+    .workflow-context {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      color: #667085;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .workflow-context-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #94a3b8;
+      flex-shrink: 0;
+    }
+
+    .workflow-context strong {
+      color: #344054;
+    }
+
+    .workflow-scroll {
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: thin;
+      padding-bottom: 6px;
+    }
+
+    .workflow-scroll::-webkit-scrollbar {
+      height: 5px;
+    }
+
+    .workflow-bar {
+      min-width: 900px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 2px;
+    }
+
+    .workflow-step {
+      flex: 1;
+      min-width: 98px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 42px;
+      padding: 7px 9px;
+      border: 1px solid #dbe3ef;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #667085;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+      transition: 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .workflow-step:hover {
+      border-color: #bfd0f8;
+      background: #f8faff;
+      color: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .workflow-step.active {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: white;
+      box-shadow: 0 5px 14px rgba(37, 99, 235, 0.18);
+    }
+
+    .workflow-number {
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: #eef2f6;
+      color: #475467;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .workflow-step.active .workflow-number {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+
+    .workflow-arrow {
+      color: #98a2b3;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* ======================================================
+       CARDS
+    ====================================================== */
+
     .card {
       background: var(--surface);
       padding: 30px;
@@ -124,7 +237,9 @@
       font-size: 14px;
     }
 
-    /* COMPOSER */
+    /* ======================================================
+       COMPOSER
+    ====================================================== */
 
     .composer {
       border: 1px solid #d0d5dd;
@@ -244,7 +359,9 @@
       white-space: nowrap;
     }
 
-    /* ATTACHMENTS */
+    /* ======================================================
+       ATTACHMENTS
+    ====================================================== */
 
     .plus-wrap {
       position: relative;
@@ -311,7 +428,9 @@
       color: #172033;
     }
 
-    /* SEND */
+    /* ======================================================
+       SEND
+    ====================================================== */
 
     .send-button {
       width: 42px;
@@ -345,7 +464,9 @@
       transform: none;
     }
 
-    /* OPTIONS */
+    /* ======================================================
+       OPTIONS
+    ====================================================== */
 
     .options {
       display: grid;
@@ -393,7 +514,9 @@
       border-color: #98a2b3;
     }
 
-    /* STATUS */
+    /* ======================================================
+       STATUS
+    ====================================================== */
 
     .loading,
     .error {
@@ -417,7 +540,9 @@
       border: 1px solid #fecaca;
     }
 
-    /* RESULT */
+    /* ======================================================
+       RESULT
+    ====================================================== */
 
     .result {
       display: none;
@@ -455,7 +580,9 @@
       white-space: nowrap;
     }
 
-    /* DETECTED REQUIREMENTS */
+    /* ======================================================
+       DETECTED REQUIREMENTS
+    ====================================================== */
 
     .detected-section {
       display: none;
@@ -520,7 +647,9 @@
       background: #e3ebff;
     }
 
-    /* SCORES */
+    /* ======================================================
+       SCORES
+    ====================================================== */
 
     .score-grid {
       display: grid;
@@ -581,7 +710,9 @@
       transition: width 0.5s ease;
     }
 
-    /* SUMMARY */
+    /* ======================================================
+       SUMMARY
+    ====================================================== */
 
     .summary-box {
       background: linear-gradient(
@@ -614,7 +745,9 @@
       font-weight: 500;
     }
 
-    /* ANALYSIS */
+    /* ======================================================
+       ANALYSIS
+    ====================================================== */
 
     .analysis-grid {
       display: grid;
@@ -689,7 +822,9 @@
       border: 1px solid #b2ddff;
     }
 
-    /* SOURCE */
+    /* ======================================================
+       SOURCE
+    ====================================================== */
 
     .source-box {
       background: #ffffff;
@@ -723,7 +858,9 @@
       font-weight: 700;
     }
 
-    /* NEXT ACTIONS */
+    /* ======================================================
+       NEXT ACTIONS
+    ====================================================== */
 
     .next-actions {
       display: grid;
@@ -762,9 +899,12 @@
       color: #101828;
     }
 
-    /* RESPONSIVE */
+    /* ======================================================
+       RESPONSIVE
+    ====================================================== */
 
     @media (max-width: 900px) {
+
       .score-grid,
       .next-actions,
       .detected-grid {
@@ -781,8 +921,9 @@
     }
 
     @media (max-width: 700px) {
+
       main {
-        margin: 35px auto;
+        margin: 30px auto;
       }
 
       .hero h1 {
@@ -820,6 +961,19 @@
       .result-header {
         flex-direction: column;
       }
+
+      .workflow-wrapper {
+        margin-left: -4px;
+        margin-right: -4px;
+      }
+
+      .workflow-context {
+        padding: 0 4px;
+      }
+
+      .workflow-bar {
+        min-width: 900px;
+      }
     }
   </style>
 </head>
@@ -844,6 +998,169 @@
         Use text, PDF documents or images as context.
         Add instructions only when you need them.
       </p>
+
+    </section>
+
+
+    <!-- ==================================================
+         WORKFLOW
+         Analyzer is a pre-work entry point.
+         It is NOT one of the 8 workflow steps.
+         ================================================== -->
+
+    <section class="workflow-wrapper">
+
+      <div class="workflow-context">
+        <span class="workflow-context-dot"></span>
+
+        <span id="workflowContextText">
+          Analyzer is the entry point. The delivery workflow starts with Requirement.
+        </span>
+      </div>
+
+      <div class="workflow-scroll">
+
+        <div
+          class="workflow-bar"
+          id="workflowBar">
+
+          <a
+            class="workflow-step"
+            href="/requirement.html"
+            data-workflow-step="requirement">
+
+            <span class="workflow-number">1</span>
+
+            <span
+              class="workflow-label"
+              data-workflow-label="requirement">
+              Requirement
+            </span>
+
+          </a>
+
+          <span class="workflow-arrow">→</span>
+
+          <a
+            class="workflow-step"
+            href="/user-story.html"
+            data-workflow-step="user_story">
+
+            <span class="workflow-number">2</span>
+
+            <span
+              class="workflow-label"
+              data-workflow-label="user_story">
+              User Story
+            </span>
+
+          </a>
+
+          <span class="workflow-arrow">→</span>
+
+          <a
+            class="workflow-step"
+            href="/acceptance-criteria.html"
+            data-workflow-step="acceptance_criteria">
+
+            <span class="workflow-number">3</span>
+
+            <span
+              class="workflow-label"
+              data-workflow-label="acceptance_criteria">
+              Acceptance Criteria
+            </span>
+
+          </a>
+
+          <span class="workflow-arrow">→</span>
+
+          <a
+            class="workflow-step"
+            href="/uat.html"
+            data-workflow-step="uat">
+
+            <span class="workflow-number">4</span>
+
+            <span
+              class="workflow-label"
+              data-workflow-label="uat">
+              UAT Test Cases
+            </span>
+
+          </a>
+
+          <span class="workflow-arrow">→</span>
+
+          <a
+            class="workflow-step"
+            href="/test-data.html"
+            data-workflow-step="test_data">
+
+            <span class="workflow-number">5</span>
+
+            <span
+              class="workflow-label"
+              data-workflow-label="test_data">
+              Test Data
+            </span>
+
+          </a>
+
+          <span class="workflow-arrow">→</span>
+
+          <a
+            class="workflow-step"
+            href="/process-flow.html"
+            data-workflow-step="process_flow">
+
+            <span class="workflow-number">6</span>
+
+            <span
+              class="workflow-label"
+              data-workflow-label="process_flow">
+              Process Flow
+            </span>
+
+          </a>
+
+          <span class="workflow-arrow">→</span>
+
+          <a
+            class="workflow-step"
+            href="/traceability.html"
+            data-workflow-step="traceability">
+
+            <span class="workflow-number">7</span>
+
+            <span
+              class="workflow-label"
+              data-workflow-label="traceability">
+              Traceability
+            </span>
+
+          </a>
+
+          <span class="workflow-arrow">→</span>
+
+          <a
+            class="workflow-step"
+            href="/document.html"
+            data-workflow-step="document">
+
+            <span class="workflow-number">8</span>
+
+            <span
+              class="workflow-label"
+              data-workflow-label="document">
+              BA Document
+            </span>
+
+          </a>
+
+        </div>
+
+      </div>
 
     </section>
 
@@ -1089,7 +1406,7 @@
       <div
         id="loading"
         class="loading">
-        AI is analyzing your input...
+        BAForge AI is analyzing your input...
       </div>
 
 
@@ -1380,11 +1697,30 @@
       <div
         id="savedIndicator"
         class="saved-indicator">
-        ✓ Requirement saved to the current workspace.
+        ✓ Requirement saved to the BAForge workspace.
       </div>
 
 
       <div class="next-actions">
+
+        <a
+          class="next-action"
+          href="/requirement.html">
+
+          <div
+            class="next-action-label"
+            id="nextRequirementLabel">
+            Workflow
+          </div>
+
+          <div
+            class="next-action-title"
+            id="nextRequirementTitle">
+            Continue to Requirement →
+          </div>
+
+        </a>
+
 
         <a
           class="next-action"
@@ -1419,25 +1755,6 @@
             class="next-action-title"
             id="nextCriteriaTitle">
             Generate Acceptance Criteria →
-          </div>
-
-        </a>
-
-
-        <a
-          class="next-action"
-          href="/uat.html">
-
-          <div
-            class="next-action-label"
-            id="nextUatLabel">
-            Continue
-          </div>
-
-          <div
-            class="next-action-title"
-            id="nextUatTitle">
-            Generate UAT Test Cases →
           </div>
 
         </a>
@@ -1480,6 +1797,20 @@
         subtitle:
           "Use text, PDF documents or images as context. Add instructions only when you need them.",
 
+        workflowContext:
+          "Analyzer is the entry point. The delivery workflow starts with Requirement.",
+
+        workflow: {
+          requirement: "Requirement",
+          userStory: "User Story",
+          acceptanceCriteria: "Acceptance Criteria",
+          uat: "UAT Test Cases",
+          testData: "Test Data",
+          processFlow: "Process Flow",
+          traceability: "Traceability",
+          document: "BA Document"
+        },
+
         inputTitle:
           "What would you like BAForge AI to analyze?",
 
@@ -1495,8 +1826,23 @@
         language:
           "Output Language",
 
+        languageEnglish:
+          "English",
+
+        languageTurkish:
+          "Turkish",
+
         detail:
           "Analysis Depth",
+
+        detailBasic:
+          "Basic",
+
+        detailProfessional:
+          "Professional",
+
+        detailComprehensive:
+          "Comprehensive",
 
         clear:
           "Clear",
@@ -1588,17 +1934,20 @@
         next:
           "Next Step",
 
+        workflowNext:
+          "Workflow",
+
         continue:
           "Continue",
+
+        continueRequirement:
+          "Continue to Requirement →",
 
         generateStory:
           "Generate User Story →",
 
         generateCriteria:
           "Generate Acceptance Criteria →",
-
-        generateUat:
-          "Generate UAT Test Cases →",
 
         pdf:
           "Upload PDF",
@@ -1624,7 +1973,21 @@
           "Geliştirmeden Önce Gereksinimi Analiz Et",
 
         subtitle:
-          "Metin, PDF veya görsel kullanın. Talimat vermek zorunlu değildir.",
+          "Metin, PDF veya görsel kullanın. Talimat vermek yalnızca gerektiğinde kullanılmalıdır.",
+
+        workflowContext:
+          "Analyzer giriş noktasıdır. Ana iş akışı Requirement adımıyla başlar.",
+
+        workflow: {
+          requirement: "Requirement",
+          userStory: "User Story",
+          acceptanceCriteria: "Acceptance Criteria",
+          uat: "UAT Test Case'leri",
+          testData: "Test Data",
+          processFlow: "Process Flow",
+          traceability: "Traceability",
+          document: "BA Document"
+        },
 
         inputTitle:
           "BAForge AI neyi analiz etsin?",
@@ -1641,8 +2004,23 @@
         language:
           "Çıktı Dili",
 
+        languageEnglish:
+          "İngilizce",
+
+        languageTurkish:
+          "Türkçe",
+
         detail:
           "Analiz Derinliği",
+
+        detailBasic:
+          "Temel",
+
+        detailProfessional:
+          "Profesyonel",
+
+        detailComprehensive:
+          "Kapsamlı",
 
         clear:
           "Temizle",
@@ -1711,7 +2089,7 @@
           "Varsayımlar",
 
         rules:
-          "Business Rules",
+          "İş Kuralları",
 
         questions:
           "Açık Sorular",
@@ -1734,17 +2112,20 @@
         next:
           "Sonraki Adım",
 
+        workflowNext:
+          "İş Akışı",
+
         continue:
           "Devam Et",
+
+        continueRequirement:
+          "Requirement'a Devam Et →",
 
         generateStory:
           "User Story Oluştur →",
 
         generateCriteria:
           "Acceptance Criteria Oluştur →",
-
-        generateUat:
-          "UAT Test Case'leri Oluştur →",
 
         pdf:
           "PDF Yükle",
@@ -1757,7 +2138,6 @@
 
         empty:
           "-"
-
       }
 
     };
@@ -1842,28 +2222,93 @@
       const language =
         currentLanguage();
 
-      return (
+      const dictionary =
         pageTranslations[language] ||
-        pageTranslations.en
-      )[key] ||
-        (
-          pageTranslations.en[key] ||
-          key
-        );
+        pageTranslations.en;
+
+
+      const parts =
+        key.split(".");
+
+
+      let value =
+        dictionary;
+
+
+      for (
+        const part of parts
+      ) {
+
+        if (
+          value === undefined ||
+          value === null
+        ) {
+          break;
+        }
+
+        value =
+          value[part];
+
+      }
+
+
+      if (
+        value !== undefined &&
+        value !== null
+      ) {
+
+        return value;
+
+      }
+
+
+      return (
+        pageTranslations.en[key] ||
+        key
+      );
 
     }
 
 
     function syncCoreLanguage() {
 
-      if (
-        window.BAI18n &&
-        typeof window.BAI18n.setLanguage ===
-          "function"
-      ) {
+      const i18n =
+        window.BAForgeI18n ||
+        window.BAI18n;
 
-        window.BAI18n.setLanguage(
-          currentLanguage()
+
+      if (!i18n) {
+        return;
+      }
+
+
+      try {
+
+        if (
+          typeof i18n.setLanguage ===
+          "function"
+        ) {
+
+          i18n.setLanguage(
+            currentLanguage()
+          );
+
+        } else if (
+          typeof i18n.changeLanguage ===
+          "function"
+        ) {
+
+          i18n.changeLanguage(
+            currentLanguage()
+          );
+
+        }
+
+      } catch (error) {
+
+        console.warn(
+          "BAForge i18n synchronization failed:",
+          error
         );
 
       }
@@ -1873,97 +2318,69 @@
 
     /*
       ======================================================
-      HELPERS
+      WORKFLOW TRANSLATION
       ======================================================
     */
 
-    function escapeHtml(value) {
+    function updateWorkflowLanguage() {
 
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    }
+      document.getElementById(
+        "workflowContextText"
+      ).textContent =
+        t("workflowContext");
 
 
-    function safeArray(value) {
+      const labels = {
 
-      if (
-        Array.isArray(value)
-      ) {
+        requirement:
+          t("workflow.requirement"),
 
-        return value;
+        user_story:
+          t("workflow.userStory"),
 
-      }
+        acceptance_criteria:
+          t("workflow.acceptanceCriteria"),
 
-      if (
-        value === null ||
-        value === undefined ||
-        value === ""
-      ) {
+        uat:
+          t("workflow.uat"),
 
-        return [];
+        test_data:
+          t("workflow.testData"),
 
-      }
+        process_flow:
+          t("workflow.processFlow"),
 
-      return [value];
+        traceability:
+          t("workflow.traceability"),
 
-    }
+        document:
+          t("workflow.document")
+
+      };
 
 
-    function normalizeScore(value) {
-
-      const score =
-        Number(value);
-
-      if (
-        !Number.isFinite(score)
-      ) {
-
-        return 0;
-
-      }
-
-      return Math.max(
-        0,
-        Math.min(
-          100,
-          Math.round(score)
+      document
+        .querySelectorAll(
+          "[data-workflow-label]"
         )
-      );
+        .forEach(
+          element => {
 
-    }
-
-
-    function updateCharacterCount() {
-
-      characterCount.textContent =
-        `${requirementEl.value.length} / 10000`;
-
-    }
+            const key =
+              element.dataset.workflowLabel;
 
 
-    function showError(message) {
+            if (
+              labels[key]
+            ) {
 
-      errorEl.textContent =
-        message;
+              element.textContent =
+                labels[key];
 
-      errorEl.style.display =
-        "block";
+            }
 
-    }
-
-
-    function hideError() {
-
-      errorEl.textContent =
-        "";
-
-      errorEl.style.display =
-        "none";
+          }
+        );
 
     }
 
@@ -1994,6 +2411,9 @@
         .textContent =
         t("subtitle");
 
+      updateWorkflowLanguage();
+
+
       document.getElementById("inputTitle")
         .textContent =
         t("inputTitle");
@@ -2016,6 +2436,64 @@
       document.getElementById("detailLabel")
         .textContent =
         t("detail");
+
+
+      /*
+       * Localize select option labels.
+       * Values remain stable for the API.
+       */
+
+      const englishOption =
+        languageEl.querySelector(
+          'option[value="en"]'
+        );
+
+      const turkishOption =
+        languageEl.querySelector(
+          'option[value="tr"]'
+        );
+
+      if (englishOption) {
+        englishOption.textContent =
+          t("languageEnglish");
+      }
+
+      if (turkishOption) {
+        turkishOption.textContent =
+          t("languageTurkish");
+      }
+
+
+      const basicOption =
+        detailEl.querySelector(
+          'option[value="Basic"]'
+        );
+
+      const professionalOption =
+        detailEl.querySelector(
+          'option[value="Professional"]'
+        );
+
+      const comprehensiveOption =
+        detailEl.querySelector(
+          'option[value="Comprehensive"]'
+        );
+
+      if (basicOption) {
+        basicOption.textContent =
+          t("detailBasic");
+      }
+
+      if (professionalOption) {
+        professionalOption.textContent =
+          t("detailProfessional");
+      }
+
+      if (comprehensiveOption) {
+        comprehensiveOption.textContent =
+          t("detailComprehensive");
+      }
+
 
       clearButton.textContent =
         t("clear");
@@ -2111,6 +2589,14 @@
         .textContent =
         t("source");
 
+      document.getElementById("nextRequirementLabel")
+        .textContent =
+        t("workflowNext");
+
+      document.getElementById("nextRequirementTitle")
+        .textContent =
+        t("continueRequirement");
+
       document.getElementById("nextStoryLabel")
         .textContent =
         t("next");
@@ -2126,14 +2612,6 @@
       document.getElementById("nextCriteriaTitle")
         .textContent =
         t("generateCriteria");
-
-      document.getElementById("nextUatLabel")
-        .textContent =
-        t("continue");
-
-      document.getElementById("nextUatTitle")
-        .textContent =
-        t("generateUat");
 
 
       if (
@@ -2344,6 +2822,103 @@
 
     /*
       ======================================================
+      HELPERS
+      ======================================================
+    */
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    function safeArray(value) {
+
+      if (
+        Array.isArray(value)
+      ) {
+
+        return value;
+
+      }
+
+      if (
+        value === null ||
+        value === undefined ||
+        value === ""
+      ) {
+
+        return [];
+
+      }
+
+      return [value];
+
+    }
+
+
+    function normalizeScore(value) {
+
+      const score =
+        Number(value);
+
+      if (
+        !Number.isFinite(score)
+      ) {
+
+        return 0;
+
+      }
+
+      return Math.max(
+        0,
+        Math.min(
+          100,
+          Math.round(score)
+        )
+      );
+
+    }
+
+
+    function updateCharacterCount() {
+
+      characterCount.textContent =
+        `${requirementEl.value.length} / 10000`;
+
+    }
+
+
+    function showError(message) {
+
+      errorEl.textContent =
+        message;
+
+      errorEl.style.display =
+        "block";
+
+    }
+
+
+    function hideError() {
+
+      errorEl.textContent =
+        "";
+
+      errorEl.style.display =
+        "none";
+
+    }
+
+
+    /*
+      ======================================================
       RENDER
       ======================================================
     */
@@ -2502,15 +3077,6 @@
           ${escapeHtml(value)}
         </span>
       `;
-
-    }
-
-
-    function renderNotes(notes) {
-
-      return renderList(
-        notes
-      );
 
     }
 
@@ -2693,7 +3259,10 @@
           analystNotes:
             normalized.analystNotes
 
-        }
+        },
+
+        detectedRequirements:
+          normalized.detectedRequirements
 
       };
 
@@ -2717,7 +3286,7 @@
 
 
       /*
-       * Prefer the new Artifact Store.
+       * Prefer the centralized Artifact Store.
        */
 
       if (
@@ -2726,22 +3295,47 @@
           "function"
       ) {
 
-        const existing =
-          window.BAArtifactStore
-            .getByType("requirement")
-            .find(
-              artifact =>
-                artifact.metadata &&
-                artifact.metadata
-                  .sourceKey ===
-                "requirement-analyzer-current"
-            );
+        let existing = null;
+
+
+        try {
+
+          if (
+            typeof window.BAArtifactStore.getByType ===
+            "function"
+          ) {
+
+            existing =
+              window.BAArtifactStore
+                .getByType("requirement")
+                .find(
+                  artifact =>
+                    artifact.metadata &&
+                    artifact.metadata
+                      .sourceKey ===
+                    "requirement-analyzer-current"
+                );
+
+          }
+
+        } catch (error) {
+
+          console.warn(
+            "Could not read existing requirement artifacts:",
+            error
+          );
+
+        }
 
 
         let artifact;
 
 
-        if (existing) {
+        if (
+          existing &&
+          typeof window.BAArtifactStore.update ===
+            "function"
+        ) {
 
           artifact =
             window.BAArtifactStore.update(
@@ -2769,7 +3363,12 @@
                     detailEl.value,
 
                   analyzerVersion:
-                    "1.0"
+                    "1.1",
+
+                  detectedRequirementCount:
+                    normalized
+                      .detectedRequirements
+                      .length
 
                 },
 
@@ -2804,7 +3403,12 @@
                     detailEl.value,
 
                   analyzerVersion:
-                    "1.0"
+                    "1.1",
+
+                  detectedRequirementCount:
+                    normalized
+                      .detectedRequirements
+                      .length
 
                 },
 
@@ -2832,7 +3436,7 @@
 
     /*
       ======================================================
-      BACKWARD COMPATIBILITY
+      LEGACY WORKSPACE BRIDGE
       ======================================================
     */
 
@@ -2848,13 +3452,6 @@
           data
         );
 
-
-      /*
-       * Keep the old sessionStorage
-       * bridge temporarily so the
-       * downstream screens continue
-       * working during migration.
-       */
 
       const requirement = {
 
@@ -2922,6 +3519,9 @@
             normalized.analystNotes
 
         },
+
+        detectedRequirements:
+          normalized.detectedRequirements,
 
         source:
           sourceInfo
@@ -3177,11 +3777,6 @@
       updateCharacterCount();
 
 
-      /*
-       * Re-render the selected requirement
-       * as the active analysis.
-       */
-
       currentAnalysis =
         selected;
 
@@ -3267,12 +3862,6 @@
         t("empty");
 
 
-      /*
-       * Explicit requirementType assignment.
-       * This fixes the previous "Other" persistence
-       * problem.
-       */
-
       document.getElementById(
         "requirementType"
       ).textContent =
@@ -3336,16 +3925,10 @@
         );
 
 
-      /*
-       * Explicit Analyst Notes handling.
-       * The previous implementation could
-       * lose non-array values.
-       */
-
       document.getElementById(
         "analystNotes"
       ).innerHTML =
-        renderNotes(
+        renderList(
           normalized.analystNotes
         );
 
@@ -3380,8 +3963,8 @@
 
 
       /*
-       * Save immediately after a successful
-       * analysis.
+       * Save the structured requirement
+       * to the centralized artifact store.
        */
 
       saveRequirementToWorkspace(
@@ -3422,8 +4005,8 @@
 
 
       /*
-       * Text remains optional when
-       * a source file exists.
+       * Text is optional when a source
+       * file is attached.
        */
 
       if (
@@ -3877,24 +4460,84 @@
 
     /*
       ======================================================
+      GLOBAL LANGUAGE EVENT
+      ======================================================
+    */
+
+    window.addEventListener(
+      "baforge:language-ready",
+      event => {
+
+        const lang =
+          event.detail?.language;
+
+
+        if (
+          lang === "tr" ||
+          lang === "en"
+        ) {
+
+          languageEl.value =
+            lang;
+
+          updateLanguage();
+
+        }
+
+      }
+    );
+
+
+    /*
+      ======================================================
       INITIALIZE
       ======================================================
     */
 
     function initialize() {
 
-      /*
-       * Restore centralized language.
-       */
+      const i18n =
+        window.BAForgeI18n ||
+        window.BAI18n;
+
 
       if (
-        window.BAI18n &&
-        typeof window.BAI18n.getLanguage ===
+        i18n &&
+        typeof i18n.getLanguage ===
           "function"
       ) {
 
+        try {
+
+          const savedLanguage =
+            i18n.getLanguage();
+
+
+          if (
+            savedLanguage === "en" ||
+            savedLanguage === "tr"
+          ) {
+
+            languageEl.value =
+              savedLanguage;
+
+          }
+
+        } catch (error) {
+
+          console.warn(
+            "Could not restore BAForge language:",
+            error
+          );
+
+        }
+
+      } else {
+
         const savedLanguage =
-          window.BAI18n.getLanguage();
+          localStorage.getItem(
+            "baforge-language"
+          );
 
 
         if (
