@@ -1,39 +1,92 @@
 module.exports = async (req, res) => {
 
+  // =========================================================
+  // METHOD
+  // =========================================================
+
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method not allowed"
     });
   }
 
+
   try {
 
-    const body = req.body || {};
+    // =========================================================
+    // ENVIRONMENT
+    // =========================================================
+
+    const apiKey =
+      process.env.OPENAI_API_KEY;
+
+    if (!apiKey) {
+
+      console.error(
+        "OPENAI_API_KEY is missing."
+      );
+
+      return res.status(500).json({
+        error:
+          "OpenAI API anahtarı sunucuda tanımlı değil."
+      });
+
+    }
+
+
+    // =========================================================
+    // BODY
+    // =========================================================
+
+    const body =
+      req.body || {};
+
 
     const requirement =
-      String(body.requirement || "").trim();
+      String(
+        body.requirement || ""
+      ).trim();
+
 
     const instruction =
-      String(body.instruction || "").trim();
+      String(
+        body.instruction || ""
+      ).trim();
+
 
     const language =
-      body.language || "en";
+      body.language === "tr"
+        ? "tr"
+        : "en";
+
 
     const detail =
-      body.detail || "Professional";
+      String(
+        body.detail || "Professional"
+      );
+
 
     const source =
-      body.source || null;
+      body.source &&
+      typeof body.source === "object"
+        ? body.source
+        : null;
 
 
     // =========================================================
     // VALIDATION
     // =========================================================
 
-    if (!["tr", "en"].includes(language)) {
+    if (
+      ![
+        "tr",
+        "en"
+      ].includes(language)
+    ) {
 
       return res.status(400).json({
-        error: "Invalid language."
+        error:
+          "Invalid language."
       });
 
     }
@@ -48,42 +101,45 @@ module.exports = async (req, res) => {
     ) {
 
       return res.status(400).json({
-        error: "Invalid detail level."
+        error:
+          "Invalid detail level."
       });
 
     }
 
+
+    // =========================================================
+    // TEXT / SOURCE DETECTION
+    // =========================================================
 
     const hasText =
       requirement.length > 0;
 
 
     const hasSource =
-      source &&
-      typeof source === "object" &&
-      typeof source.data === "string" &&
-      source.data.length > 0;
+      Boolean(
+        source &&
+        typeof source.data === "string" &&
+        source.data.trim().length > 0
+      );
 
 
-    /*
-      Valid combinations:
+    // =========================================================
+    // EMPTY REQUEST
+    // =========================================================
 
-      1. Text only
-      2. PDF only
-      3. Image only
-      4. Text + PDF
-      5. Text + Image
-      6. Instruction + PDF
-      7. Instruction + Image
-    */
-
-    if (!hasText && !hasSource) {
+    if (
+      !hasText &&
+      !hasSource
+    ) {
 
       return res.status(400).json({
+
         error:
           language === "tr"
-            ? "Lütfen analiz için metin yazın veya bir PDF/görsel ekleyin."
-            : "Please provide text or attach a PDF/image for analysis."
+            ? "Analiz için metin girin veya PDF/görsel ekleyin."
+            : "Please provide text or attach a PDF/image."
+
       });
 
     }
@@ -94,22 +150,20 @@ module.exports = async (req, res) => {
     // =========================================================
 
     /*
-      Text is required only when there is NO attachment.
+      Text-only analysis requires a meaningful requirement.
 
-      If a PDF/image exists, the text may be:
+      When an attachment exists, text can be:
 
-      "4-7. sayfaları incele"
-
-      or
-
-      "IBAN kurallarına odaklan"
-
-      or
-
-      completely empty.
+      - empty
+      - "4-7. sayfaları incele"
+      - "IBAN kurallarına odaklan"
+      - "Sadece ödeme limitlerini bul"
     */
 
-    if (hasText && !hasSource) {
+    if (
+      hasText &&
+      !hasSource
+    ) {
 
       const words =
         requirement
@@ -123,10 +177,12 @@ module.exports = async (req, res) => {
       ) {
 
         return res.status(400).json({
+
           error:
             language === "tr"
               ? "Lütfen en az 15 karakter ve 3 kelime içeren açık bir gereksinim girin."
               : "Please provide a clear requirement with at least 15 characters and 3 words."
+
         });
 
       }
@@ -135,7 +191,169 @@ module.exports = async (req, res) => {
 
 
     // =========================================================
-    // LANGUAGE
+    // SOURCE INFORMATION
+    // =========================================================
+
+    let sourceType =
+      "text";
+
+
+    let sourceMime =
+      "";
+
+
+    let sourceName =
+      "";
+
+
+    let sourceData =
+      "";
+
+
+    if (hasSource) {
+
+      sourceMime =
+        String(
+          source.type || ""
+        )
+          .trim()
+          .toLowerCase();
+
+
+      sourceName =
+        String(
+          source.name || ""
+        )
+          .trim();
+
+
+      sourceData =
+        String(
+          source.data || ""
+        )
+          .trim();
+
+
+      // -------------------------------------------------------
+      // SOURCE DATA URL VALIDATION
+      // -------------------------------------------------------
+
+      if (
+        !sourceData.startsWith(
+          "data:"
+        )
+      ) {
+
+        return res.status(400).json({
+
+          error:
+            language === "tr"
+              ? "Dosya verisi geçersiz."
+              : "Invalid file data."
+
+        });
+
+      }
+
+
+      // -------------------------------------------------------
+      // PDF
+      // -------------------------------------------------------
+
+      const isPdf =
+        sourceMime === "application/pdf" ||
+        sourceName
+          .toLowerCase()
+          .endsWith(".pdf") ||
+        sourceData
+          .toLowerCase()
+          .startsWith(
+            "data:application/pdf"
+          );
+
+
+      // -------------------------------------------------------
+      // IMAGE
+      // -------------------------------------------------------
+
+      const isImage =
+        sourceMime.startsWith(
+          "image/"
+        ) ||
+        sourceData
+          .toLowerCase()
+          .startsWith(
+            "data:image/"
+          );
+
+
+      if (isPdf) {
+
+        sourceType =
+          "pdf";
+
+      } else if (isImage) {
+
+        sourceType =
+          "image";
+
+      } else {
+
+        return res.status(400).json({
+
+          error:
+            language === "tr"
+              ? "Desteklenmeyen dosya türü. Yalnızca PDF veya görsel kullanılabilir."
+              : "Unsupported file type. Only PDF or image files are supported."
+
+        });
+
+      }
+
+    }
+
+
+    // =========================================================
+    // PAYLOAD SIZE PROTECTION
+    // =========================================================
+
+    /*
+      Vercel Function request body limit is approximately 4.5 MB.
+
+      Because the frontend sends the file as Base64 inside JSON,
+      the encoded payload is larger than the original file.
+
+      We therefore reject oversized Base64 data here with a
+      readable error instead of sending it to OpenAI.
+    */
+
+    if (hasSource) {
+
+      const MAX_SOURCE_DATA_CHARS =
+        4_000_000;
+
+
+      if (
+        sourceData.length >
+        MAX_SOURCE_DATA_CHARS
+      ) {
+
+        return res.status(413).json({
+
+          error:
+            language === "tr"
+              ? "Dosya çok büyük. Lütfen daha küçük bir PDF veya görsel kullanın."
+              : "The file is too large. Please use a smaller PDF or image."
+
+        });
+
+      }
+
+    }
+
+
+    // =========================================================
+    // OUTPUT LANGUAGE
     // =========================================================
 
     const outputLanguage =
@@ -145,24 +363,33 @@ module.exports = async (req, res) => {
 
 
     // =========================================================
-    // DETAIL
+    // DETAIL INSTRUCTION
     // =========================================================
 
-    let detailInstruction = "";
+    let detailInstruction =
+      "";
 
 
-    if (detail === "Basic") {
+    if (
+      detail === "Basic"
+    ) {
 
       detailInstruction = `
+
 Generate a concise analysis.
 
 Keep lists focused on the most important findings.
+
 Avoid unnecessary explanations.
+
 `;
 
-    } else if (detail === "Comprehensive") {
+    } else if (
+      detail === "Comprehensive"
+    ) {
 
       detailInstruction = `
+
 Generate a comprehensive professional Business Analysis.
 
 Be thorough when identifying:
@@ -176,11 +403,13 @@ Be thorough when identifying:
 - distinct requirements
 
 Do not invent information.
+
 `;
 
     } else {
 
       detailInstruction = `
+
 Generate a professional Senior Business Analyst level analysis.
 
 Focus on information useful for:
@@ -190,68 +419,8 @@ Focus on information useful for:
 - testing
 - stakeholder clarification
 - downstream BA artifacts
+
 `;
-
-    }
-
-
-    // =========================================================
-    // SOURCE TYPE
-    // =========================================================
-
-    let sourceType = "text";
-
-
-    let sourceMime = "";
-
-    let sourceName = "";
-
-    let sourceData = "";
-
-
-    if (hasSource) {
-
-      sourceMime =
-        String(
-          source.type || ""
-        ).toLowerCase();
-
-      sourceName =
-        String(
-          source.name || ""
-        ).trim();
-
-      sourceData =
-        String(
-          source.data || ""
-        ).trim();
-
-
-      if (
-        sourceMime === "application/pdf" ||
-        sourceName.toLowerCase().endsWith(".pdf") ||
-        sourceData.startsWith("data:application/pdf")
-      ) {
-
-        sourceType = "pdf";
-
-      } else if (
-        sourceMime.startsWith("image/") ||
-        sourceData.startsWith("data:image/")
-      ) {
-
-        sourceType = "image";
-
-      } else {
-
-        return res.status(400).json({
-          error:
-            language === "tr"
-              ? "Desteklenmeyen dosya türü."
-              : "Unsupported file type."
-        });
-
-      }
 
     }
 
@@ -265,10 +434,22 @@ Focus on information useful for:
       requirement ||
       (
         sourceType === "pdf"
-          ? "Analyze the attached PDF."
+          ? (
+              language === "tr"
+                ? "Ekli PDF dokümanını analiz et."
+                : "Analyze the attached PDF document."
+            )
           : sourceType === "image"
-            ? "Analyze the attached image."
-            : "Analyze the provided requirement."
+            ? (
+                language === "tr"
+                  ? "Ekli görseli analiz et."
+                  : "Analyze the attached image."
+              )
+            : (
+                language === "tr"
+                  ? "Sağlanan gereksinimi analiz et."
+                  : "Analyze the provided requirement."
+              )
       );
 
 
@@ -360,9 +541,6 @@ Do NOT assume technical implementation.
 
 Do NOT turn missing information into a confirmed rule.
 
-Only identify a business rule when it is explicitly stated
-or directly supported by the attachment.
-
 Edge cases may be proposed as scenarios to consider,
 but they must NOT be presented as confirmed business rules.
 
@@ -393,6 +571,9 @@ Do NOT create artificial requirements simply by splitting
 every sentence.
 
 Only include genuinely distinct requirements.
+
+The primary requirement should represent the most central
+requirement identified from the source.
 
 =========================================================
 SCORING
@@ -426,6 +607,9 @@ Use:
 
 0-39 = highly ambiguous or insufficiently defined
 
+=========================================================
+PRIORITY
+=========================================================
 
 For priority:
 
@@ -434,7 +618,9 @@ information to determine priority.
 
 Do NOT invent priority based only on the domain.
 
-For requirementType:
+=========================================================
+REQUIREMENT TYPE
+=========================================================
 
 Choose the type that best represents the actual source.
 
@@ -526,43 +712,55 @@ The JSON must have exactly this structure:
 
 
     // =========================================================
-    // BUILD OPENAI INPUT
+    // OPENAI INPUT
     // =========================================================
 
     const content = [];
 
 
-    /*
-      IMPORTANT:
-      Put the attachment FIRST so the model receives the
-      actual source before the natural-language instruction.
-    */
+    // ---------------------------------------------------------
+    // ATTACHMENT FIRST
+    // ---------------------------------------------------------
 
     if (hasSource) {
 
-      if (sourceType === "pdf") {
+      if (
+        sourceType === "pdf"
+      ) {
+
+        /*
+          IMPORTANT:
+
+          Do NOT send "detail" here.
+
+          detail is not part of the PDF input_file object.
+        */
 
         content.push({
 
-          type: "input_file",
+          type:
+            "input_file",
 
           filename:
             sourceName ||
             "document.pdf",
 
           file_data:
-            sourceData,
-
-          detail:
-            "high"
+            sourceData
 
         });
 
-      } else if (sourceType === "image") {
+      }
+
+
+      if (
+        sourceType === "image"
+      ) {
 
         content.push({
 
-          type: "input_image",
+          type:
+            "input_image",
 
           image_url:
             sourceData,
@@ -577,15 +775,17 @@ The JSON must have exactly this structure:
     }
 
 
-    /*
-      Put the instruction AFTER the attachment.
-    */
+    // ---------------------------------------------------------
+    // INSTRUCTION / PROMPT
+    // ---------------------------------------------------------
 
     content.push({
 
-      type: "input_text",
+      type:
+        "input_text",
 
-      text: prompt
+      text:
+        prompt
 
     });
 
@@ -593,7 +793,8 @@ The JSON must have exactly this structure:
     const input = [
 
       {
-        role: "user",
+        role:
+          "user",
 
         content
 
@@ -606,63 +807,168 @@ The JSON must have exactly this structure:
     // OPENAI REQUEST
     // =========================================================
 
-    const response =
-      await fetch(
-        "https://api.openai.com/v1/responses",
-        {
+    const controller =
+      new AbortController();
 
-          method: "POST",
 
-          headers: {
-
-            "Content-Type":
-              "application/json",
-
-            "Authorization":
-              `Bearer ${process.env.OPENAI_API_KEY}`
-
-          },
-
-          body:
-            JSON.stringify({
-
-              model:
-                "gpt-5.6-luna",
-
-              input,
-
-              store:
-                false
-
-            })
-
-        }
+    const timeout =
+      setTimeout(
+        () => {
+          controller.abort();
+        },
+        120000
       );
 
 
-    const data =
-      await response.json();
+    let response;
+
+
+    try {
+
+      response =
+        await fetch(
+          "https://api.openai.com/v1/responses",
+          {
+
+            method:
+              "POST",
+
+            headers: {
+
+              "Content-Type":
+                "application/json",
+
+              "Authorization":
+                `Bearer ${apiKey}`
+
+            },
+
+            body:
+              JSON.stringify({
+
+                model:
+                  "gpt-5.6-luna",
+
+                input,
+
+                store:
+                  false
+
+              }),
+
+            signal:
+              controller.signal
+
+          }
+        );
+
+    } catch (error) {
+
+      clearTimeout(
+        timeout
+      );
+
+
+      console.error(
+        "OpenAI network error:",
+        error
+      );
+
+
+      if (
+        error?.name ===
+        "AbortError"
+      ) {
+
+        return res.status(504).json({
+
+          error:
+            language === "tr"
+              ? "Analiz zaman aşımına uğradı. Lütfen tekrar deneyin."
+              : "The analysis timed out. Please try again."
+
+        });
+
+      }
+
+
+      return res.status(502).json({
+
+        error:
+          language === "tr"
+            ? "OpenAI servisine ulaşılamadı."
+            : "Could not reach the OpenAI service."
+
+      });
+
+    }
+
+
+    clearTimeout(
+      timeout
+    );
+
+
+    // =========================================================
+    // OPENAI RESPONSE
+    // =========================================================
+
+    let data;
+
+
+    try {
+
+      data =
+        await response.json();
+
+    } catch (error) {
+
+      console.error(
+        "OpenAI response JSON error:",
+        error
+      );
+
+
+      return res.status(502).json({
+
+        error:
+          language === "tr"
+            ? "OpenAI servisinden geçerli yanıt alınamadı."
+            : "Invalid response received from OpenAI."
+
+      });
+
+    }
 
 
     // =========================================================
     // OPENAI ERROR
     // =========================================================
 
-    if (!response.ok) {
+    if (
+      !response.ok
+    ) {
 
       console.error(
-        "OpenAI error:",
+        "OpenAI API error:",
         data
       );
 
 
+      const apiError =
+        data?.error?.message ||
+        "OpenAI request failed";
+
+
       return res.status(
-        response.status
+        response.status >= 400 &&
+        response.status < 600
+          ? response.status
+          : 502
       ).json({
 
         error:
-          data?.error?.message ||
-          "OpenAI request failed"
+          apiError
 
       });
 
@@ -673,44 +979,65 @@ The JSON must have exactly this structure:
     // EXTRACT OUTPUT
     // =========================================================
 
-    let text =
+    let outputText =
       String(
-        data.output_text || ""
+        data?.output_text ||
+        ""
       ).trim();
 
 
-    /*
-      Fallback for Responses API output
-    */
+    // ---------------------------------------------------------
+    // FALLBACK
+    // ---------------------------------------------------------
 
-    if (!text) {
+    if (
+      !outputText &&
+      Array.isArray(
+        data?.output
+      )
+    ) {
 
-      text =
+      outputText =
         data.output
-          ?.flatMap(
+          .flatMap(
             item =>
-              item.content || []
+              Array.isArray(
+                item?.content
+              )
+                ? item.content
+                : []
           )
-          ?.filter(
+          .filter(
             item =>
-              item.type === "output_text"
+              item?.type ===
+              "output_text"
           )
-          ?.map(
+          .map(
             item =>
-              item.text || ""
+              item?.text || ""
           )
-          ?.join("")
-          ?.trim() || "";
+          .join("")
+          .trim();
 
     }
 
 
-    if (!text) {
+    if (
+      !outputText
+    ) {
+
+      console.error(
+        "OpenAI returned no text:",
+        data
+      );
+
 
       return res.status(500).json({
 
         error:
-          "No output received from OpenAI"
+          language === "tr"
+            ? "Yapay zekâ analiz sonucu döndürmedi."
+            : "The AI returned no analysis result."
 
       });
 
@@ -722,11 +1049,18 @@ The JSON must have exactly this structure:
     // =========================================================
 
     let cleanText =
-      text.trim();
+      outputText.trim();
 
+
+    /*
+      Remove Markdown code fences if the model
+      accidentally returns them.
+    */
 
     if (
-      cleanText.startsWith("```")
+      cleanText.startsWith(
+        "```"
+      )
     ) {
 
       cleanText =
@@ -765,7 +1099,10 @@ The JSON must have exactly this structure:
     } catch (error) {
 
       console.error(
-        "Invalid JSON from model:",
+        "Invalid JSON from model:"
+      );
+
+      console.error(
         cleanText
       );
 
@@ -773,7 +1110,9 @@ The JSON must have exactly this structure:
       return res.status(500).json({
 
         error:
-          "AI returned invalid JSON"
+          language === "tr"
+            ? "Yapay zekâ geçerli bir analiz formatı döndürmedi."
+            : "The AI returned an invalid analysis format."
 
       });
 
@@ -784,7 +1123,9 @@ The JSON must have exactly this structure:
     // HELPERS
     // =========================================================
 
-    function cleanString(value) {
+    function cleanString(
+      value
+    ) {
 
       return String(
         value ?? ""
@@ -793,10 +1134,14 @@ The JSON must have exactly this structure:
     }
 
 
-    function cleanArray(value) {
+    function cleanArray(
+      value
+    ) {
 
       if (
-        !Array.isArray(value)
+        !Array.isArray(
+          value
+        )
       ) {
 
         return [];
@@ -808,7 +1153,9 @@ The JSON must have exactly this structure:
 
         .map(
           item =>
-            cleanString(item)
+            cleanString(
+              item
+            )
         )
 
         .filter(
@@ -818,14 +1165,20 @@ The JSON must have exactly this structure:
     }
 
 
-    function cleanScore(value) {
+    function cleanScore(
+      value
+    ) {
 
       const score =
-        Number(value);
+        Number(
+          value
+        );
 
 
       if (
-        !Number.isFinite(score)
+        !Number.isFinite(
+          score
+        )
       ) {
 
         return 0;
@@ -837,9 +1190,92 @@ The JSON must have exactly this structure:
         0,
         Math.min(
           100,
-          Math.round(score)
+          Math.round(
+            score
+          )
         )
       );
+
+    }
+
+
+    function normalizeRequirementType(
+      value
+    ) {
+
+      const normalized =
+        cleanString(
+          value
+        );
+
+
+      const map = {
+
+        "Functional":
+          "Functional",
+
+        "Non-Functional":
+          "Non-Functional",
+
+        "Business Rule":
+          "Business Rule",
+
+        "Regulatory":
+          "Regulatory",
+
+        "Data":
+          "Data",
+
+        "Integration":
+          "Integration",
+
+        "Process":
+          "Process",
+
+        "Other":
+          "Other"
+
+      };
+
+
+      return (
+        map[
+          normalized
+        ] ||
+        "Other"
+      );
+
+    }
+
+
+    function normalizePriority(
+      value
+    ) {
+
+      const normalized =
+        cleanString(
+          value
+        );
+
+
+      const allowed = [
+
+        "High",
+
+        "Medium",
+
+        "Low",
+
+        "Unknown"
+
+      ];
+
+
+      return allowed.includes(
+        normalized
+      )
+        ? normalized
+        : "Unknown";
 
     }
 
@@ -850,7 +1286,7 @@ The JSON must have exactly this structure:
 
     const detectedRequirements =
       Array.isArray(
-        result.detectedRequirements
+        result?.detectedRequirements
       )
 
         ? result.detectedRequirements
@@ -875,16 +1311,14 @@ The JSON must have exactly this structure:
                   ),
 
                 requirementType:
-                  cleanString(
+                  normalizeRequirementType(
                     item?.requirementType
-                  ) ||
-                  "Other",
+                  ),
 
                 priority:
-                  cleanString(
+                  normalizePriority(
                     item?.priority
-                  ) ||
-                  "Unknown"
+                  )
 
               })
             )
@@ -905,83 +1339,96 @@ The JSON must have exactly this structure:
 
       title:
         cleanString(
-          result.title
+          result?.title
         ) ||
         "Requirement",
 
+
       summary:
         cleanString(
-          result.summary
+          result?.summary
         ),
+
 
       primaryRequirement:
         cleanString(
-          result.primaryRequirement
+          result?.primaryRequirement
         ) ||
         requirement ||
         "",
 
+
       requirementType:
-        cleanString(
-          result.requirementType
-        ) ||
-        "Other",
+        normalizeRequirementType(
+          result?.requirementType
+        ),
+
 
       priority:
-        cleanString(
-          result.priority
-        ) ||
-        "Unknown",
+        normalizePriority(
+          result?.priority
+        ),
+
 
       clarityScore:
         cleanScore(
-          result.clarityScore
+          result?.clarityScore
         ),
+
 
       completenessScore:
         cleanScore(
-          result.completenessScore
+          result?.completenessScore
         ),
+
 
       testabilityScore:
         cleanScore(
-          result.testabilityScore
+          result?.testabilityScore
         ),
+
 
       ambiguities:
         cleanArray(
-          result.ambiguities
+          result?.ambiguities
         ),
+
 
       missingInformation:
         cleanArray(
-          result.missingInformation
+          result?.missingInformation
         ),
+
 
       assumptions:
         cleanArray(
-          result.assumptions
+          result?.assumptions
         ),
+
 
       businessRules:
         cleanArray(
-          result.businessRules
+          result?.businessRules
         ),
+
 
       openQuestions:
         cleanArray(
-          result.openQuestions
+          result?.openQuestions
         ),
+
 
       edgeCases:
         cleanArray(
-          result.edgeCases
+          result?.edgeCases
         ),
+
 
       analystNotes:
         cleanArray(
-          result.analystNotes
+          result?.analystNotes
         ),
+
 
       detectedRequirements
 
@@ -989,7 +1436,7 @@ The JSON must have exactly this structure:
 
 
     // =========================================================
-    // RESPONSE
+    // FINAL RESPONSE
     // =========================================================
 
     return res.status(200).json(
