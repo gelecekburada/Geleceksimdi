@@ -3,7 +3,7 @@
 
   /* =========================================================
      BAForge AI — Shared Navigation
-     Centralized i18n integration
+     Centralized navigation + i18n
   ========================================================= */
 
   const path = window.location.pathname;
@@ -31,44 +31,30 @@
   }
 
   /* =========================================================
-     LOAD CENTRAL I18N IF NEEDED
+     I18N LOADER
   ========================================================= */
 
   function loadI18n() {
     return new Promise((resolve) => {
-      if (
-        window.BAForgeI18n ||
-        window.BAI18n
-      ) {
+      if (window.BAForgeI18n || window.BAI18n) {
         resolve();
         return;
       }
 
-      const existing =
-        document.querySelector(
-          'script[src="/core/i18n.js"]'
-        );
+      const existing = document.querySelector(
+        'script[src="/core/i18n.js"]'
+      );
 
       if (existing) {
-        existing.addEventListener(
-          "load",
-          resolve,
-          { once: true }
-        );
-
-        existing.addEventListener(
-          "error",
-          resolve,
-          { once: true }
-        );
-
+        existing.addEventListener("load", resolve, { once: true });
+        existing.addEventListener("error", resolve, { once: true });
         return;
       }
 
-      const script =
-        document.createElement("script");
+      const script = document.createElement("script");
 
       script.src = "/core/i18n.js";
+
       script.onload = resolve;
       script.onerror = resolve;
 
@@ -76,10 +62,8 @@
     });
   }
 
-
   /* =========================================================
      FALLBACK TRANSLATIONS
-     Only used if i18n.js is unavailable.
   ========================================================= */
 
   const fallback = {
@@ -96,25 +80,35 @@
         processFlow: "Process Flow",
         traceability: "Traceability",
         document: "BA Document",
-        language: "Language"
+        language: "Language",
+        menu: "Menu"
       },
 
       workflow: {
+        previousStep: "Previous Step",
         nextStep: "Next Step",
+
         analyzerToRequirement:
           "Continue to Requirement",
+
         requirementToUserStory:
           "Continue to User Story",
+
         userStoryToAcceptanceCriteria:
           "Continue to Acceptance Criteria",
+
         acceptanceCriteriaToUat:
           "Continue to UAT Test Cases",
+
         uatToTestData:
           "Continue to Test Data",
+
         testDataToProcessFlow:
           "Continue to Process Flow",
+
         processFlowToTraceability:
           "Continue to Traceability",
+
         traceabilityToDocument:
           "Continue to BA Document"
       }
@@ -123,49 +117,55 @@
     tr: {
       nav: {
         home: "Ana Sayfa",
-        analyzer: "Analyzer",
-        requirement: "Requirement",
-        userStory: "User Story",
-        acceptanceCriteria:
-          "Acceptance Criteria",
-        uat: "UAT Test Case'leri",
-        testData: "Test Data",
-        processFlow: "Process Flow",
-        traceability: "Traceability",
-        document: "BA Document",
-        language: "Dil"
+        analyzer: "Analizör",
+        requirement: "Gereksinim",
+        userStory: "Kullanıcı Hikâyesi",
+        acceptanceCriteria: "Kabul Kriterleri",
+        uat: "UAT Test Senaryoları",
+        testData: "Test Verileri",
+        processFlow: "Süreç Akışı",
+        traceability: "İzlenebilirlik",
+        document: "BA Dokümanı",
+        language: "Dil",
+        menu: "Menü"
       },
 
       workflow: {
+        previousStep: "Önceki Adım",
         nextStep: "Sonraki Adım",
+
         analyzerToRequirement:
-          "Requirement'a Devam Et",
+          "Gereksinime Devam Et",
+
         requirementToUserStory:
-          "User Story'ye Devam Et",
+          "Kullanıcı Hikâyesine Devam Et",
+
         userStoryToAcceptanceCriteria:
-          "Acceptance Criteria'ya Devam Et",
+          "Kabul Kriterlerine Devam Et",
+
         acceptanceCriteriaToUat:
-          "UAT Test Case'lerine Devam Et",
+          "UAT Test Senaryolarına Devam Et",
+
         uatToTestData:
-          "Test Data'ya Devam Et",
+          "Test Verilerine Devam Et",
+
         testDataToProcessFlow:
-          "Process Flow'a Devam Et",
+          "Süreç Akışına Devam Et",
+
         processFlowToTraceability:
-          "Traceability'ye Devam Et",
+          "İzlenebilirliğe Devam Et",
+
         traceabilityToDocument:
-          "BA Document'a Devam Et"
+          "BA Dokümanına Devam Et"
       }
     }
-
   };
-
 
   /* =========================================================
      INITIALIZE
   ========================================================= */
 
   loadI18n().then(init);
-
 
   function init() {
 
@@ -175,14 +175,9 @@
       null;
 
     let language =
-      localStorage.getItem(
-        "baforge-language"
-      ) || "en";
+      localStorage.getItem("baforge-language") || "en";
 
-    if (
-      language !== "tr" &&
-      language !== "en"
-    ) {
+    if (language !== "tr" && language !== "en") {
       language = "en";
     }
 
@@ -198,7 +193,6 @@
       }
     }
 
-
     /* =======================================================
        TRANSLATION HELPER
     ======================================================= */
@@ -206,11 +200,9 @@
     function t(key) {
 
       if (i18n) {
-
         try {
 
-          const result =
-            i18n.t(key);
+          const result = i18n.t(key);
 
           if (
             result !== undefined &&
@@ -229,18 +221,11 @@
         }
       }
 
+      const parts = key.split(".");
 
-      const parts =
-        key.split(".");
+      let value = fallback[language];
 
-      let value =
-        fallback[language];
-
-      for (
-        let i = 0;
-        i < parts.length;
-        i++
-      ) {
+      for (let i = 0; i < parts.length; i++) {
 
         if (
           value === undefined ||
@@ -249,8 +234,7 @@
           return key;
         }
 
-        value =
-          value[parts[i]];
+        value = value[parts[i]];
       }
 
       return (
@@ -261,6 +245,11 @@
         : key;
     }
 
+    /* =======================================================
+       DOCUMENT LANGUAGE
+    ======================================================= */
+
+    document.documentElement.lang = language;
 
     /* =======================================================
        SHARED STYLES
@@ -416,110 +405,57 @@
         background: #2563eb;
       }
 
-      .baforge-actions {
-        max-width: 1180px;
-        margin: 0 auto;
-        padding: 10px 20px;
+      /* =====================================================
+         WORKFLOW NAVIGATION
+      ===================================================== */
+
+      .baforge-workflow-nav {
+        max-width: 1100px;
+        margin: 28px auto 45px;
+        padding: 0 18px;
         display: flex;
-        align-items: center;
-        gap: 8px;
-        overflow-x: auto;
-        scrollbar-width: none;
-        background: #f8fafc;
+        align-items: stretch;
+        justify-content: space-between;
+        gap: 12px;
       }
 
-      .baforge-actions::-webkit-scrollbar {
-        display: none;
+      .baforge-workflow-nav.is-analyzer {
+        justify-content: flex-end;
       }
 
-      .baforge-action {
-        flex-shrink: 0;
-        padding: 7px 11px;
+      .baforge-workflow-button {
+        min-height: 44px;
+        padding: 0 16px;
         border: 1px solid #dbe3ef;
-        border-radius: 8px;
+        border-radius: 10px;
         background: white;
         color: #475467;
-        font-size: 11px;
-        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
         transition: 0.2s ease;
       }
 
-      .baforge-action:hover {
+      .baforge-workflow-button:hover {
         color: #2563eb;
         border-color: #bfdbfe;
         background: #eff6ff;
         transform: translateY(-1px);
       }
 
-      .baforge-next-step {
-        max-width: 1100px;
-        margin: 28px auto 45px;
-        padding: 22px 24px;
-        border: 1px solid #dbeafe;
-        border-radius: 16px;
-        background:
-          linear-gradient(
-            135deg,
-            #eff6ff,
-            #f5f3ff
-          );
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-      }
-
-      .baforge-next-copy {
-        min-width: 0;
-      }
-
-      .baforge-next-label {
-        margin-bottom: 5px;
-        color: #2563eb;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .baforge-next-title {
-        color: #172033;
-        font-size: 17px;
-        font-weight: 800;
-      }
-
-      .baforge-next-button {
-        flex-shrink: 0;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 42px;
-        padding: 0 17px;
-        border-radius: 10px;
+      .baforge-workflow-button.next {
         background: #2563eb;
+        border-color: #2563eb;
         color: white;
-        font-size: 13px;
-        font-weight: 700;
-        text-decoration: none;
-        transition: 0.2s ease;
       }
 
-      .baforge-next-button:hover {
+      .baforge-workflow-button.next:hover {
         background: #1d4ed8;
-        transform: translateY(-2px);
-      }
-
-      .tool-card {
-        cursor: pointer;
-      }
-
-      .tool-card .tool-link {
-        transition: 0.2s ease;
-      }
-
-      .tool-card:hover .tool-link {
-        transform: translateX(4px);
+        border-color: #1d4ed8;
+        color: white;
       }
 
       @media (max-width: 1050px) {
@@ -563,19 +499,18 @@
           display: none;
         }
 
-        .baforge-actions {
-          padding: 9px 16px;
-        }
-
-        .baforge-next-step {
+        .baforge-workflow-nav {
           margin: 22px 16px 35px;
-          padding: 19px;
-          align-items: flex-start;
+          padding: 0;
           flex-direction: column;
         }
 
-        .baforge-next-button {
+        .baforge-workflow-button {
           width: 100%;
+        }
+
+        .baforge-workflow-nav.is-analyzer {
+          align-items: stretch;
         }
       }
 
@@ -600,63 +535,36 @@
       }
     `;
 
-    const style =
-      document.createElement("style");
-
+    const style = document.createElement("style");
     style.textContent = styles;
-
     document.head.appendChild(style);
-
 
     /* =======================================================
        NAV TEXT
     ======================================================= */
 
     const navText = {
-      home:
-        t("nav.home"),
-
-      analyzer:
-        t("nav.analyzer"),
-
-      requirement:
-        t("nav.requirement"),
-
-      story:
-        t("nav.userStory"),
-
-      criteria:
-        t("nav.acceptanceCriteria"),
-
-      uat:
-        t("nav.uat"),
-
-      testData:
-        t("nav.testData"),
-
-      processFlow:
-        t("nav.processFlow"),
-
-      traceability:
-        t("nav.traceability"),
-
-      document:
-        t("nav.document"),
-
-      language:
-        t("nav.language")
+      home: t("nav.home"),
+      analyzer: t("nav.analyzer"),
+      requirement: t("nav.requirement"),
+      story: t("nav.userStory"),
+      criteria: t("nav.acceptanceCriteria"),
+      uat: t("nav.uat"),
+      testData: t("nav.testData"),
+      processFlow: t("nav.processFlow"),
+      traceability: t("nav.traceability"),
+      document: t("nav.document"),
+      language: t("nav.language"),
+      menu: t("nav.menu")
     };
 
-
     /* =======================================================
-       NAVIGATION
+       CREATE NAV
     ======================================================= */
 
-    const nav =
-      document.createElement("nav");
+    const nav = document.createElement("nav");
 
-    nav.className =
-      "baforge-nav";
+    nav.className = "baforge-nav";
 
     nav.innerHTML = `
 
@@ -673,23 +581,18 @@
           <a
             href="/"
             class="baforge-link ${
-              currentPage === "home"
-                ? "active"
-                : ""
-            }"
-            data-nav="home">
+              currentPage === "home" ? "active" : ""
+            }">
             ${navText.home}
           </a>
 
           <a
             href="/requirement-analyzer.html"
             class="baforge-link ${
-              currentPage ===
-              "requirement-analyzer"
+              currentPage === "requirement-analyzer"
                 ? "active"
                 : ""
-            }"
-            data-nav="analyzer">
+            }">
             ${navText.analyzer}
           </a>
 
@@ -699,8 +602,7 @@
               currentPage === "requirement"
                 ? "active"
                 : ""
-            }"
-            data-nav="requirement">
+            }">
             ${navText.requirement}
           </a>
 
@@ -710,20 +612,17 @@
               currentPage === "user-story"
                 ? "active"
                 : ""
-            }"
-            data-nav="story">
+            }">
             ${navText.story}
           </a>
 
           <a
             href="/acceptance-criteria.html"
             class="baforge-link ${
-              currentPage ===
-              "acceptance-criteria"
+              currentPage === "acceptance-criteria"
                 ? "active"
                 : ""
-            }"
-            data-nav="criteria">
+            }">
             ${navText.criteria}
           </a>
 
@@ -733,8 +632,7 @@
               currentPage === "uat"
                 ? "active"
                 : ""
-            }"
-            data-nav="uat">
+            }">
             ${navText.uat}
           </a>
 
@@ -744,8 +642,7 @@
               currentPage === "test-data"
                 ? "active"
                 : ""
-            }"
-            data-nav="testData">
+            }">
             ${navText.testData}
           </a>
 
@@ -755,8 +652,7 @@
               currentPage === "process-flow"
                 ? "active"
                 : ""
-            }"
-            data-nav="processFlow">
+            }">
             ${navText.processFlow}
           </a>
 
@@ -766,8 +662,7 @@
               currentPage === "traceability"
                 ? "active"
                 : ""
-            }"
-            data-nav="traceability">
+            }">
             ${navText.traceability}
           </a>
 
@@ -777,8 +672,7 @@
               currentPage === "document"
                 ? "active"
                 : ""
-            }"
-            data-nav="document">
+            }">
             ${navText.document}
           </a>
 
@@ -787,8 +681,7 @@
         <div class="baforge-language">
 
           <span
-            class="baforge-language-label"
-            data-nav="language">
+            class="baforge-language-label">
             ${navText.language}
           </span>
 
@@ -808,7 +701,7 @@
           class="baforge-menu-button"
           id="baforgeMenuButton"
           type="button"
-          aria-label="Menu"
+          aria-label="${navText.menu}"
           aria-expanded="false">
           ☰
         </button>
@@ -825,20 +718,17 @@
             currentPage === "home"
               ? "active"
               : ""
-          }"
-          data-nav="home">
+          }">
           ${navText.home}
         </a>
 
         <a
           href="/requirement-analyzer.html"
           class="baforge-mobile-link ${
-            currentPage ===
-            "requirement-analyzer"
+            currentPage === "requirement-analyzer"
               ? "active"
               : ""
-          }"
-          data-nav="analyzer">
+          }">
           ${navText.analyzer}
         </a>
 
@@ -848,8 +738,7 @@
             currentPage === "requirement"
               ? "active"
               : ""
-          }"
-          data-nav="requirement">
+          }">
           ${navText.requirement}
         </a>
 
@@ -859,20 +748,17 @@
             currentPage === "user-story"
               ? "active"
               : ""
-          }"
-          data-nav="story">
+          }">
           ${navText.story}
         </a>
 
         <a
           href="/acceptance-criteria.html"
           class="baforge-mobile-link ${
-            currentPage ===
-            "acceptance-criteria"
+            currentPage === "acceptance-criteria"
               ? "active"
               : ""
-          }"
-          data-nav="criteria">
+          }">
           ${navText.criteria}
         </a>
 
@@ -882,8 +768,7 @@
             currentPage === "uat"
               ? "active"
               : ""
-          }"
-          data-nav="uat">
+          }">
           ${navText.uat}
         </a>
 
@@ -893,8 +778,7 @@
             currentPage === "test-data"
               ? "active"
               : ""
-          }"
-          data-nav="testData">
+          }">
           ${navText.testData}
         </a>
 
@@ -904,8 +788,7 @@
             currentPage === "process-flow"
               ? "active"
               : ""
-          }"
-          data-nav="processFlow">
+          }">
           ${navText.processFlow}
         </a>
 
@@ -915,8 +798,7 @@
             currentPage === "traceability"
               ? "active"
               : ""
-          }"
-          data-nav="traceability">
+          }">
           ${navText.traceability}
         </a>
 
@@ -926,48 +808,36 @@
             currentPage === "document"
               ? "active"
               : ""
-          }"
-          data-nav="document">
+          }">
           ${navText.document}
         </a>
 
       </div>
     `;
 
-
     document.body.insertBefore(
       nav,
       document.body.firstChild
     );
-
 
     /* =======================================================
        MOBILE MENU
     ======================================================= */
 
     const menuButton =
-      document.getElementById(
-        "baforgeMenuButton"
-      );
+      document.getElementById("baforgeMenuButton");
 
     const mobileMenu =
-      document.getElementById(
-        "baforgeMobileMenu"
-      );
+      document.getElementById("baforgeMobileMenu");
 
-    if (
-      menuButton &&
-      mobileMenu
-    ) {
+    if (menuButton && mobileMenu) {
 
       menuButton.addEventListener(
         "click",
         function () {
 
           const isOpen =
-            mobileMenu.classList.toggle(
-              "open"
-            );
+            mobileMenu.classList.toggle("open");
 
           menuButton.setAttribute(
             "aria-expanded",
@@ -975,65 +845,44 @@
           );
 
           menuButton.textContent =
-            isOpen
-              ? "✕"
-              : "☰";
+            isOpen ? "✕" : "☰";
         }
       );
     }
-
 
     /* =======================================================
        LANGUAGE SELECTOR
     ======================================================= */
 
     const globalLanguage =
-      document.getElementById(
-        "baforgeLanguage"
-      );
+      document.getElementById("baforgeLanguage");
 
     if (globalLanguage) {
 
-      globalLanguage.value =
-        language;
+      globalLanguage.value = language;
 
       globalLanguage.addEventListener(
         "change",
         function () {
-
-          changeLanguage(
-            this.value
-          );
+          changeLanguage(this.value);
         }
       );
     }
 
-
-    /* =======================================================
-       EXISTING PAGE LANGUAGE SELECTOR
-    ======================================================= */
-
     const pageLanguage =
-      document.getElementById(
-        "language"
-      );
+      document.getElementById("language");
 
     if (pageLanguage) {
 
-      pageLanguage.value =
-        language;
+      pageLanguage.value = language;
 
       pageLanguage.addEventListener(
         "change",
         function () {
-
-          changeLanguage(
-            this.value
-          );
+          changeLanguage(this.value);
         }
       );
     }
-
 
     /* =======================================================
        LANGUAGE CHANGE
@@ -1041,10 +890,7 @@
 
     function changeLanguage(lang) {
 
-      if (
-        lang !== "tr" &&
-        lang !== "en"
-      ) {
+      if (lang !== "tr" && lang !== "en") {
         return;
       }
 
@@ -1053,8 +899,7 @@
         lang
       );
 
-      document.documentElement.lang =
-        lang;
+      document.documentElement.lang = lang;
 
       if (i18n) {
 
@@ -1064,16 +909,12 @@
             typeof i18n.setLanguage ===
             "function"
           ) {
-
             i18n.setLanguage(lang);
-
           } else if (
             typeof i18n.changeLanguage ===
             "function"
           ) {
-
             i18n.changeLanguage(lang);
-
           }
 
         } catch (error) {
@@ -1082,39 +923,31 @@
             "BAForge language change failed.",
             error
           );
-
         }
       }
 
+      window.dispatchEvent(
+        new CustomEvent(
+          "baforge:language-changed",
+          {
+            detail: {
+              language: lang
+            }
+          }
+        )
+      );
+
       /*
-       * Some pages have their own language
-       * selector and translation logic.
-       * Keep it synchronized.
+       * Page-specific selectors are synchronized
+       * without triggering recursive changes.
        */
 
       if (
         pageLanguage &&
         pageLanguage.value !== lang
       ) {
-
-        pageLanguage.value =
-          lang;
-
-        pageLanguage.dispatchEvent(
-          new Event(
-            "change",
-            {
-              bubbles: true
-            }
-          )
-        );
-
+        pageLanguage.value = lang;
       }
-
-      /*
-       * Apply centralized data-i18n
-       * translations.
-       */
 
       if (i18n) {
 
@@ -1133,331 +966,201 @@
             "BAForge i18n apply failed.",
             error
           );
-
         }
       }
 
       /*
-       * Re-render shared navigation.
-       * A reload keeps every page's own
-       * translation logic synchronized.
+       * Navigation labels are generated from
+       * the current language, therefore a reload
+       * keeps every page synchronized.
        */
 
       window.location.reload();
     }
 
-
     /* =======================================================
-       QUICK ACTIONS
+       WORKFLOW NAVIGATION
+       
+       IMPORTANT:
+       - Analyzer is pre-work.
+       - Analyzer gets NO shared bottom navigation.
+       - Its own page will contain one
+         "Gereksinime Devam Et" action.
+       - Other workflow pages get Previous + Next.
     ======================================================= */
 
-    if (
-      currentPage !== "home"
-    ) {
+    const workflow = {
 
-      const actions =
-        document.createElement("div");
+      requirement: {
+        previous: null,
+        next: {
+          href: "/user-story.html",
+          label: t(
+            "workflow.requirementToUserStory"
+          )
+        }
+      },
 
-      actions.className =
-        "baforge-actions";
+      "user-story": {
+        previous: {
+          href: "/requirement.html",
+          label: t("nav.requirement")
+        },
+        next: {
+          href: "/acceptance-criteria.html",
+          label: t(
+            "workflow.userStoryToAcceptanceCriteria"
+          )
+        }
+      },
 
-      const actionMap = {
+      "acceptance-criteria": {
+        previous: {
+          href: "/user-story.html",
+          label: t("nav.userStory")
+        },
+        next: {
+          href: "/uat.html",
+          label: t(
+            "workflow.acceptanceCriteriaToUat"
+          )
+        }
+      },
 
-        "requirement-analyzer": `
-          <a
-            class="baforge-action"
-            href="/requirement.html">
-            → ${navText.requirement}
-          </a>
-        `,
+      uat: {
+        previous: {
+          href: "/acceptance-criteria.html",
+          label: t("nav.acceptanceCriteria")
+        },
+        next: {
+          href: "/test-data.html",
+          label: t(
+            "workflow.uatToTestData"
+          )
+        }
+      },
 
-        "requirement": `
-          <a
-            class="baforge-action"
-            href="/requirement-analyzer.html">
-            ← ${navText.analyzer}
-          </a>
+      "test-data": {
+        previous: {
+          href: "/uat.html",
+          label: t("nav.uat")
+        },
+        next: {
+          href: "/process-flow.html",
+          label: t(
+            "workflow.testDataToProcessFlow"
+          )
+        }
+      },
 
-          <a
-            class="baforge-action"
-            href="/user-story.html">
-            → ${navText.story}
-          </a>
-        `,
+      "process-flow": {
+        previous: {
+          href: "/test-data.html",
+          label: t("nav.testData")
+        },
+        next: {
+          href: "/traceability.html",
+          label: t(
+            "workflow.processFlowToTraceability"
+          )
+        }
+      },
 
-        "user-story": `
-          <a
-            class="baforge-action"
-            href="/requirement.html">
-            ← ${navText.requirement}
-          </a>
+      traceability: {
+        previous: {
+          href: "/process-flow.html",
+          label: t("nav.processFlow")
+        },
+        next: {
+          href: "/document.html",
+          label: t(
+            "workflow.traceabilityToDocument"
+          )
+        }
+      },
 
-          <a
-            class="baforge-action"
-            href="/acceptance-criteria.html">
-            → ${navText.criteria}
-          </a>
-        `,
+      document: {
+        previous: {
+          href: "/traceability.html",
+          label: t("nav.traceability")
+        },
+        next: null
+      }
+    };
 
-        "acceptance-criteria": `
-          <a
-            class="baforge-action"
-            href="/user-story.html">
-            ← ${navText.story}
-          </a>
+    function addWorkflowNavigation() {
 
-          <a
-            class="baforge-action"
-            href="/uat.html">
-            → ${navText.uat}
-          </a>
-        `,
-
-        "uat": `
-          <a
-            class="baforge-action"
-            href="/acceptance-criteria.html">
-            ← ${navText.criteria}
-          </a>
-
-          <a
-            class="baforge-action"
-            href="/test-data.html">
-            → ${navText.testData}
-          </a>
-        `,
-
-        "test-data": `
-          <a
-            class="baforge-action"
-            href="/uat.html">
-            ← ${navText.uat}
-          </a>
-
-          <a
-            class="baforge-action"
-            href="/process-flow.html">
-            → ${navText.processFlow}
-          </a>
-        `,
-
-        "process-flow": `
-          <a
-            class="baforge-action"
-            href="/test-data.html">
-            ← ${navText.testData}
-          </a>
-
-          <a
-            class="baforge-action"
-            href="/traceability.html">
-            → ${navText.traceability}
-          </a>
-        `,
-
-        "traceability": `
-          <a
-            class="baforge-action"
-            href="/process-flow.html">
-            ← ${navText.processFlow}
-          </a>
-
-          <a
-            class="baforge-action"
-            href="/document.html">
-            → ${navText.document}
-          </a>
-        `,
-
-        "document": `
-          <a
-            class="baforge-action"
-            href="/traceability.html">
-            ← ${navText.traceability}
-          </a>
-        `
-      };
-
-      actions.innerHTML =
-        actionMap[currentPage] || "";
-
-      document.body.insertBefore(
-        actions,
-        document.body.children[1]
-      );
-    }
-
-
-    /* =======================================================
-       NEXT STEP
-    ======================================================= */
-
-    function addNextStep() {
+      /*
+       * Analyzer is intentionally excluded.
+       * Requirement has no previous workflow step.
+       * Document has no next workflow step.
+       */
 
       if (
         currentPage === "home" ||
-        currentPage === "document"
+        currentPage === "requirement-analyzer"
       ) {
         return;
       }
 
-      const next =
+      const config =
+        workflow[currentPage];
+
+      if (!config) {
+        return;
+      }
+
+      const section =
         document.createElement("section");
 
-      next.className =
-        "baforge-next-step";
+      section.className =
+        "baforge-workflow-nav";
 
-      let title = "";
-      let href = "";
-
-      if (
-        currentPage ===
-        "requirement-analyzer"
-      ) {
-
-        title =
-          t(
-            "workflow.analyzerToRequirement"
-          );
-
-        href =
-          "/requirement.html";
+      if (currentPage === "requirement") {
+        section.classList.add("is-analyzer");
       }
 
-      if (
-        currentPage ===
-        "requirement"
-      ) {
+      if (config.previous) {
 
-        title =
-          t(
-            "workflow.requirementToUserStory"
-          );
+        const previous =
+          document.createElement("a");
 
-        href =
-          "/user-story.html";
+        previous.className =
+          "baforge-workflow-button previous";
+
+        previous.href =
+          config.previous.href;
+
+        previous.textContent =
+          `← ${t("workflow.previousStep")}: ${config.previous.label}`;
+
+        section.appendChild(previous);
       }
 
-      if (
-        currentPage ===
-        "user-story"
-      ) {
+      if (config.next) {
 
-        title =
-          t(
-            "workflow.userStoryToAcceptanceCriteria"
-          );
+        const next =
+          document.createElement("a");
 
-        href =
-          "/acceptance-criteria.html";
+        next.className =
+          "baforge-workflow-button next";
+
+        next.href =
+          config.next.href;
+
+        next.textContent =
+          `${config.next.label} →`;
+
+        section.appendChild(next);
       }
 
-      if (
-        currentPage ===
-        "acceptance-criteria"
-      ) {
-
-        title =
-          t(
-            "workflow.acceptanceCriteriaToUat"
-          );
-
-        href =
-          "/uat.html";
-      }
-
-      if (
-        currentPage ===
-        "uat"
-      ) {
-
-        title =
-          t(
-            "workflow.uatToTestData"
-          );
-
-        href =
-          "/test-data.html";
-      }
-
-      if (
-        currentPage ===
-        "test-data"
-      ) {
-
-        title =
-          t(
-            "workflow.testDataToProcessFlow"
-          );
-
-        href =
-          "/process-flow.html";
-      }
-
-      if (
-        currentPage ===
-        "process-flow"
-      ) {
-
-        title =
-          t(
-            "workflow.processFlowToTraceability"
-          );
-
-        href =
-          "/traceability.html";
-      }
-
-      if (
-        currentPage ===
-        "traceability"
-      ) {
-
-        title =
-          t(
-            "workflow.traceabilityToDocument"
-          );
-
-        href =
-          "/document.html";
-      }
-
-      if (!href) {
-        return;
-      }
-
-      next.innerHTML = `
-
-        <div class="baforge-next-copy">
-
-          <div class="baforge-next-label">
-            ${t("workflow.nextStep")}
-          </div>
-
-          <div class="baforge-next-title">
-            ${title}
-          </div>
-
-        </div>
-
-        <a
-          href="${href}"
-          class="baforge-next-button">
-          ${title} →
-        </a>
-
-      `;
-
-      document.body.appendChild(
-        next
-      );
+      document.body.appendChild(section);
     }
 
-    addNextStep();
-
+    addWorkflowNavigation();
 
     /* =======================================================
-       APPLY CENTRAL I18N
+       CENTRAL I18N APPLY
     ======================================================= */
 
     if (i18n) {
@@ -1477,43 +1180,29 @@
           "BAForge i18n initial apply failed.",
           error
         );
-
       }
     }
 
-
     /* =======================================================
-       HOME PAGE
-       Existing homepage-specific text
-       remains supported for now.
+       HOME PAGE LANGUAGE SUPPORT
     ======================================================= */
 
     function updateHomeLanguage(lang) {
 
-      if (
-        currentPage !== "home"
-      ) {
+      if (currentPage !== "home") {
         return;
       }
 
-      const isTr =
-        lang === "tr";
-
+      const isTr = lang === "tr";
 
       const eyebrow =
-        document.querySelector(
-          ".eyebrow"
-        );
+        document.querySelector(".eyebrow");
 
       const heroTitle =
-        document.querySelector(
-          ".hero h1"
-        );
+        document.querySelector(".hero h1");
 
       const heroText =
-        document.querySelector(
-          ".hero p"
-        );
+        document.querySelector(".hero p");
 
       const heroPrimary =
         document.querySelector(
@@ -1525,81 +1214,59 @@
           ".hero-actions .btn-secondary"
         );
 
-
       if (eyebrow) {
-
         eyebrow.innerHTML =
           isTr
-
             ? '<span class="eyebrow-dot"></span> Yapay Zeka Destekli BA & QA Platformu'
-
             : '<span class="eyebrow-dot"></span> AI-powered Business Analysis & QA Toolkit';
       }
 
-
       if (heroTitle) {
-
         heroTitle.innerHTML =
           isTr
-
             ? 'Gereksinimleri <span>Yapılandırılmış Çıktılara</span> Dönüştür.'
-
             : 'Turn Requirements Into <span>Structured Artifacts.</span>';
       }
 
-
       if (heroText) {
-
         heroText.textContent =
           isTr
-
             ? "BAForge AI, Business Analyst ve QA profesyonellerinin gereksinimleri User Story, Acceptance Criteria, UAT Test Case, Test Data ve Process Flow çıktılarıyla yapılandırmasına yardımcı olur."
-
             : "BAForge AI helps Business Analysts and QA professionals transform requirements into structured User Stories, Acceptance Criteria, UAT Test Cases, Test Data and Process Flows.";
       }
 
-
       if (heroPrimary) {
-
         heroPrimary.textContent =
           isTr
             ? "User Story ile Başla →"
             : "Start with User Story →";
       }
 
-
       if (heroSecondary) {
-
         heroSecondary.textContent =
           isTr
             ? "Araçları Keşfet"
             : "Explore Tools";
       }
 
-
       const headings =
         document.querySelectorAll(
           ".section-heading h2"
         );
 
-
       if (headings[0]) {
-
         headings[0].textContent =
           isTr
             ? "BA / QA Araç Seti"
             : "BA / QA Toolkit";
       }
 
-
       if (headings[1]) {
-
         headings[1].textContent =
           isTr
-            ? "Requirement'tan BA Document'a"
+            ? "Gereksinimden BA Dokümanına"
             : "From Requirement to BA Document";
       }
-
 
       const workflowTitles =
         document.querySelectorAll(
@@ -1611,41 +1278,39 @@
           ".workflow-step p"
         );
 
-
       const workflowTR = [
 
         [
-          "Requirement",
+          "Gereksinim",
           "İş gereksinimini yapılandırın."
         ],
 
         [
-          "User Story",
+          "Kullanıcı Hikâyesi",
           "Gereksinimi kullanıcı ihtiyacına dönüştürün."
         ],
 
         [
-          "Acceptance Criteria",
+          "Kabul Kriterleri",
           "Ölçülebilir kabul koşullarını tanımlayın."
         ],
 
         [
-          "UAT Test Cases",
+          "UAT Test Senaryoları",
           "Gereksinimleri uygulanabilir testlere dönüştürün."
         ],
 
         [
-          "Test Data",
+          "Test Verileri",
           "Test senaryoları için veri oluşturun."
         ],
 
         [
-          "Process Flow",
+          "Süreç Akışı",
           "İş sürecini ve karar noktalarını görselleştirin."
         ]
 
       ];
-
 
       const workflowEN = [
 
@@ -1681,34 +1346,25 @@
 
       ];
 
-
       const workflowData =
         isTr
           ? workflowTR
           : workflowEN;
 
-
       workflowTitles.forEach(
         (el, index) => {
 
-          if (
-            workflowData[index]
-          ) {
-
+          if (workflowData[index]) {
             el.textContent =
               workflowData[index][0];
           }
         }
       );
 
-
       workflowDescriptions.forEach(
         (el, index) => {
 
-          if (
-            workflowData[index]
-          ) {
-
+          if (workflowData[index]) {
             el.textContent =
               workflowData[index][1];
           }
@@ -1716,15 +1372,10 @@
       );
     }
 
-
-    updateHomeLanguage(
-      language
-    );
-
+    updateHomeLanguage(language);
 
     /* =======================================================
-       GLOBAL LANGUAGE EVENT
-       Other pages can listen to this.
+       GLOBAL LANGUAGE EVENTS
     ======================================================= */
 
     window.dispatchEvent(
@@ -1737,7 +1388,6 @@
         }
       )
     );
-
   }
 
 })();
