@@ -1,4901 +1,2536 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>BAForge AI - Requirement Analyzer</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --primary-light: #eef4ff;
-
-      --text: #172033;
-      --muted: #667085;
-
-      --border: #e4e7ec;
-      --surface: #ffffff;
-      --background: #f6f8fc;
-
-      --success: #15803d;
-      --success-bg: #ecfdf3;
-
-      --danger: #b42318;
-      --danger-bg: #fef2f2;
-
-      --warning: #b54708;
-      --warning-bg: #fffaeb;
-
-      --shadow-sm: 0 4px 14px rgba(16, 24, 40, 0.06);
-      --shadow-md: 0 12px 35px rgba(16, 24, 40, 0.08);
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(
-          circle at top left,
-          rgba(37, 99, 235, 0.07),
-          transparent 32%
-        ),
-        var(--background);
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    main {
-      max-width: 1240px;
-      margin: 42px auto;
-      padding: 0 20px;
-    }
-
-    /* ======================================================
-       HERO
-    ====================================================== */
-
-    .hero {
-      text-align: center;
-      margin-bottom: 22px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(37, 99, 235, 0.09);
-      color: #1d4ed8;
-      border: 1px solid #c7d7fe;
-      padding: 7px 13px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      margin-bottom: 15px;
-    }
-
-    .hero h1 {
-      font-size: 42px;
-      line-height: 1.15;
-      letter-spacing: -1.2px;
-      margin: 0 0 14px;
-      color: #101828;
-    }
-
-    .hero h1 span {
-      color: var(--primary);
-    }
-
-    .hero p {
-      color: var(--muted);
-      font-size: 18px;
-      max-width: 760px;
-      margin: 0 auto;
-    }
-
-    /* ======================================================
-       TOOL INFO CARD
-       Common pattern for all BAForge tools.
-    ====================================================== */
-
-    .tool-info {
-      max-width: 980px;
-      margin: 0 auto 28px;
-      padding: 17px 19px;
-      display: flex;
-      align-items: flex-start;
-      gap: 13px;
-      background: linear-gradient(
-        135deg,
-        #f8faff,
-        #ffffff
-      );
-      border: 1px solid #dbe5ff;
-      border-left: 4px solid var(--primary);
-      border-radius: 14px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .tool-info-icon {
-      width: 34px;
-      height: 34px;
-      flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      background: var(--primary-light);
-      color: var(--primary);
-      font-size: 17px;
-      font-weight: 800;
-    }
-
-    .tool-info-content {
-      min-width: 0;
-    }
-
-    .tool-info-title {
-      margin: 0 0 4px;
-      color: #101828;
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .tool-info-text {
-      margin: 0;
-      color: #667085;
-      font-size: 13px;
-      line-height: 1.65;
-    }
-
-    /* ======================================================
-       WORKFLOW
-    ====================================================== */
-
-    .workflow-wrapper {
-      margin: 0 auto 30px;
-      max-width: 1180px;
-    }
-
-    .workflow-context {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-      color: #667085;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .workflow-context-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #94a3b8;
-      flex-shrink: 0;
-    }
-
-    .workflow-context strong {
-      color: #344054;
-    }
-
-    .workflow-scroll {
-      overflow-x: auto;
-      overflow-y: hidden;
-      scrollbar-width: thin;
-      padding-bottom: 6px;
-    }
-
-    .workflow-scroll::-webkit-scrollbar {
-      height: 5px;
-    }
-
-    .workflow-bar {
-      min-width: 900px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 6px 2px;
-    }
-
-    .workflow-step {
-      flex: 1;
-      min-width: 98px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      min-height: 42px;
-      padding: 7px 9px;
-      border: 1px solid #dbe3ef;
-      border-radius: 10px;
-      background: #ffffff;
-      color: #667085;
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: 700;
-      transition: 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .workflow-step:hover {
-      border-color: #bfd0f8;
-      background: #f8faff;
-      color: #1d4ed8;
-      transform: translateY(-1px);
-    }
-
-    .workflow-step.active {
-      background: #2563eb;
-      border-color: #2563eb;
-      color: white;
-      box-shadow: 0 5px 14px rgba(37, 99, 235, 0.18);
-    }
-
-    .workflow-number {
-      width: 22px;
-      height: 22px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      border-radius: 50%;
-      background: #eef2f6;
-      color: #475467;
-      font-size: 10px;
-      font-weight: 800;
-    }
-
-    .workflow-step.active .workflow-number {
-      background: rgba(255,255,255,0.2);
-      color: white;
-    }
-
-    .workflow-arrow {
-      color: #98a2b3;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-
-    /* ======================================================
-       CARDS
-    ====================================================== */
-
-    .card {
-      background: var(--surface);
-      padding: 30px;
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-md);
-      margin-bottom: 26px;
-    }
-
-    .card-title {
-      margin: 0 0 6px;
-      font-size: 22px;
-      color: #101828;
-    }
-
-    .card-description {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 9px;
-      color: #344054;
-      font-size: 14px;
-    }
-
-    /* ======================================================
-       COMPOSER
-    ====================================================== */
-
-    .composer {
-      border: 1px solid #d0d5dd;
-      border-radius: 16px;
-      background: #ffffff;
-      overflow: visible;
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-    }
-
-    .composer:focus-within {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 150px;
-      padding: 17px 17px 10px;
-      border: 0;
-      outline: none;
-      font-size: 15px;
-      line-height: 1.6;
-      resize: vertical;
-      background: transparent;
-      color: var(--text);
-      font-family: inherit;
-    }
-
-    textarea::placeholder {
-      color: #98a2b3;
-    }
-
-    .source-chip {
-      display: none;
-      align-items: center;
-      gap: 10px;
-      margin: 0 14px 12px;
-      padding: 10px 12px;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 11px;
-    }
-
-    .source-chip.visible {
-      display: flex;
-    }
-
-    .source-icon {
-      font-size: 20px;
-    }
-
-    .source-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .source-name {
-      font-size: 13px;
-      font-weight: 800;
-      color: #344054;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .source-meta {
-      margin-top: 2px;
-      color: #98a2b3;
-      font-size: 11px;
-    }
-
-    .remove-source {
-      border: 0;
-      background: transparent;
-      color: #98a2b3;
-      padding: 4px 7px;
-      font-size: 19px;
-      cursor: pointer;
-    }
-
-    .remove-source:hover {
-      color: #344054;
-    }
-
-    .composer-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 12px;
-      border-top: 1px solid #eef0f3;
-      background: #fbfcfe;
-      border-radius: 0 0 16px 16px;
-    }
-
-    .toolbar-left,
-    .toolbar-right {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
-
-    .toolbar-left {
-      min-width: 0;
-    }
-
-    .input-hint {
-      color: #98a2b3;
-      font-size: 12px;
-    }
-
-    .character-count {
-      color: #98a2b3;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    /* ======================================================
-       ATTACHMENTS
-    ====================================================== */
-
-    .plus-wrap {
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .icon-button {
-      width: 40px;
-      height: 40px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      border: 1px solid #d0d5dd;
-      border-radius: 10px;
-      background: #ffffff;
-      color: #344054;
-      font-size: 25px;
-      line-height: 1;
-      cursor: pointer;
-      box-shadow: none;
-    }
-
-    .icon-button:hover {
-      background: #f8fafc;
-      border-color: #98a2b3;
-    }
-
-    .attach-menu {
-      display: none;
-      position: absolute;
-      left: 0;
-      bottom: 50px;
-      width: 210px;
-      padding: 7px;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      box-shadow: 0 14px 32px rgba(16, 24, 40, 0.16);
-      z-index: 50;
-    }
-
-    .attach-menu.open {
-      display: block;
-    }
-
-    .attach-option {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 11px 12px;
-      border: 0;
-      border-radius: 9px;
-      background: #ffffff;
-      color: #344054;
-      text-align: left;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .attach-option:hover {
-      background: #f8fafc;
-      color: #172033;
-    }
-
-    /* ======================================================
-       SEND
-    ====================================================== */
-
-    .send-button {
-      width: 42px;
-      height: 42px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      border: 0;
-      border-radius: 11px;
-      background: linear-gradient(
-        135deg,
-        #2563eb,
-        #1d4ed8
-      );
-      color: white;
-      font-size: 19px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.22);
-    }
-
-    .send-button:hover {
-      transform: translateY(-1px);
-    }
-
-    .send-button:disabled {
-      background: #94a3b8;
-      box-shadow: none;
-      cursor: wait;
-      transform: none;
-    }
-
-    /* ======================================================
-       OPTIONS
-    ====================================================== */
-
-    .options {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 22px;
-    }
-
-    select {
-      width: 100%;
-      padding: 13px 14px;
-      border: 1px solid #d0d5dd;
-      border-radius: 10px;
-      background: white;
-      color: #344054;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    select:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
-    }
-
-    .actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .secondary-button {
-      padding: 13px 20px;
-      border: 1px solid #d0d5dd;
-      border-radius: 11px;
-      background: #ffffff;
-      color: #344054;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .secondary-button:hover {
-      background: #f8fafc;
-      border-color: #98a2b3;
-    }
-
-    /* ======================================================
-       STATUS
-    ====================================================== */
-
-    .loading,
-    .error {
-      display: none;
-      margin-top: 17px;
-      padding: 14px 16px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .loading {
-      color: #344054;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-    }
-
-    .error {
-      background: var(--danger-bg);
-      color: var(--danger);
-      border: 1px solid #fecaca;
-    }
-
-    /* ======================================================
-       RESULT
-    ====================================================== */
-
-    .result {
-      display: none;
-    }
-
-    .result-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-
-    .result-header h2 {
-      margin: 0 0 5px;
-      font-size: 27px;
-      color: #101828;
-    }
-
-    .result-header p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .status-pill {
-      display: inline-flex;
-      padding: 7px 11px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      background: var(--success-bg);
-      color: var(--success);
-      border: 1px solid #abefc6;
-      white-space: nowrap;
-    }
-
-    /* ======================================================
-       DETECTED REQUIREMENTS
-    ====================================================== */
-
-    .detected-section {
-      display: none;
-      margin-bottom: 25px;
-      padding: 20px;
-      border: 1px solid #dbe5ff;
-      border-radius: 14px;
-      background: #f8faff;
-    }
-
-    .detected-section h3 {
-      margin: 0 0 6px;
-      color: #101828;
-      font-size: 18px;
-    }
-
-    .detected-description {
-      margin: 0 0 16px;
-      color: #667085;
-      font-size: 13px;
-    }
-
-    .detected-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .detected-card {
-      padding: 16px;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-    }
-
-    .detected-card h4 {
-      margin: 0 0 7px;
-      color: #101828;
-      font-size: 15px;
-    }
-
-    .detected-card p {
-      margin: 0 0 13px;
-      color: #667085;
-      font-size: 13px;
-      line-height: 1.55;
-    }
-
-    .use-requirement {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #bfd0f8;
-      border-radius: 9px;
-      background: #eef4ff;
-      color: #1d4ed8;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .use-requirement:hover {
-      background: #e3ebff;
-    }
-
-    /* ======================================================
-       SCORES
-    ====================================================== */
-
-    .score-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .score-card {
-      padding: 20px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: #ffffff;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .score-label {
-      color: #667085;
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 8px;
-    }
-
-    .score-value {
-      display: flex;
-      align-items: baseline;
-      gap: 5px;
-      font-size: 32px;
-      font-weight: 800;
-      color: #101828;
-    }
-
-    .score-value span {
-      font-size: 14px;
-      color: #98a2b3;
-      font-weight: 600;
-    }
-
-    .score-bar {
-      height: 7px;
-      background: #eef2f6;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 12px;
-    }
-
-    .score-fill {
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      background: linear-gradient(
-        90deg,
-        #60a5fa,
-        #2563eb
-      );
-      transition: width 0.5s ease;
-    }
-
-    /* ======================================================
-       SUMMARY
-    ====================================================== */
-
-    .summary-box {
-      background: linear-gradient(
-        135deg,
-        #eef4ff,
-        #f5f7ff
-      );
-      border-left: 5px solid var(--primary);
-      border-top: 1px solid #dbe5ff;
-      border-right: 1px solid #dbe5ff;
-      border-bottom: 1px solid #dbe5ff;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 24px;
-    }
-
-    .summary-label {
-      font-size: 11px;
-      color: #667085;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      margin-bottom: 7px;
-    }
-
-    .summary-text {
-      color: #172033;
-      font-size: 16px;
-      line-height: 1.7;
-      font-weight: 500;
-    }
-
-    /* ======================================================
-       ANALYSIS
-    ====================================================== */
-
-    .analysis-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .analysis-box {
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
-    }
-
-    .analysis-box.full {
-      grid-column: 1 / -1;
-    }
-
-    .analysis-box h3 {
-      margin: 0 0 13px;
-      font-size: 17px;
-      color: #101828;
-    }
-
-    .analysis-box p {
-      margin: 0;
-      color: #475467;
-      line-height: 1.65;
-    }
-
-    .list {
-      margin: 0;
-      padding-left: 21px;
-    }
-
-    .list li {
-      margin-bottom: 9px;
-      color: #475467;
-      line-height: 1.55;
-    }
-
-    .empty {
-      color: #98a2b3;
-      font-style: italic;
-      font-size: 14px;
-    }
-
-    .priority {
-      display: inline-flex;
-      padding: 4px 9px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    .priority-high {
-      color: #b42318;
-      background: #fef3f2;
-      border: 1px solid #fecdca;
-    }
-
-    .priority-medium {
-      color: #b54708;
-      background: #fffaeb;
-      border: 1px solid #fedf89;
-    }
-
-    .priority-low {
-      color: #175cd3;
-      background: #eff8ff;
-      border: 1px solid #b2ddff;
-    }
-
-    /* ======================================================
-       SOURCE
-    ====================================================== */
-
-    .source-box {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-top: 24px;
-    }
-
-    .source-label {
-      color: #667085;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      margin-bottom: 7px;
-    }
-
-    .source-text {
-      color: #475467;
-      white-space: pre-wrap;
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    .saved-indicator {
-      display: none;
-      margin-top: 12px;
-      color: var(--success);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    /* ======================================================
-       NEXT ACTIONS
-    ====================================================== */
-
-    .next-actions {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 24px;
-    }
-
-    .next-action {
-      display: block;
-      text-decoration: none;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 17px;
-      color: #172033;
-    }
-
-    .next-action:hover {
-      border-color: #bfd0f8;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .next-action-label {
-      color: #667085;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 5px;
-    }
-
-    .next-action-title {
-      font-size: 15px;
-      font-weight: 800;
-      color: #101828;
-    }
-
-    /* ======================================================
-       RESPONSIVE
-    ====================================================== */
-
-    @media (max-width: 900px) {
-
-      .score-grid,
-      .next-actions,
-      .detected-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .analysis-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .analysis-box.full {
-        grid-column: auto;
-      }
-    }
-
-    @media (max-width: 700px) {
-
-      main {
-        margin: 30px auto;
-      }
-
-      .hero h1 {
-        font-size: 34px;
-      }
-
-      .hero p {
-        font-size: 16px;
-      }
-
-      .tool-info {
-        padding: 15px;
-      }
-
-      .card {
-        padding: 20px;
-      }
-
-      .options {
-        grid-template-columns: 1fr;
-      }
-
-      .composer-toolbar {
-        align-items: flex-end;
-      }
-
-      .input-hint {
-        display: none;
-      }
-
-      .actions {
-        flex-direction: column;
-      }
-
-      .actions button {
-        width: 100%;
-      }
-
-      .result-header {
-        flex-direction: column;
-      }
-
-      .workflow-wrapper {
-        margin-left: -4px;
-        margin-right: -4px;
-      }
-
-      .workflow-context {
-        padding: 0 4px;
-      }
-
-      .workflow-bar {
-        min-width: 900px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAForge AI - Requirement Intelligence</title>
+
+<style>
+*{box-sizing:border-box}
+
+:root{
+  --p:#2563eb;
+  --pd:#1d4ed8;
+  --t:#172033;
+  --m:#667085;
+  --b:#e4e7ec;
+  --bg:#f6f8fc;
+  --ok:#15803d;
+  --err:#b42318
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  color:var(--t);
+  background:
+    radial-gradient(circle at top left,rgba(37,99,235,.07),transparent 32%),
+    var(--bg);
+  line-height:1.5
+}
+
+main{
+  max-width:1240px;
+  margin:52px auto;
+  padding:0 20px
+}
+
+.hero{
+  text-align:center;
+  margin-bottom:32px
+}
+
+.badge{
+  display:inline-flex;
+  padding:7px 13px;
+  border-radius:999px;
+  background:#eef4ff;
+  color:#1d4ed8;
+  border:1px solid #c7d7fe;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:15px
+}
+
+.hero h1{
+  font-size:42px;
+  line-height:1.15;
+  letter-spacing:-1.2px;
+  margin:0 0 14px;
+  color:#101828
+}
+
+.hero p{
+  color:var(--m);
+  font-size:18px;
+  max-width:760px;
+  margin:auto
+}
+
+.card{
+  background:#fff;
+  padding:30px;
+  border:1px solid var(--b);
+  border-radius:18px;
+  box-shadow:0 12px 35px rgba(16,24,40,.08);
+  margin-bottom:26px
+}
+
+.card-title{
+  margin:0 0 6px;
+  font-size:22px
+}
+
+.card-description{
+  margin:0 0 22px;
+  color:var(--m);
+  font-size:14px
+}
+
+.composer{
+  border:1px solid #d0d5dd;
+  border-radius:16px;
+  overflow:visible;
+  background:#fff
+}
+
+.composer:focus-within{
+  border-color:var(--p);
+  box-shadow:0 0 0 4px rgba(37,99,235,.1)
+}
+
+textarea{
+  display:block;
+  width:100%;
+  min-height:150px;
+  border:0;
+  outline:0;
+  padding:17px;
+  font:15px/1.6 Arial;
+  resize:vertical;
+  border-radius:16px 16px 0 0
+}
+
+.toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 12px;
+  border-top:1px solid #eef0f3;
+  background:#fbfcfe;
+  border-radius:0 0 16px 16px
+}
+
+.left,
+.right{
+  display:flex;
+  align-items:center;
+  gap:8px
+}
+
+.plus{
+  position:relative
+}
+
+.icon{
+  width:40px;
+  height:40px;
+  border:1px solid #d0d5dd;
+  background:#fff;
+  color:#344054;
+  border-radius:10px;
+  font-size:24px;
+  line-height:1;
+  cursor:pointer
+}
+
+.send{
+  width:42px;
+  height:42px;
+  border:0;
+  border-radius:11px;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:#fff;
+  font-weight:700;
+  cursor:pointer
+}
+
+.send:disabled{
+  opacity:.55;
+  cursor:not-allowed
+}
+
+.menu{
+  display:none;
+  position:absolute;
+  left:0;
+  bottom:48px;
+  width:200px;
+  padding:7px;
+  background:#fff;
+  border:1px solid var(--b);
+  border-radius:13px;
+  box-shadow:0 14px 32px rgba(16,24,40,.14);
+  z-index:5
+}
+
+.menu.open{
+  display:block
+}
+
+.menu button{
+  display:block;
+  width:100%;
+  padding:11px 12px;
+  border:0;
+  background:#fff;
+  color:#344054;
+  text-align:left;
+  border-radius:9px;
+  cursor:pointer
+}
+
+.menu button:hover{
+  background:#f8fafc
+}
+
+.chip{
+  display:none;
+  margin:0 14px 12px;
+  padding:10px 12px;
+  background:#f8fafc;
+  border:1px solid var(--b);
+  border-radius:11px;
+  align-items:center;
+  gap:10px
+}
+
+.chip.show{
+  display:flex
+}
+
+.chip-info{
+  flex:1;
+  min-width:0
+}
+
+.chip-name{
+  font-size:13px;
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+.chip-meta{
+  font-size:11px;
+  color:#98a2b3
+}
+
+.remove{
+  border:0;
+  background:transparent;
+  font-size:18px;
+  color:#98a2b3;
+  cursor:pointer
+}
+
+.meta{
+  font-size:12px;
+  color:#98a2b3
+}
+
+.options{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+  margin-top:20px
+}
+
+label{
+  display:block;
+  font-weight:700;
+  margin-bottom:8px;
+  color:#344054;
+  font-size:14px
+}
+
+select{
+  width:100%;
+  padding:13px;
+  border:1px solid #d0d5dd;
+  border-radius:10px;
+  background:#fff
+}
+
+.actions{
+  display:flex;
+  gap:12px;
+  margin-top:20px
+}
+
+.secondary{
+  padding:13px 18px;
+  border:1px solid #d0d5dd;
+  background:#fff;
+  border-radius:11px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.primary{
+  padding:13px 18px;
+  border:0;
+  background:var(--p);
+  color:#fff;
+  border-radius:11px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.primary:hover{
+  background:var(--pd)
+}
+
+.loading,
+.error{
+  display:none;
+  margin-top:16px;
+  padding:14px 16px;
+  border-radius:10px;
+  font-weight:600;
+  font-size:14px
+}
+
+.loading{
+  background:#f8fafc;
+  border:1px solid var(--b)
+}
+
+.error{
+  background:#fef2f2;
+  color:var(--err);
+  border:1px solid #fecaca
+}
+
+.result{
+  display:none
+}
+
+.result-head{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:24px
+}
+
+.result-head h2{
+  margin:0 0 5px;
+  font-size:27px
+}
+
+.result-head p{
+  margin:0;
+  color:var(--m);
+  font-size:14px
+}
+
+.pill{
+  padding:7px 11px;
+  border-radius:999px;
+  background:#ecfdf3;
+  color:var(--ok);
+  border:1px solid #abefc6;
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap
+}
+
+.scores{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px
+}
+
+.score{
+  padding:20px;
+  border:1px solid var(--b);
+  border-radius:14px
+}
+
+.sl{
+  font-size:12px;
+  font-weight:800;
+  color:var(--m);
+  text-transform:uppercase;
+  letter-spacing:.6px
+}
+
+.sv{
+  font-size:32px;
+  font-weight:800;
+  margin-top:5px
+}
+
+.bar{
+  height:7px;
+  background:#eef2f6;
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:12px
+}
+
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,#60a5fa,#2563eb);
+  width:0
+}
+
+.summary{
+  margin:24px 0;
+  padding:20px;
+  background:#eef4ff;
+  border:1px solid #dbe5ff;
+  border-left:5px solid var(--p);
+  border-radius:12px
+}
+
+.summary small,
+.source small{
+  display:block;
+  color:var(--m);
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  margin-bottom:7px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px
+}
+
+.box{
+  padding:20px;
+  background:#f8fafc;
+  border:1px solid var(--b);
+  border-radius:14px
+}
+
+.box.full{
+  grid-column:1/-1
+}
+
+.box h3{
+  margin:0 0 12px;
+  font-size:17px
+}
+
+.box p{
+  margin:0;
+  color:#475467
+}
+
+.list{
+  margin:0;
+  padding-left:20px;
+  color:#475467
+}
+
+.empty{
+  color:#98a2b3;
+  font-style:italic
+}
+
+.source{
+  margin-top:24px;
+  padding:16px;
+  border:1px solid var(--b);
+  border-radius:12px
+}
+
+.source-text{
+  white-space:pre-wrap;
+  color:#475467;
+  font-size:14px
+}
+
+.detected{
+  display:none;
+  margin:24px 0
+}
+
+.detected-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px
+}
+
+.detected-card{
+  padding:16px;
+  border:1px solid var(--b);
+  border-radius:13px
+}
+
+.detected-card h4{
+  margin:0 0 6px
+}
+
+.detected-card p{
+  margin:0 0 12px;
+  color:var(--m);
+  font-size:13px
+}
+
+.use{
+  width:100%;
+  padding:10px;
+  border:1px solid #bfd0f8;
+  background:#eef4ff;
+  color:#1d4ed8;
+  border-radius:9px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.saved{
+  display:none;
+  color:var(--ok);
+  font-size:13px;
+  font-weight:700;
+  margin-top:12px
+}
+
+.next{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-top:24px
+}
+
+.next a{
+  padding:17px;
+  border:1px solid var(--b);
+  border-radius:14px;
+  text-decoration:none;
+  color:var(--t);
+  background:#fff
+}
+
+.next a:hover{
+  border-color:#bfd0f8;
+  background:#f8fbff
+}
+
+.next small{
+  display:block;
+  color:var(--m);
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  margin-bottom:5px
+}
+
+.next b{
+  font-size:14px
+}
+
+.continue{
+  margin-top:22px;
+  padding:18px 20px;
+  border-radius:14px;
+  background:#101828;
+  color:#fff;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px
+}
+
+.continue small{
+  display:block;
+  opacity:.7;
+  font-size:11px;
+  text-transform:uppercase;
+  font-weight:800;
+  margin-bottom:3px
+}
+
+.continue strong{
+  font-size:16px
+}
+
+.continue span{
+  font-size:22px
+}
+
+@media(max-width:900px){
+  .scores,
+  .next,
+  .detected-grid{
+    grid-template-columns:1fr
+  }
+
+  .grid{
+    grid-template-columns:1fr
+  }
+
+  .box.full{
+    grid-column:auto
+  }
+}
+
+@media(max-width:700px){
+  main{
+    margin:35px auto
+  }
+
+  .hero h1{
+    font-size:34px
+  }
+
+  .card{
+    padding:20px
+  }
+
+  .result-head{
+    flex-direction:column
+  }
+
+  .left .meta{
+    display:none
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <main>
+<main>
 
-    <!-- ==================================================
-         HERO
-         ================================================== -->
+<section class="hero">
+  <div class="badge" id="badge">Requirement Intelligence</div>
 
-    <section class="hero">
+  <h1 id="title">
+    Analyze Requirements Before You Build
+  </h1>
 
-      <div
-        class="badge"
-        id="badge">
-        Requirement Analyzer
+  <p id="subtitle">
+    Turn requirements, documents and visual inputs into structured analysis before development begins.
+  </p>
+</section>
+
+
+<section class="card">
+
+  <h2 class="card-title" id="inputTitle">
+    What would you like BAForge AI to analyze?
+  </h2>
+
+  <p class="card-description" id="inputDesc">
+    Write a requirement, attach a PDF or image, or use both. You can also provide a natural-language instruction.
+  </p>
+
+
+  <div class="composer">
+
+    <textarea
+      id="requirement"
+      maxlength="10000"
+      placeholder="Tell BAForge AI what you want to analyze..."
+    ></textarea>
+
+
+    <div class="chip" id="chip">
+
+      <span id="chipIcon">📄</span>
+
+      <div class="chip-info">
+        <div class="chip-name" id="chipName"></div>
+        <div class="chip-meta" id="chipMeta"></div>
       </div>
 
-      <h1 id="pageTitle">
-        Analyze Requirements Before You Build
-      </h1>
+      <button
+        class="remove"
+        id="remove"
+        type="button"
+      >×</button>
 
-      <p id="pageSubtitle">
-        Use text, PDF documents or images as context.
-        Add instructions only when you need them.
-      </p>
+    </div>
 
-    </section>
 
+    <div class="toolbar">
 
-    <!-- ==================================================
-         TOOL INFO
-         Common BAForge pattern:
-         "What is this tool for?"
-         ================================================== -->
+      <div class="left">
 
-    <section
-      class="tool-info"
-      aria-labelledby="toolInfoTitle">
-
-      <div
-        class="tool-info-icon"
-        aria-hidden="true">
-        ?
-      </div>
-
-      <div class="tool-info-content">
-
-        <h2
-          class="tool-info-title"
-          id="toolInfoTitle">
-          What does this tool do?
-        </h2>
-
-        <p
-          class="tool-info-text"
-          id="toolInfoText">
-          Requirement Analyzer examines a raw requirement and identifies
-          ambiguity, missing information, assumptions, business rules,
-          edge cases and testability concerns before the requirement moves
-          into the delivery workflow.
-        </p>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==================================================
-         WORKFLOW
-         Analyzer is a pre-work entry point.
-         It is NOT one of the 8 workflow steps.
-         ================================================== -->
-
-    <section class="workflow-wrapper">
-
-      <div class="workflow-context">
-
-        <span
-          class="workflow-context-dot">
-        </span>
-
-        <span id="workflowContextText">
-          Analyzer is the entry point. The delivery workflow starts with Requirement.
-        </span>
-
-      </div>
-
-      <div class="workflow-scroll">
-
-        <div
-          class="workflow-bar"
-          id="workflowBar">
-
-          <a
-            class="workflow-step"
-            href="/requirement.html"
-            data-workflow-step="requirement">
-
-            <span class="workflow-number">1</span>
-
-            <span
-              class="workflow-label"
-              data-workflow-label="requirement">
-              Requirement
-            </span>
-
-          </a>
-
-          <span class="workflow-arrow">→</span>
-
-          <a
-            class="workflow-step"
-            href="/user-story.html"
-            data-workflow-step="user_story">
-
-            <span class="workflow-number">2</span>
-
-            <span
-              class="workflow-label"
-              data-workflow-label="user_story">
-              User Story
-            </span>
-
-          </a>
-
-          <span class="workflow-arrow">→</span>
-
-          <a
-            class="workflow-step"
-            href="/acceptance-criteria.html"
-            data-workflow-step="acceptance_criteria">
-
-            <span class="workflow-number">3</span>
-
-            <span
-              class="workflow-label"
-              data-workflow-label="acceptance_criteria">
-              Acceptance Criteria
-            </span>
-
-          </a>
-
-          <span class="workflow-arrow">→</span>
-
-          <a
-            class="workflow-step"
-            href="/uat.html"
-            data-workflow-step="uat">
-
-            <span class="workflow-number">4</span>
-
-            <span
-              class="workflow-label"
-              data-workflow-label="uat">
-              UAT Test Cases
-            </span>
-
-          </a>
-
-          <span class="workflow-arrow">→</span>
-
-          <a
-            class="workflow-step"
-            href="/test-data.html"
-            data-workflow-step="test_data">
-
-            <span class="workflow-number">5</span>
-
-            <span
-              class="workflow-label"
-              data-workflow-label="test_data">
-              Test Data
-            </span>
-
-          </a>
-
-          <span class="workflow-arrow">→</span>
-
-          <a
-            class="workflow-step"
-            href="/process-flow.html"
-            data-workflow-step="process_flow">
-
-            <span class="workflow-number">6</span>
-
-            <span
-              class="workflow-label"
-              data-workflow-label="process_flow">
-              Process Flow
-            </span>
-
-          </a>
-
-          <span class="workflow-arrow">→</span>
-
-          <a
-            class="workflow-step"
-            href="/traceability.html"
-            data-workflow-step="traceability">
-
-            <span class="workflow-number">7</span>
-
-            <span
-              class="workflow-label"
-              data-workflow-label="traceability">
-              Traceability
-            </span>
-
-          </a>
-
-          <span class="workflow-arrow">→</span>
-
-          <a
-            class="workflow-step"
-            href="/document.html"
-            data-workflow-step="document">
-
-            <span class="workflow-number">8</span>
-
-            <span
-              class="workflow-label"
-              data-workflow-label="document">
-              BA Document
-            </span>
-
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==================================================
-         INPUT
-         ================================================== -->
-
-    <section class="card">
-
-      <h2
-        class="card-title"
-        id="inputTitle">
-        What would you like BAForge AI to analyze?
-      </h2>
-
-      <p
-        class="card-description"
-        id="inputDescription">
-        Write a requirement, attach a PDF or image, or use both.
-        A written instruction is optional when a source is attached.
-      </p>
-
-
-      <div class="composer">
-
-        <textarea
-          id="requirement"
-          maxlength="10000"
-          placeholder="Tell BAForge AI what you want to analyze..."
-          spellcheck="true"></textarea>
-
-
-        <div
-          id="sourceChip"
-          class="source-chip">
-
-          <div
-            id="sourceIcon"
-            class="source-icon">
-            📄
-          </div>
-
-          <div class="source-info">
-
-            <div
-              id="sourceName"
-              class="source-name">
-            </div>
-
-            <div
-              id="sourceMeta"
-              class="source-meta">
-            </div>
-
-          </div>
+        <div class="plus">
 
           <button
-            id="removeSource"
-            class="remove-source"
+            class="icon"
+            id="plus"
             type="button"
-            aria-label="Remove attachment">
-            ×
-          </button>
-
-        </div>
+            aria-label="Add attachment"
+          >+</button>
 
 
-        <div class="composer-toolbar">
+          <div class="menu" id="menu">
 
-          <div class="toolbar-left">
+            <button id="pdf" type="button">
+              📄 <span id="pdfText">Upload PDF</span>
+            </button>
 
-            <div class="plus-wrap">
+            <button id="image" type="button">
+              🖼️ <span id="imageText">Upload Image</span>
+            </button>
 
-              <button
-                id="attachButton"
-                class="icon-button"
-                type="button"
-                aria-label="Add source">
-                +
-              </button>
-
-
-              <div
-                id="attachMenu"
-                class="attach-menu">
-
-                <button
-                  id="pdfOption"
-                  class="attach-option"
-                  type="button">
-
-                  📄
-
-                  <span id="pdfOptionText">
-                    Upload PDF
-                  </span>
-
-                </button>
-
-
-                <button
-                  id="imageOption"
-                  class="attach-option"
-                  type="button">
-
-                  🖼️
-
-                  <span id="imageOptionText">
-                    Upload Image
-                  </span>
-
-                </button>
-
-
-                <button
-                  id="cameraOption"
-                  class="attach-option"
-                  type="button">
-
-                  📷
-
-                  <span id="cameraOptionText">
-                    Take Photo
-                  </span>
-
-                </button>
-
-              </div>
-
-            </div>
-
-
-            <span
-              id="inputHint"
-              class="input-hint">
-              Optional instruction: focus on limits, rules, gaps or specific sections.
-            </span>
-
-          </div>
-
-
-          <div class="toolbar-right">
-
-            <span
-              id="characterCount"
-              class="character-count">
-              0 / 10000
-            </span>
-
-            <button
-              id="analyzeButton"
-              class="send-button"
-              type="button"
-              aria-label="Analyze">
-              ➤
+            <button id="camera" type="button">
+              📷 <span id="cameraText">Take Photo</span>
             </button>
 
           </div>
 
         </div>
 
-      </div>
 
-
-      <input
-        id="pdfInput"
-        type="file"
-        accept="application/pdf,.pdf"
-        hidden>
-
-      <input
-        id="imageInput"
-        type="file"
-        accept="image/*"
-        hidden>
-
-      <input
-        id="cameraInput"
-        type="file"
-        accept="image/*"
-        capture="environment"
-        hidden>
-
-
-      <div class="options">
-
-        <div>
-
-          <label
-            for="language"
-            id="languageLabel">
-            Output Language
-          </label>
-
-          <select id="language">
-
-            <option value="en">
-              English
-            </option>
-
-            <option value="tr">
-              Türkçe
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div>
-
-          <label
-            for="detail"
-            id="detailLabel">
-            Analysis Depth
-          </label>
-
-          <select id="detail">
-
-            <option value="Basic">
-              Basic
-            </option>
-
-            <option
-              value="Professional"
-              selected>
-              Professional
-            </option>
-
-            <option value="Comprehensive">
-              Comprehensive
-            </option>
-
-          </select>
-
-        </div>
+        <span class="meta" id="hint">
+          Optional instruction: focus on limits, rules, gaps or specific sections.
+        </span>
 
       </div>
 
 
-      <div class="actions">
+      <div class="right">
+
+        <span class="meta" id="count">
+          0 / 10000
+        </span>
 
         <button
-          id="clearButton"
-          class="secondary-button"
-          type="button">
-          Clear
-        </button>
+          class="send"
+          id="analyze"
+          type="button"
+          aria-label="Analyze"
+        >➤</button>
 
       </div>
 
+    </div>
+
+  </div>
+
+
+  <input
+    id="pdfInput"
+    type="file"
+    accept="application/pdf,.pdf"
+    hidden
+  >
+
+  <input
+    id="imageInput"
+    type="file"
+    accept="image/*"
+    hidden
+  >
+
+  <input
+    id="cameraInput"
+    type="file"
+    accept="image/*"
+    capture="environment"
+    hidden
+  >
+
+
+  <div class="options">
+
+    <div>
+
+      <label id="detailLabel">
+        Analysis Depth
+      </label>
+
+      <select id="detail">
+
+        <option value="Basic">
+          Basic
+        </option>
+
+        <option value="Professional" selected>
+          Professional
+        </option>
+
+        <option value="Comprehensive">
+          Comprehensive
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <div class="actions">
+
+    <button
+      class="secondary"
+      id="clear"
+      type="button"
+    >
+      Clear
+    </button>
+
+  </div>
+
+
+  <div
+    class="loading"
+    id="loading"
+  >
+    AI is analyzing your input...
+  </div>
+
+
+  <div
+    class="error"
+    id="error"
+  ></div>
+
+</section>
+
+
+<section
+  class="card result"
+  id="result"
+>
+
+  <div class="result-head">
+
+    <div>
+
+      <h2 id="resultTitle">
+        Requirement Intelligence
+      </h2>
+
+      <p id="resultSub">
+        Structured analysis generated from your input.
+      </p>
+
+    </div>
+
+    <div
+      class="pill"
+      id="status"
+    >
+      Analysis Complete
+    </div>
+
+  </div>
+
+
+  <div
+    class="detected"
+    id="detected"
+  >
+
+    <h3 id="detectedTitle">
+      Requirements Found
+    </h3>
+
+    <div
+      class="detected-grid"
+      id="detectedGrid"
+    ></div>
+
+  </div>
+
+
+  <div class="scores">
+
+    <div class="score">
 
       <div
-        id="loading"
-        class="loading">
-        BAForge AI is analyzing your input...
+        class="sl"
+        id="cl"
+      >
+        Clarity
       </div>
 
+      <div class="sv">
+
+        <span id="clarity">0</span>
+
+        <span style="font-size:14px;color:#98a2b3">
+          / 100
+        </span>
+
+      </div>
+
+      <div class="bar">
+        <div
+          class="fill"
+          id="clarityBar"
+        ></div>
+      </div>
+
+    </div>
+
+
+    <div class="score">
 
       <div
-        id="error"
-        class="error">
+        class="sl"
+        id="co"
+      >
+        Completeness
       </div>
 
-    </section>
+      <div class="sv">
 
+        <span id="complete">0</span>
 
-    <!-- ==================================================
-         RESULT
-         ================================================== -->
+        <span style="font-size:14px;color:#98a2b3">
+          / 100
+        </span>
 
-    <section
-      id="result"
-      class="card result">
+      </div>
 
-      <div class="result-header">
-
-        <div>
-
-          <h2 id="resultTitle">
-            Requirement Analysis
-          </h2>
-
-          <p id="resultSubtitle">
-            Structured analysis generated from your input.
-          </p>
-
-        </div>
-
+      <div class="bar">
         <div
-          id="statusPill"
-          class="status-pill">
-          Analysis Complete
-        </div>
-
+          class="fill"
+          id="completeBar"
+        ></div>
       </div>
 
+    </div>
+
+
+    <div class="score">
 
       <div
-        id="detectedSection"
-        class="detected-section">
+        class="sl"
+        id="te"
+      >
+        Testability
+      </div>
 
-        <h3 id="detectedTitle">
-          Requirements Found
-        </h3>
+      <div class="sv">
 
-        <p
-          id="detectedDescription"
-          class="detected-description">
-          Multiple requirements were detected in the source.
-        </p>
+        <span id="testable">0</span>
 
+        <span style="font-size:14px;color:#98a2b3">
+          / 100
+        </span>
+
+      </div>
+
+      <div class="bar">
         <div
-          id="detectedGrid"
-          class="detected-grid">
-        </div>
-
+          class="fill"
+          id="testableBar"
+        ></div>
       </div>
 
+    </div>
 
-      <div class="score-grid">
+  </div>
 
-        <div class="score-card">
 
-          <div
-            class="score-label"
-            id="clarityLabel">
-            Clarity
-          </div>
+  <div class="summary">
 
-          <div class="score-value">
+    <small id="sumLabel">
+      Summary
+    </small>
 
-            <span id="clarityScore">0</span>
+    <div id="summary"></div>
 
-            <span id="clarityMax">/ 100</span>
+  </div>
 
-          </div>
 
-          <div class="score-bar">
+  <div class="grid">
 
-            <div
-              id="clarityBar"
-              class="score-fill">
-            </div>
 
-          </div>
+    <div class="box">
 
-        </div>
+      <h3 id="typeTitle">
+        Requirement Type
+      </h3>
 
+      <p id="type">-</p>
 
-        <div class="score-card">
+    </div>
 
-          <div
-            class="score-label"
-            id="completenessLabel">
-            Completeness
-          </div>
 
-          <div class="score-value">
+    <div class="box">
 
-            <span id="completenessScore">0</span>
+      <h3 id="priorityTitle">
+        Priority
+      </h3>
 
-            <span id="completenessMax">/ 100</span>
+      <p id="priority">-</p>
 
-          </div>
+    </div>
 
-          <div class="score-bar">
 
-            <div
-              id="completenessBar"
-              class="score-fill">
-            </div>
+    <div class="box">
 
-          </div>
+      <h3 id="ambTitle">
+        Ambiguities
+      </h3>
 
-        </div>
+      <div id="ambiguities"></div>
 
+    </div>
 
-        <div class="score-card">
 
-          <div
-            class="score-label"
-            id="testabilityLabel">
-            Testability
-          </div>
+    <div class="box">
 
-          <div class="score-value">
+      <h3 id="missTitle">
+        Missing Information
+      </h3>
 
-            <span id="testabilityScore">0</span>
+      <div id="missing"></div>
 
-            <span id="testabilityMax">/ 100</span>
+    </div>
 
-          </div>
 
-          <div class="score-bar">
+    <div class="box">
 
-            <div
-              id="testabilityBar"
-              class="score-fill">
-            </div>
+      <h3 id="assTitle">
+        Assumptions
+      </h3>
 
-          </div>
+      <div id="assumptions"></div>
 
-        </div>
+    </div>
 
-      </div>
 
+    <div class="box">
 
-      <div class="summary-box">
+      <h3 id="ruleTitle">
+        Business Rules
+      </h3>
 
-        <div
-          class="summary-label"
-          id="summaryLabel">
-          Summary
-        </div>
+      <div id="rules"></div>
 
-        <div
-          id="summary"
-          class="summary-text">
-        </div>
+    </div>
 
-      </div>
 
+    <div class="box">
 
-      <div class="analysis-grid">
+      <h3 id="qTitle">
+        Open Questions
+      </h3>
 
-        <div class="analysis-box">
+      <div id="questions"></div>
 
-          <h3 id="typeTitle">
-            Requirement Type
-          </h3>
+    </div>
 
-          <p id="requirementType">-</p>
 
-        </div>
+    <div class="box">
 
+      <h3 id="edgeTitle">
+        Edge Cases
+      </h3>
 
-        <div class="analysis-box">
+      <div id="edges"></div>
 
-          <h3 id="priorityTitle">
-            Priority
-          </h3>
+    </div>
 
-          <p id="priority">-</p>
 
-        </div>
+    <div class="box full">
 
+      <h3 id="noteTitle">
+        Analyst Notes
+      </h3>
 
-        <div class="analysis-box">
+      <div id="notes"></div>
 
-          <h3 id="ambiguitiesTitle">
-            Ambiguities
-          </h3>
+    </div>
 
-          <div id="ambiguities"></div>
 
-        </div>
+  </div>
 
 
-        <div class="analysis-box">
+  <div class="source">
 
-          <h3 id="missingTitle">
-            Missing Information
-          </h3>
+    <small id="sourceLabel">
+      Analyzed Input
+    </small>
 
-          <div id="missingInformation"></div>
+    <div
+      class="source-text"
+      id="source"
+    ></div>
 
-        </div>
+  </div>
 
 
-        <div class="analysis-box">
+  <div
+    class="saved"
+    id="saved"
+  >
+    ✓ Requirement saved to the workspace.
+  </div>
 
-          <h3 id="assumptionsTitle">
-            Assumptions
-          </h3>
 
-          <div id="assumptions"></div>
+  <div class="next">
 
-        </div>
+    <a href="/requirement.html">
 
+      <small id="requirementNextSmall">
+        Next Step
+      </small>
 
-        <div class="analysis-box">
+      <b id="requirementNext">
+        Continue to Requirement →
+      </b>
 
-          <h3 id="rulesTitle">
-            Business Rules
-          </h3>
+    </a>
 
-          <div id="businessRules"></div>
 
-        </div>
+    <a href="/user-story.html">
 
+      <small>
+        Next Step
+      </small>
 
-        <div class="analysis-box">
+      <b id="userStoryNext">
+        Generate User Story →
+      </b>
 
-          <h3 id="questionsTitle">
-            Open Questions
-          </h3>
+    </a>
 
-          <div id="openQuestions"></div>
 
-        </div>
+    <a href="/acceptance-criteria.html">
 
+      <small>
+        Continue
+      </small>
 
-        <div class="analysis-box">
+      <b id="acNext">
+        Generate Acceptance Criteria →
+      </b>
 
-          <h3 id="edgeCasesTitle">
-            Edge Cases
-          </h3>
+    </a>
 
-          <div id="edgeCases"></div>
 
-        </div>
+    <a href="/uat.html">
 
+      <small>
+        Continue
+      </small>
 
-        <div class="analysis-box full">
+      <b id="uatNext">
+        Generate UAT Test Cases →
+      </b>
 
-          <h3 id="recommendationTitle">
-            Analyst Notes
-          </h3>
+    </a>
 
-          <div id="analystNotes"></div>
+  </div>
 
-        </div>
 
-      </div>
+  <a
+    class="continue"
+    href="/requirement.html"
+  >
 
+    <div>
 
-      <div class="source-box">
+      <small id="continueSmall">
+        Continue Workflow
+      </small>
 
-        <div
-          class="source-label"
-          id="sourceLabel">
-          Analyzed Input
-        </div>
+      <strong id="continueText">
+        Gereksinime Devam Et
+      </strong>
 
-        <div
-          id="sourceRequirement"
-          class="source-text">
-        </div>
+    </div>
 
-      </div>
+    <span>→</span>
 
+  </a>
 
-      <div
-        id="savedIndicator"
-        class="saved-indicator">
-        ✓ Requirement saved to the BAForge workspace.
-      </div>
+</section>
 
+</main>
 
-      <div class="next-actions">
 
-        <a
-          class="next-action"
-          href="/requirement.html">
+<script src="/core/data-model.js"></script>
+<script src="/core/artifact-store.js"></script>
+<script src="/core/relationship-engine.js"></script>
+<script src="/core/i18n.js"></script>
 
-          <div
-            class="next-action-label"
-            id="nextRequirementLabel">
-            Workflow
-          </div>
 
-          <div
-            class="next-action-title"
-            id="nextRequirementTitle">
-            Continue to Requirement →
-          </div>
+<script>
 
-        </a>
+const $ = id => document.getElementById(id);
 
+const text = $('requirement');
 
-        <a
-          class="next-action"
-          href="/user-story.html">
+let file = null;
+let detected = [];
+let currentResult = null;
 
-          <div
-            class="next-action-label"
-            id="nextStoryLabel">
-            Next Step
-          </div>
 
-          <div
-            class="next-action-title"
-            id="nextStoryTitle">
-            Generate User Story →
-          </div>
+/* --------------------------------------------------
+   LANGUAGE
+-------------------------------------------------- */
 
-        </a>
+function getWebsiteLanguage(){
 
+  try{
 
-        <a
-          class="next-action"
-          href="/acceptance-criteria.html">
+    if(
+      window.BAI18n &&
+      typeof BAI18n.getLanguage === 'function'
+    ){
 
-          <div
-            class="next-action-label"
-            id="nextCriteriaLabel">
-            Continue
-          </div>
+      return BAI18n.getLanguage() === 'tr'
+        ? 'tr'
+        : 'en';
 
-          <div
-            class="next-action-title"
-            id="nextCriteriaTitle">
-            Generate Acceptance Criteria →
-          </div>
+    }
 
-        </a>
+  }catch(e){}
 
-      </div>
+  return localStorage.getItem('baforge-language') === 'tr'
+    ? 'tr'
+    : 'en';
 
-    </section>
+}
 
-  </main>
 
+/* --------------------------------------------------
+   TRANSLATIONS
+-------------------------------------------------- */
 
-  <!-- ====================================================
-       CORE
-       ==================================================== -->
+const tr = {
 
-  <script src="/core/data-model.js"></script>
-  <script src="/core/artifact-store.js"></script>
-  <script src="/core/relationship-engine.js"></script>
-  <script src="/core/i18n.js"></script>
+  en: {
 
+    badge:'Requirement Intelligence',
 
-  <script>
+    title:'Analyze Requirements Before You Build',
 
-    /*
-      ======================================================
-      PAGE TRANSLATIONS
-      ======================================================
-    */
+    subtitle:
+      'Turn requirements, documents and visual inputs into structured analysis before development begins.',
 
-    const pageTranslations = {
+    inputTitle:
+      'What would you like BAForge AI to analyze?',
 
-      en: {
+    inputDesc:
+      'Write a requirement, attach a PDF or image, or use both. You can also provide a natural-language instruction.',
 
-        badge:
-          "Requirement Analyzer",
+    placeholder:
+      'Tell BAForge AI what you want to analyze...',
 
-        title:
-          "Analyze Requirements Before You Build",
+    hint:
+      'Optional instruction: focus on limits, rules, gaps or specific sections.',
 
-        subtitle:
-          "Use text, PDF documents or images as context. Add instructions only when you need them.",
+    detail:
+      'Analysis Depth',
 
-        toolInfoTitle:
-          "What does this tool do?",
+    clear:
+      'Clear',
 
-        toolInfoText:
-          "Requirement Analyzer examines a raw requirement and identifies ambiguity, missing information, assumptions, business rules, edge cases and testability concerns before the requirement moves into the delivery workflow.",
+    analyze:
+      'Analyze',
 
-        workflowContext:
-          "Analyzer is the entry point. The delivery workflow starts with Requirement.",
+    loading:
+      'AI is analyzing your input...',
 
-        workflow: {
-          requirement: "Requirement",
-          userStory: "User Story",
-          acceptanceCriteria: "Acceptance Criteria",
-          uat: "UAT Test Cases",
-          testData: "Test Data",
-          processFlow: "Process Flow",
-          traceability: "Traceability",
-          document: "BA Document"
-        },
+    validation:
+      'Add some text or attach a PDF/image before analyzing.',
 
-        inputTitle:
-          "What would you like BAForge AI to analyze?",
+    generic:
+      'Something went wrong while analyzing your input.',
 
-        inputDescription:
-          "Write a requirement, attach a PDF or image, or use both. A written instruction is optional when a source is attached.",
+    pdf:
+      'Upload PDF',
 
-        placeholder:
-          "Tell BAForge AI what you want to analyze...",
+    image:
+      'Upload Image',
 
-        hint:
-          "Optional instruction: focus on limits, rules, gaps or specific sections.",
+    camera:
+      'Take Photo',
 
-        language:
-          "Output Language",
+    tooLarge:
+      'File is too large. Please use a file up to 4 MB.',
 
-        languageEnglish:
-          "English",
+    badType:
+      'Only PDF and image files are supported.',
 
-        languageTurkish:
-          "Turkish",
+    ready:
+      'Ready to analyze',
 
-        detail:
-          "Analysis Depth",
+    complete:
+      'Analysis Complete',
 
-        detailBasic:
-          "Basic",
+    result:
+      'Requirement Intelligence',
 
-        detailProfessional:
-          "Professional",
+    sub:
+      'Structured analysis generated from your input.',
 
-        detailComprehensive:
-          "Comprehensive",
+    detected:
+      'Requirements Found',
 
-        clear:
-          "Clear",
+    use:
+      'Use This Requirement',
 
-        loading:
-          "BAForge AI is analyzing your input...",
+    saved:
+      '✓ Requirement saved to the workspace.',
 
-        validation:
-          "Add some text or attach a PDF or image before analyzing.",
+    requirementType:
+      'Requirement Type',
 
-        fileTooLarge:
-          "The file is too large. Please use a file up to 4 MB.",
+    priority:
+      'Priority',
 
-        fileType:
-          "Only PDF and image files are supported.",
+    ambiguities:
+      'Ambiguities',
 
-        fileReady:
-          "Ready to analyze",
+    missing:
+      'Missing Information',
 
-        genericError:
-          "Something went wrong while analyzing your input.",
+    assumptions:
+      'Assumptions',
 
-        result:
-          "Requirement Analysis",
+    rules:
+      'Business Rules',
 
-        resultSubtitle:
-          "Structured analysis generated from your input.",
+    questions:
+      'Open Questions',
 
-        complete:
-          "Analysis Complete",
+    edgeCases:
+      'Edge Cases',
 
-        detected:
-          "Requirements Found",
+    analystNotes:
+      'Analyst Notes',
 
-        detectedDescription:
-          "Multiple requirements were detected in the source. Select one to use as the current workspace requirement.",
+    summary:
+      'Summary',
 
-        useRequirement:
-          "Use This Requirement",
+    source:
+      'Analyzed Input',
 
-        requirementFallback:
-          "Requirement",
+    requirementNext:
+      'Continue to Requirement →',
 
-        other:
-          "Other",
+    userStoryNext:
+      'Generate User Story →',
 
-        unknown:
-          "Unknown",
+    acNext:
+      'Generate Acceptance Criteria →',
 
-        clarity:
-          "Clarity",
+    uatNext:
+      'Generate UAT Test Cases →',
 
-        completeness:
-          "Completeness",
+    continueSmall:
+      'Continue Workflow',
 
-        testability:
-          "Testability",
+    continueText:
+      'Continue to Requirement'
 
-        summary:
-          "Summary",
+  },
 
-        type:
-          "Requirement Type",
 
-        priority:
-          "Priority",
+  tr: {
 
-        ambiguities:
-          "Ambiguities",
+    badge:'Gereksinim Analizi',
 
-        missing:
-          "Missing Information",
+    title:
+      'Geliştirmeden Önce Gereksinimi Analiz Et',
 
-        assumptions:
-          "Assumptions",
+    subtitle:
+      'Gereksinimleri, dokümanları ve görsel girdileri geliştirme öncesinde yapılandırılmış analize dönüştürün.',
 
-        rules:
-          "Business Rules",
+    inputTitle:
+      'BAForge AI neyi analiz etsin?',
 
-        questions:
-          "Open Questions",
+    inputDesc:
+      'Gereksinimi yazın, PDF veya görsel ekleyin ya da ikisini birlikte kullanın. İsterseniz doğal dilde talimat da verebilirsiniz.',
 
-        edgeCases:
-          "Edge Cases",
+    placeholder:
+      'BAForge AI\'a neyi analiz etmesini istediğinizi yazın...',
 
-        notes:
-          "Analyst Notes",
+    hint:
+      'İsteğe bağlı: limitlere, kurallara, eksik bilgilere veya belirli bölümlere odaklanın.',
+
+    detail:
+      'Analiz Derinliği',
+
+    clear:
+      'Temizle',
+
+    analyze:
+      'Analiz Et',
+
+    loading:
+      'AI girdinizi analiz ediyor...',
+
+    validation:
+      'Analiz için metin girin veya PDF/görsel ekleyin.',
+
+    generic:
+      'Girdi analiz edilirken bir hata oluştu.',
+
+    pdf:
+      'PDF Yükle',
+
+    image:
+      'Görsel Yükle',
+
+    camera:
+      'Fotoğraf Çek',
+
+    tooLarge:
+      'Dosya çok büyük. Lütfen 4 MB veya daha küçük bir dosya kullanın.',
+
+    badType:
+      'Yalnızca PDF ve görsel dosyaları desteklenir.',
+
+    ready:
+      'Analize hazır',
+
+    complete:
+      'Analiz Tamamlandı',
+
+    result:
+      'Gereksinim Analizi',
+
+    sub:
+      'Girdinizden oluşturulan yapılandırılmış analiz.',
+
+    detected:
+      'Bulunan Gereksinimler',
+
+    use:
+      'Bu Gereksinimi Kullan',
+
+    saved:
+      '✓ Gereksinim çalışma alanına kaydedildi.',
+
+    requirementType:
+      'Gereksinim Türü',
+
+    priority:
+      'Öncelik',
+
+    ambiguities:
+      'Belirsizlikler',
+
+    missing:
+      'Eksik Bilgiler',
+
+    assumptions:
+      'Varsayımlar',
+
+    rules:
+      'İş Kuralları',
+
+    questions:
+      'Açık Sorular',
+
+    edgeCases:
+      'Kenar Durumları',
+
+    analystNotes:
+      'Analist Notları',
+
+    summary:
+      'Özet',
+
+    source:
+      'Analiz Edilen Girdi',
+
+    requirementNext:
+      'Gereksinime Devam Et →',
+
+    userStoryNext:
+      'User Story Oluştur →',
+
+    acNext:
+      'Kabul Kriterleri Oluştur →',
+
+    uatNext:
+      'UAT Test Senaryoları Oluştur →',
+
+    continueSmall:
+      'İş Akışına Devam Et',
+
+    continueText:
+      'Gereksinime Devam Et'
+
+  }
+
+};
+
+
+function T(key){
+
+  const language = getWebsiteLanguage();
+
+  return (
+    tr[language] &&
+    tr[language][key]
+  ) || tr.en[key] || key;
+
+}
+
+
+/* --------------------------------------------------
+   I18N UI
+-------------------------------------------------- */
+
+function applyLanguage(){
+
+  const language = getWebsiteLanguage();
+
+  document.documentElement.lang = language;
+
+  $('badge').textContent = T('badge');
+  $('title').textContent = T('title');
+  $('subtitle').textContent = T('subtitle');
+
+  $('inputTitle').textContent = T('inputTitle');
+  $('inputDesc').textContent = T('inputDesc');
+
+  text.placeholder = T('placeholder');
+
+  $('hint').textContent = T('hint');
+
+  $('detailLabel').textContent = T('detail');
+
+  $('clear').textContent = T('clear');
+
+  $('loading').textContent = T('loading');
+
+  $('pdfText').textContent = T('pdf');
+  $('imageText').textContent = T('image');
+  $('cameraText').textContent = T('camera');
+
+  $('status').textContent = T('complete');
+
+  $('resultTitle').textContent = T('result');
+  $('resultSub').textContent = T('sub');
+
+  $('detectedTitle').textContent = T('detected');
+
+  $('typeTitle').textContent = T('requirementType');
+  $('priorityTitle').textContent = T('priority');
+
+  $('ambTitle').textContent = T('ambiguities');
+  $('missTitle').textContent = T('missing');
+  $('assTitle').textContent = T('assumptions');
+  $('ruleTitle').textContent = T('rules');
+  $('qTitle').textContent = T('questions');
+  $('edgeTitle').textContent = T('edgeCases');
+  $('noteTitle').textContent = T('analystNotes');
+
+  $('sumLabel').textContent = T('summary');
+  $('sourceLabel').textContent = T('source');
+
+  $('requirementNext').textContent = T('requirementNext');
+  $('userStoryNext').textContent = T('userStoryNext');
+  $('acNext').textContent = T('acNext');
+  $('uatNext').textContent = T('uatNext');
+
+  $('continueSmall').textContent = T('continueSmall');
+  $('continueText').textContent = T('continueText');
+
+}
+
+
+/* --------------------------------------------------
+   HELPERS
+-------------------------------------------------- */
+
+function esc(value){
+
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+
+}
+
+
+function list(values){
+
+  if(
+    !Array.isArray(values) ||
+    values.length === 0
+  ){
+
+    return '<div class="empty">-</div>';
+
+  }
+
+  return `
+    <ul class="list">
+      ${
+        values
+          .map(item =>
+            `<li>${
+              esc(
+                typeof item === 'object'
+                  ? JSON.stringify(item)
+                  : item
+              )
+            }</li>`
+          )
+          .join('')
+      }
+    </ul>
+  `;
+
+}
+
+
+function score(value,id,bar){
+
+  const number =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        Math.round(Number(value) || 0)
+      )
+    );
+
+  $(id).textContent = number;
+
+  $(bar).style.width = number + '%';
+
+}
+
+
+/* --------------------------------------------------
+   FILE CHIP
+-------------------------------------------------- */
+
+function chip(){
+
+  if(!file){
+
+    $('chip').classList.remove('show');
+
+    return;
+
+  }
+
+  $('chip').classList.add('show');
+
+  $('chipIcon').textContent =
+    file.type === 'application/pdf'
+      ? '📄'
+      : '🖼️';
+
+  $('chipName').textContent =
+    file.name;
+
+  $('chipMeta').textContent =
+    (file.size / 1048576).toFixed(2)
+    + ' MB · '
+    + T('ready');
+
+}
+
+
+/* --------------------------------------------------
+   ERROR
+-------------------------------------------------- */
+
+function showError(message){
+
+  $('error').textContent = message;
+
+  $('error').style.display = 'block';
+
+}
+
+
+/* --------------------------------------------------
+   FILE PICKER
+-------------------------------------------------- */
+
+function pick(fileObject){
+
+  if(!fileObject){
+
+    return;
+
+  }
+
+  if(
+    fileObject.size >
+    4 * 1024 * 1024
+  ){
+
+    showError(T('tooLarge'));
+
+    return;
+
+  }
+
+  const valid =
+    fileObject.type === 'application/pdf' ||
+    fileObject.type.startsWith('image/') ||
+    fileObject.name
+      .toLowerCase()
+      .endsWith('.pdf');
+
+  if(!valid){
+
+    showError(T('badType'));
+
+    return;
+
+  }
+
+  file = fileObject;
+
+  chip();
+
+  $('menu').classList.remove('open');
+
+}
+
+
+/* --------------------------------------------------
+   FILE -> DATA URL
+-------------------------------------------------- */
+
+async function dataUrl(fileObject){
+
+  return new Promise(
+    (resolve,reject) => {
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        () => resolve(reader.result);
+
+      reader.onerror =
+        reject;
+
+      reader.readAsDataURL(fileObject);
+
+    }
+  );
+
+}
+
+
+/* --------------------------------------------------
+   ARTIFACT SAVE
+-------------------------------------------------- */
+
+function saveArtifact(data,original){
+
+  const requirementData = {
+
+    title:
+      data.title ||
+      data.summary ||
+      'Requirement',
+
+    description:
+      original ||
+      data.summary ||
+      '',
+
+    requirement:
+      original ||
+      data.requirement ||
+      data.summary ||
+      '',
+
+    summary:
+      data.summary || '',
+
+    requirementType:
+      data.requirementType ||
+      'Other',
+
+    priority:
+      String(
+        data.priority ||
+        'medium'
+      ).toLowerCase(),
+
+    analysis:{
+
+      clarityScore:
+        data.clarityScore,
+
+      completenessScore:
+        data.completenessScore,
+
+      testabilityScore:
+        data.testabilityScore,
+
+      ambiguities:
+        data.ambiguities || [],
+
+      missingInformation:
+        data.missingInformation || [],
+
+      assumptions:
+        data.assumptions || [],
+
+      businessRules:
+        data.businessRules || [],
+
+      openQuestions:
+        data.openQuestions || [],
+
+      edgeCases:
+        data.edgeCases || [],
+
+      analystNotes:
+        data.analystNotes || []
+
+    }
+
+  };
+
+
+  /*
+   * Preferred storage:
+   * BAArtifactStore
+   */
+
+  try{
+
+    if(
+      window.BAArtifactStore &&
+      typeof BAArtifactStore.create === 'function'
+    ){
+
+      const existing =
+        typeof BAArtifactStore.getByType === 'function'
+          ? BAArtifactStore
+              .getByType('requirement')
+              .find(
+                item =>
+                  item &&
+                  item.metadata &&
+                  item.metadata.sourceKey ===
+                    'requirement-intelligence-current'
+              )
+          : null;
+
+
+      const metadata = {
+
+        sourceKey:
+          'requirement-intelligence-current',
 
         source:
-          "Analyzed Input",
-
-        saved:
-          "✓ Requirement saved to the BAForge workspace.",
-
-        selected:
-          "✓ Requirement selected for the current workspace.",
-
-        next:
-          "Next Step",
-
-        workflowNext:
-          "Workflow",
-
-        continue:
-          "Continue",
-
-        continueRequirement:
-          "Continue to Requirement →",
-
-        generateStory:
-          "Generate User Story →",
-
-        generateCriteria:
-          "Generate Acceptance Criteria →",
-
-        pdf:
-          "Upload PDF",
-
-        image:
-          "Upload Image",
-
-        camera:
-          "Take Photo",
-
-        removeAttachment:
-          "Remove attachment",
-
-        addSource:
-          "Add source",
-
-        analyze:
-          "Analyze",
-
-        empty:
-          "-"
-
-      },
-
-
-      tr: {
-
-        badge:
-          "Gereksinim Analizi",
-
-        title:
-          "Geliştirmeden Önce Gereksinimi Analiz Et",
-
-        subtitle:
-          "Metin, PDF veya görsel kullanın. Talimat vermek yalnızca gerektiğinde kullanılmalıdır.",
-
-        toolInfoTitle:
-          "Bu araç ne işe yarar?",
-
-        toolInfoText:
-          "Gereksinim Analizörü, ham gereksinimi inceleyerek geliştirme sürecine geçmeden önce belirsizlikleri, eksik bilgileri, varsayımları, iş kurallarını, uç durumları ve test edilebilirlik sorunlarını belirler.",
-
-        workflowContext:
-          "Gereksinim Analizörü giriş noktasıdır. Ana iş akışı Gereksinim adımıyla başlar.",
-
-        workflow: {
-          requirement: "Gereksinim",
-          userStory: "Kullanıcı Hikâyesi",
-          acceptanceCriteria: "Kabul Kriterleri",
-          uat: "UAT Test Senaryoları",
-          testData: "Test Verileri",
-          processFlow: "Süreç Akışı",
-          traceability: "İzlenebilirlik",
-          document: "BA Dokümanı"
-        },
-
-        inputTitle:
-          "BAForge AI neyi analiz etsin?",
-
-        inputDescription:
-          "Gereksinimi yazın, PDF veya görsel ekleyin ya da ikisini birlikte kullanın. Dosya eklediğinizde yazılı talimat zorunlu değildir.",
-
-        placeholder:
-          "BAForge AI'ın analiz etmesini istediğiniz gereksinimi yazın...",
-
-        hint:
-          "İsteğe bağlı: limitlere, kurallara, eksiklere veya belirli bölümlere odaklan.",
-
-        language:
-          "Çıktı Dili",
-
-        languageEnglish:
-          "İngilizce",
-
-        languageTurkish:
-          "Türkçe",
-
-        detail:
-          "Analiz Derinliği",
-
-        detailBasic:
-          "Temel",
-
-        detailProfessional:
-          "Profesyonel",
-
-        detailComprehensive:
-          "Kapsamlı",
-
-        clear:
-          "Temizle",
-
-        loading:
-          "BAForge AI girdinizi analiz ediyor...",
-
-        validation:
-          "Analiz için metin yazın veya PDF/görsel ekleyin.",
-
-        fileTooLarge:
-          "Dosya çok büyük. Lütfen 4 MB'a kadar bir dosya kullanın.",
-
-        fileType:
-          "Yalnızca PDF ve görsel dosyaları desteklenir.",
-
-        fileReady:
-          "Analize hazır",
-
-        genericError:
-          "Girdi analiz edilirken bir hata oluştu.",
-
-        result:
-          "Gereksinim Analizi",
-
-        resultSubtitle:
-          "Girdinizden oluşturulan yapılandırılmış analiz.",
-
-        complete:
-          "Analiz Tamamlandı",
-
-        detected:
-          "Bulunan Gereksinimler",
-
-        detectedDescription:
-          "Kaynakta birden fazla gereksinim bulundu. Çalışma alanında kullanmak istediğiniz gereksinimi seçebilirsiniz.",
-
-        useRequirement:
-          "Bu Gereksinimi Kullan",
-
-        requirementFallback:
-          "Gereksinim",
-
-        other:
-          "Diğer",
-
-        unknown:
-          "Bilinmiyor",
-
-        clarity:
-          "Açıklık",
-
-        completeness:
-          "Bütünlük",
-
-        testability:
-          "Test Edilebilirlik",
-
-        summary:
-          "Özet",
-
-        type:
-          "Gereksinim Türü",
-
-        priority:
-          "Öncelik",
-
-        ambiguities:
-          "Belirsizlikler",
-
-        missing:
-          "Eksik Bilgiler",
-
-        assumptions:
-          "Varsayımlar",
-
-        rules:
-          "İş Kuralları",
-
-        questions:
-          "Açık Sorular",
-
-        edgeCases:
-          "Uç Durumlar",
-
-        notes:
-          "Analist Notları",
-
-        source:
-          "Analiz Edilen Girdi",
-
-        saved:
-          "✓ Gereksinim BAForge çalışma alanına kaydedildi.",
-
-        selected:
-          "✓ Gereksinim mevcut çalışma alanı için seçildi.",
-
-        next:
-          "Sonraki Adım",
-
-        workflowNext:
-          "İş Akışı",
-
-        continue:
-          "Devam Et",
-
-        continueRequirement:
-          "Gereksinime Devam Et →",
-
-        generateStory:
-          "Kullanıcı Hikâyesi Oluştur →",
-
-        generateCriteria:
-          "Kabul Kriterleri Oluştur →",
-
-        pdf:
-          "PDF Yükle",
-
-        image:
-          "Görsel Yükle",
-
-        camera:
-          "Fotoğraf Çek",
-
-        removeAttachment:
-          "Ekli dosyayı kaldır",
-
-        addSource:
-          "Kaynak ekle",
-
-        analyze:
-          "Analiz et",
-
-        empty:
-          "-"
+          file
+            ? 'Requirement Intelligence · ' + file.name
+            : 'Requirement Intelligence',
+
+        sourceFile:
+          file
+            ? {
+                name:file.name,
+                type:file.type,
+                size:file.size
+              }
+            : null
+
+      };
+
+
+      if(existing){
+
+        BAArtifactStore.update(
+          existing.id,
+          {
+            content:requirementData,
+            metadata
+          }
+        );
+
+      }else{
+
+        BAArtifactStore.create(
+          'requirement',
+          requirementData,
+          metadata
+        );
 
       }
+
+    }
+
+  }catch(error){
+
+    console.warn(
+      'ArtifactStore save warning:',
+      error
+    );
+
+  }
+
+
+  /*
+   * Legacy bridge.
+   * Kept temporarily so older screens
+   * can still receive the requirement.
+   */
+
+  try{
+
+    if(window.BADataModel){
+
+      const legacy =
+        BADataModel.createRequirement({
+
+          title:
+            requirementData.title,
+
+          description:
+            requirementData.description,
+
+          source:
+            file
+              ? 'Requirement Intelligence · ' +
+                file.name
+              : 'Requirement Intelligence',
+
+          requirementType:
+            requirementData.requirementType,
+
+          priority:
+            requirementData.priority,
+
+          analysis:
+            requirementData.analysis
+
+        });
+
+
+      sessionStorage.setItem(
+        'baforge-current-requirement',
+        JSON.stringify(legacy)
+      );
+
+    }
+
+  }catch(error){
+
+    console.warn(
+      'Legacy requirement bridge warning:',
+      error
+    );
+
+  }
+
+
+  try{
+
+    sessionStorage.setItem(
+      'baforge-analyzer-source',
+      JSON.stringify(
+        file
+          ? {
+              name:file.name,
+              type:file.type,
+              size:file.size
+            }
+          : {}
+      )
+    );
+
+  }catch(error){}
+
+
+  $('saved').textContent =
+    T('saved');
+
+  $('saved').style.display =
+    'block';
+
+}
+
+
+/* --------------------------------------------------
+   RENDER RESULT
+-------------------------------------------------- */
+
+function render(data,original){
+
+  currentResult = data;
+
+  detected =
+    Array.isArray(data.detectedRequirements)
+      ? data.detectedRequirements
+      : [];
+
+
+  if(detected.length > 1){
+
+    $('detected').style.display =
+      'block';
+
+    $('detectedGrid').innerHTML =
+      detected
+        .map(
+          (item,index) => `
+
+            <div class="detected-card">
+
+              <h4>
+                ${
+                  esc(
+                    item.title ||
+                    ('Requirement ' + (index + 1))
+                  )
+                }
+              </h4>
+
+              <p>
+                ${
+                  esc(
+                    item.requirement ||
+                    item.summary ||
+                    ''
+                  )
+                }
+              </p>
+
+              <button
+                class="use"
+                data-index="${index}"
+                type="button"
+              >
+                ${esc(T('use'))}
+              </button>
+
+            </div>
+
+          `
+        )
+        .join('');
+
+
+    document
+      .querySelectorAll('.use')
+      .forEach(button => {
+
+        button.onclick =
+          () => {
+
+            const item =
+              detected[
+                Number(
+                  button.dataset.index
+                )
+              ];
+
+            if(!item){
+
+              return;
+
+            }
+
+            text.value =
+              item.requirement ||
+              item.summary ||
+              '';
+
+            $('count').textContent =
+              text.value.length +
+              ' / 10000';
+
+
+            const selected = {
+
+              ...data,
+
+              ...(item.analysis || {}),
+
+              title:
+                item.title ||
+                data.title,
+
+              summary:
+                item.summary ||
+                item.requirement ||
+                data.summary,
+
+              requirement:
+                item.requirement ||
+                item.summary ||
+                data.requirement,
+
+              requirementType:
+                item.requirementType ||
+                data.requirementType,
+
+              priority:
+                item.priority ||
+                data.priority
+
+            };
+
+
+            render(
+              selected,
+              text.value
+            );
+
+          };
+
+      });
+
+  }else{
+
+    $('detected').style.display =
+      'none';
+
+    $('detectedGrid').innerHTML = '';
+
+  }
+
+
+  score(
+    data.clarityScore,
+    'clarity',
+    'clarityBar'
+  );
+
+  score(
+    data.completenessScore,
+    'complete',
+    'completeBar'
+  );
+
+  score(
+    data.testabilityScore,
+    'testable',
+    'testableBar'
+  );
+
+
+  $('summary').textContent =
+    data.summary || '-';
+
+  $('type').textContent =
+    data.requirementType || '-';
+
+  $('priority').textContent =
+    data.priority || '-';
+
+
+  $('ambiguities').innerHTML =
+    list(data.ambiguities);
+
+  $('missing').innerHTML =
+    list(data.missingInformation);
+
+  $('assumptions').innerHTML =
+    list(data.assumptions);
+
+  $('rules').innerHTML =
+    list(data.businessRules);
+
+  $('questions').innerHTML =
+    list(data.openQuestions);
+
+  $('edges').innerHTML =
+    list(data.edgeCases);
+
+  $('notes').innerHTML =
+    list(data.analystNotes);
+
+
+  $('source').textContent =
+    file
+      ? file.name +
+        '\n\n' +
+        (
+          original ||
+          data.summary ||
+          ''
+        )
+      : (
+          original ||
+          data.summary ||
+          ''
+        );
+
+
+  /*
+   * Save analyzed requirement
+   * to workspace context.
+   */
+
+  saveArtifact(
+    data,
+    original ||
+      data.requirement ||
+      data.summary ||
+      ''
+  );
+
+
+  $('result').style.display =
+    'block';
+
+
+  $('result').scrollIntoView({
+    behavior:'smooth'
+  });
+
+}
+
+
+/* --------------------------------------------------
+   ANALYZE
+-------------------------------------------------- */
+
+async function analyze(){
+
+  const value =
+    text.value.trim();
+
+
+  if(!value && !file){
+
+    showError(
+      T('validation')
+    );
+
+    return;
+
+  }
+
+
+  $('error').style.display =
+    'none';
+
+  $('analyze').disabled =
+    true;
+
+  $('clear').disabled =
+    true;
+
+  $('loading').style.display =
+    'block';
+
+  $('result').style.display =
+    'none';
+
+
+  try{
+
+    let source = null;
+
+
+    if(file){
+
+      source = {
+
+        name:file.name,
+
+        type:file.type,
+
+        size:file.size,
+
+        data:
+          await dataUrl(file)
+
+      };
+
+    }
+
+
+    /*
+     * Important:
+     *
+     * The text field is treated as the
+     * user's instruction / requirement.
+     *
+     * Website language is used automatically.
+     */
+
+    const payload = {
+
+      requirement:
+        value,
+
+      instruction:
+        value,
+
+      language:
+        getWebsiteLanguage(),
+
+      websiteLanguage:
+        getWebsiteLanguage(),
+
+      detail:
+        $('detail').value,
+
+      source
 
     };
 
 
-    /*
-      ======================================================
-      ELEMENTS
-      ======================================================
-    */
+    const response =
+      await fetch(
+        '/api/requirement-analyzer',
+        {
+          method:'POST',
 
-    const languageEl =
-      document.getElementById("language");
+          headers:{
+            'Content-Type':
+              'application/json'
+          },
 
-    const requirementEl =
-      document.getElementById("requirement");
-
-    const detailEl =
-      document.getElementById("detail");
-
-    const analyzeButton =
-      document.getElementById("analyzeButton");
-
-    const clearButton =
-      document.getElementById("clearButton");
-
-    const loadingEl =
-      document.getElementById("loading");
-
-    const errorEl =
-      document.getElementById("error");
-
-    const resultEl =
-      document.getElementById("result");
-
-    const characterCount =
-      document.getElementById("characterCount");
-
-    const attachButton =
-      document.getElementById("attachButton");
-
-    const attachMenu =
-      document.getElementById("attachMenu");
-
-    const pdfInput =
-      document.getElementById("pdfInput");
-
-    const imageInput =
-      document.getElementById("imageInput");
-
-    const cameraInput =
-      document.getElementById("cameraInput");
-
-
-    let selectedFile = null;
-
-    let detectedRequirements = [];
-
-    let currentAnalysis = null;
-
-    let currentRequirementArtifact = null;
-
-
-    /*
-      ======================================================
-      TRANSLATION
-      ======================================================
-    */
-
-    function currentLanguage() {
-
-      return (
-        languageEl.value ||
-        "en"
-      );
-
-    }
-
-
-    function t(key) {
-
-      const language =
-        currentLanguage();
-
-      const dictionary =
-        pageTranslations[language] ||
-        pageTranslations.en;
-
-      const parts =
-        key.split(".");
-
-      let value =
-        dictionary;
-
-      for (
-        const part of parts
-      ) {
-
-        if (
-          value === undefined ||
-          value === null
-        ) {
-          break;
-        }
-
-        value =
-          value[part];
-
-      }
-
-      if (
-        value !== undefined &&
-        value !== null
-      ) {
-
-        return value;
-
-      }
-
-      /*
-       * Fallback for nested English keys.
-       */
-
-      let fallback =
-        pageTranslations.en;
-
-      for (
-        const part of parts
-      ) {
-
-        if (
-          fallback === undefined ||
-          fallback === null
-        ) {
-          break;
-        }
-
-        fallback =
-          fallback[part];
-
-      }
-
-      return (
-        fallback !== undefined &&
-        fallback !== null
-      )
-        ? fallback
-        : key;
-
-    }
-
-
-    function syncCoreLanguage() {
-
-      const i18n =
-        window.BAForgeI18n ||
-        window.BAI18n;
-
-      if (!i18n) {
-        return;
-      }
-
-      try {
-
-        if (
-          typeof i18n.setLanguage ===
-          "function"
-        ) {
-
-          i18n.setLanguage(
-            currentLanguage()
-          );
-
-        } else if (
-          typeof i18n.changeLanguage ===
-          "function"
-        ) {
-
-          i18n.changeLanguage(
-            currentLanguage()
-          );
+          body:
+            JSON.stringify(payload)
 
         }
-
-      } catch (error) {
-
-        console.warn(
-          "BAForge i18n synchronization failed:",
-          error
-        );
-
-      }
-
-    }
-
-
-    /*
-      ======================================================
-      WORKFLOW TRANSLATION
-      ======================================================
-    */
-
-    function updateWorkflowLanguage() {
-
-      document.getElementById(
-        "workflowContextText"
-      ).textContent =
-        t("workflowContext");
-
-      const labels = {
-
-        requirement:
-          t("workflow.requirement"),
-
-        user_story:
-          t("workflow.userStory"),
-
-        acceptance_criteria:
-          t("workflow.acceptanceCriteria"),
-
-        uat:
-          t("workflow.uat"),
-
-        test_data:
-          t("workflow.testData"),
-
-        process_flow:
-          t("workflow.processFlow"),
-
-        traceability:
-          t("workflow.traceability"),
-
-        document:
-          t("workflow.document")
-
-      };
-
-      document
-        .querySelectorAll(
-          "[data-workflow-label]"
-        )
-        .forEach(
-          element => {
-
-            const key =
-              element.dataset.workflowLabel;
-
-            if (
-              labels[key]
-            ) {
-
-              element.textContent =
-                labels[key];
-
-            }
-
-          }
-        );
-
-    }
-
-
-    /*
-      ======================================================
-      ACCESSIBILITY / COMMON LABELS
-      ======================================================
-    */
-
-    function updateAccessibilityLabels() {
-
-      document.getElementById(
-        "removeSource"
-      ).setAttribute(
-        "aria-label",
-        t("removeAttachment")
       );
 
-      document.getElementById(
-        "attachButton"
-      ).setAttribute(
-        "aria-label",
-        t("addSource")
-      );
 
-      document.getElementById(
-        "analyzeButton"
-      ).setAttribute(
-        "aria-label",
-        t("analyze")
+    const raw =
+      await response.text();
+
+
+    let data;
+
+
+    try{
+
+      data =
+        JSON.parse(raw);
+
+    }catch(error){
+
+      throw new Error(
+        T('generic')
       );
 
     }
 
 
-    /*
-      ======================================================
-      LANGUAGE
-      ======================================================
-    */
-
-    function updateLanguage() {
-
-      syncCoreLanguage();
-
-      const language =
-        currentLanguage();
-
-      document.documentElement.lang =
-        language;
-
-      document.title =
-        language === "tr"
-          ? "BAForge AI - Gereksinim Analizi"
-          : "BAForge AI - Requirement Analyzer";
-
-
-      document.getElementById("badge")
-        .textContent =
-        t("badge");
-
-      document.getElementById("pageTitle")
-        .textContent =
-        t("title");
-
-      document.getElementById("pageSubtitle")
-        .textContent =
-        t("subtitle");
-
-
-      /*
-       * Tool information card
-       */
-
-      document.getElementById(
-        "toolInfoTitle"
-      ).textContent =
-        t("toolInfoTitle");
-
-      document.getElementById(
-        "toolInfoText"
-      ).textContent =
-        t("toolInfoText");
-
-
-      updateWorkflowLanguage();
-
-
-      document.getElementById("inputTitle")
-        .textContent =
-        t("inputTitle");
-
-      document.getElementById("inputDescription")
-        .textContent =
-        t("inputDescription");
-
-      requirementEl.placeholder =
-        t("placeholder");
-
-      document.getElementById("inputHint")
-        .textContent =
-        t("hint");
-
-      document.getElementById("languageLabel")
-        .textContent =
-        t("language");
-
-      document.getElementById("detailLabel")
-        .textContent =
-        t("detail");
-
-
-      /*
-       * Localize language select options.
-       * Values remain stable for the API.
-       */
-
-      const englishOption =
-        languageEl.querySelector(
-          'option[value="en"]'
-        );
-
-      const turkishOption =
-        languageEl.querySelector(
-          'option[value="tr"]'
-        );
-
-      if (englishOption) {
-
-        englishOption.textContent =
-          t("languageEnglish");
-
-      }
-
-      if (turkishOption) {
-
-        turkishOption.textContent =
-          t("languageTurkish");
-
-      }
-
-
-      /*
-       * Localize detail select options.
-       */
-
-      const basicOption =
-        detailEl.querySelector(
-          'option[value="Basic"]'
-        );
-
-      const professionalOption =
-        detailEl.querySelector(
-          'option[value="Professional"]'
-        );
-
-      const comprehensiveOption =
-        detailEl.querySelector(
-          'option[value="Comprehensive"]'
-        );
-
-      if (basicOption) {
-
-        basicOption.textContent =
-          t("detailBasic");
-
-      }
-
-      if (professionalOption) {
-
-        professionalOption.textContent =
-          t("detailProfessional");
-
-      }
-
-      if (comprehensiveOption) {
-
-        comprehensiveOption.textContent =
-          t("detailComprehensive");
-
-      }
-
-
-      clearButton.textContent =
-        t("clear");
-
-      loadingEl.textContent =
-        t("loading");
-
-      document.getElementById("pdfOptionText")
-        .textContent =
-        t("pdf");
-
-      document.getElementById("imageOptionText")
-        .textContent =
-        t("image");
-
-      document.getElementById("cameraOptionText")
-        .textContent =
-        t("camera");
-
-
-      /*
-       * Result area
-       */
-
-      document.getElementById("resultTitle")
-        .textContent =
-        t("result");
-
-      document.getElementById("resultSubtitle")
-        .textContent =
-        t("resultSubtitle");
-
-      document.getElementById("statusPill")
-        .textContent =
-        t("complete");
-
-      document.getElementById("detectedTitle")
-        .textContent =
-        t("detected");
-
-      document.getElementById("detectedDescription")
-        .textContent =
-        t("detectedDescription");
-
-      document.getElementById("clarityLabel")
-        .textContent =
-        t("clarity");
-
-      document.getElementById("completenessLabel")
-        .textContent =
-        t("completeness");
-
-      document.getElementById("testabilityLabel")
-        .textContent =
-        t("testability");
-
-      document.getElementById("summaryLabel")
-        .textContent =
-        t("summary");
-
-      document.getElementById("typeTitle")
-        .textContent =
-        t("type");
-
-      document.getElementById("priorityTitle")
-        .textContent =
-        t("priority");
-
-      document.getElementById("ambiguitiesTitle")
-        .textContent =
-        t("ambiguities");
-
-      document.getElementById("missingTitle")
-        .textContent =
-        t("missing");
-
-      document.getElementById("assumptionsTitle")
-        .textContent =
-        t("assumptions");
-
-      document.getElementById("rulesTitle")
-        .textContent =
-        t("rules");
-
-      document.getElementById("questionsTitle")
-        .textContent =
-        t("questions");
-
-      document.getElementById("edgeCasesTitle")
-        .textContent =
-        t("edgeCases");
-
-      document.getElementById("recommendationTitle")
-        .textContent =
-        t("notes");
-
-      document.getElementById("sourceLabel")
-        .textContent =
-        t("source");
-
-      document.getElementById("nextRequirementLabel")
-        .textContent =
-        t("workflowNext");
-
-      document.getElementById("nextRequirementTitle")
-        .textContent =
-        t("continueRequirement");
-
-      document.getElementById("nextStoryLabel")
-        .textContent =
-        t("next");
-
-      document.getElementById("nextStoryTitle")
-        .textContent =
-        t("generateStory");
-
-      document.getElementById("nextCriteriaLabel")
-        .textContent =
-        t("continue");
-
-      document.getElementById("nextCriteriaTitle")
-        .textContent =
-        t("generateCriteria");
-
-
-      updateAccessibilityLabels();
-
-
-      if (
-        detectedRequirements.length > 1
-      ) {
-
-        renderDetectedRequirements(
-          detectedRequirements
-        );
-
-      }
-
-
-      updateSourceChip();
-
-    }
-
-
-    /*
-      ======================================================
-      ATTACHMENTS
-      ======================================================
-    */
-
-    function updateSourceChip() {
-
-      const chip =
-        document.getElementById(
-          "sourceChip"
-        );
-
-      if (!selectedFile) {
-
-        chip.classList.remove(
-          "visible"
-        );
-
-        return;
-
-      }
-
-
-      const isPdf =
-        selectedFile.type ===
-          "application/pdf" ||
-        selectedFile.name
-          .toLowerCase()
-          .endsWith(".pdf");
-
-
-      document.getElementById(
-        "sourceIcon"
-      ).textContent =
-        isPdf
-          ? "📄"
-          : "🖼️";
-
-
-      document.getElementById(
-        "sourceName"
-      ).textContent =
-        selectedFile.name;
-
-
-      document.getElementById(
-        "sourceMeta"
-      ).textContent =
-        `${(
-          selectedFile.size /
-          1024 /
-          1024
-        ).toFixed(2)} MB · ${t("fileReady")}`;
-
-
-      chip.classList.add(
-        "visible"
+    if(!response.ok){
+
+      throw new Error(
+        data.error ||
+        T('generic')
       );
 
     }
 
 
-    function selectFile(file) {
-
-      if (!file) {
-        return;
-      }
-
-
-      if (
-        file.size >
-        4 * 1024 * 1024
-      ) {
-
-        showError(
-          t("fileTooLarge")
-        );
-
-        return;
-
-      }
-
-
-      const isPdf =
-        file.type ===
-          "application/pdf" ||
-        file.name
-          .toLowerCase()
-          .endsWith(".pdf");
-
-
-      const isImage =
-        file.type
-          .startsWith("image/");
-
-
-      if (
-        !isPdf &&
-        !isImage
-      ) {
-
-        showError(
-          t("fileType")
-        );
-
-        return;
-
-      }
-
-
-      selectedFile =
-        file;
-
-      hideError();
-
-      updateSourceChip();
-
-      attachMenu.classList.remove(
-        "open"
-      );
-
-    }
-
-
-    function removeFile() {
-
-      selectedFile =
-        null;
-
-      pdfInput.value =
-        "";
-
-      imageInput.value =
-        "";
-
-      cameraInput.value =
-        "";
-
-      updateSourceChip();
-
-    }
-
-
-    function fileToDataUrl(file) {
-
-      return new Promise(
-        (
-          resolve,
-          reject
-        ) => {
-
-          const reader =
-            new FileReader();
-
-
-          reader.onload =
-            () => {
-
-              resolve(
-                reader.result
-              );
-
-            };
-
-
-          reader.onerror =
-            () => {
-
-              reject(
-                new Error(
-                  "Unable to read file."
-                )
-              );
-
-            };
-
-
-          reader.readAsDataURL(
-            file
-          );
-
-        }
-      );
-
-    }
-
-
-    /*
-      ======================================================
-      HELPERS
-      ======================================================
-    */
-
-    function escapeHtml(value) {
-
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    }
-
-
-    function safeArray(value) {
-
-      if (
-        Array.isArray(value)
-      ) {
-
-        return value;
-
-      }
-
-      if (
-        value === null ||
-        value === undefined ||
-        value === ""
-      ) {
-
-        return [];
-
-      }
-
-      return [value];
-
-    }
-
-
-    function normalizeScore(value) {
-
-      const score =
-        Number(value);
-
-      if (
-        !Number.isFinite(score)
-      ) {
-
-        return 0;
-
-      }
-
-      return Math.max(
-        0,
-        Math.min(
-          100,
-          Math.round(score)
-        )
-      );
-
-    }
-
-
-    function updateCharacterCount() {
-
-      characterCount.textContent =
-        `${requirementEl.value.length} / 10000`;
-
-    }
-
-
-    function showError(message) {
-
-      errorEl.textContent =
-        message;
-
-      errorEl.style.display =
-        "block";
-
-    }
-
-
-    function hideError() {
-
-      errorEl.textContent =
-        "";
-
-      errorEl.style.display =
-        "none";
-
-    }
-
-
-    /*
-      ======================================================
-      RENDER
-      ======================================================
-    */
-
-    function renderScore(
-      value,
-      scoreId,
-      barId
-    ) {
-
-      const score =
-        normalizeScore(value);
-
-
-      document.getElementById(
-        scoreId
-      ).textContent =
-        score;
-
-
-      document.getElementById(
-        barId
-      ).style.width =
-        `${score}%`;
-
-    }
-
-
-    function itemToText(item) {
-
-      if (
-        item === null ||
-        item === undefined
-      ) {
-
-        return "";
-
-      }
-
-
-      if (
-        typeof item === "string" ||
-        typeof item === "number" ||
-        typeof item === "boolean"
-      ) {
-
-        return String(item);
-
-      }
-
-
-      if (
-        typeof item === "object"
-      ) {
-
-        return (
-          item.description ||
-          item.rule ||
-          item.question ||
-          item.note ||
-          item.text ||
-          JSON.stringify(item)
-        );
-
-      }
-
-
-      return "";
-
-    }
-
-
-    function renderList(items) {
-
-      const list =
-        safeArray(items)
-          .map(itemToText)
-          .filter(Boolean);
-
-
-      if (
-        list.length === 0
-      ) {
-
-        return `
-          <div class="empty">
-            ${escapeHtml(t("empty"))}
-          </div>
-        `;
-
-      }
-
-
-      return `
-        <ul class="list">
-          ${
-            list
-              .map(
-                item => `
-                  <li>
-                    ${escapeHtml(item)}
-                  </li>
-                `
-              )
-              .join("")
-          }
-        </ul>
-      `;
-
-    }
-
-
-    function renderPriority(priority) {
-
-      const value =
-        String(
-          priority ||
-          t("unknown")
-        );
-
-
-      const normalized =
-        value.toLowerCase();
-
-
-      let className =
-        "priority-medium";
-
-
-      if (
-        normalized.includes("high") ||
-        normalized.includes("critical") ||
-        normalized.includes("yüksek") ||
-        normalized.includes("kritik")
-      ) {
-
-        className =
-          "priority-high";
-
-      }
-
-
-      if (
-        normalized.includes("low") ||
-        normalized.includes("düşük")
-      ) {
-
-        className =
-          "priority-low";
-
-      }
-
-
-      return `
-        <span class="priority ${className}">
-          ${escapeHtml(value)}
-        </span>
-      `;
-
-    }
-
-
-    /*
-      ======================================================
-      REQUIREMENT NORMALIZATION
-      ======================================================
-    */
-
-    function normalizeAnalysis(
-      data
-    ) {
-
-      const analysis =
-        data &&
-        typeof data === "object"
-          ? data
-          : {};
-
-
-      return {
-
-        title:
-          analysis.title ||
-          t("requirementFallback"),
-
-        summary:
-          analysis.summary ||
-          "",
-
-        requirementType:
-          analysis.requirementType ||
-          analysis.type ||
-          t("other"),
-
-        priority:
-          analysis.priority ||
-          t("unknown"),
-
-        clarityScore:
-          normalizeScore(
-            analysis.clarityScore
-          ),
-
-        completenessScore:
-          normalizeScore(
-            analysis.completenessScore
-          ),
-
-        testabilityScore:
-          normalizeScore(
-            analysis.testabilityScore
-          ),
-
-        ambiguities:
-          safeArray(
-            analysis.ambiguities
-          ),
-
-        missingInformation:
-          safeArray(
-            analysis.missingInformation
-          ),
-
-        assumptions:
-          safeArray(
-            analysis.assumptions
-          ),
-
-        businessRules:
-          safeArray(
-            analysis.businessRules
-          ),
-
-        openQuestions:
-          safeArray(
-            analysis.openQuestions
-          ),
-
-        edgeCases:
-          safeArray(
-            analysis.edgeCases
-          ),
-
-        analystNotes:
-          safeArray(
-            analysis.analystNotes
-          ),
-
-        primaryRequirement:
-          analysis.primaryRequirement ||
-          "",
-
-        detectedRequirements:
-          Array.isArray(
-            analysis.detectedRequirements
-          )
-            ? analysis.detectedRequirements
-            : []
-
-      };
-
-    }
-
-
-    /*
-      ======================================================
-      ARTIFACT STORE
-      ======================================================
-    */
-
-    function buildRequirementArtifact(
+    render(
       data,
-      originalRequirement,
-      sourceInfo
-    ) {
+      data.primaryRequirement ||
+      data.requirement ||
+      value
+    );
 
-      const normalized =
-        normalizeAnalysis(
-          data
-        );
 
+  }catch(error){
 
-      const description =
-        normalized.primaryRequirement ||
-        originalRequirement ||
-        normalized.summary ||
-        "";
+    console.error(error);
 
+    showError(
+      error.message ||
+      T('generic')
+    );
 
-      const requirementData = {
+  }finally{
 
-        title:
-          normalized.title,
+    $('analyze').disabled =
+      false;
 
-        description,
+    $('clear').disabled =
+      false;
 
-        requirement:
-          description,
+    $('loading').style.display =
+      'none';
 
-        summary:
-          normalized.summary,
+  }
 
-        requirementType:
-          normalized.requirementType,
+}
 
-        priority:
-          normalized.priority,
 
-        analysis: {
+/* --------------------------------------------------
+   PLUS MENU
+-------------------------------------------------- */
 
-          clarityScore:
-            normalized.clarityScore,
+$('plus').onclick =
+  event => {
 
-          completenessScore:
-            normalized.completenessScore,
+    event.stopPropagation();
 
-          testabilityScore:
-            normalized.testabilityScore,
+    $('menu')
+      .classList
+      .toggle('open');
 
-          ambiguities:
-            normalized.ambiguities,
+  };
 
-          missingInformation:
-            normalized.missingInformation,
 
-          assumptions:
-            normalized.assumptions,
+document.onclick =
+  event => {
 
-          businessRules:
-            normalized.businessRules,
+    if(
+      !event.target.closest('.plus')
+    ){
 
-          openQuestions:
-            normalized.openQuestions,
-
-          edgeCases:
-            normalized.edgeCases,
-
-          analystNotes:
-            normalized.analystNotes
-
-        },
-
-        detectedRequirements:
-          normalized.detectedRequirements
-
-      };
-
-
-      const source =
-        sourceInfo
-          ? {
-              type:
-                sourceInfo.type ||
-                "",
-
-              name:
-                sourceInfo.name ||
-                "",
-
-              size:
-                sourceInfo.size ||
-                null
-            }
-          : null;
-
-
-      /*
-       * Prefer the centralized Artifact Store.
-       *
-       * The legacy sessionStorage bridge is kept
-       * temporarily for older workflow screens.
-       */
-
-      if (
-        window.BAArtifactStore &&
-        typeof window.BAArtifactStore.create ===
-          "function"
-      ) {
-
-        let existing = null;
-
-
-        try {
-
-          if (
-            typeof window.BAArtifactStore.getByType ===
-            "function"
-          ) {
-
-            existing =
-              window.BAArtifactStore
-                .getByType("requirement")
-                .find(
-                  artifact =>
-                    artifact.metadata &&
-                    artifact.metadata
-                      .sourceKey ===
-                    "requirement-analyzer-current"
-                );
-
-          }
-
-        } catch (error) {
-
-          console.warn(
-            "Could not read existing requirement artifacts:",
-            error
-          );
-
-        }
-
-
-        let artifact;
-
-
-        if (
-          existing &&
-          typeof window.BAArtifactStore.update ===
-            "function"
-        ) {
-
-          artifact =
-            window.BAArtifactStore.update(
-              existing.id,
-              {
-
-                title:
-                  requirementData.title,
-
-                content:
-                  requirementData,
-
-                metadata: {
-
-                  sourceKey:
-                    "requirement-analyzer-current",
-
-                  sourceTool:
-                    "requirement-analyzer",
-
-                  language:
-                    currentLanguage(),
-
-                  detail:
-                    detailEl.value,
-
-                  analyzerVersion:
-                    "1.2",
-
-                  detectedRequirementCount:
-                    normalized
-                      .detectedRequirements
-                      .length
-
-                },
-
-                source
-
-              }
-            );
-
-        } else {
-
-          artifact =
-            window.BAArtifactStore.create(
-              "requirement",
-              requirementData,
-              {
-
-                title:
-                  requirementData.title,
-
-                metadata: {
-
-                  sourceKey:
-                    "requirement-analyzer-current",
-
-                  sourceTool:
-                    "requirement-analyzer",
-
-                  language:
-                    currentLanguage(),
-
-                  detail:
-                    detailEl.value,
-
-                  analyzerVersion:
-                    "1.2",
-
-                  detectedRequirementCount:
-                    normalized
-                      .detectedRequirements
-                      .length
-
-                },
-
-                source
-
-              }
-            );
-
-        }
-
-
-        currentRequirementArtifact =
-          artifact;
-
-
-        return artifact;
-
-      }
-
-
-      return null;
+      $('menu')
+        .classList
+        .remove('open');
 
     }
 
+  };
 
-    /*
-      ======================================================
-      LEGACY WORKSPACE BRIDGE
-      ======================================================
-    */
 
-    function saveLegacyRequirement(
-      artifact,
-      data,
-      originalRequirement,
-      sourceInfo
-    ) {
+/* --------------------------------------------------
+   FILE INPUTS
+-------------------------------------------------- */
 
-      const normalized =
-        normalizeAnalysis(
-          data
-        );
+$('pdf').onclick =
+  () => $('pdfInput').click();
 
+$('image').onclick =
+  () => $('imageInput').click();
 
-      const requirement = {
+$('camera').onclick =
+  () => $('cameraInput').click();
 
-        id:
-          artifact?.id ||
-          `req-${Date.now()}`,
 
-        type:
-          "requirement",
-
-        title:
-          normalized.title,
-
-        description:
-          artifact?.content?.description ||
-          originalRequirement ||
-          normalized.summary ||
-          "",
-
-        requirement:
-          artifact?.content?.description ||
-          originalRequirement ||
-          normalized.summary ||
-          "",
-
-        summary:
-          normalized.summary,
-
-        requirementType:
-          normalized.requirementType,
-
-        priority:
-          normalized.priority,
-
-        analysis: {
-
-          clarityScore:
-            normalized.clarityScore,
-
-          completenessScore:
-            normalized.completenessScore,
-
-          testabilityScore:
-            normalized.testabilityScore,
-
-          ambiguities:
-            normalized.ambiguities,
-
-          missingInformation:
-            normalized.missingInformation,
-
-          assumptions:
-            normalized.assumptions,
-
-          businessRules:
-            normalized.businessRules,
-
-          openQuestions:
-            normalized.openQuestions,
-
-          edgeCases:
-            normalized.edgeCases,
-
-          analystNotes:
-            normalized.analystNotes
-
-        },
-
-        detectedRequirements:
-          normalized.detectedRequirements,
-
-        source:
-          sourceInfo
-            ? `Requirement Analyzer · ${sourceInfo.name || "source"}`
-            : "Requirement Analyzer",
-
-        createdAt:
-          artifact?.createdAt ||
-          new Date().toISOString(),
-
-        updatedAt:
-          artifact?.updatedAt ||
-          new Date().toISOString()
-
-      };
-
-
-      try {
-
-        sessionStorage.setItem(
-          "baforge-current-requirement",
-          JSON.stringify(
-            requirement
-          )
-        );
-
-
-        sessionStorage.setItem(
-          "baforge-analyzer-source",
-          JSON.stringify(
-            sourceInfo || {}
-          )
-        );
-
-      } catch (error) {
-
-        console.warn(
-          "Legacy workspace bridge could not be saved:",
-          error
-        );
-
-      }
-
-
-      return requirement;
-
-    }
-
-
-    /*
-      ======================================================
-      SAVE REQUIREMENT
-      ======================================================
-    */
-
-    function saveRequirementToWorkspace(
-      data,
-      originalRequirement,
-      sourceInfo
-    ) {
-
-      const normalized =
-        normalizeAnalysis(
-          data
-        );
-
-
-      const artifact =
-        buildRequirementArtifact(
-          normalized,
-          originalRequirement,
-          sourceInfo
-        );
-
-
-      saveLegacyRequirement(
-        artifact,
-        normalized,
-        originalRequirement,
-        sourceInfo
-      );
-
-
-      const savedIndicator =
-        document.getElementById(
-          "savedIndicator"
-        );
-
-
-      savedIndicator.style.display =
-        "block";
-
-
-      savedIndicator.textContent =
-        t("saved");
-
-
-      return artifact;
-
-    }
-
-
-    /*
-      ======================================================
-      DETECTED REQUIREMENTS
-      ======================================================
-    */
-
-    function renderDetectedRequirements(
-      items
-    ) {
-
-      detectedRequirements =
-        Array.isArray(items)
-          ? items
-          : [];
-
-
-      const section =
-        document.getElementById(
-          "detectedSection"
-        );
-
-      const grid =
-        document.getElementById(
-          "detectedGrid"
-        );
-
-
-      if (
-        detectedRequirements.length <= 1
-      ) {
-
-        section.style.display =
-          "none";
-
-        grid.innerHTML =
-          "";
-
-        return;
-
-      }
-
-
-      section.style.display =
-        "block";
-
-
-      grid.innerHTML =
-        detectedRequirements
-          .map(
-            (
-              item,
-              index
-            ) => {
-
-              const title =
-                item.title ||
-                `${t("requirementFallback")} ${index + 1}`;
-
-
-              const text =
-                item.requirement ||
-                item.description ||
-                item.summary ||
-                "";
-
-
-              return `
-                <div class="detected-card">
-
-                  <h4>
-                    ${escapeHtml(title)}
-                  </h4>
-
-                  <p>
-                    ${escapeHtml(text)}
-                  </p>
-
-                  <button
-                    type="button"
-                    class="use-requirement"
-                    data-index="${index}">
-                    ${escapeHtml(t("useRequirement"))}
-                  </button>
-
-                </div>
-              `;
-
-            }
-          )
-          .join("");
-
-
-      grid
-        .querySelectorAll(
-          ".use-requirement"
-        )
-        .forEach(
-          button => {
-
-            button.addEventListener(
-              "click",
-              () => {
-
-                selectDetectedRequirement(
-                  Number(
-                    button.dataset.index
-                  )
-                );
-
-              }
-            );
-
-          }
-        );
-
-    }
-
-
-    function selectDetectedRequirement(
-      index
-    ) {
-
-      const item =
-        detectedRequirements[index];
-
-
-      if (!item) {
-        return;
-      }
-
-
-      const selected =
-        normalizeAnalysis(
-          item
-        );
-
-
-      const text =
-        selected.primaryRequirement ||
-        item.requirement ||
-        item.description ||
-        item.summary ||
-        item.title ||
-        "";
-
-
-      requirementEl.value =
-        text;
-
-
-      updateCharacterCount();
-
-
-      currentAnalysis =
-        selected;
-
-
-      renderResult(
-        selected,
-        text,
-        selectedFile
-          ? {
-              name:
-                selectedFile.name,
-
-              type:
-                selectedFile.type,
-
-              size:
-                selectedFile.size
-            }
-          : null
-      );
-
-
-      document.getElementById(
-        "savedIndicator"
-      ).textContent =
-        t("selected");
-
-    }
-
-
-    /*
-      ======================================================
-      MAIN RESULT
-      ======================================================
-    */
-
-    function renderResult(
-      data,
-      originalRequirement,
-      sourceInfo
-    ) {
-
-      const normalized =
-        normalizeAnalysis(
-          data
-        );
-
-
-      currentAnalysis =
-        normalized;
-
-
-      renderDetectedRequirements(
-        normalized.detectedRequirements
-      );
-
-
-      renderScore(
-        normalized.clarityScore,
-        "clarityScore",
-        "clarityBar"
-      );
-
-
-      renderScore(
-        normalized.completenessScore,
-        "completenessScore",
-        "completenessBar"
-      );
-
-
-      renderScore(
-        normalized.testabilityScore,
-        "testabilityScore",
-        "testabilityBar"
-      );
-
-
-      document.getElementById(
-        "summary"
-      ).textContent =
-        normalized.summary ||
-        t("empty");
-
-
-      document.getElementById(
-        "requirementType"
-      ).textContent =
-        normalized.requirementType ||
-        t("empty");
-
-
-      document.getElementById(
-        "priority"
-      ).innerHTML =
-        renderPriority(
-          normalized.priority
-        );
-
-
-      document.getElementById(
-        "ambiguities"
-      ).innerHTML =
-        renderList(
-          normalized.ambiguities
-        );
-
-
-      document.getElementById(
-        "missingInformation"
-      ).innerHTML =
-        renderList(
-          normalized.missingInformation
-        );
-
-
-      document.getElementById(
-        "assumptions"
-      ).innerHTML =
-        renderList(
-          normalized.assumptions
-        );
-
-
-      document.getElementById(
-        "businessRules"
-      ).innerHTML =
-        renderList(
-          normalized.businessRules
-        );
-
-
-      document.getElementById(
-        "openQuestions"
-      ).innerHTML =
-        renderList(
-          normalized.openQuestions
-        );
-
-
-      document.getElementById(
-        "edgeCases"
-      ).innerHTML =
-        renderList(
-          normalized.edgeCases
-        );
-
-
-      document.getElementById(
-        "analystNotes"
-      ).innerHTML =
-        renderList(
-          normalized.analystNotes
-        );
-
-
-      let sourceText =
-        originalRequirement ||
-        normalized.primaryRequirement ||
-        normalized.summary ||
-        "";
-
-
-      if (
-        sourceInfo &&
-        sourceInfo.name
-      ) {
-
-        sourceText =
-          sourceInfo.name +
-          (
-            sourceText
-              ? `\n\n${sourceText}`
-              : ""
-          );
-
-      }
-
-
-      document.getElementById(
-        "sourceRequirement"
-      ).textContent =
-        sourceText;
-
-
-      /*
-       * Save the structured requirement
-       * to the centralized artifact store.
-       */
-
-      saveRequirementToWorkspace(
-        normalized,
-        normalized.primaryRequirement ||
-        originalRequirement ||
-        normalized.summary ||
-        "",
-        sourceInfo
-      );
-
-
-      resultEl.style.display =
-        "block";
-
-
-      resultEl.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-
-    }
-
-
-    /*
-      ======================================================
-      ANALYZE
-      ======================================================
-    */
-
-    async function analyzeInput() {
-
-      hideError();
-
-
-      const requirement =
-        requirementEl.value.trim();
-
-
-      /*
-       * Text is optional when a source
-       * file is attached.
-       */
-
-      if (
-        !requirement &&
-        !selectedFile
-      ) {
-
-        showError(
-          t("validation")
-        );
-
-        return;
-
-      }
-
-
-      analyzeButton.disabled =
-        true;
-
-      clearButton.disabled =
-        true;
-
-      loadingEl.style.display =
-        "block";
-
-      resultEl.style.display =
-        "none";
-
-
-      document.getElementById(
-        "savedIndicator"
-      ).style.display =
-        "none";
-
-
-      try {
-
-        let source =
-          null;
-
-
-        if (
-          selectedFile
-        ) {
-
-          const dataUrl =
-            await fileToDataUrl(
-              selectedFile
-            );
-
-
-          source = {
-
-            name:
-              selectedFile.name,
-
-            type:
-              selectedFile.type,
-
-            size:
-              selectedFile.size,
-
-            data:
-              dataUrl
-
-          };
-
-        }
-
-
-        const response =
-          await fetch(
-            "/api/requirement-analyzer",
-            {
-
-              method:
-                "POST",
-
-              headers: {
-
-                "Content-Type":
-                  "application/json"
-
-              },
-
-              body:
-                JSON.stringify({
-
-                  requirement,
-
-                  instruction:
-                    requirement,
-
-                  language:
-                    languageEl.value,
-
-                  detail:
-                    detailEl.value,
-
-                  source
-
-                })
-
-            }
-          );
-
-
-        const raw =
-          await response.text();
-
-
-        let data;
-
-
-        try {
-
-          data =
-            JSON.parse(raw);
-
-        } catch {
-
-          throw new Error(
-            t("genericError")
-          );
-
-        }
-
-
-        if (
-          !response.ok
-        ) {
-
-          throw new Error(
-            data.error ||
-            t("genericError")
-          );
-
-        }
-
-
-        if (
-          !data ||
-          typeof data !== "object"
-        ) {
-
-          throw new Error(
-            t("genericError")
-          );
-
-        }
-
-
-        const normalized =
-          normalizeAnalysis(
-            data
-          );
-
-
-        renderResult(
-          normalized,
-          requirement,
-          source
-            ? {
-                name:
-                  source.name,
-
-                type:
-                  source.type,
-
-                size:
-                  source.size
-              }
-            : null
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "Requirement Analyzer error:",
-          error
-        );
-
-
-        showError(
-          error.message ||
-          t("genericError")
-        );
-
-      } finally {
-
-        analyzeButton.disabled =
-          false;
-
-        clearButton.disabled =
-          false;
-
-        loadingEl.style.display =
-          "none";
-
-      }
-
-    }
-
-
-    /*
-      ======================================================
-      CLEAR
-      ======================================================
-    */
-
-    function clearForm() {
-
-      requirementEl.value =
-        "";
-
-      selectedFile =
-        null;
-
-      detectedRequirements =
-        [];
-
-      currentAnalysis =
-        null;
-
-      currentRequirementArtifact =
-        null;
-
-
-      pdfInput.value =
-        "";
-
-      imageInput.value =
-        "";
-
-      cameraInput.value =
-        "";
-
-
-      updateCharacterCount();
-
-      updateSourceChip();
-
-      hideError();
-
-
-      resultEl.style.display =
-        "none";
-
-
-      document.getElementById(
-        "savedIndicator"
-      ).style.display =
-        "none";
-
-
-      document.getElementById(
-        "detectedSection"
-      ).style.display =
-        "none";
-
-
-      document.getElementById(
-        "detectedGrid"
-      ).innerHTML =
-        "";
-
-
-      requirementEl.focus();
-
-    }
-
-
-    /*
-      ======================================================
-      EVENTS
-      ======================================================
-    */
-
-    attachButton.addEventListener(
-      "click",
-      event => {
-
-        event.stopPropagation();
-
-        attachMenu.classList.toggle(
-          "open"
-        );
-
-      }
+$('pdfInput').onchange =
+  event =>
+    pick(
+      event.target.files[0]
     );
 
 
-    document.addEventListener(
-      "click",
-      event => {
-
-        if (
-          !event.target.closest(
-            ".plus-wrap"
-          )
-        ) {
-
-          attachMenu.classList.remove(
-            "open"
-          );
-
-        }
-
-      }
+$('imageInput').onchange =
+  event =>
+    pick(
+      event.target.files[0]
     );
 
 
-    document.getElementById(
-      "pdfOption"
-    ).addEventListener(
-      "click",
-      () => {
-
-        attachMenu.classList.remove(
-          "open"
-        );
-
-        pdfInput.click();
-
-      }
+$('cameraInput').onchange =
+  event =>
+    pick(
+      event.target.files[0]
     );
 
 
-    document.getElementById(
-      "imageOption"
-    ).addEventListener(
-      "click",
-      () => {
+/* --------------------------------------------------
+   REMOVE FILE
+-------------------------------------------------- */
 
-        attachMenu.classList.remove(
-          "open"
-        );
+$('remove').onclick =
+  () => {
 
-        imageInput.click();
+    file = null;
 
-      }
-    );
+    $('pdfInput').value = '';
+    $('imageInput').value = '';
+    $('cameraInput').value = '';
 
+    chip();
 
-    document.getElementById(
-      "cameraOption"
-    ).addEventListener(
-      "click",
-      () => {
+  };
 
-        attachMenu.classList.remove(
-          "open"
-        );
 
-        cameraInput.click();
+/* --------------------------------------------------
+   TEXT COUNTER
+-------------------------------------------------- */
 
-      }
-    );
+text.oninput =
+  () => {
 
+    $('count').textContent =
+      text.value.length +
+      ' / 10000';
 
-    pdfInput.addEventListener(
-      "change",
-      event => {
+  };
 
-        selectFile(
-          event.target.files[0]
-        );
 
-      }
-    );
+/* --------------------------------------------------
+   CLEAR
+-------------------------------------------------- */
 
+$('clear').onclick =
+  () => {
 
-    imageInput.addEventListener(
-      "change",
-      event => {
+    text.value = '';
 
-        selectFile(
-          event.target.files[0]
-        );
+    $('count').textContent =
+      '0 / 10000';
 
-      }
-    );
+    file = null;
 
+    chip();
 
-    cameraInput.addEventListener(
-      "change",
-      event => {
+    $('result').style.display =
+      'none';
 
-        selectFile(
-          event.target.files[0]
-        );
+    $('saved').style.display =
+      'none';
 
-      }
-    );
+    $('error').style.display =
+      'none';
 
+    text.focus();
 
-    document.getElementById(
-      "removeSource"
-    ).addEventListener(
-      "click",
-      removeFile
-    );
+  };
 
 
-    requirementEl.addEventListener(
-      "input",
-      updateCharacterCount
-    );
+/* --------------------------------------------------
+   ANALYZE BUTTON
+-------------------------------------------------- */
 
+$('analyze').onclick =
+  analyze;
 
-    languageEl.addEventListener(
-      "change",
-      () => {
 
-        syncCoreLanguage();
+/* --------------------------------------------------
+   INITIALIZE
+-------------------------------------------------- */
 
-        updateLanguage();
+applyLanguage();
 
-        /*
-         * Inform the rest of BAForge that the
-         * page language changed.
-         */
-        try {
 
-          window.dispatchEvent(
-            new CustomEvent(
-              "baforge:language-changed",
-              {
-                detail: {
-                  language:
-                    currentLanguage()
-                }
-              }
-            )
-          );
+/*
+ * If the central i18n module exposes
+ * language change events, refresh this page
+ * automatically when the website language changes.
+ */
 
-        } catch (error) {
+window.addEventListener(
+  'baforge-language-changed',
+  applyLanguage
+);
 
-          console.warn(
-            "Could not dispatch language event:",
-            error
-          );
+</script>
 
-        }
 
-      }
-    );
-
-
-    analyzeButton.addEventListener(
-      "click",
-      analyzeInput
-    );
-
-
-    clearButton.addEventListener(
-      "click",
-      clearForm
-    );
-
-
-    requirementEl.addEventListener(
-      "keydown",
-      event => {
-
-        if (
-          (
-            event.ctrlKey ||
-            event.metaKey
-          ) &&
-          event.key === "Enter"
-        ) {
-
-          event.preventDefault();
-
-          analyzeInput();
-
-        }
-
-      }
-    );
-
-
-    /*
-      ======================================================
-      GLOBAL LANGUAGE EVENTS
-      ======================================================
-    */
-
-    window.addEventListener(
-      "baforge:language-ready",
-      event => {
-
-        const lang =
-          event.detail?.language;
-
-
-        if (
-          lang === "tr" ||
-          lang === "en"
-        ) {
-
-          languageEl.value =
-            lang;
-
-          updateLanguage();
-
-        }
-
-      }
-    );
-
-
-    window.addEventListener(
-      "baforge:language-changed",
-      event => {
-
-        const lang =
-          event.detail?.language;
-
-
-        if (
-          lang === "tr" ||
-          lang === "en"
-        ) {
-
-          if (
-            languageEl.value !==
-            lang
-          ) {
-
-            languageEl.value =
-              lang;
-
-            updateLanguage();
-
-          }
-
-        }
-
-      }
-    );
-
-
-    /*
-      ======================================================
-      INITIALIZE
-      ======================================================
-    */
-
-    function initialize() {
-
-      const i18n =
-        window.BAForgeI18n ||
-        window.BAI18n;
-
-
-      if (
-        i18n &&
-        typeof i18n.getLanguage ===
-          "function"
-      ) {
-
-        try {
-
-          const savedLanguage =
-            i18n.getLanguage();
-
-
-          if (
-            savedLanguage === "en" ||
-            savedLanguage === "tr"
-          ) {
-
-            languageEl.value =
-              savedLanguage;
-
-          }
-
-        } catch (error) {
-
-          console.warn(
-            "Could not restore BAForge language:",
-            error
-          );
-
-        }
-
-      } else {
-
-        const savedLanguage =
-          localStorage.getItem(
-            "baforge-language"
-          );
-
-
-        if (
-          savedLanguage === "en" ||
-          savedLanguage === "tr"
-        ) {
-
-          languageEl.value =
-            savedLanguage;
-
-        }
-
-      }
-
-
-      updateLanguage();
-
-      updateCharacterCount();
-
-      updateSourceChip();
-
-    }
-
-
-    initialize();
-
-  </script>
-
-
-  <script src="/nav.js"></script>
+<script src="/nav.js"></script>
 
 </body>
-
 </html>
