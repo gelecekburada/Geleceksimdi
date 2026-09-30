@@ -518,6 +518,11 @@ select{
   color:#fff
 }
 
+.small-button:disabled{
+  opacity:.5;
+  cursor:not-allowed
+}
+
 .detected{
   display:none;
   margin:24px 0
@@ -891,8 +896,6 @@ select{
 </section>
 
 
-<!-- NASIL ÇALIŞIR -->
-
 <details class="help">
 
   <summary id="helpTitle">
@@ -1163,8 +1166,6 @@ select{
   ></div>
 
 
-  <!-- GEÇMİŞ -->
-
   <div class="history">
 
     <div class="history-head">
@@ -1192,8 +1193,6 @@ select{
 
 </section>
 
-
-<!-- RESULT -->
 
 <section
   class="card result"
@@ -1223,8 +1222,6 @@ select{
 
   </div>
 
-
-  <!-- SEÇİM -->
 
   <div
     class="selection-bar"
@@ -1261,6 +1258,7 @@ select{
         class="small-button blue"
         id="transferSelected"
         type="button"
+        disabled
       >
         Seçilenleri Gereksinimlere Aktar
       </button>
@@ -1269,8 +1267,6 @@ select{
 
   </div>
 
-
-  <!-- BULUNAN GEREKSİNİMLER -->
 
   <div
     class="detected"
@@ -1300,8 +1296,6 @@ select{
 
   </div>
 
-
-  <!-- SCORES -->
 
   <div class="scores">
 
@@ -1391,8 +1385,6 @@ select{
   </div>
 
 
-  <!-- SUMMARY -->
-
   <div class="summary">
 
     <small>
@@ -1404,10 +1396,7 @@ select{
   </div>
 
 
-  <!-- DETAIL -->
-
   <div class="grid">
-
 
     <div class="box">
 
@@ -1415,9 +1404,7 @@ select{
         Gereksinim Türü
       </h3>
 
-      <p id="type">
-        -
-      </p>
+      <p id="type">-</p>
 
     </div>
 
@@ -1428,9 +1415,7 @@ select{
         Öncelik
       </h3>
 
-      <p id="priority">
-        -
-      </p>
+      <p id="priority">-</p>
 
     </div>
 
@@ -1514,8 +1499,6 @@ select{
   </div>
 
 
-  <!-- SOURCE -->
-
   <div class="source">
 
     <small>
@@ -1529,8 +1512,6 @@ select{
 
   </div>
 
-
-  <!-- SAVE -->
 
   <div
     class="save-panel"
@@ -1567,8 +1548,6 @@ select{
     ✓ Analiz çalışma alanına kaydedildi.
   </div>
 
-
-  <!-- NEXT -->
 
   <div class="next">
 
@@ -1626,8 +1605,6 @@ select{
   </div>
 
 
-  <!-- TEK ANA CTA -->
-
   <a
     class="continue"
     id="continueButton"
@@ -1662,17 +1639,28 @@ select{
 <script src="/core/relationship-engine.js"></script>
 <script src="/core/i18n.js"></script>
 
-
 <script>
+
+(function(){
+
+"use strict";
+
+
+/* ==================================================
+   SAFE DOM
+================================================== */
 
 const $ = id =>
   document.getElementById(id);
 
+
 const text =
   $('requirement');
 
+
 const HISTORY_KEY =
   'baforge-requirement-analysis-history';
+
 
 let file = null;
 
@@ -1682,9 +1670,11 @@ let currentOriginal = '';
 
 let detected = [];
 
-let selectedIndexes = new Set();
+let selectedIndexes =
+  new Set();
 
-let currentHistoryId = null;
+let currentHistoryId =
+  null;
 
 
 /* ==================================================
@@ -1697,18 +1687,35 @@ function websiteLanguage(){
 
     if(
       window.BAI18n &&
-      typeof BAI18n.getLanguage === 'function'
+      typeof window.BAI18n.getLanguage ===
+        'function'
     ){
 
-      return BAI18n.getLanguage() === 'tr'
+      return window.BAI18n.getLanguage() ===
+        'tr'
         ? 'tr'
         : 'en';
 
     }
 
-  }catch(e){}
+  }catch(error){
+
+    console.warn(
+      'Language detection warning:',
+      error
+    );
+
+  }
 
   return 'tr';
+
+}
+
+
+function applyLanguage(){
+
+  document.documentElement.lang =
+    websiteLanguage();
 
 }
 
@@ -1798,32 +1805,41 @@ function localizePriority(value){
 
 
 /* ==================================================
-   HELP TEXT
+   ESCAPE
 ================================================== */
 
-function applyLanguage(){
+function esc(value){
 
-  document.documentElement.lang =
-    websiteLanguage();
+  return String(
+    value ?? ''
+  )
+    .replace(
+      /&/g,
+      '&amp;'
+    )
+    .replace(
+      /</g,
+      '&lt;'
+    )
+    .replace(
+      />/g,
+      '&gt;'
+    )
+    .replace(
+      /"/g,
+      '&quot;'
+    )
+    .replace(
+      /'/g,
+      '&#039;'
+    );
 
 }
 
 
 /* ==================================================
-   HELPERS
+   LIST
 ================================================== */
-
-function esc(value){
-
-  return String(value ?? '')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#039;');
-
-}
-
 
 function list(values){
 
@@ -1832,23 +1848,33 @@ function list(values){
     values.length === 0
   ){
 
-    return '<div class="empty">-</div>';
+    return `
+      <div class="empty">
+        -
+      </div>
+    `;
 
   }
+
 
   return `
     <ul class="list">
       ${
         values
-          .map(item =>
-            `<li>${
-              esc(
-                typeof item === 'object'
-                  ? JSON.stringify(item)
-                  : item
-              )
-            }</li>`
-          )
+          .map(item => {
+
+            const value =
+              typeof item === 'object'
+                ? JSON.stringify(item)
+                : item;
+
+            return `
+              <li>
+                ${esc(value)}
+              </li>
+            `;
+
+          })
           .join('')
       }
     </ul>
@@ -1857,7 +1883,15 @@ function list(values){
 }
 
 
-function score(value,id,bar){
+/* ==================================================
+   SCORE
+================================================== */
+
+function score(
+  value,
+  id,
+  bar
+){
 
   const number =
     Math.max(
@@ -1870,8 +1904,10 @@ function score(value,id,bar){
       )
     );
 
+
   $(id).textContent =
     number;
+
 
   $(bar).style.width =
     number + '%';
@@ -1880,47 +1916,101 @@ function score(value,id,bar){
 
 
 /* ==================================================
-   FILE
+   ERROR
 ================================================== */
 
-function chip(){
+function showError(message){
+
+  const error =
+    $('error');
+
+
+  if(!error){
+    return;
+  }
+
+
+  error.textContent =
+    String(
+      message ||
+      'Beklenmeyen bir hata oluştu.'
+    );
+
+
+  error.style.display =
+    'block';
+
+}
+
+
+function clearError(){
+
+  $('error').style.display =
+    'none';
+
+}
+
+
+/* ==================================================
+   FILE CHIP
+================================================== */
+
+function renderChip(){
 
   if(!file){
 
     $('chip')
       .classList
-      .remove('show');
+      .remove(
+        'show'
+      );
 
     return;
 
   }
 
+
   $('chip')
     .classList
-    .add('show');
+    .add(
+      'show'
+    );
+
 
   $('chipIcon').textContent =
-    file.type === 'application/pdf'
+    file.type ===
+      'application/pdf'
       ? '📄'
       : '🖼️';
+
 
   $('chipName').textContent =
     file.name;
 
+
   $('chipMeta').textContent =
     (
-      file.size / 1048576
+      file.size /
+      1048576
     ).toFixed(2)
-    + ' MB · Analize hazır';
+    +
+    ' MB · Analize hazır';
 
 }
 
 
-function pick(fileObject){
+/* ==================================================
+   PICK FILE
+================================================== */
+
+function pick(
+  fileObject
+){
 
   if(!fileObject){
     return;
   }
+
 
   if(
     fileObject.size >
@@ -1935,15 +2025,21 @@ function pick(fileObject){
 
   }
 
+
   const valid =
     fileObject.type ===
       'application/pdf' ||
+
     fileObject.type.startsWith(
       'image/'
     ) ||
+
     fileObject.name
       .toLowerCase()
-      .endsWith('.pdf');
+      .endsWith(
+        '.pdf'
+      );
+
 
   if(!valid){
 
@@ -1955,33 +2051,78 @@ function pick(fileObject){
 
   }
 
+
+  clearError();
+
+
   file =
     fileObject;
 
-  chip();
+
+  renderChip();
+
 
   $('menu')
     .classList
-    .remove('open');
+    .remove(
+      'open'
+    );
 
 }
 
 
-async function dataUrl(fileObject){
+/* ==================================================
+   FILE TO DATA URL
+================================================== */
+
+function dataUrl(
+  fileObject
+){
 
   return new Promise(
-    (resolve,reject) => {
+    (
+      resolve,
+      reject
+    ) => {
 
       const reader =
         new FileReader();
 
+
       reader.onload =
-        () => resolve(
-          reader.result
-        );
+        () => {
+
+          if(
+            typeof reader.result !==
+            'string'
+          ){
+
+            reject(
+              new Error(
+                'Dosya okunamadı.'
+              )
+            );
+
+            return;
+
+          }
+
+
+          resolve(
+            reader.result
+          );
+
+        };
+
 
       reader.onerror =
-        reject;
+        () =>
+          reject(
+            new Error(
+              'Dosya okunurken hata oluştu.'
+            )
+          );
+
 
       reader.readAsDataURL(
         fileObject
@@ -1989,21 +2130,6 @@ async function dataUrl(fileObject){
 
     }
   );
-
-}
-
-
-/* ==================================================
-   ERROR
-================================================== */
-
-function showError(message){
-
-  $('error').textContent =
-    message;
-
-  $('error').style.display =
-    'block';
 
 }
 
@@ -2021,18 +2147,30 @@ function readHistory(){
         HISTORY_KEY
       );
 
+
     if(!value){
       return [];
     }
 
-    const parsed =
-      JSON.parse(value);
 
-    return Array.isArray(parsed)
+    const parsed =
+      JSON.parse(
+        value
+      );
+
+
+    return Array.isArray(
+      parsed
+    )
       ? parsed
       : [];
 
-  }catch(e){
+  }catch(error){
+
+    console.warn(
+      'History read failed:',
+      error
+    );
 
     return [];
 
@@ -2041,21 +2179,29 @@ function readHistory(){
 }
 
 
-function writeHistory(items){
+function writeHistory(
+  items
+){
 
   try{
 
     localStorage.setItem(
       HISTORY_KEY,
-      JSON.stringify(items)
+      JSON.stringify(
+        items
+      )
     );
 
-  }catch(e){
+    return true;
+
+  }catch(error){
 
     console.warn(
-      'History save failed',
-      e
+      'History save failed:',
+      error
     );
+
+    return false;
 
   }
 
@@ -2073,22 +2219,31 @@ function makeHistoryTitle(){
 
   }
 
+
   if(
     currentResult &&
     currentResult.summary
   ){
 
     return currentResult.summary
-      .slice(0,80);
+      .slice(
+        0,
+        80
+      );
 
   }
+
 
   if(currentOriginal){
 
     return currentOriginal
-      .slice(0,80);
+      .slice(
+        0,
+        80
+      );
 
   }
+
 
   if(file){
 
@@ -2096,10 +2251,15 @@ function makeHistoryTitle(){
 
   }
 
+
   return 'Gereksinim Analizi';
 
 }
 
+
+/* ==================================================
+   SAVE HISTORY
+================================================== */
 
 function saveToHistory(){
 
@@ -2107,8 +2267,10 @@ function saveToHistory(){
     return null;
   }
 
+
   const items =
     readHistory();
+
 
   const id =
     currentHistoryId ||
@@ -2134,9 +2296,14 @@ function saveToHistory(){
     source:
       file
         ? {
-            name:file.name,
-            type:file.type,
-            size:file.size
+            name:
+              file.name,
+
+            type:
+              file.type,
+
+            size:
+              file.size
           }
         : null,
 
@@ -2153,19 +2320,21 @@ function saveToHistory(){
 
   const filtered =
     items.filter(
-      x => x.id !== id
+      x =>
+        x.id !== id
     );
 
 
-  filtered.unshift(item);
+  filtered.unshift(
+    item
+  );
 
-
-  /*
-   * Only last 5 are kept.
-   */
 
   writeHistory(
-    filtered.slice(0,5)
+    filtered.slice(
+      0,
+      5
+    )
   );
 
 
@@ -2178,10 +2347,15 @@ function saveToHistory(){
 }
 
 
+/* ==================================================
+   RENDER HISTORY
+================================================== */
+
 function renderHistory(){
 
   const listEl =
     $('historyList');
+
 
   const items =
     readHistory();
@@ -2210,45 +2384,50 @@ function renderHistory(){
               item.createdAt
             );
 
+
           const dateText =
-            isNaN(date.getTime())
+            isNaN(
+              date.getTime()
+            )
               ? ''
               : date.toLocaleString(
                   'tr-TR',
                   {
-                    day:'2-digit',
-                    month:'2-digit',
-                    year:'numeric',
-                    hour:'2-digit',
-                    minute:'2-digit'
+                    day:
+                      '2-digit',
+
+                    month:
+                      '2-digit',
+
+                    year:
+                      'numeric',
+
+                    hour:
+                      '2-digit',
+
+                    minute:
+                      '2-digit'
                   }
                 );
 
 
           return `
+            <div class="history-item">
 
-            <div
-              class="history-item"
-            >
+              <div class="history-info">
 
-              <div
-                class="history-info"
-              >
-
-                <div
-                  class="history-title"
-                >
+                <div class="history-title">
                   ${esc(item.title)}
                 </div>
 
-                <div
-                  class="history-meta"
-                >
+                <div class="history-meta">
                   ${esc(dateText)}
                   ${
                     item.source
                       ? ' · ' +
-                        esc(item.source.name)
+                        esc(
+                          item.source.name
+                        )
                       : ''
                   }
                 </div>
@@ -2264,7 +2443,6 @@ function renderHistory(){
               </button>
 
             </div>
-
           `;
 
         }
@@ -2276,27 +2454,40 @@ function renderHistory(){
     .querySelectorAll(
       '.history-open'
     )
-    .forEach(button => {
+    .forEach(
+      button => {
 
-      button.onclick =
-        () =>
-          openHistory(
-            button.dataset.historyId
-          );
+        button.addEventListener(
+          'click',
+          () =>
+            openHistory(
+              button.dataset
+                .historyId
+            )
+        );
 
-    });
+      }
+    );
 
 }
 
 
-function openHistory(id){
+/* ==================================================
+   OPEN HISTORY
+================================================== */
+
+function openHistory(
+  id
+){
 
   const items =
     readHistory();
 
+
   const item =
     items.find(
-      x => x.id === id
+      x =>
+        x.id === id
     );
 
 
@@ -2308,11 +2499,14 @@ function openHistory(id){
   currentHistoryId =
     item.id;
 
+
   currentResult =
     item.result;
 
+
   currentOriginal =
     item.original || '';
+
 
   detected =
     Array.isArray(
@@ -2332,11 +2526,15 @@ function openHistory(id){
     );
 
 
-  file = null;
+  file =
+    null;
+
 
   $('chip')
     .classList
-    .remove('show');
+    .remove(
+      'show'
+    );
 
 
   text.value =
@@ -2356,6 +2554,7 @@ function openHistory(id){
 
   $('saved').textContent =
     '✓ Geçmiş analiz açıldı.';
+
 
   $('saved').style.display =
     'block';
@@ -2378,7 +2577,7 @@ function saveArtifactToWorkspace(){
 
     if(
       window.BAArtifactStore &&
-      typeof BAArtifactStore.create ===
+      typeof window.BAArtifactStore.create ===
         'function'
     ){
 
@@ -2397,6 +2596,7 @@ function saveArtifactToWorkspace(){
         requirement:
           currentOriginal ||
           currentResult.requirement ||
+          currentResult.primaryRequirement ||
           currentResult.summary ||
           '',
 
@@ -2489,12 +2689,16 @@ function saveArtifactToWorkspace(){
 
 
   /*
-   * Legacy bridge for Requirement screen.
+   * Legacy bridge.
    */
 
   try{
 
-    if(window.BADataModel){
+    if(
+      window.BADataModel &&
+      typeof window.BADataModel.createRequirement ===
+        'function'
+    ){
 
       const legacy =
         BADataModel.createRequirement({
@@ -2598,6 +2802,10 @@ function saveAnalysis(){
 
   if(!currentResult){
 
+    showError(
+      'Önce bir analiz oluşturun.'
+    );
+
     return;
 
   }
@@ -2611,12 +2819,14 @@ function saveAnalysis(){
   $('saved').textContent =
     '✓ Analiz kaydedildi. Son 5 analiz içinde tutuluyor.';
 
+
   $('saved').style.display =
     'block';
 
 
   $('saveAnalysis').textContent =
     '✓ Kaydedildi';
+
 
   $('saveAnalysis').disabled =
     true;
@@ -2628,7 +2838,7 @@ function saveAnalysis(){
 
 
 /* ==================================================
-   REQUIREMENT SELECTION
+   SELECTION
 ================================================== */
 
 function updateSelection(){
@@ -2639,12 +2849,16 @@ function updateSelection(){
 
 
   detected.forEach(
-    (item,index) => {
+    (
+      item,
+      index
+    ) => {
 
       const card =
         document.querySelector(
           `[data-card-index="${index}"]`
         );
+
 
       const checkbox =
         document.querySelector(
@@ -2656,7 +2870,9 @@ function updateSelection(){
 
         card.classList.toggle(
           'selected',
-          selectedIndexes.has(index)
+          selectedIndexes.has(
+            index
+          )
         );
 
       }
@@ -2665,7 +2881,9 @@ function updateSelection(){
       if(checkbox){
 
         checkbox.checked =
-          selectedIndexes.has(index);
+          selectedIndexes.has(
+            index
+          );
 
       }
 
@@ -2685,17 +2903,25 @@ function updateSelection(){
 }
 
 
-function toggleRequirement(index){
+function toggleRequirement(
+  index
+){
 
   if(
-    selectedIndexes.has(index)
+    selectedIndexes.has(
+      index
+    )
   ){
 
-    selectedIndexes.delete(index);
+    selectedIndexes.delete(
+      index
+    );
 
   }else{
 
-    selectedIndexes.add(index);
+    selectedIndexes.add(
+      index
+    );
 
   }
 
@@ -2705,10 +2931,16 @@ function toggleRequirement(index){
 }
 
 
+/* ==================================================
+   RENDER DETECTED
+================================================== */
+
 function renderDetected(){
 
   if(
-    !Array.isArray(detected) ||
+    !Array.isArray(
+      detected
+    ) ||
     detected.length === 0
   ){
 
@@ -2730,11 +2962,16 @@ function renderDetected(){
   $('detectedGrid').innerHTML =
     detected
       .map(
-        (item,index) => `
+        (
+          item,
+          index
+        ) => `
 
           <div
             class="detected-card ${
-              selectedIndexes.has(index)
+              selectedIndexes.has(
+                index
+              )
                 ? 'selected'
                 : ''
             }"
@@ -2746,7 +2983,9 @@ function renderDetected(){
               type="checkbox"
               data-checkbox-index="${index}"
               ${
-                selectedIndexes.has(index)
+                selectedIndexes.has(
+                  index
+                )
                   ? 'checked'
                   : ''
               }
@@ -2758,7 +2997,9 @@ function renderDetected(){
                   item.title ||
                   (
                     'Gereksinim ' +
-                    (index + 1)
+                    (
+                      index + 1
+                    )
                   )
                 )
               }
@@ -2774,7 +3015,6 @@ function renderDetected(){
               }
             </p>
 
-
             <button
               class="details-button"
               type="button"
@@ -2782,7 +3022,6 @@ function renderDetected(){
             >
               Detayları Gör
             </button>
-
 
             <div
               class="requirement-details"
@@ -2870,10 +3109,12 @@ function renderDetected(){
                   .detailsIndex
               );
 
+
             const box =
               document.querySelector(
                 `[data-details-box="${index}"]`
               );
+
 
             if(box){
 
@@ -2922,17 +3163,15 @@ function transferSelected(){
         index =>
           detected[index]
       )
-      .filter(Boolean);
+      .filter(
+        Boolean
+      );
 
 
   if(!selected.length){
     return;
   }
 
-
-  /*
-   * Store all selected requirements.
-   */
 
   sessionStorage.setItem(
     'baforge-selected-requirements',
@@ -2941,14 +3180,6 @@ function transferSelected(){
     )
   );
 
-
-  /*
-   * Requirement screen currently
-   * expects a single current requirement.
-   *
-   * Therefore first selected item is
-   * also placed in the legacy bridge.
-   */
 
   const first =
     selected[0];
@@ -3014,9 +3245,14 @@ function transferSelected(){
     JSON.stringify(
       file
         ? {
-            name:file.name,
-            type:file.type,
-            size:file.size
+            name:
+              file.name,
+
+            type:
+              file.type,
+
+            size:
+              file.size
           }
         : {}
     )
@@ -3029,7 +3265,8 @@ function transferSelected(){
 
   $('continueButton')
     .scrollIntoView({
-      behavior:'smooth'
+      behavior:
+        'smooth'
     });
 
 }
@@ -3047,30 +3284,26 @@ function renderResult(
   currentResult =
     data;
 
+
   currentOriginal =
     original || '';
 
 
   detected =
     Array.isArray(
-      data.detectedRequirements
+      data?.detectedRequirements
     )
       ? data.detectedRequirements
       : [];
 
 
-  /*
-   * If the API returns one requirement
-   * but no detectedRequirements array,
-   * create one so the user can still select it.
-   */
-
   if(
     detected.length === 0 &&
     (
-      data.title ||
-      data.requirement ||
-      data.summary
+      data?.title ||
+      data?.primaryRequirement ||
+      data?.requirement ||
+      data?.summary
     )
   ){
 
@@ -3089,6 +3322,7 @@ function renderResult(
 
         requirement:
           data.requirement ||
+          data.primaryRequirement ||
           original ||
           data.summary ||
           '',
@@ -3104,7 +3338,8 @@ function renderResult(
           data.priority,
 
         analysis:
-          data.analysis || data
+          data.analysis ||
+          data
 
       }
 
@@ -3113,94 +3348,91 @@ function renderResult(
   }
 
 
-  /*
-   * Reset selection when a new result
-   * is rendered, except when opening history.
-   */
-
-  if(
-    !currentHistoryId ||
-    currentHistoryId !==
-      $('result').dataset.historyId
-  ){
-
-    selectedIndexes =
-      new Set();
-
-  }
-
-
   renderDetected();
 
 
   score(
-    data.clarityScore,
+    data?.clarityScore,
     'clarity',
     'clarityBar'
   );
 
+
   score(
-    data.completenessScore,
+    data?.completenessScore,
     'complete',
     'completeBar'
   );
 
+
   score(
-    data.testabilityScore,
+    data?.testabilityScore,
     'testable',
     'testableBar'
   );
 
 
+  $('resultTitle').textContent =
+    data?.title ||
+    'Gereksinim Analizi';
+
+
   $('summary').textContent =
-    data.summary || '-';
+    data?.summary ||
+    '-';
 
 
   $('type').textContent =
     localizeType(
-      data.requirementType
+      data?.requirementType
     );
 
 
   $('priority').textContent =
     localizePriority(
-      data.priority
+      data?.priority
     );
 
 
   $('ambiguities').innerHTML =
     list(
-      data.ambiguities
+      data?.ambiguities
     );
+
 
   $('missing').innerHTML =
     list(
-      data.missingInformation
+      data?.missingInformation
     );
+
 
   $('assumptions').innerHTML =
     list(
-      data.assumptions
+      data?.assumptions
     );
+
 
   $('rules').innerHTML =
     list(
-      data.businessRules
+      data?.businessRules
     );
+
 
   $('questions').innerHTML =
     list(
-      data.openQuestions
+      data?.openQuestions
     );
+
 
   $('edges').innerHTML =
     list(
-      data.edgeCases
+      data?.edgeCases
     );
+
 
   $('notes').innerHTML =
     list(
-      data.analystNotes
+      data?.analystNotes
     );
 
 
@@ -3211,13 +3443,13 @@ function renderResult(
           '\n\n' +
           (
             original ||
-            data.summary ||
+            data?.summary ||
             ''
           )
         )
       : (
           original ||
-          data.summary ||
+          data?.summary ||
           ''
         );
 
@@ -3226,23 +3458,23 @@ function renderResult(
     'block';
 
 
-  /*
-   * Every fresh analysis starts unsaved.
-   */
-
   $('saved').style.display =
     'none';
 
+
   $('saveAnalysis').disabled =
     false;
+
 
   $('saveAnalysis').textContent =
     'Analizi Kaydet';
 
 
-  $('result').scrollIntoView({
-    behavior:'smooth'
-  });
+  $('result')
+    .scrollIntoView({
+      behavior:
+        'smooth'
+    });
 
 }
 
@@ -3252,6 +3484,9 @@ function renderResult(
 ================================================== */
 
 async function analyze(){
+
+  clearError();
+
 
   const value =
     text.value.trim();
@@ -3271,17 +3506,25 @@ async function analyze(){
   }
 
 
-  $('error').style.display =
-    'none';
+  const analyzeButton =
+    $('analyze');
 
-  $('analyze').disabled =
+
+  analyzeButton.disabled =
     true;
+
 
   $('clear').disabled =
     true;
 
+
   $('loading').style.display =
     'block';
+
+
+  $('loading').textContent =
+    'AI girdinizi analiz ediyor...';
+
 
   $('result').style.display =
     'none';
@@ -3289,10 +3532,21 @@ async function analyze(){
 
   try{
 
-    let source = null;
+    let source =
+      null;
 
 
     if(file){
+
+      $('loading').textContent =
+        'Dosya hazırlanıyor...';
+
+
+      const encoded =
+        await dataUrl(
+          file
+        );
+
 
       source = {
 
@@ -3306,11 +3560,15 @@ async function analyze(){
           file.size,
 
         data:
-          await dataUrl(file)
+          encoded
 
       };
 
     }
+
+
+    $('loading').textContent =
+      'AI girdinizi analiz ediyor...';
 
 
     const language =
@@ -3342,7 +3600,9 @@ async function analyze(){
       await fetch(
         '/api/requirement-analyzer',
         {
-          method:'POST',
+
+          method:
+            'POST',
 
           headers:{
             'Content-Type':
@@ -3368,21 +3628,30 @@ async function analyze(){
     try{
 
       data =
-        JSON.parse(raw);
+        JSON.parse(
+          raw
+        );
 
-    }catch(e){
+    }catch(error){
 
       throw new Error(
-        'Sunucudan geçerli bir analiz sonucu alınamadı.'
+        raw
+          ? raw.slice(
+              0,
+              500
+            )
+          : 'Sunucudan geçerli bir analiz sonucu alınamadı.'
       );
 
     }
 
 
-    if(!response.ok){
+    if(
+      !response.ok
+    ){
 
       throw new Error(
-        data.error ||
+        data?.error ||
         'Analiz sırasında bir hata oluştu.'
       );
 
@@ -3392,34 +3661,41 @@ async function analyze(){
     currentHistoryId =
       null;
 
+
     selectedIndexes =
       new Set();
 
 
     renderResult(
       data,
-      data.primaryRequirement ||
-      data.requirement ||
+      data?.primaryRequirement ||
+      data?.requirement ||
       value
     );
 
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      'Requirement Intelligence error:',
+      error
+    );
+
 
     showError(
-      error.message ||
-      'Analiz sırasında bir hata oluştu.'
+      error?.message ||
+      'Analiz sırasında beklenmeyen bir hata oluştu.'
     );
 
   }finally{
 
-    $('analyze').disabled =
+    analyzeButton.disabled =
       false;
+
 
     $('clear').disabled =
       false;
+
 
     $('loading').style.display =
       'none';
@@ -3430,205 +3706,296 @@ async function analyze(){
 
 
 /* ==================================================
+   ANALYZE BUTTON
+   IMPORTANT: THIS WAS MISSING
+================================================== */
+
+$('analyze').addEventListener(
+  'click',
+  analyze
+);
+
+
+/* ==================================================
    MENU
 ================================================== */
 
-$('plus').onclick =
+$('plus').addEventListener(
+  'click',
   event => {
 
     event.stopPropagation();
 
     $('menu')
       .classList
-      .toggle('open');
+      .toggle(
+        'open'
+      );
 
-  };
+  }
+);
 
 
-document.onclick =
+document.addEventListener(
+  'click',
   event => {
 
     if(
-      !event.target.closest('.plus')
+      !event.target.closest(
+        '.plus'
+      )
     ){
 
       $('menu')
         .classList
-        .remove('open');
+        .remove(
+          'open'
+        );
 
     }
 
-  };
+  }
+);
 
 
-$('pdf').onclick =
+$('pdf').addEventListener(
+  'click',
   () =>
-    $('pdfInput').click();
+    $('pdfInput').click()
+);
 
 
-$('image').onclick =
+$('image').addEventListener(
+  'click',
   () =>
-    $('imageInput').click();
+    $('imageInput').click()
+);
 
 
-$('camera').onclick =
+$('camera').addEventListener(
+  'click',
   () =>
-    $('cameraInput').click();
+    $('cameraInput').click()
+);
 
 
-$('pdfInput').onchange =
+$('pdfInput').addEventListener(
+  'change',
   event =>
     pick(
-      event.target.files[0]
-    );
+      event.target.files?.[0]
+    )
+);
 
 
-$('imageInput').onchange =
+$('imageInput').addEventListener(
+  'change',
   event =>
     pick(
-      event.target.files[0]
-    );
+      event.target.files?.[0]
+    )
+);
 
 
-$('cameraInput').onchange =
+$('cameraInput').addEventListener(
+  'change',
   event =>
     pick(
-      event.target.files[0]
-    );
+      event.target.files?.[0]
+    )
+);
 
 
 /* ==================================================
    REMOVE FILE
 ================================================== */
 
-$('remove').onclick =
+$('remove').addEventListener(
+  'click',
   () => {
 
-    file = null;
+    file =
+      null;
 
-    $('pdfInput').value = '';
-    $('imageInput').value = '';
-    $('cameraInput').value = '';
 
-    chip();
+    $('pdfInput').value =
+      '';
 
-  };
+
+    $('imageInput').value =
+      '';
+
+
+    $('cameraInput').value =
+      '';
+
+
+    renderChip();
+
+  }
+);
 
 
 /* ==================================================
    COUNTER
 ================================================== */
 
-text.oninput =
+text.addEventListener(
+  'input',
   () => {
 
     $('count').textContent =
       text.value.length +
       ' / 10000';
 
-  };
+  }
+);
 
 
 /* ==================================================
    CLEAR
 ================================================== */
 
-$('clear').onclick =
+$('clear').addEventListener(
+  'click',
   () => {
 
-    text.value = '';
+    text.value =
+      '';
+
 
     $('count').textContent =
       '0 / 10000';
 
-    file = null;
 
-    detected = [];
+    file =
+      null;
+
+
+    detected =
+      [];
+
 
     selectedIndexes =
       new Set();
 
+
     currentResult =
       null;
+
 
     currentOriginal =
       '';
 
+
     currentHistoryId =
       null;
 
-    chip();
+
+    $('pdfInput').value =
+      '';
+
+
+    $('imageInput').value =
+      '';
+
+
+    $('cameraInput').value =
+      '';
+
+
+    renderChip();
+
 
     $('result').style.display =
       'none';
 
+
     $('saved').style.display =
       'none';
 
-    $('error').style.display =
-      'none';
+
+    clearError();
+
 
     text.focus();
 
-  };
+  }
+);
 
 
 /* ==================================================
    SAVE
 ================================================== */
 
-$('saveAnalysis').onclick =
-  saveAnalysis;
+$('saveAnalysis').addEventListener(
+  'click',
+  saveAnalysis
+);
 
 
 /* ==================================================
    SELECT ALL
 ================================================== */
 
-$('selectAll').onclick =
+$('selectAll').addEventListener(
+  'click',
   () => {
 
     selectedIndexes =
       new Set(
         detected.map(
-          (_,index) => index
+          (
+            item,
+            index
+          ) =>
+            index
         )
       );
 
+
     updateSelection();
 
-  };
+  }
+);
 
 
 /* ==================================================
    CLEAR SELECTION
 ================================================== */
 
-$('clearSelection').onclick =
+$('clearSelection').addEventListener(
+  'click',
   () => {
 
     selectedIndexes =
       new Set();
 
+
     updateSelection();
 
-  };
+  }
+);
 
 
 /* ==================================================
    TRANSFER
 ================================================== */
 
-$('transferSelected').onclick =
-  transferSelected;
+$('transferSelected').addEventListener(
+  'click',
+  transferSelected
+);
 
 
 /* ==================================================
    REFRESH HISTORY
 ================================================== */
 
-$('refreshHistory').onclick =
-  renderHistory;
+$('refreshHistory').addEventListener(
+  'click',
+  renderHistory
+);
 
 
 /* ==================================================
@@ -3639,8 +4006,39 @@ applyLanguage();
 
 renderHistory();
 
-</script>
 
+/* ==================================================
+   GLOBAL JS ERROR
+================================================== */
+
+window.addEventListener(
+  'error',
+  event => {
+
+    console.error(
+      'Page JavaScript error:',
+      event.error
+    );
+
+  }
+);
+
+
+window.addEventListener(
+  'unhandledrejection',
+  event => {
+
+    console.error(
+      'Unhandled promise rejection:',
+      event.reason
+    );
+
+  }
+);
+
+})();
+
+</script>
 
 <script src="/nav.js"></script>
 
