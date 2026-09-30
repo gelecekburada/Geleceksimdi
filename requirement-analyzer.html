@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -16,7 +16,8 @@
   --b:#e4e7ec;
   --bg:#f6f8fc;
   --ok:#15803d;
-  --err:#b42318
+  --err:#b42318;
+  --dark:#101828
 }
 
 body{
@@ -31,13 +32,13 @@ body{
 
 main{
   max-width:1240px;
-  margin:52px auto;
+  margin:48px auto;
   padding:0 20px
 }
 
 .hero{
   text-align:center;
-  margin-bottom:32px
+  margin-bottom:30px
 }
 
 .badge{
@@ -63,7 +64,7 @@ main{
 .hero p{
   color:var(--m);
   font-size:18px;
-  max-width:760px;
+  max-width:780px;
   margin:auto
 }
 
@@ -73,7 +74,7 @@ main{
   border:1px solid var(--b);
   border-radius:18px;
   box-shadow:0 12px 35px rgba(16,24,40,.08);
-  margin-bottom:26px
+  margin-bottom:24px
 }
 
 .card-title{
@@ -82,10 +83,65 @@ main{
 }
 
 .card-description{
-  margin:0 0 22px;
+  margin:0 0 20px;
   color:var(--m);
   font-size:14px
 }
+
+/* HELP */
+
+.help{
+  border:1px solid #dbe5ff;
+  background:#f8fbff;
+  border-radius:14px;
+  margin-bottom:22px;
+  overflow:hidden
+}
+
+.help summary{
+  cursor:pointer;
+  padding:15px 17px;
+  font-weight:800;
+  color:#1d4ed8;
+  list-style:none
+}
+
+.help summary::-webkit-details-marker{
+  display:none
+}
+
+.help summary:before{
+  content:"ⓘ";
+  margin-right:8px
+}
+
+.help-body{
+  padding:0 18px 18px;
+  color:#475467;
+  font-size:14px
+}
+
+.help-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:12px
+}
+
+.help-step{
+  padding:14px;
+  background:#fff;
+  border:1px solid var(--b);
+  border-radius:11px
+}
+
+.help-step b{
+  display:block;
+  margin-bottom:4px;
+  color:var(--t)
+}
+
+/* COMPOSER */
 
 .composer{
   border:1px solid #d0d5dd;
@@ -122,8 +178,7 @@ textarea{
   border-radius:0 0 16px 16px
 }
 
-.left,
-.right{
+.left,.right{
   display:flex;
   align-items:center;
   gap:8px
@@ -166,13 +221,13 @@ textarea{
   position:absolute;
   left:0;
   bottom:48px;
-  width:200px;
+  width:205px;
   padding:7px;
   background:#fff;
   border:1px solid var(--b);
   border-radius:13px;
   box-shadow:0 14px 32px rgba(16,24,40,.14);
-  z-index:5
+  z-index:10
 }
 
 .menu.open{
@@ -241,6 +296,8 @@ textarea{
   color:#98a2b3
 }
 
+/* OPTIONS */
+
 .options{
   display:grid;
   grid-template-columns:1fr;
@@ -266,32 +323,104 @@ select{
 
 .actions{
   display:flex;
-  gap:12px;
+  gap:10px;
   margin-top:20px
 }
 
-.secondary{
+.secondary,
+.primary{
   padding:13px 18px;
-  border:1px solid #d0d5dd;
-  background:#fff;
   border-radius:11px;
   font-weight:700;
   cursor:pointer
 }
 
+.secondary{
+  border:1px solid #d0d5dd;
+  background:#fff
+}
+
 .primary{
-  padding:13px 18px;
   border:0;
   background:var(--p);
-  color:#fff;
-  border-radius:11px;
-  font-weight:700;
-  cursor:pointer
+  color:#fff
 }
 
 .primary:hover{
   background:var(--pd)
 }
+
+/* HISTORY */
+
+.history{
+  margin-top:22px
+}
+
+.history-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:12px
+}
+
+.history-head h3{
+  margin:0
+}
+
+.history-list{
+  display:grid;
+  gap:8px
+}
+
+.history-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 15px;
+  border:1px solid var(--b);
+  border-radius:11px;
+  background:#fff
+}
+
+.history-info{
+  min-width:0
+}
+
+.history-title{
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+.history-meta{
+  color:var(--m);
+  font-size:11px;
+  margin-top:2px
+}
+
+.history-open{
+  flex:none;
+  padding:8px 12px;
+  border:1px solid #bfd0f8;
+  background:#eef4ff;
+  color:#1d4ed8;
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.history-empty{
+  padding:16px;
+  border:1px dashed var(--b);
+  border-radius:11px;
+  color:var(--m);
+  font-size:13px
+}
+
+/* STATUS */
 
 .loading,
 .error{
@@ -313,6 +442,8 @@ select{
   color:var(--err);
   border:1px solid #fecaca
 }
+
+/* RESULT */
 
 .result{
   display:none
@@ -346,6 +477,130 @@ select{
   font-weight:800;
   white-space:nowrap
 }
+
+/* SELECTED */
+
+.selection-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
+  margin-bottom:18px;
+  background:#f8fbff;
+  border:1px solid #dbe5ff;
+  border-radius:12px
+}
+
+.selection-count{
+  font-weight:800;
+  color:#1d4ed8
+}
+
+.selection-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap
+}
+
+.small-button{
+  padding:9px 12px;
+  border-radius:8px;
+  border:1px solid #d0d5dd;
+  background:#fff;
+  cursor:pointer;
+  font-weight:700
+}
+
+.small-button.blue{
+  background:#2563eb;
+  border-color:#2563eb;
+  color:#fff
+}
+
+.detected{
+  display:none;
+  margin:24px 0
+}
+
+.detected-title-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px
+}
+
+.detected-title-row h3{
+  margin:0
+}
+
+.detected-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px
+}
+
+.detected-card{
+  position:relative;
+  padding:17px;
+  border:1px solid var(--b);
+  border-radius:13px;
+  background:#fff;
+  transition:.15s
+}
+
+.detected-card.selected{
+  border-color:#8db1ff;
+  background:#f8fbff;
+  box-shadow:0 0 0 2px rgba(37,99,235,.08)
+}
+
+.detected-card h4{
+  margin:0 0 7px;
+  padding-right:28px
+}
+
+.detected-card p{
+  margin:0 0 13px;
+  color:var(--m);
+  font-size:13px
+}
+
+.select-check{
+  position:absolute;
+  top:17px;
+  right:17px;
+  width:20px;
+  height:20px;
+  accent-color:#2563eb;
+  cursor:pointer
+}
+
+.requirement-details{
+  display:none;
+  margin-top:10px;
+  padding:11px;
+  background:#f8fafc;
+  border-radius:9px;
+  color:#475467;
+  font-size:12px
+}
+
+.requirement-details.open{
+  display:block
+}
+
+.details-button{
+  padding:8px 10px;
+  border:1px solid #d0d5dd;
+  background:#fff;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700
+}
+
+/* SCORES */
 
 .scores{
   display:grid;
@@ -386,6 +641,8 @@ select{
   background:linear-gradient(90deg,#60a5fa,#2563eb);
   width:0
 }
+
+/* CONTENT */
 
 .summary{
   margin:24px 0;
@@ -458,44 +715,6 @@ select{
   font-size:14px
 }
 
-.detected{
-  display:none;
-  margin:24px 0
-}
-
-.detected-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px
-}
-
-.detected-card{
-  padding:16px;
-  border:1px solid var(--b);
-  border-radius:13px
-}
-
-.detected-card h4{
-  margin:0 0 6px
-}
-
-.detected-card p{
-  margin:0 0 12px;
-  color:var(--m);
-  font-size:13px
-}
-
-.use{
-  width:100%;
-  padding:10px;
-  border:1px solid #bfd0f8;
-  background:#eef4ff;
-  color:#1d4ed8;
-  border-radius:9px;
-  font-weight:700;
-  cursor:pointer
-}
-
 .saved{
   display:none;
   color:var(--ok);
@@ -504,17 +723,43 @@ select{
   margin-top:12px
 }
 
+/* SAVE */
+
+.save-panel{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-top:20px;
+  padding:16px;
+  background:#f8fafc;
+  border:1px solid var(--b);
+  border-radius:13px
+}
+
+.save-panel-text b{
+  display:block;
+  margin-bottom:2px
+}
+
+.save-panel-text span{
+  color:var(--m);
+  font-size:12px
+}
+
+/* NEXT */
+
 .next{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:14px;
-  margin-top:24px
+  gap:12px;
+  margin-top:22px
 }
 
 .next a{
-  padding:17px;
+  padding:16px;
   border:1px solid var(--b);
-  border-radius:14px;
+  border-radius:13px;
   text-decoration:none;
   color:var(--t);
   background:#fff
@@ -528,7 +773,7 @@ select{
 .next small{
   display:block;
   color:var(--m);
-  font-size:11px;
+  font-size:10px;
   font-weight:800;
   text-transform:uppercase;
   margin-bottom:5px
@@ -538,8 +783,10 @@ select{
   font-size:14px
 }
 
+/* SINGLE CTA */
+
 .continue{
-  margin-top:22px;
+  margin-top:18px;
   padding:18px 20px;
   border-radius:14px;
   background:#101828;
@@ -554,7 +801,7 @@ select{
 .continue small{
   display:block;
   opacity:.7;
-  font-size:11px;
+  font-size:10px;
   text-transform:uppercase;
   font-weight:800;
   margin-bottom:3px
@@ -569,6 +816,7 @@ select{
 }
 
 @media(max-width:900px){
+
   .scores,
   .next,
   .detected-grid{
@@ -582,11 +830,17 @@ select{
   .box.full{
     grid-column:auto
   }
+
+  .help-grid{
+    grid-template-columns:1fr
+  }
+
 }
 
 @media(max-width:700px){
+
   main{
-    margin:35px auto
+    margin:30px auto
   }
 
   .hero h1{
@@ -604,7 +858,15 @@ select{
   .left .meta{
     display:none
   }
+
+  .selection-bar,
+  .save-panel{
+    align-items:flex-start;
+    flex-direction:column
+  }
+
 }
+
 </style>
 </head>
 
@@ -613,26 +875,95 @@ select{
 <main>
 
 <section class="hero">
-  <div class="badge" id="badge">Requirement Intelligence</div>
+
+  <div class="badge">
+    Requirement Intelligence
+  </div>
 
   <h1 id="title">
-    Analyze Requirements Before You Build
+    Geliştirmeden Önce Gereksinimi Analiz Et
   </h1>
 
   <p id="subtitle">
-    Turn requirements, documents and visual inputs into structured analysis before development begins.
+    Gereksinimleri, dokümanları ve görsel girdileri geliştirme öncesinde yapılandırılmış analize dönüştürün.
   </p>
+
 </section>
+
+
+<!-- NASIL ÇALIŞIR -->
+
+<details class="help">
+
+  <summary id="helpTitle">
+    Bu ekran nasıl çalışır?
+  </summary>
+
+  <div class="help-body">
+
+    <p id="helpIntro">
+      Requirement Intelligence, geliştirmeye başlamadan önce gereksinimleri anlamlandırmak ve eksikleri ortaya çıkarmak için kullanılır.
+    </p>
+
+    <div class="help-grid">
+
+      <div class="help-step">
+        <b>1. Girdi ekle</b>
+        <span id="help1">
+          Metin yazın veya + butonundan PDF/görsel ekleyin.
+        </span>
+      </div>
+
+      <div class="help-step">
+        <b>2. Talimat ver</b>
+        <span id="help2">
+          İsterseniz “3-5. sayfaları incele ve transfer gereksinimlerini çıkar” gibi doğal dilde talimat yazın.
+        </span>
+      </div>
+
+      <div class="help-step">
+        <b>3. Analiz et</b>
+        <span id="help3">
+          AI gereksinimleri, belirsizlikleri, eksikleri, iş kurallarını ve kenar durumlarını çıkarır.
+        </span>
+      </div>
+
+      <div class="help-step">
+        <b>4. Gereksinimleri seç</b>
+        <span id="help4">
+          Bulunan gereksinimlerden birini veya birden fazlasını seçebilirsiniz.
+        </span>
+      </div>
+
+      <div class="help-step">
+        <b>5. Analizi kaydet</b>
+        <span id="help5">
+          Analizi kaydettiğinizde geçmiş analizler bölümünden tekrar açabilirsiniz.
+        </span>
+      </div>
+
+      <div class="help-step">
+        <b>6. İş akışına devam et</b>
+        <span id="help6">
+          Seçtiğiniz gereksinimleri Requirement ekranına aktarabilirsiniz.
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+</details>
 
 
 <section class="card">
 
-  <h2 class="card-title" id="inputTitle">
-    What would you like BAForge AI to analyze?
+  <h2 class="card-title">
+    BAForge AI neyi analiz etsin?
   </h2>
 
-  <p class="card-description" id="inputDesc">
-    Write a requirement, attach a PDF or image, or use both. You can also provide a natural-language instruction.
+  <p class="card-description">
+    Gereksinimi yazın, PDF veya görsel ekleyin ya da ikisini birlikte kullanın. İsterseniz doğal dilde talimat da verebilirsiniz.
   </p>
 
 
@@ -641,7 +972,7 @@ select{
     <textarea
       id="requirement"
       maxlength="10000"
-      placeholder="Tell BAForge AI what you want to analyze..."
+      placeholder="BAForge AI'a neyi analiz etmesini istediğinizi yazın..."
     ></textarea>
 
 
@@ -650,8 +981,17 @@ select{
       <span id="chipIcon">📄</span>
 
       <div class="chip-info">
-        <div class="chip-name" id="chipName"></div>
-        <div class="chip-meta" id="chipMeta"></div>
+
+        <div
+          class="chip-name"
+          id="chipName"
+        ></div>
+
+        <div
+          class="chip-meta"
+          id="chipMeta"
+        ></div>
+
       </div>
 
       <button
@@ -673,22 +1013,34 @@ select{
             class="icon"
             id="plus"
             type="button"
-            aria-label="Add attachment"
+            aria-label="Dosya ekle"
           >+</button>
 
 
-          <div class="menu" id="menu">
+          <div
+            class="menu"
+            id="menu"
+          >
 
-            <button id="pdf" type="button">
-              📄 <span id="pdfText">Upload PDF</span>
+            <button
+              id="pdf"
+              type="button"
+            >
+              📄 PDF Yükle
             </button>
 
-            <button id="image" type="button">
-              🖼️ <span id="imageText">Upload Image</span>
+            <button
+              id="image"
+              type="button"
+            >
+              🖼️ Görsel Yükle
             </button>
 
-            <button id="camera" type="button">
-              📷 <span id="cameraText">Take Photo</span>
+            <button
+              id="camera"
+              type="button"
+            >
+              📷 Fotoğraf Çek
             </button>
 
           </div>
@@ -696,8 +1048,11 @@ select{
         </div>
 
 
-        <span class="meta" id="hint">
-          Optional instruction: focus on limits, rules, gaps or specific sections.
+        <span
+          class="meta"
+          id="hint"
+        >
+          İsteğe bağlı: limitlere, kurallara, eksik bilgilere veya belirli bölümlere odaklanın.
         </span>
 
       </div>
@@ -705,7 +1060,10 @@ select{
 
       <div class="right">
 
-        <span class="meta" id="count">
+        <span
+          class="meta"
+          id="count"
+        >
           0 / 10000
         </span>
 
@@ -713,7 +1071,7 @@ select{
           class="send"
           id="analyze"
           type="button"
-          aria-label="Analyze"
+          aria-label="Analiz et"
         >➤</button>
 
       </div>
@@ -750,22 +1108,25 @@ select{
 
     <div>
 
-      <label id="detailLabel">
-        Analysis Depth
+      <label>
+        Analiz Derinliği
       </label>
 
       <select id="detail">
 
         <option value="Basic">
-          Basic
+          Temel
         </option>
 
-        <option value="Professional" selected>
-          Professional
+        <option
+          value="Professional"
+          selected
+        >
+          Profesyonel
         </option>
 
         <option value="Comprehensive">
-          Comprehensive
+          Kapsamlı
         </option>
 
       </select>
@@ -782,7 +1143,7 @@ select{
       id="clear"
       type="button"
     >
-      Clear
+      Temizle
     </button>
 
   </div>
@@ -792,7 +1153,7 @@ select{
     class="loading"
     id="loading"
   >
-    AI is analyzing your input...
+    AI girdinizi analiz ediyor...
   </div>
 
 
@@ -801,8 +1162,38 @@ select{
     id="error"
   ></div>
 
+
+  <!-- GEÇMİŞ -->
+
+  <div class="history">
+
+    <div class="history-head">
+
+      <h3>
+        Geçmiş Analizler
+      </h3>
+
+      <button
+        class="small-button"
+        id="refreshHistory"
+        type="button"
+      >
+        Yenile
+      </button>
+
+    </div>
+
+    <div
+      class="history-list"
+      id="historyList"
+    ></div>
+
+  </div>
+
 </section>
 
+
+<!-- RESULT -->
 
 <section
   class="card result"
@@ -814,11 +1205,11 @@ select{
     <div>
 
       <h2 id="resultTitle">
-        Requirement Intelligence
+        Gereksinim Analizi
       </h2>
 
       <p id="resultSub">
-        Structured analysis generated from your input.
+        Girdinizden oluşturulan yapılandırılmış analiz.
       </p>
 
     </div>
@@ -827,20 +1218,80 @@ select{
       class="pill"
       id="status"
     >
-      Analysis Complete
+      Analiz Tamamlandı
     </div>
 
   </div>
 
+
+  <!-- SEÇİM -->
+
+  <div
+    class="selection-bar"
+    id="selectionBar"
+    style="display:none"
+  >
+
+    <div
+      class="selection-count"
+      id="selectionCount"
+    >
+      0 gereksinim seçildi
+    </div>
+
+    <div class="selection-actions">
+
+      <button
+        class="small-button"
+        id="selectAll"
+        type="button"
+      >
+        Tümünü Seç
+      </button>
+
+      <button
+        class="small-button"
+        id="clearSelection"
+        type="button"
+      >
+        Seçimi Temizle
+      </button>
+
+      <button
+        class="small-button blue"
+        id="transferSelected"
+        type="button"
+      >
+        Seçilenleri Gereksinimlere Aktar
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- BULUNAN GEREKSİNİMLER -->
 
   <div
     class="detected"
     id="detected"
   >
 
-    <h3 id="detectedTitle">
-      Requirements Found
-    </h3>
+    <div class="detected-title-row">
+
+      <h3>
+        Bulunan Gereksinimler
+      </h3>
+
+      <span
+        class="meta"
+        id="selectionHint"
+      >
+        Gereksinimleri seçebilirsiniz.
+      </span>
+
+    </div>
+
 
     <div
       class="detected-grid"
@@ -850,15 +1301,14 @@ select{
   </div>
 
 
+  <!-- SCORES -->
+
   <div class="scores">
 
     <div class="score">
 
-      <div
-        class="sl"
-        id="cl"
-      >
-        Clarity
+      <div class="sl">
+        Açıklık
       </div>
 
       <div class="sv">
@@ -872,10 +1322,12 @@ select{
       </div>
 
       <div class="bar">
+
         <div
           class="fill"
           id="clarityBar"
         ></div>
+
       </div>
 
     </div>
@@ -883,11 +1335,8 @@ select{
 
     <div class="score">
 
-      <div
-        class="sl"
-        id="co"
-      >
-        Completeness
+      <div class="sl">
+        Tamlık
       </div>
 
       <div class="sv">
@@ -901,10 +1350,12 @@ select{
       </div>
 
       <div class="bar">
+
         <div
           class="fill"
           id="completeBar"
         ></div>
+
       </div>
 
     </div>
@@ -912,11 +1363,8 @@ select{
 
     <div class="score">
 
-      <div
-        class="sl"
-        id="te"
-      >
-        Testability
+      <div class="sl">
+        Test Edilebilirlik
       </div>
 
       <div class="sv">
@@ -930,10 +1378,12 @@ select{
       </div>
 
       <div class="bar">
+
         <div
           class="fill"
           id="testableBar"
         ></div>
+
       </div>
 
     </div>
@@ -941,10 +1391,12 @@ select{
   </div>
 
 
+  <!-- SUMMARY -->
+
   <div class="summary">
 
-    <small id="sumLabel">
-      Summary
+    <small>
+      Özet
     </small>
 
     <div id="summary"></div>
@@ -952,35 +1404,41 @@ select{
   </div>
 
 
+  <!-- DETAIL -->
+
   <div class="grid">
 
 
     <div class="box">
 
-      <h3 id="typeTitle">
-        Requirement Type
+      <h3>
+        Gereksinim Türü
       </h3>
 
-      <p id="type">-</p>
+      <p id="type">
+        -
+      </p>
 
     </div>
 
 
     <div class="box">
 
-      <h3 id="priorityTitle">
-        Priority
+      <h3>
+        Öncelik
       </h3>
 
-      <p id="priority">-</p>
+      <p id="priority">
+        -
+      </p>
 
     </div>
 
 
     <div class="box">
 
-      <h3 id="ambTitle">
-        Ambiguities
+      <h3>
+        Belirsizlikler
       </h3>
 
       <div id="ambiguities"></div>
@@ -990,8 +1448,8 @@ select{
 
     <div class="box">
 
-      <h3 id="missTitle">
-        Missing Information
+      <h3>
+        Eksik Bilgiler
       </h3>
 
       <div id="missing"></div>
@@ -1001,8 +1459,8 @@ select{
 
     <div class="box">
 
-      <h3 id="assTitle">
-        Assumptions
+      <h3>
+        Varsayımlar
       </h3>
 
       <div id="assumptions"></div>
@@ -1012,8 +1470,8 @@ select{
 
     <div class="box">
 
-      <h3 id="ruleTitle">
-        Business Rules
+      <h3>
+        İş Kuralları
       </h3>
 
       <div id="rules"></div>
@@ -1023,8 +1481,8 @@ select{
 
     <div class="box">
 
-      <h3 id="qTitle">
-        Open Questions
+      <h3>
+        Açık Sorular
       </h3>
 
       <div id="questions"></div>
@@ -1034,8 +1492,8 @@ select{
 
     <div class="box">
 
-      <h3 id="edgeTitle">
-        Edge Cases
+      <h3>
+        Kenar Durumları
       </h3>
 
       <div id="edges"></div>
@@ -1045,22 +1503,23 @@ select{
 
     <div class="box full">
 
-      <h3 id="noteTitle">
-        Analyst Notes
+      <h3>
+        Analist Notları
       </h3>
 
       <div id="notes"></div>
 
     </div>
 
-
   </div>
 
 
+  <!-- SOURCE -->
+
   <div class="source">
 
-    <small id="sourceLabel">
-      Analyzed Input
+    <small>
+      Analiz Edilen Girdi
     </small>
 
     <div
@@ -1071,24 +1530,56 @@ select{
   </div>
 
 
+  <!-- SAVE -->
+
+  <div
+    class="save-panel"
+    id="savePanel"
+  >
+
+    <div class="save-panel-text">
+
+      <b>
+        Analizi çalışma alanına kaydet
+      </b>
+
+      <span>
+        Kaydettiğiniz analiz daha sonra Geçmiş Analizler bölümünden tekrar açılabilir.
+      </span>
+
+    </div>
+
+    <button
+      class="primary"
+      id="saveAnalysis"
+      type="button"
+    >
+      Analizi Kaydet
+    </button>
+
+  </div>
+
+
   <div
     class="saved"
     id="saved"
   >
-    ✓ Requirement saved to the workspace.
+    ✓ Analiz çalışma alanına kaydedildi.
   </div>
 
+
+  <!-- NEXT -->
 
   <div class="next">
 
     <a href="/requirement.html">
 
-      <small id="requirementNextSmall">
-        Next Step
+      <small>
+        Sonraki Adım
       </small>
 
-      <b id="requirementNext">
-        Continue to Requirement →
+      <b>
+        Gereksinime Devam Et →
       </b>
 
     </a>
@@ -1097,11 +1588,11 @@ select{
     <a href="/user-story.html">
 
       <small>
-        Next Step
+        Sonraki Adım
       </small>
 
-      <b id="userStoryNext">
-        Generate User Story →
+      <b>
+        User Story Oluştur →
       </b>
 
     </a>
@@ -1110,11 +1601,11 @@ select{
     <a href="/acceptance-criteria.html">
 
       <small>
-        Continue
+        Devam Et
       </small>
 
-      <b id="acNext">
-        Generate Acceptance Criteria →
+      <b>
+        Kabul Kriterleri Oluştur →
       </b>
 
     </a>
@@ -1123,11 +1614,11 @@ select{
     <a href="/uat.html">
 
       <small>
-        Continue
+        Devam Et
       </small>
 
-      <b id="uatNext">
-        Generate UAT Test Cases →
+      <b>
+        UAT Test Senaryoları Oluştur →
       </b>
 
     </a>
@@ -1135,24 +1626,29 @@ select{
   </div>
 
 
+  <!-- TEK ANA CTA -->
+
   <a
     class="continue"
+    id="continueButton"
     href="/requirement.html"
   >
 
     <div>
 
-      <small id="continueSmall">
-        Continue Workflow
+      <small>
+        İş Akışına Devam Et
       </small>
 
-      <strong id="continueText">
-        Gereksinime Devam Et
+      <strong>
+        Seçilen Gereksinimlere Devam Et
       </strong>
 
     </div>
 
-    <span>→</span>
+    <span>
+      →
+    </span>
 
   </a>
 
@@ -1169,20 +1665,33 @@ select{
 
 <script>
 
-const $ = id => document.getElementById(id);
+const $ = id =>
+  document.getElementById(id);
 
-const text = $('requirement');
+const text =
+  $('requirement');
+
+const HISTORY_KEY =
+  'baforge-requirement-analysis-history';
 
 let file = null;
-let detected = [];
+
 let currentResult = null;
 
+let currentOriginal = '';
 
-/* --------------------------------------------------
+let detected = [];
+
+let selectedIndexes = new Set();
+
+let currentHistoryId = null;
+
+
+/* ==================================================
    LANGUAGE
--------------------------------------------------- */
+================================================== */
 
-function getWebsiteLanguage(){
+function websiteLanguage(){
 
   try{
 
@@ -1199,358 +1708,110 @@ function getWebsiteLanguage(){
 
   }catch(e){}
 
-  return localStorage.getItem('baforge-language') === 'tr'
-    ? 'tr'
-    : 'en';
+  return 'tr';
 
 }
 
 
-/* --------------------------------------------------
-   TRANSLATIONS
--------------------------------------------------- */
+/* ==================================================
+   LOCALIZATION
+================================================== */
 
-const tr = {
+const TYPE_TR = {
 
-  en: {
+  Functional:
+    'İşlevsel',
 
-    badge:'Requirement Intelligence',
+  'Non-Functional':
+    'İşlevsel Olmayan',
 
-    title:'Analyze Requirements Before You Build',
+  'Business Rule':
+    'İş Kuralı',
 
-    subtitle:
-      'Turn requirements, documents and visual inputs into structured analysis before development begins.',
+  Regulatory:
+    'Düzenleyici',
 
-    inputTitle:
-      'What would you like BAForge AI to analyze?',
+  Data:
+    'Veri',
 
-    inputDesc:
-      'Write a requirement, attach a PDF or image, or use both. You can also provide a natural-language instruction.',
+  Integration:
+    'Entegrasyon',
 
-    placeholder:
-      'Tell BAForge AI what you want to analyze...',
+  Process:
+    'Süreç',
 
-    hint:
-      'Optional instruction: focus on limits, rules, gaps or specific sections.',
-
-    detail:
-      'Analysis Depth',
-
-    clear:
-      'Clear',
-
-    analyze:
-      'Analyze',
-
-    loading:
-      'AI is analyzing your input...',
-
-    validation:
-      'Add some text or attach a PDF/image before analyzing.',
-
-    generic:
-      'Something went wrong while analyzing your input.',
-
-    pdf:
-      'Upload PDF',
-
-    image:
-      'Upload Image',
-
-    camera:
-      'Take Photo',
-
-    tooLarge:
-      'File is too large. Please use a file up to 4 MB.',
-
-    badType:
-      'Only PDF and image files are supported.',
-
-    ready:
-      'Ready to analyze',
-
-    complete:
-      'Analysis Complete',
-
-    result:
-      'Requirement Intelligence',
-
-    sub:
-      'Structured analysis generated from your input.',
-
-    detected:
-      'Requirements Found',
-
-    use:
-      'Use This Requirement',
-
-    saved:
-      '✓ Requirement saved to the workspace.',
-
-    requirementType:
-      'Requirement Type',
-
-    priority:
-      'Priority',
-
-    ambiguities:
-      'Ambiguities',
-
-    missing:
-      'Missing Information',
-
-    assumptions:
-      'Assumptions',
-
-    rules:
-      'Business Rules',
-
-    questions:
-      'Open Questions',
-
-    edgeCases:
-      'Edge Cases',
-
-    analystNotes:
-      'Analyst Notes',
-
-    summary:
-      'Summary',
-
-    source:
-      'Analyzed Input',
-
-    requirementNext:
-      'Continue to Requirement →',
-
-    userStoryNext:
-      'Generate User Story →',
-
-    acNext:
-      'Generate Acceptance Criteria →',
-
-    uatNext:
-      'Generate UAT Test Cases →',
-
-    continueSmall:
-      'Continue Workflow',
-
-    continueText:
-      'Continue to Requirement'
-
-  },
-
-
-  tr: {
-
-    badge:'Gereksinim Analizi',
-
-    title:
-      'Geliştirmeden Önce Gereksinimi Analiz Et',
-
-    subtitle:
-      'Gereksinimleri, dokümanları ve görsel girdileri geliştirme öncesinde yapılandırılmış analize dönüştürün.',
-
-    inputTitle:
-      'BAForge AI neyi analiz etsin?',
-
-    inputDesc:
-      'Gereksinimi yazın, PDF veya görsel ekleyin ya da ikisini birlikte kullanın. İsterseniz doğal dilde talimat da verebilirsiniz.',
-
-    placeholder:
-      'BAForge AI\'a neyi analiz etmesini istediğinizi yazın...',
-
-    hint:
-      'İsteğe bağlı: limitlere, kurallara, eksik bilgilere veya belirli bölümlere odaklanın.',
-
-    detail:
-      'Analiz Derinliği',
-
-    clear:
-      'Temizle',
-
-    analyze:
-      'Analiz Et',
-
-    loading:
-      'AI girdinizi analiz ediyor...',
-
-    validation:
-      'Analiz için metin girin veya PDF/görsel ekleyin.',
-
-    generic:
-      'Girdi analiz edilirken bir hata oluştu.',
-
-    pdf:
-      'PDF Yükle',
-
-    image:
-      'Görsel Yükle',
-
-    camera:
-      'Fotoğraf Çek',
-
-    tooLarge:
-      'Dosya çok büyük. Lütfen 4 MB veya daha küçük bir dosya kullanın.',
-
-    badType:
-      'Yalnızca PDF ve görsel dosyaları desteklenir.',
-
-    ready:
-      'Analize hazır',
-
-    complete:
-      'Analiz Tamamlandı',
-
-    result:
-      'Gereksinim Analizi',
-
-    sub:
-      'Girdinizden oluşturulan yapılandırılmış analiz.',
-
-    detected:
-      'Bulunan Gereksinimler',
-
-    use:
-      'Bu Gereksinimi Kullan',
-
-    saved:
-      '✓ Gereksinim çalışma alanına kaydedildi.',
-
-    requirementType:
-      'Gereksinim Türü',
-
-    priority:
-      'Öncelik',
-
-    ambiguities:
-      'Belirsizlikler',
-
-    missing:
-      'Eksik Bilgiler',
-
-    assumptions:
-      'Varsayımlar',
-
-    rules:
-      'İş Kuralları',
-
-    questions:
-      'Açık Sorular',
-
-    edgeCases:
-      'Kenar Durumları',
-
-    analystNotes:
-      'Analist Notları',
-
-    summary:
-      'Özet',
-
-    source:
-      'Analiz Edilen Girdi',
-
-    requirementNext:
-      'Gereksinime Devam Et →',
-
-    userStoryNext:
-      'User Story Oluştur →',
-
-    acNext:
-      'Kabul Kriterleri Oluştur →',
-
-    uatNext:
-      'UAT Test Senaryoları Oluştur →',
-
-    continueSmall:
-      'İş Akışına Devam Et',
-
-    continueText:
-      'Gereksinime Devam Et'
-
-  }
+  Other:
+    'Diğer'
 
 };
 
 
-function T(key){
+const PRIORITY_TR = {
 
-  const language = getWebsiteLanguage();
+  High:
+    'Yüksek',
 
-  return (
-    tr[language] &&
-    tr[language][key]
-  ) || tr.en[key] || key;
+  Medium:
+    'Orta',
+
+  Low:
+    'Düşük',
+
+  Unknown:
+    'Bilinmiyor',
+
+  high:
+    'Yüksek',
+
+  medium:
+    'Orta',
+
+  low:
+    'Düşük',
+
+  unknown:
+    'Bilinmiyor'
+
+};
+
+
+function localizeType(value){
+
+  if(!value){
+    return '-';
+  }
+
+  return TYPE_TR[value] || value;
 
 }
 
 
-/* --------------------------------------------------
-   I18N UI
--------------------------------------------------- */
+function localizePriority(value){
+
+  if(!value){
+    return '-';
+  }
+
+  return PRIORITY_TR[value] || value;
+
+}
+
+
+/* ==================================================
+   HELP TEXT
+================================================== */
 
 function applyLanguage(){
 
-  const language = getWebsiteLanguage();
-
-  document.documentElement.lang = language;
-
-  $('badge').textContent = T('badge');
-  $('title').textContent = T('title');
-  $('subtitle').textContent = T('subtitle');
-
-  $('inputTitle').textContent = T('inputTitle');
-  $('inputDesc').textContent = T('inputDesc');
-
-  text.placeholder = T('placeholder');
-
-  $('hint').textContent = T('hint');
-
-  $('detailLabel').textContent = T('detail');
-
-  $('clear').textContent = T('clear');
-
-  $('loading').textContent = T('loading');
-
-  $('pdfText').textContent = T('pdf');
-  $('imageText').textContent = T('image');
-  $('cameraText').textContent = T('camera');
-
-  $('status').textContent = T('complete');
-
-  $('resultTitle').textContent = T('result');
-  $('resultSub').textContent = T('sub');
-
-  $('detectedTitle').textContent = T('detected');
-
-  $('typeTitle').textContent = T('requirementType');
-  $('priorityTitle').textContent = T('priority');
-
-  $('ambTitle').textContent = T('ambiguities');
-  $('missTitle').textContent = T('missing');
-  $('assTitle').textContent = T('assumptions');
-  $('ruleTitle').textContent = T('rules');
-  $('qTitle').textContent = T('questions');
-  $('edgeTitle').textContent = T('edgeCases');
-  $('noteTitle').textContent = T('analystNotes');
-
-  $('sumLabel').textContent = T('summary');
-  $('sourceLabel').textContent = T('source');
-
-  $('requirementNext').textContent = T('requirementNext');
-  $('userStoryNext').textContent = T('userStoryNext');
-  $('acNext').textContent = T('acNext');
-  $('uatNext').textContent = T('uatNext');
-
-  $('continueSmall').textContent = T('continueSmall');
-  $('continueText').textContent = T('continueText');
+  document.documentElement.lang =
+    websiteLanguage();
 
 }
 
 
-/* --------------------------------------------------
+/* ==================================================
    HELPERS
--------------------------------------------------- */
+================================================== */
 
 function esc(value){
 
@@ -1603,32 +1864,40 @@ function score(value,id,bar){
       0,
       Math.min(
         100,
-        Math.round(Number(value) || 0)
+        Math.round(
+          Number(value) || 0
+        )
       )
     );
 
-  $(id).textContent = number;
+  $(id).textContent =
+    number;
 
-  $(bar).style.width = number + '%';
+  $(bar).style.width =
+    number + '%';
 
 }
 
 
-/* --------------------------------------------------
-   FILE CHIP
--------------------------------------------------- */
+/* ==================================================
+   FILE
+================================================== */
 
 function chip(){
 
   if(!file){
 
-    $('chip').classList.remove('show');
+    $('chip')
+      .classList
+      .remove('show');
 
     return;
 
   }
 
-  $('chip').classList.add('show');
+  $('chip')
+    .classList
+    .add('show');
 
   $('chipIcon').textContent =
     file.type === 'application/pdf'
@@ -1639,36 +1908,18 @@ function chip(){
     file.name;
 
   $('chipMeta').textContent =
-    (file.size / 1048576).toFixed(2)
-    + ' MB · '
-    + T('ready');
+    (
+      file.size / 1048576
+    ).toFixed(2)
+    + ' MB · Analize hazır';
 
 }
 
-
-/* --------------------------------------------------
-   ERROR
--------------------------------------------------- */
-
-function showError(message){
-
-  $('error').textContent = message;
-
-  $('error').style.display = 'block';
-
-}
-
-
-/* --------------------------------------------------
-   FILE PICKER
--------------------------------------------------- */
 
 function pick(fileObject){
 
   if(!fileObject){
-
     return;
-
   }
 
   if(
@@ -1676,39 +1927,45 @@ function pick(fileObject){
     4 * 1024 * 1024
   ){
 
-    showError(T('tooLarge'));
+    showError(
+      'Dosya çok büyük. Lütfen 4 MB veya daha küçük bir dosya kullanın.'
+    );
 
     return;
 
   }
 
   const valid =
-    fileObject.type === 'application/pdf' ||
-    fileObject.type.startsWith('image/') ||
+    fileObject.type ===
+      'application/pdf' ||
+    fileObject.type.startsWith(
+      'image/'
+    ) ||
     fileObject.name
       .toLowerCase()
       .endsWith('.pdf');
 
   if(!valid){
 
-    showError(T('badType'));
+    showError(
+      'Yalnızca PDF ve görsel dosyaları desteklenir.'
+    );
 
     return;
 
   }
 
-  file = fileObject;
+  file =
+    fileObject;
 
   chip();
 
-  $('menu').classList.remove('open');
+  $('menu')
+    .classList
+    .remove('open');
 
 }
 
-
-/* --------------------------------------------------
-   FILE -> DATA URL
--------------------------------------------------- */
 
 async function dataUrl(fileObject){
 
@@ -1719,12 +1976,16 @@ async function dataUrl(fileObject){
         new FileReader();
 
       reader.onload =
-        () => resolve(reader.result);
+        () => resolve(
+          reader.result
+        );
 
       reader.onerror =
         reject;
 
-      reader.readAsDataURL(fileObject);
+      reader.readAsDataURL(
+        fileObject
+      );
 
     }
   );
@@ -1732,147 +1993,488 @@ async function dataUrl(fileObject){
 }
 
 
-/* --------------------------------------------------
-   ARTIFACT SAVE
--------------------------------------------------- */
+/* ==================================================
+   ERROR
+================================================== */
 
-function saveArtifact(data,original){
+function showError(message){
 
-  const requirementData = {
+  $('error').textContent =
+    message;
+
+  $('error').style.display =
+    'block';
+
+}
+
+
+/* ==================================================
+   HISTORY
+================================================== */
+
+function readHistory(){
+
+  try{
+
+    const value =
+      localStorage.getItem(
+        HISTORY_KEY
+      );
+
+    if(!value){
+      return [];
+    }
+
+    const parsed =
+      JSON.parse(value);
+
+    return Array.isArray(parsed)
+      ? parsed
+      : [];
+
+  }catch(e){
+
+    return [];
+
+  }
+
+}
+
+
+function writeHistory(items){
+
+  try{
+
+    localStorage.setItem(
+      HISTORY_KEY,
+      JSON.stringify(items)
+    );
+
+  }catch(e){
+
+    console.warn(
+      'History save failed',
+      e
+    );
+
+  }
+
+}
+
+
+function makeHistoryTitle(){
+
+  if(
+    currentResult &&
+    currentResult.title
+  ){
+
+    return currentResult.title;
+
+  }
+
+  if(
+    currentResult &&
+    currentResult.summary
+  ){
+
+    return currentResult.summary
+      .slice(0,80);
+
+  }
+
+  if(currentOriginal){
+
+    return currentOriginal
+      .slice(0,80);
+
+  }
+
+  if(file){
+
+    return file.name;
+
+  }
+
+  return 'Gereksinim Analizi';
+
+}
+
+
+function saveToHistory(){
+
+  if(!currentResult){
+    return null;
+  }
+
+  const items =
+    readHistory();
+
+  const id =
+    currentHistoryId ||
+    (
+      'analysis_' +
+      Date.now()
+    );
+
+
+  const item = {
+
+    id,
 
     title:
-      data.title ||
-      data.summary ||
-      'Requirement',
+      makeHistoryTitle(),
 
-    description:
-      original ||
-      data.summary ||
-      '',
+    createdAt:
+      new Date().toISOString(),
 
-    requirement:
-      original ||
-      data.requirement ||
-      data.summary ||
-      '',
+    original:
+      currentOriginal,
 
-    summary:
-      data.summary || '',
+    source:
+      file
+        ? {
+            name:file.name,
+            type:file.type,
+            size:file.size
+          }
+        : null,
 
-    requirementType:
-      data.requirementType ||
-      'Other',
+    result:
+      currentResult,
 
-    priority:
-      String(
-        data.priority ||
-        'medium'
-      ).toLowerCase(),
-
-    analysis:{
-
-      clarityScore:
-        data.clarityScore,
-
-      completenessScore:
-        data.completenessScore,
-
-      testabilityScore:
-        data.testabilityScore,
-
-      ambiguities:
-        data.ambiguities || [],
-
-      missingInformation:
-        data.missingInformation || [],
-
-      assumptions:
-        data.assumptions || [],
-
-      businessRules:
-        data.businessRules || [],
-
-      openQuestions:
-        data.openQuestions || [],
-
-      edgeCases:
-        data.edgeCases || [],
-
-      analystNotes:
-        data.analystNotes || []
-
-    }
+    selectedIndexes:
+      Array.from(
+        selectedIndexes
+      )
 
   };
 
 
+  const filtered =
+    items.filter(
+      x => x.id !== id
+    );
+
+
+  filtered.unshift(item);
+
+
   /*
-   * Preferred storage:
-   * BAArtifactStore
+   * Only last 5 are kept.
    */
+
+  writeHistory(
+    filtered.slice(0,5)
+  );
+
+
+  currentHistoryId =
+    id;
+
+
+  return item;
+
+}
+
+
+function renderHistory(){
+
+  const listEl =
+    $('historyList');
+
+  const items =
+    readHistory();
+
+
+  if(!items.length){
+
+    listEl.innerHTML = `
+      <div class="history-empty">
+        Henüz kaydedilmiş bir analiz bulunmuyor.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  listEl.innerHTML =
+    items
+      .map(
+        item => {
+
+          const date =
+            new Date(
+              item.createdAt
+            );
+
+          const dateText =
+            isNaN(date.getTime())
+              ? ''
+              : date.toLocaleString(
+                  'tr-TR',
+                  {
+                    day:'2-digit',
+                    month:'2-digit',
+                    year:'numeric',
+                    hour:'2-digit',
+                    minute:'2-digit'
+                  }
+                );
+
+
+          return `
+
+            <div
+              class="history-item"
+            >
+
+              <div
+                class="history-info"
+              >
+
+                <div
+                  class="history-title"
+                >
+                  ${esc(item.title)}
+                </div>
+
+                <div
+                  class="history-meta"
+                >
+                  ${esc(dateText)}
+                  ${
+                    item.source
+                      ? ' · ' +
+                        esc(item.source.name)
+                      : ''
+                  }
+                </div>
+
+              </div>
+
+              <button
+                class="history-open"
+                data-history-id="${esc(item.id)}"
+                type="button"
+              >
+                Aç
+              </button>
+
+            </div>
+
+          `;
+
+        }
+      )
+      .join('');
+
+
+  listEl
+    .querySelectorAll(
+      '.history-open'
+    )
+    .forEach(button => {
+
+      button.onclick =
+        () =>
+          openHistory(
+            button.dataset.historyId
+          );
+
+    });
+
+}
+
+
+function openHistory(id){
+
+  const items =
+    readHistory();
+
+  const item =
+    items.find(
+      x => x.id === id
+    );
+
+
+  if(!item){
+    return;
+  }
+
+
+  currentHistoryId =
+    item.id;
+
+  currentResult =
+    item.result;
+
+  currentOriginal =
+    item.original || '';
+
+  detected =
+    Array.isArray(
+      item.result?.detectedRequirements
+    )
+      ? item.result.detectedRequirements
+      : [];
+
+
+  selectedIndexes =
+    new Set(
+      Array.isArray(
+        item.selectedIndexes
+      )
+        ? item.selectedIndexes
+        : []
+    );
+
+
+  file = null;
+
+  $('chip')
+    .classList
+    .remove('show');
+
+
+  text.value =
+    currentOriginal;
+
+
+  $('count').textContent =
+    text.value.length +
+    ' / 10000';
+
+
+  renderResult(
+    currentResult,
+    currentOriginal
+  );
+
+
+  $('saved').textContent =
+    '✓ Geçmiş analiz açıldı.';
+
+  $('saved').style.display =
+    'block';
+
+}
+
+
+/* ==================================================
+   ARTIFACT STORE
+================================================== */
+
+function saveArtifactToWorkspace(){
+
+  if(!currentResult){
+    return;
+  }
+
 
   try{
 
     if(
       window.BAArtifactStore &&
-      typeof BAArtifactStore.create === 'function'
+      typeof BAArtifactStore.create ===
+        'function'
     ){
 
-      const existing =
-        typeof BAArtifactStore.getByType === 'function'
-          ? BAArtifactStore
-              .getByType('requirement')
-              .find(
-                item =>
-                  item &&
-                  item.metadata &&
-                  item.metadata.sourceKey ===
-                    'requirement-intelligence-current'
-              )
-          : null;
+      const requirementData = {
 
+        title:
+          currentResult.title ||
+          currentResult.summary ||
+          'Requirement',
 
-      const metadata = {
+        description:
+          currentOriginal ||
+          currentResult.summary ||
+          '',
 
-        sourceKey:
-          'requirement-intelligence-current',
+        requirement:
+          currentOriginal ||
+          currentResult.requirement ||
+          currentResult.summary ||
+          '',
 
-        source:
-          file
-            ? 'Requirement Intelligence · ' + file.name
-            : 'Requirement Intelligence',
+        summary:
+          currentResult.summary ||
+          '',
 
-        sourceFile:
-          file
-            ? {
-                name:file.name,
-                type:file.type,
-                size:file.size
-              }
-            : null
+        requirementType:
+          currentResult.requirementType ||
+          'Other',
+
+        priority:
+          String(
+            currentResult.priority ||
+            'Unknown'
+          ).toLowerCase(),
+
+        analysis:{
+
+          clarityScore:
+            currentResult.clarityScore,
+
+          completenessScore:
+            currentResult.completenessScore,
+
+          testabilityScore:
+            currentResult.testabilityScore,
+
+          ambiguities:
+            currentResult.ambiguities ||
+            [],
+
+          missingInformation:
+            currentResult.missingInformation ||
+            [],
+
+          assumptions:
+            currentResult.assumptions ||
+            [],
+
+          businessRules:
+            currentResult.businessRules ||
+            [],
+
+          openQuestions:
+            currentResult.openQuestions ||
+            [],
+
+          edgeCases:
+            currentResult.edgeCases ||
+            [],
+
+          analystNotes:
+            currentResult.analystNotes ||
+            []
+
+        }
 
       };
 
 
-      if(existing){
+      BAArtifactStore.create(
+        'requirement',
+        requirementData,
+        {
+          sourceKey:
+            'requirement-intelligence',
 
-        BAArtifactStore.update(
-          existing.id,
-          {
-            content:requirementData,
-            metadata
-          }
-        );
+          source:
+            file
+              ? 'Requirement Intelligence · ' +
+                file.name
+              : 'Requirement Intelligence',
 
-      }else{
-
-        BAArtifactStore.create(
-          'requirement',
-          requirementData,
-          metadata
-        );
-
-      }
+          historyId:
+            currentHistoryId
+        }
+      );
 
     }
 
@@ -1887,9 +2489,7 @@ function saveArtifact(data,original){
 
 
   /*
-   * Legacy bridge.
-   * Kept temporarily so older screens
-   * can still receive the requirement.
+   * Legacy bridge for Requirement screen.
    */
 
   try{
@@ -1900,10 +2500,14 @@ function saveArtifact(data,original){
         BADataModel.createRequirement({
 
           title:
-            requirementData.title,
+            currentResult.title ||
+            currentResult.summary ||
+            'Requirement',
 
           description:
-            requirementData.description,
+            currentOriginal ||
+            currentResult.summary ||
+            '',
 
           source:
             file
@@ -1912,20 +2516,64 @@ function saveArtifact(data,original){
               : 'Requirement Intelligence',
 
           requirementType:
-            requirementData.requirementType,
+            currentResult.requirementType ||
+            'Other',
 
           priority:
-            requirementData.priority,
+            String(
+              currentResult.priority ||
+              'Unknown'
+            ).toLowerCase(),
 
-          analysis:
-            requirementData.analysis
+          analysis:{
+
+            clarityScore:
+              currentResult.clarityScore,
+
+            completenessScore:
+              currentResult.completenessScore,
+
+            testabilityScore:
+              currentResult.testabilityScore,
+
+            ambiguities:
+              currentResult.ambiguities ||
+              [],
+
+            missingInformation:
+              currentResult.missingInformation ||
+              [],
+
+            assumptions:
+              currentResult.assumptions ||
+              [],
+
+            businessRules:
+              currentResult.businessRules ||
+              [],
+
+            openQuestions:
+              currentResult.openQuestions ||
+              [],
+
+            edgeCases:
+              currentResult.edgeCases ||
+              [],
+
+            analystNotes:
+              currentResult.analystNotes ||
+              []
+
+          }
 
         });
 
 
       sessionStorage.setItem(
         'baforge-current-requirement',
-        JSON.stringify(legacy)
+        JSON.stringify(
+          legacy
+        )
       );
 
     }
@@ -1933,178 +2581,556 @@ function saveArtifact(data,original){
   }catch(error){
 
     console.warn(
-      'Legacy requirement bridge warning:',
+      'Legacy save warning:',
       error
     );
 
   }
 
+}
 
-  try{
 
-    sessionStorage.setItem(
-      'baforge-analyzer-source',
-      JSON.stringify(
-        file
-          ? {
-              name:file.name,
-              type:file.type,
-              size:file.size
-            }
-          : {}
-      )
-    );
+/* ==================================================
+   EXPLICIT SAVE
+================================================== */
 
-  }catch(error){}
+function saveAnalysis(){
+
+  if(!currentResult){
+
+    return;
+
+  }
+
+
+  saveToHistory();
+
+  saveArtifactToWorkspace();
 
 
   $('saved').textContent =
-    T('saved');
+    '✓ Analiz kaydedildi. Son 5 analiz içinde tutuluyor.';
 
   $('saved').style.display =
     'block';
 
+
+  $('saveAnalysis').textContent =
+    '✓ Kaydedildi';
+
+  $('saveAnalysis').disabled =
+    true;
+
+
+  renderHistory();
+
 }
 
 
-/* --------------------------------------------------
-   RENDER RESULT
--------------------------------------------------- */
+/* ==================================================
+   REQUIREMENT SELECTION
+================================================== */
 
-function render(data,original){
+function updateSelection(){
 
-  currentResult = data;
-
-  detected =
-    Array.isArray(data.detectedRequirements)
-      ? data.detectedRequirements
-      : [];
+  $('selectionCount').textContent =
+    selectedIndexes.size +
+    ' gereksinim seçildi';
 
 
-  if(detected.length > 1){
+  detected.forEach(
+    (item,index) => {
 
-    $('detected').style.display =
-      'block';
+      const card =
+        document.querySelector(
+          `[data-card-index="${index}"]`
+        );
 
-    $('detectedGrid').innerHTML =
-      detected
-        .map(
-          (item,index) => `
-
-            <div class="detected-card">
-
-              <h4>
-                ${
-                  esc(
-                    item.title ||
-                    ('Requirement ' + (index + 1))
-                  )
-                }
-              </h4>
-
-              <p>
-                ${
-                  esc(
-                    item.requirement ||
-                    item.summary ||
-                    ''
-                  )
-                }
-              </p>
-
-              <button
-                class="use"
-                data-index="${index}"
-                type="button"
-              >
-                ${esc(T('use'))}
-              </button>
-
-            </div>
-
-          `
-        )
-        .join('');
+      const checkbox =
+        document.querySelector(
+          `[data-checkbox-index="${index}"]`
+        );
 
 
-    document
-      .querySelectorAll('.use')
-      .forEach(button => {
+      if(card){
 
-        button.onclick =
-          () => {
+        card.classList.toggle(
+          'selected',
+          selectedIndexes.has(index)
+        );
 
-            const item =
-              detected[
-                Number(
-                  button.dataset.index
-                )
-              ];
-
-            if(!item){
-
-              return;
-
-            }
-
-            text.value =
-              item.requirement ||
-              item.summary ||
-              '';
-
-            $('count').textContent =
-              text.value.length +
-              ' / 10000';
+      }
 
 
-            const selected = {
+      if(checkbox){
 
-              ...data,
+        checkbox.checked =
+          selectedIndexes.has(index);
 
-              ...(item.analysis || {}),
+      }
 
-              title:
-                item.title ||
-                data.title,
-
-              summary:
-                item.summary ||
-                item.requirement ||
-                data.summary,
-
-              requirement:
-                item.requirement ||
-                item.summary ||
-                data.requirement,
-
-              requirementType:
-                item.requirementType ||
-                data.requirementType,
-
-              priority:
-                item.priority ||
-                data.priority
-
-            };
+    }
+  );
 
 
-            render(
-              selected,
-              text.value
-            );
+  $('selectionBar').style.display =
+    detected.length
+      ? 'flex'
+      : 'none';
 
-          };
 
-      });
+  $('transferSelected').disabled =
+    selectedIndexes.size === 0;
+
+}
+
+
+function toggleRequirement(index){
+
+  if(
+    selectedIndexes.has(index)
+  ){
+
+    selectedIndexes.delete(index);
 
   }else{
+
+    selectedIndexes.add(index);
+
+  }
+
+
+  updateSelection();
+
+}
+
+
+function renderDetected(){
+
+  if(
+    !Array.isArray(detected) ||
+    detected.length === 0
+  ){
 
     $('detected').style.display =
       'none';
 
-    $('detectedGrid').innerHTML = '';
+    $('selectionBar').style.display =
+      'none';
+
+    return;
 
   }
+
+
+  $('detected').style.display =
+    'block';
+
+
+  $('detectedGrid').innerHTML =
+    detected
+      .map(
+        (item,index) => `
+
+          <div
+            class="detected-card ${
+              selectedIndexes.has(index)
+                ? 'selected'
+                : ''
+            }"
+            data-card-index="${index}"
+          >
+
+            <input
+              class="select-check"
+              type="checkbox"
+              data-checkbox-index="${index}"
+              ${
+                selectedIndexes.has(index)
+                  ? 'checked'
+                  : ''
+              }
+            >
+
+            <h4>
+              ${
+                esc(
+                  item.title ||
+                  (
+                    'Gereksinim ' +
+                    (index + 1)
+                  )
+                )
+              }
+            </h4>
+
+            <p>
+              ${
+                esc(
+                  item.requirement ||
+                  item.summary ||
+                  ''
+                )
+              }
+            </p>
+
+
+            <button
+              class="details-button"
+              type="button"
+              data-details-index="${index}"
+            >
+              Detayları Gör
+            </button>
+
+
+            <div
+              class="requirement-details"
+              data-details-box="${index}"
+            >
+
+              <b>Tür:</b>
+              ${
+                esc(
+                  localizeType(
+                    item.requirementType ||
+                    currentResult?.requirementType
+                  )
+                )
+              }
+
+              <br><br>
+
+              <b>Öncelik:</b>
+              ${
+                esc(
+                  localizePriority(
+                    item.priority ||
+                    currentResult?.priority
+                  )
+                )
+              }
+
+              <br><br>
+
+              <b>Özet:</b>
+              ${
+                esc(
+                  item.summary ||
+                  item.requirement ||
+                  '-'
+                )
+              }
+
+            </div>
+
+          </div>
+
+        `
+      )
+      .join('');
+
+
+  $('detectedGrid')
+    .querySelectorAll(
+      '[data-checkbox-index]'
+    )
+    .forEach(
+      checkbox => {
+
+        checkbox.addEventListener(
+          'change',
+          () =>
+            toggleRequirement(
+              Number(
+                checkbox.dataset
+                  .checkboxIndex
+              )
+            )
+        );
+
+      }
+    );
+
+
+  $('detectedGrid')
+    .querySelectorAll(
+      '[data-details-index]'
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          'click',
+          () => {
+
+            const index =
+              Number(
+                button.dataset
+                  .detailsIndex
+              );
+
+            const box =
+              document.querySelector(
+                `[data-details-box="${index}"]`
+              );
+
+            if(box){
+
+              box.classList.toggle(
+                'open'
+              );
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+
+  updateSelection();
+
+}
+
+
+/* ==================================================
+   TRANSFER
+================================================== */
+
+function transferSelected(){
+
+  if(
+    selectedIndexes.size === 0
+  ){
+
+    showError(
+      'Lütfen en az bir gereksinim seçin.'
+    );
+
+    return;
+
+  }
+
+
+  const selected =
+    Array.from(
+      selectedIndexes
+    )
+      .map(
+        index =>
+          detected[index]
+      )
+      .filter(Boolean);
+
+
+  if(!selected.length){
+    return;
+  }
+
+
+  /*
+   * Store all selected requirements.
+   */
+
+  sessionStorage.setItem(
+    'baforge-selected-requirements',
+    JSON.stringify(
+      selected
+    )
+  );
+
+
+  /*
+   * Requirement screen currently
+   * expects a single current requirement.
+   *
+   * Therefore first selected item is
+   * also placed in the legacy bridge.
+   */
+
+  const first =
+    selected[0];
+
+
+  const requirementText =
+    first.requirement ||
+    first.summary ||
+    currentOriginal ||
+    '';
+
+
+  const requirementData = {
+
+    id:
+      first.id ||
+      (
+        'req_' +
+        Date.now()
+      ),
+
+    title:
+      first.title ||
+      'Requirement',
+
+    description:
+      requirementText,
+
+    requirement:
+      requirementText,
+
+    summary:
+      first.summary ||
+      requirementText,
+
+    requirementType:
+      first.requirementType ||
+      currentResult?.requirementType ||
+      'Other',
+
+    priority:
+      first.priority ||
+      currentResult?.priority ||
+      'Unknown',
+
+    analysis:
+      first.analysis ||
+      currentResult
+
+  };
+
+
+  sessionStorage.setItem(
+    'baforge-current-requirement',
+    JSON.stringify(
+      requirementData
+    )
+  );
+
+
+  sessionStorage.setItem(
+    'baforge-analyzer-source',
+    JSON.stringify(
+      file
+        ? {
+            name:file.name,
+            type:file.type,
+            size:file.size
+          }
+        : {}
+    )
+  );
+
+
+  $('continueButton').href =
+    '/requirement.html';
+
+
+  $('continueButton')
+    .scrollIntoView({
+      behavior:'smooth'
+    });
+
+}
+
+
+/* ==================================================
+   RENDER RESULT
+================================================== */
+
+function renderResult(
+  data,
+  original
+){
+
+  currentResult =
+    data;
+
+  currentOriginal =
+    original || '';
+
+
+  detected =
+    Array.isArray(
+      data.detectedRequirements
+    )
+      ? data.detectedRequirements
+      : [];
+
+
+  /*
+   * If the API returns one requirement
+   * but no detectedRequirements array,
+   * create one so the user can still select it.
+   */
+
+  if(
+    detected.length === 0 &&
+    (
+      data.title ||
+      data.requirement ||
+      data.summary
+    )
+  ){
+
+    detected = [
+
+      {
+
+        id:
+          data.id ||
+          'primary',
+
+        title:
+          data.title ||
+          data.summary ||
+          'Gereksinim',
+
+        requirement:
+          data.requirement ||
+          original ||
+          data.summary ||
+          '',
+
+        summary:
+          data.summary ||
+          '',
+
+        requirementType:
+          data.requirementType,
+
+        priority:
+          data.priority,
+
+        analysis:
+          data.analysis || data
+
+      }
+
+    ];
+
+  }
+
+
+  /*
+   * Reset selection when a new result
+   * is rendered, except when opening history.
+   */
+
+  if(
+    !currentHistoryId ||
+    currentHistoryId !==
+      $('result').dataset.historyId
+  ){
+
+    selectedIndexes =
+      new Set();
+
+  }
+
+
+  renderDetected();
 
 
   score(
@@ -2129,43 +3155,65 @@ function render(data,original){
   $('summary').textContent =
     data.summary || '-';
 
+
   $('type').textContent =
-    data.requirementType || '-';
+    localizeType(
+      data.requirementType
+    );
+
 
   $('priority').textContent =
-    data.priority || '-';
+    localizePriority(
+      data.priority
+    );
 
 
   $('ambiguities').innerHTML =
-    list(data.ambiguities);
+    list(
+      data.ambiguities
+    );
 
   $('missing').innerHTML =
-    list(data.missingInformation);
+    list(
+      data.missingInformation
+    );
 
   $('assumptions').innerHTML =
-    list(data.assumptions);
+    list(
+      data.assumptions
+    );
 
   $('rules').innerHTML =
-    list(data.businessRules);
+    list(
+      data.businessRules
+    );
 
   $('questions').innerHTML =
-    list(data.openQuestions);
+    list(
+      data.openQuestions
+    );
 
   $('edges').innerHTML =
-    list(data.edgeCases);
+    list(
+      data.edgeCases
+    );
 
   $('notes').innerHTML =
-    list(data.analystNotes);
+    list(
+      data.analystNotes
+    );
 
 
   $('source').textContent =
     file
-      ? file.name +
-        '\n\n' +
-        (
-          original ||
-          data.summary ||
-          ''
+      ? (
+          file.name +
+          '\n\n' +
+          (
+            original ||
+            data.summary ||
+            ''
+          )
         )
       : (
           original ||
@@ -2174,22 +3222,22 @@ function render(data,original){
         );
 
 
-  /*
-   * Save analyzed requirement
-   * to workspace context.
-   */
-
-  saveArtifact(
-    data,
-    original ||
-      data.requirement ||
-      data.summary ||
-      ''
-  );
-
-
   $('result').style.display =
     'block';
+
+
+  /*
+   * Every fresh analysis starts unsaved.
+   */
+
+  $('saved').style.display =
+    'none';
+
+  $('saveAnalysis').disabled =
+    false;
+
+  $('saveAnalysis').textContent =
+    'Analizi Kaydet';
 
 
   $('result').scrollIntoView({
@@ -2199,9 +3247,9 @@ function render(data,original){
 }
 
 
-/* --------------------------------------------------
+/* ==================================================
    ANALYZE
--------------------------------------------------- */
+================================================== */
 
 async function analyze(){
 
@@ -2209,10 +3257,13 @@ async function analyze(){
     text.value.trim();
 
 
-  if(!value && !file){
+  if(
+    !value &&
+    !file
+  ){
 
     showError(
-      T('validation')
+      'Analiz için metin girin veya PDF/görsel ekleyin.'
     );
 
     return;
@@ -2245,11 +3296,14 @@ async function analyze(){
 
       source = {
 
-        name:file.name,
+        name:
+          file.name,
 
-        type:file.type,
+        type:
+          file.type,
 
-        size:file.size,
+        size:
+          file.size,
 
         data:
           await dataUrl(file)
@@ -2259,14 +3313,9 @@ async function analyze(){
     }
 
 
-    /*
-     * Important:
-     *
-     * The text field is treated as the
-     * user's instruction / requirement.
-     *
-     * Website language is used automatically.
-     */
+    const language =
+      websiteLanguage();
+
 
     const payload = {
 
@@ -2276,11 +3325,10 @@ async function analyze(){
       instruction:
         value,
 
-      language:
-        getWebsiteLanguage(),
+      language,
 
       websiteLanguage:
-        getWebsiteLanguage(),
+        language,
 
       detail:
         $('detail').value,
@@ -2302,7 +3350,9 @@ async function analyze(){
           },
 
           body:
-            JSON.stringify(payload)
+            JSON.stringify(
+              payload
+            )
 
         }
       );
@@ -2320,10 +3370,10 @@ async function analyze(){
       data =
         JSON.parse(raw);
 
-    }catch(error){
+    }catch(e){
 
       throw new Error(
-        T('generic')
+        'Sunucudan geçerli bir analiz sonucu alınamadı.'
       );
 
     }
@@ -2333,13 +3383,20 @@ async function analyze(){
 
       throw new Error(
         data.error ||
-        T('generic')
+        'Analiz sırasında bir hata oluştu.'
       );
 
     }
 
 
-    render(
+    currentHistoryId =
+      null;
+
+    selectedIndexes =
+      new Set();
+
+
+    renderResult(
       data,
       data.primaryRequirement ||
       data.requirement ||
@@ -2353,7 +3410,7 @@ async function analyze(){
 
     showError(
       error.message ||
-      T('generic')
+      'Analiz sırasında bir hata oluştu.'
     );
 
   }finally{
@@ -2372,9 +3429,9 @@ async function analyze(){
 }
 
 
-/* --------------------------------------------------
-   PLUS MENU
--------------------------------------------------- */
+/* ==================================================
+   MENU
+================================================== */
 
 $('plus').onclick =
   event => {
@@ -2404,18 +3461,19 @@ document.onclick =
   };
 
 
-/* --------------------------------------------------
-   FILE INPUTS
--------------------------------------------------- */
-
 $('pdf').onclick =
-  () => $('pdfInput').click();
+  () =>
+    $('pdfInput').click();
+
 
 $('image').onclick =
-  () => $('imageInput').click();
+  () =>
+    $('imageInput').click();
+
 
 $('camera').onclick =
-  () => $('cameraInput').click();
+  () =>
+    $('cameraInput').click();
 
 
 $('pdfInput').onchange =
@@ -2439,9 +3497,9 @@ $('cameraInput').onchange =
     );
 
 
-/* --------------------------------------------------
+/* ==================================================
    REMOVE FILE
--------------------------------------------------- */
+================================================== */
 
 $('remove').onclick =
   () => {
@@ -2457,9 +3515,9 @@ $('remove').onclick =
   };
 
 
-/* --------------------------------------------------
-   TEXT COUNTER
--------------------------------------------------- */
+/* ==================================================
+   COUNTER
+================================================== */
 
 text.oninput =
   () => {
@@ -2471,9 +3529,9 @@ text.oninput =
   };
 
 
-/* --------------------------------------------------
+/* ==================================================
    CLEAR
--------------------------------------------------- */
+================================================== */
 
 $('clear').onclick =
   () => {
@@ -2484,6 +3542,20 @@ $('clear').onclick =
       '0 / 10000';
 
     file = null;
+
+    detected = [];
+
+    selectedIndexes =
+      new Set();
+
+    currentResult =
+      null;
+
+    currentOriginal =
+      '';
+
+    currentHistoryId =
+      null;
 
     chip();
 
@@ -2501,31 +3573,71 @@ $('clear').onclick =
   };
 
 
-/* --------------------------------------------------
-   ANALYZE BUTTON
--------------------------------------------------- */
+/* ==================================================
+   SAVE
+================================================== */
 
-$('analyze').onclick =
-  analyze;
+$('saveAnalysis').onclick =
+  saveAnalysis;
 
 
-/* --------------------------------------------------
+/* ==================================================
+   SELECT ALL
+================================================== */
+
+$('selectAll').onclick =
+  () => {
+
+    selectedIndexes =
+      new Set(
+        detected.map(
+          (_,index) => index
+        )
+      );
+
+    updateSelection();
+
+  };
+
+
+/* ==================================================
+   CLEAR SELECTION
+================================================== */
+
+$('clearSelection').onclick =
+  () => {
+
+    selectedIndexes =
+      new Set();
+
+    updateSelection();
+
+  };
+
+
+/* ==================================================
+   TRANSFER
+================================================== */
+
+$('transferSelected').onclick =
+  transferSelected;
+
+
+/* ==================================================
+   REFRESH HISTORY
+================================================== */
+
+$('refreshHistory').onclick =
+  renderHistory;
+
+
+/* ==================================================
    INITIALIZE
--------------------------------------------------- */
+================================================== */
 
 applyLanguage();
 
-
-/*
- * If the central i18n module exposes
- * language change events, refresh this page
- * automatically when the website language changes.
- */
-
-window.addEventListener(
-  'baforge-language-changed',
-  applyLanguage
-);
+renderHistory();
 
 </script>
 
