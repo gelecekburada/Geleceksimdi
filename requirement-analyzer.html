@@ -30,14 +30,16 @@
       --danger: #b42318;
       --danger-bg: #fef2f2;
 
+      --warning: #b54708;
+      --warning-bg: #fffaeb;
+
       --shadow-sm: 0 4px 14px rgba(16, 24, 40, 0.06);
       --shadow-md: 0 12px 35px rgba(16, 24, 40, 0.08);
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-
+      font-family: Arial, Helvetica, sans-serif;
       background:
         radial-gradient(
           circle at top left,
@@ -45,7 +47,6 @@
           transparent 32%
         ),
         var(--background);
-
       color: var(--text);
       line-height: 1.5;
     }
@@ -65,18 +66,13 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-
       background: rgba(37, 99, 235, 0.09);
       color: #1d4ed8;
-
       border: 1px solid #c7d7fe;
-
       padding: 7px 13px;
       border-radius: 999px;
-
       font-size: 12px;
       font-weight: 800;
-
       margin-bottom: 15px;
     }
 
@@ -84,9 +80,7 @@
       font-size: 42px;
       line-height: 1.15;
       letter-spacing: -1.2px;
-
       margin: 0 0 14px;
-
       color: #101828;
     }
 
@@ -97,62 +91,46 @@
     .hero p {
       color: var(--muted);
       font-size: 18px;
-
       max-width: 760px;
       margin: 0 auto;
     }
 
     .card {
       background: var(--surface);
-
       padding: 30px;
-
       border-radius: 18px;
       border: 1px solid var(--border);
-
       box-shadow: var(--shadow-md);
-
       margin-bottom: 26px;
     }
 
     .card-title {
       margin: 0 0 6px;
-
       font-size: 22px;
       color: #101828;
     }
 
     .card-description {
       margin: 0 0 22px;
-
       color: var(--muted);
       font-size: 14px;
     }
 
     label {
       display: block;
-
       font-weight: 700;
       margin-bottom: 9px;
-
       color: #344054;
       font-size: 14px;
     }
 
-    /*
-      ======================================================
-      MULTIMODAL COMPOSER
-      ======================================================
-    */
+    /* COMPOSER */
 
     .composer {
       border: 1px solid #d0d5dd;
       border-radius: 16px;
-
       background: #ffffff;
-
       overflow: visible;
-
       transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease;
@@ -160,27 +138,21 @@
 
     .composer:focus-within {
       border-color: var(--primary);
-
-      box-shadow:
-        0 0 0 4px rgba(37, 99, 235, 0.10);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
     }
 
     textarea {
       width: 100%;
       min-height: 150px;
-
       padding: 17px 17px 10px;
-
       border: 0;
       outline: none;
-
       font-size: 15px;
       line-height: 1.6;
-
       resize: vertical;
-
       background: transparent;
       color: var(--text);
+      font-family: inherit;
     }
 
     textarea::placeholder {
@@ -189,16 +161,11 @@
 
     .source-chip {
       display: none;
-
       align-items: center;
       gap: 10px;
-
       margin: 0 14px 12px;
-
       padding: 10px 12px;
-
       background: #f8fafc;
-
       border: 1px solid var(--border);
       border-radius: 11px;
     }
@@ -219,9 +186,7 @@
     .source-name {
       font-size: 13px;
       font-weight: 800;
-
       color: #344054;
-
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -229,7 +194,6 @@
 
     .source-meta {
       margin-top: 2px;
-
       color: #98a2b3;
       font-size: 11px;
     }
@@ -237,13 +201,9 @@
     .remove-source {
       border: 0;
       background: transparent;
-
       color: #98a2b3;
-
       padding: 4px 7px;
-
       font-size: 19px;
-
       cursor: pointer;
     }
 
@@ -253,27 +213,19 @@
 
     .composer-toolbar {
       display: flex;
-
       justify-content: space-between;
       align-items: center;
-
       gap: 12px;
-
       padding: 10px 12px;
-
       border-top: 1px solid #eef0f3;
-
       background: #fbfcfe;
-
       border-radius: 0 0 16px 16px;
     }
 
     .toolbar-left,
     .toolbar-right {
       display: flex;
-
       align-items: center;
-
       gap: 9px;
     }
 
@@ -288,17 +240,11 @@
 
     .character-count {
       color: #98a2b3;
-
       font-size: 12px;
-
       white-space: nowrap;
     }
 
-    /*
-      ======================================================
-      ATTACHMENT MENU
-      ======================================================
-    */
+    /* ATTACHMENTS */
 
     .plus-wrap {
       position: relative;
@@ -308,58 +254,36 @@
     .icon-button {
       width: 40px;
       height: 40px;
-
       display: inline-flex;
-
       align-items: center;
       justify-content: center;
-
       padding: 0;
-
       border: 1px solid #d0d5dd;
       border-radius: 10px;
-
       background: #ffffff;
       color: #344054;
-
       font-size: 25px;
       line-height: 1;
-
       cursor: pointer;
-
       box-shadow: none;
-
-      transition:
-        background 0.15s ease,
-        border-color 0.15s ease;
     }
 
     .icon-button:hover {
       background: #f8fafc;
-
       border-color: #98a2b3;
     }
 
     .attach-menu {
       display: none;
-
       position: absolute;
-
       left: 0;
       bottom: 50px;
-
       width: 210px;
-
       padding: 7px;
-
       background: #ffffff;
-
       border: 1px solid var(--border);
       border-radius: 13px;
-
-      box-shadow:
-        0 14px 32px rgba(16, 24, 40, 0.16);
-
+      box-shadow: 0 14px 32px rgba(16, 24, 40, 0.16);
       z-index: 50;
     }
 
@@ -369,205 +293,131 @@
 
     .attach-option {
       width: 100%;
-
       display: flex;
-
       align-items: center;
-
       gap: 10px;
-
       padding: 11px 12px;
-
       border: 0;
       border-radius: 9px;
-
       background: #ffffff;
       color: #344054;
-
       text-align: left;
-
       font-size: 14px;
-
       cursor: pointer;
     }
 
     .attach-option:hover {
       background: #f8fafc;
-
       color: #172033;
     }
 
-    /*
-      ======================================================
-      SEND BUTTON
-      ======================================================
-    */
+    /* SEND */
 
     .send-button {
       width: 42px;
       height: 42px;
-
       display: inline-flex;
-
       align-items: center;
       justify-content: center;
-
       padding: 0;
-
       border: 0;
       border-radius: 11px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #2563eb,
-          #1d4ed8
-        );
-
+      background: linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+      );
       color: white;
-
       font-size: 19px;
       font-weight: 800;
-
       cursor: pointer;
-
-      box-shadow:
-        0 6px 16px rgba(37, 99, 235, 0.22);
-
-      transition:
-        transform 0.15s ease,
-        box-shadow 0.2s ease;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.22);
     }
 
     .send-button:hover {
       transform: translateY(-1px);
-
-      box-shadow:
-        0 9px 20px rgba(37, 99, 235, 0.28);
     }
 
     .send-button:disabled {
       background: #94a3b8;
-
       box-shadow: none;
-
       cursor: wait;
-
       transform: none;
     }
 
-    /*
-      ======================================================
-      OPTIONS
-      ======================================================
-    */
+    /* OPTIONS */
 
     .options {
       display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px;
-
       margin-top: 22px;
     }
 
     select {
       width: 100%;
-
       padding: 13px 14px;
-
       border: 1px solid #d0d5dd;
       border-radius: 10px;
-
       background: white;
       color: #344054;
-
       font-size: 14px;
-
       cursor: pointer;
     }
 
     select:focus {
       outline: none;
-
       border-color: var(--primary);
-
-      box-shadow:
-        0 0 0 4px rgba(37, 99, 235, 0.10);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
     }
 
     .actions {
       display: flex;
-
       gap: 12px;
-
       margin-top: 20px;
     }
 
     .secondary-button {
       padding: 13px 20px;
-
       border: 1px solid #d0d5dd;
       border-radius: 11px;
-
       background: #ffffff;
       color: #344054;
-
       font-size: 14px;
       font-weight: 700;
-
       cursor: pointer;
     }
 
     .secondary-button:hover {
       background: #f8fafc;
-
       border-color: #98a2b3;
     }
 
-    /*
-      ======================================================
-      STATUS
-      ======================================================
-    */
+    /* STATUS */
 
     .loading,
     .error {
       display: none;
-
       margin-top: 17px;
-
       padding: 14px 16px;
-
       border-radius: 10px;
-
       font-size: 14px;
       font-weight: 600;
     }
 
     .loading {
       color: #344054;
-
       background: #f8fafc;
-
       border: 1px solid var(--border);
     }
 
     .error {
       background: var(--danger-bg);
-
       color: var(--danger);
-
       border: 1px solid #fecaca;
     }
 
-    /*
-      ======================================================
-      RESULT
-      ======================================================
-    */
+    /* RESULT */
 
     .result {
       display: none;
@@ -575,134 +425,94 @@
 
     .result-header {
       display: flex;
-
       justify-content: space-between;
       align-items: flex-start;
-
       gap: 20px;
-
       margin-bottom: 24px;
     }
 
     .result-header h2 {
       margin: 0 0 5px;
-
       font-size: 27px;
-
       color: #101828;
     }
 
     .result-header p {
       margin: 0;
-
       color: var(--muted);
-
       font-size: 14px;
     }
 
     .status-pill {
       display: inline-flex;
-
       padding: 7px 11px;
-
       border-radius: 999px;
-
       font-size: 12px;
       font-weight: 800;
-
       background: var(--success-bg);
-
       color: var(--success);
-
       border: 1px solid #abefc6;
-
       white-space: nowrap;
     }
 
-    /*
-      ======================================================
-      DETECTED REQUIREMENTS
-      ======================================================
-    */
+    /* DETECTED REQUIREMENTS */
 
     .detected-section {
       display: none;
-
       margin-bottom: 25px;
-
       padding: 20px;
-
       border: 1px solid #dbe5ff;
       border-radius: 14px;
-
       background: #f8faff;
     }
 
     .detected-section h3 {
       margin: 0 0 6px;
-
       color: #101828;
-
       font-size: 18px;
     }
 
     .detected-description {
       margin: 0 0 16px;
-
       color: #667085;
-
       font-size: 13px;
     }
 
     .detected-grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
 
     .detected-card {
       padding: 16px;
-
       background: #ffffff;
-
       border: 1px solid var(--border);
       border-radius: 12px;
     }
 
     .detected-card h4 {
       margin: 0 0 7px;
-
       color: #101828;
-
       font-size: 15px;
     }
 
     .detected-card p {
       margin: 0 0 13px;
-
       color: #667085;
-
       font-size: 13px;
       line-height: 1.55;
     }
 
     .use-requirement {
       width: 100%;
-
       padding: 10px 12px;
-
       border: 1px solid #bfd0f8;
       border-radius: 9px;
-
       background: #eef4ff;
       color: #1d4ed8;
-
       font-size: 13px;
       font-weight: 700;
-
       cursor: pointer;
     }
 
@@ -710,170 +520,112 @@
       background: #e3ebff;
     }
 
-    /*
-      ======================================================
-      SCORES
-      ======================================================
-    */
+    /* SCORES */
 
     .score-grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(3, minmax(0, 1fr));
-
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
-
       margin-bottom: 24px;
     }
 
     .score-card {
       padding: 20px;
-
       border: 1px solid var(--border);
       border-radius: 14px;
-
       background: #ffffff;
-
       box-shadow: var(--shadow-sm);
     }
 
     .score-label {
       color: #667085;
-
       font-size: 12px;
       font-weight: 800;
-
       text-transform: uppercase;
-
       letter-spacing: 0.6px;
-
       margin-bottom: 8px;
     }
 
     .score-value {
       display: flex;
-
       align-items: baseline;
-
       gap: 5px;
-
       font-size: 32px;
-
       font-weight: 800;
-
       color: #101828;
     }
 
     .score-value span {
       font-size: 14px;
-
       color: #98a2b3;
-
       font-weight: 600;
     }
 
     .score-bar {
       height: 7px;
-
       background: #eef2f6;
-
       border-radius: 999px;
-
       overflow: hidden;
-
       margin-top: 12px;
     }
 
     .score-fill {
       height: 100%;
-
       width: 0%;
-
       border-radius: 999px;
-
-      background:
-        linear-gradient(
-          90deg,
-          #60a5fa,
-          #2563eb
-        );
-
+      background: linear-gradient(
+        90deg,
+        #60a5fa,
+        #2563eb
+      );
       transition: width 0.5s ease;
     }
 
-    /*
-      ======================================================
-      SUMMARY
-      ======================================================
-    */
+    /* SUMMARY */
 
     .summary-box {
-      background:
-        linear-gradient(
-          135deg,
-          #eef4ff,
-          #f5f7ff
-        );
-
+      background: linear-gradient(
+        135deg,
+        #eef4ff,
+        #f5f7ff
+      );
       border-left: 5px solid var(--primary);
-
       border-top: 1px solid #dbe5ff;
       border-right: 1px solid #dbe5ff;
       border-bottom: 1px solid #dbe5ff;
-
       border-radius: 12px;
-
       padding: 20px;
-
       margin-bottom: 24px;
     }
 
     .summary-label {
       font-size: 11px;
-
       color: #667085;
-
       font-weight: 800;
-
       text-transform: uppercase;
-
       letter-spacing: 0.7px;
-
       margin-bottom: 7px;
     }
 
     .summary-text {
       color: #172033;
-
       font-size: 16px;
-
       line-height: 1.7;
-
       font-weight: 500;
     }
 
-    /*
-      ======================================================
-      ANALYSIS
-      ======================================================
-    */
+    /* ANALYSIS */
 
     .analysis-grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px;
     }
 
     .analysis-box {
       background: #f8fafc;
-
       border: 1px solid var(--border);
       border-radius: 14px;
-
       padding: 20px;
     }
 
@@ -883,191 +635,136 @@
 
     .analysis-box h3 {
       margin: 0 0 13px;
-
       font-size: 17px;
-
       color: #101828;
     }
 
     .analysis-box p {
       margin: 0;
-
       color: #475467;
-
       line-height: 1.65;
     }
 
     .list {
       margin: 0;
-
       padding-left: 21px;
     }
 
     .list li {
       margin-bottom: 9px;
-
       color: #475467;
-
       line-height: 1.55;
     }
 
     .empty {
       color: #98a2b3;
-
       font-style: italic;
-
       font-size: 14px;
     }
 
     .priority {
       display: inline-flex;
-
       padding: 4px 9px;
-
       border-radius: 999px;
-
       font-size: 11px;
       font-weight: 800;
-
       text-transform: uppercase;
     }
 
     .priority-high {
       color: #b42318;
-
       background: #fef3f2;
-
       border: 1px solid #fecdca;
     }
 
     .priority-medium {
       color: #b54708;
-
       background: #fffaeb;
-
       border: 1px solid #fedf89;
     }
 
     .priority-low {
       color: #175cd3;
-
       background: #eff8ff;
-
       border: 1px solid #b2ddff;
     }
 
-    /*
-      ======================================================
-      SOURCE
-      ======================================================
-    */
+    /* SOURCE */
 
     .source-box {
       background: #ffffff;
-
       border: 1px solid var(--border);
       border-radius: 12px;
-
       padding: 16px;
-
       margin-top: 24px;
     }
 
     .source-label {
       color: #667085;
-
       font-size: 11px;
       font-weight: 800;
-
       text-transform: uppercase;
-
       letter-spacing: 0.7px;
-
       margin-bottom: 7px;
     }
 
     .source-text {
       color: #475467;
-
       white-space: pre-wrap;
-
       line-height: 1.6;
-
       font-size: 14px;
     }
 
     .saved-indicator {
       display: none;
-
       margin-top: 12px;
-
       color: var(--success);
-
       font-size: 13px;
       font-weight: 700;
     }
 
-    /*
-      ======================================================
-      NEXT ACTIONS
-      ======================================================
-    */
+    /* NEXT ACTIONS */
 
     .next-actions {
       display: grid;
-
-      grid-template-columns:
-        repeat(3, minmax(0, 1fr));
-
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
-
       margin-top: 24px;
     }
 
     .next-action {
       display: block;
-
       text-decoration: none;
-
       background: #ffffff;
-
       border: 1px solid var(--border);
       border-radius: 14px;
-
       padding: 17px;
-
       color: #172033;
     }
 
     .next-action:hover {
       border-color: #bfd0f8;
-
       box-shadow: var(--shadow-sm);
     }
 
     .next-action-label {
       color: #667085;
-
       font-size: 11px;
       font-weight: 800;
-
       text-transform: uppercase;
-
       letter-spacing: 0.6px;
-
       margin-bottom: 5px;
     }
 
     .next-action-title {
       font-size: 15px;
-
       font-weight: 800;
-
       color: #101828;
     }
 
-    @media (max-width: 900px) {
+    /* RESPONSIVE */
 
+    @media (max-width: 900px) {
       .score-grid,
       .next-actions,
       .detected-grid {
@@ -1081,11 +778,9 @@
       .analysis-box.full {
         grid-column: auto;
       }
-
     }
 
     @media (max-width: 700px) {
-
       main {
         margin: 35px auto;
       }
@@ -1125,7 +820,6 @@
       .result-header {
         flex-direction: column;
       }
-
     }
   </style>
 </head>
@@ -1155,7 +849,7 @@
 
 
     <!-- ==================================================
-         MULTIMODAL INPUT
+         INPUT
          ================================================== -->
 
     <section class="card">
@@ -1182,8 +876,6 @@
           placeholder="Tell BAForge AI what you want to analyze..."
           spellcheck="true"></textarea>
 
-
-        <!-- ATTACHED SOURCE -->
 
         <div
           id="sourceChip"
@@ -1219,8 +911,6 @@
 
         </div>
 
-
-        <!-- COMPOSER TOOLBAR -->
 
         <div class="composer-toolbar">
 
@@ -1308,8 +998,6 @@
       </div>
 
 
-      <!-- FILE INPUTS -->
-
       <input
         id="pdfInput"
         type="file"
@@ -1329,8 +1017,6 @@
         capture="environment"
         hidden>
 
-
-      <!-- OPTIONS -->
 
       <div class="options">
 
@@ -1446,8 +1132,6 @@
       </div>
 
 
-      <!-- MULTIPLE REQUIREMENTS -->
-
       <div
         id="detectedSection"
         class="detected-section">
@@ -1460,7 +1144,6 @@
           id="detectedDescription"
           class="detected-description">
           Multiple requirements were detected in the source.
-          Select one to use as the current workspace requirement.
         </p>
 
         <div
@@ -1470,8 +1153,6 @@
 
       </div>
 
-
-      <!-- SCORES -->
 
       <div class="score-grid">
 
@@ -1485,13 +1166,9 @@
 
           <div class="score-value">
 
-            <span id="clarityScore">
-              0
-            </span>
+            <span id="clarityScore">0</span>
 
-            <span>
-              / 100
-            </span>
+            <span>/ 100</span>
 
           </div>
 
@@ -1517,13 +1194,9 @@
 
           <div class="score-value">
 
-            <span id="completenessScore">
-              0
-            </span>
+            <span id="completenessScore">0</span>
 
-            <span>
-              / 100
-            </span>
+            <span>/ 100</span>
 
           </div>
 
@@ -1549,13 +1222,9 @@
 
           <div class="score-value">
 
-            <span id="testabilityScore">
-              0
-            </span>
+            <span id="testabilityScore">0</span>
 
-            <span>
-              / 100
-            </span>
+            <span>/ 100</span>
 
           </div>
 
@@ -1573,8 +1242,6 @@
       </div>
 
 
-      <!-- SUMMARY -->
-
       <div class="summary-box">
 
         <div
@@ -1591,8 +1258,6 @@
       </div>
 
 
-      <!-- ANALYSIS -->
-
       <div class="analysis-grid">
 
         <div class="analysis-box">
@@ -1601,9 +1266,7 @@
             Requirement Type
           </h3>
 
-          <p id="requirementType">
-            -
-          </p>
+          <p id="requirementType">-</p>
 
         </div>
 
@@ -1614,9 +1277,7 @@
             Priority
           </h3>
 
-          <p id="priority">
-            -
-          </p>
+          <p id="priority">-</p>
 
         </div>
 
@@ -1627,8 +1288,7 @@
             Ambiguities
           </h3>
 
-          <div id="ambiguities">
-          </div>
+          <div id="ambiguities"></div>
 
         </div>
 
@@ -1639,8 +1299,7 @@
             Missing Information
           </h3>
 
-          <div id="missingInformation">
-          </div>
+          <div id="missingInformation"></div>
 
         </div>
 
@@ -1651,8 +1310,7 @@
             Assumptions
           </h3>
 
-          <div id="assumptions">
-          </div>
+          <div id="assumptions"></div>
 
         </div>
 
@@ -1663,8 +1321,7 @@
             Business Rules
           </h3>
 
-          <div id="businessRules">
-          </div>
+          <div id="businessRules"></div>
 
         </div>
 
@@ -1675,8 +1332,7 @@
             Open Questions
           </h3>
 
-          <div id="openQuestions">
-          </div>
+          <div id="openQuestions"></div>
 
         </div>
 
@@ -1687,8 +1343,7 @@
             Edge Cases
           </h3>
 
-          <div id="edgeCases">
-          </div>
+          <div id="edgeCases"></div>
 
         </div>
 
@@ -1699,15 +1354,12 @@
             Analyst Notes
           </h3>
 
-          <div id="analystNotes">
-          </div>
+          <div id="analystNotes"></div>
 
         </div>
 
       </div>
 
-
-      <!-- SOURCE -->
 
       <div class="source-box">
 
@@ -1728,11 +1380,9 @@
       <div
         id="savedIndicator"
         class="saved-indicator">
-        ✓ Requirement saved to the current workspace context.
+        ✓ Requirement saved to the current workspace.
       </div>
 
-
-      <!-- NEXT -->
 
       <div class="next-actions">
 
@@ -1799,18 +1449,25 @@
   </main>
 
 
+  <!-- ====================================================
+       CORE
+       ==================================================== -->
+
   <script src="/core/data-model.js"></script>
+  <script src="/core/artifact-store.js"></script>
+  <script src="/core/relationship-engine.js"></script>
+  <script src="/core/i18n.js"></script>
 
 
   <script>
 
     /*
       ======================================================
-      TRANSLATIONS
+      PAGE TRANSLATIONS
       ======================================================
     */
 
-    const translations = {
+    const pageTranslations = {
 
       en: {
 
@@ -1845,7 +1502,7 @@
           "Clear",
 
         loading:
-          "AI is analyzing your input...",
+          "BAForge AI is analyzing your input...",
 
         validation:
           "Add some text or attach a PDF or image before analyzing.",
@@ -1923,7 +1580,7 @@
           "Analyzed Input",
 
         saved:
-          "✓ Requirement saved to the current workspace context.",
+          "✓ Requirement saved to the BAForge workspace.",
 
         selected:
           "✓ Requirement selected for the current workspace.",
@@ -1931,11 +1588,11 @@
         next:
           "Next Step",
 
-        generateStory:
-          "Generate User Story →",
-
         continue:
           "Continue",
+
+        generateStory:
+          "Generate User Story →",
 
         generateCriteria:
           "Generate Acceptance Criteria →",
@@ -1991,7 +1648,7 @@
           "Temizle",
 
         loading:
-          "AI girdinizi analiz ediyor...",
+          "BAForge AI girdinizi analiz ediyor...",
 
         validation:
           "Analiz için metin yazın veya PDF/görsel ekleyin.",
@@ -2069,7 +1726,7 @@
           "Analiz Edilen Girdi",
 
         saved:
-          "✓ Gereksinim mevcut workspace bağlamına kaydedildi.",
+          "✓ Gereksinim BAForge workspace'e kaydedildi.",
 
         selected:
           "✓ Gereksinim mevcut workspace için seçildi.",
@@ -2077,11 +1734,11 @@
         next:
           "Sonraki Adım",
 
-        generateStory:
-          "User Story Oluştur →",
-
         continue:
           "Devam Et",
+
+        generateStory:
+          "User Story Oluştur →",
 
         generateCriteria:
           "Acceptance Criteria Oluştur →",
@@ -2155,11 +1812,63 @@
       document.getElementById("cameraInput");
 
 
-    let selectedFile =
-      null;
+    let selectedFile = null;
 
-    let detectedRequirements =
-      [];
+    let detectedRequirements = [];
+
+    let currentAnalysis = null;
+
+    let currentRequirementArtifact = null;
+
+
+    /*
+      ======================================================
+      TRANSLATION
+      ======================================================
+    */
+
+    function currentLanguage() {
+
+      return (
+        languageEl.value ||
+        "en"
+      );
+
+    }
+
+
+    function t(key) {
+
+      const language =
+        currentLanguage();
+
+      return (
+        pageTranslations[language] ||
+        pageTranslations.en
+      )[key] ||
+        (
+          pageTranslations.en[key] ||
+          key
+        );
+
+    }
+
+
+    function syncCoreLanguage() {
+
+      if (
+        window.BAI18n &&
+        typeof window.BAI18n.setLanguage ===
+          "function"
+      ) {
+
+        window.BAI18n.setLanguage(
+          currentLanguage()
+        );
+
+      }
+
+    }
 
 
     /*
@@ -2167,16 +1876,6 @@
       HELPERS
       ======================================================
     */
-
-    function t(key) {
-
-      return (
-        translations[languageEl.value] ||
-        translations.en
-      )[key];
-
-    }
-
 
     function escapeHtml(value) {
 
@@ -2186,6 +1885,55 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+
+    }
+
+
+    function safeArray(value) {
+
+      if (
+        Array.isArray(value)
+      ) {
+
+        return value;
+
+      }
+
+      if (
+        value === null ||
+        value === undefined ||
+        value === ""
+      ) {
+
+        return [];
+
+      }
+
+      return [value];
+
+    }
+
+
+    function normalizeScore(value) {
+
+      const score =
+        Number(value);
+
+      if (
+        !Number.isFinite(score)
+      ) {
+
+        return 0;
+
+      }
+
+      return Math.max(
+        0,
+        Math.min(
+          100,
+          Math.round(score)
+        )
+      );
 
     }
 
@@ -2220,26 +1968,6 @@
     }
 
 
-    function normalizeScore(value) {
-
-      const score =
-        Number(value);
-
-      if (!Number.isFinite(score)) {
-        return 0;
-      }
-
-      return Math.max(
-        0,
-        Math.min(
-          100,
-          Math.round(score)
-        )
-      );
-
-    }
-
-
     /*
       ======================================================
       LANGUAGE
@@ -2248,200 +1976,175 @@
 
     function updateLanguage() {
 
+      syncCoreLanguage();
+
       document.documentElement.lang =
-        languageEl.value;
+        currentLanguage();
 
 
       document.getElementById("badge")
         .textContent =
         t("badge");
 
-
       document.getElementById("pageTitle")
         .textContent =
         t("title");
-
 
       document.getElementById("pageSubtitle")
         .textContent =
         t("subtitle");
 
-
       document.getElementById("inputTitle")
         .textContent =
         t("inputTitle");
-
 
       document.getElementById("inputDescription")
         .textContent =
         t("inputDescription");
 
-
       requirementEl.placeholder =
         t("placeholder");
-
 
       document.getElementById("inputHint")
         .textContent =
         t("hint");
 
-
       document.getElementById("languageLabel")
         .textContent =
         t("language");
-
 
       document.getElementById("detailLabel")
         .textContent =
         t("detail");
 
-
       clearButton.textContent =
         t("clear");
 
-
       loadingEl.textContent =
         t("loading");
-
 
       document.getElementById("pdfOptionText")
         .textContent =
         t("pdf");
 
-
       document.getElementById("imageOptionText")
         .textContent =
         t("image");
-
 
       document.getElementById("cameraOptionText")
         .textContent =
         t("camera");
 
-
       document.getElementById("resultTitle")
         .textContent =
         t("result");
-
 
       document.getElementById("resultSubtitle")
         .textContent =
         t("resultSubtitle");
 
-
       document.getElementById("statusPill")
         .textContent =
         t("complete");
-
 
       document.getElementById("detectedTitle")
         .textContent =
         t("detected");
 
-
       document.getElementById("detectedDescription")
         .textContent =
         t("detectedDescription");
-
 
       document.getElementById("clarityLabel")
         .textContent =
         t("clarity");
 
-
       document.getElementById("completenessLabel")
         .textContent =
         t("completeness");
-
 
       document.getElementById("testabilityLabel")
         .textContent =
         t("testability");
 
-
       document.getElementById("summaryLabel")
         .textContent =
         t("summary");
-
 
       document.getElementById("typeTitle")
         .textContent =
         t("type");
 
-
       document.getElementById("priorityTitle")
         .textContent =
         t("priority");
-
 
       document.getElementById("ambiguitiesTitle")
         .textContent =
         t("ambiguities");
 
-
       document.getElementById("missingTitle")
         .textContent =
         t("missing");
-
 
       document.getElementById("assumptionsTitle")
         .textContent =
         t("assumptions");
 
-
       document.getElementById("rulesTitle")
         .textContent =
         t("rules");
-
 
       document.getElementById("questionsTitle")
         .textContent =
         t("questions");
 
-
       document.getElementById("edgeCasesTitle")
         .textContent =
         t("edgeCases");
-
 
       document.getElementById("recommendationTitle")
         .textContent =
         t("notes");
 
-
       document.getElementById("sourceLabel")
         .textContent =
         t("source");
-
 
       document.getElementById("nextStoryLabel")
         .textContent =
         t("next");
 
-
       document.getElementById("nextStoryTitle")
         .textContent =
         t("generateStory");
-
 
       document.getElementById("nextCriteriaLabel")
         .textContent =
         t("continue");
 
-
       document.getElementById("nextCriteriaTitle")
         .textContent =
         t("generateCriteria");
-
 
       document.getElementById("nextUatLabel")
         .textContent =
         t("continue");
 
-
       document.getElementById("nextUatTitle")
         .textContent =
         t("generateUat");
+
+
+      if (
+        detectedRequirements.length > 1
+      ) {
+
+        renderDetectedRequirements(
+          detectedRequirements
+        );
+
+      }
 
 
       updateSourceChip();
@@ -2458,7 +2161,9 @@
     function updateSourceChip() {
 
       const chip =
-        document.getElementById("sourceChip");
+        document.getElementById(
+          "sourceChip"
+        );
 
 
       if (!selectedFile) {
@@ -2567,7 +2272,6 @@
 
       updateSourceChip();
 
-
       attachMenu.classList.remove(
         "open"
       );
@@ -2580,7 +2284,6 @@
       selectedFile =
         null;
 
-
       pdfInput.value =
         "";
 
@@ -2589,7 +2292,6 @@
 
       cameraInput.value =
         "";
-
 
       updateSourceChip();
 
@@ -2642,7 +2344,7 @@
 
     /*
       ======================================================
-      RENDERING
+      RENDER
       ======================================================
     */
 
@@ -2670,11 +2372,60 @@
     }
 
 
-    function renderList(items) {
+    function itemToText(item) {
 
       if (
-        !Array.isArray(items) ||
-        items.length === 0
+        item === null ||
+        item === undefined
+      ) {
+
+        return "";
+
+      }
+
+
+      if (
+        typeof item === "string" ||
+        typeof item === "number" ||
+        typeof item === "boolean"
+      ) {
+
+        return String(item);
+
+      }
+
+
+      if (
+        typeof item === "object"
+      ) {
+
+        return (
+          item.description ||
+          item.rule ||
+          item.question ||
+          item.note ||
+          item.text ||
+          JSON.stringify(item)
+        );
+
+      }
+
+
+      return "";
+
+    }
+
+
+    function renderList(items) {
+
+      const list =
+        safeArray(items)
+          .map(itemToText)
+          .filter(Boolean);
+
+
+      if (
+        list.length === 0
       ) {
 
         return `
@@ -2689,17 +2440,11 @@
       return `
         <ul class="list">
           ${
-            items
+            list
               .map(
                 item => `
                   <li>
-                    ${
-                      escapeHtml(
-                        typeof item === "object"
-                          ? JSON.stringify(item)
-                          : item
-                      )
-                    }
+                    ${escapeHtml(item)}
                   </li>
                 `
               )
@@ -2763,193 +2508,435 @@
 
     function renderNotes(notes) {
 
-      if (
-        !notes ||
-        (
-          Array.isArray(notes) &&
-          notes.length === 0
-        )
-      ) {
-
-        return `
-          <div class="empty">
-            ${escapeHtml(t("empty"))}
-          </div>
-        `;
-
-      }
-
-
-      if (
-        Array.isArray(notes)
-      ) {
-
-        return renderList(notes);
-
-      }
-
-
-      return `
-        <p>
-          ${escapeHtml(notes)}
-        </p>
-      `;
+      return renderList(
+        notes
+      );
 
     }
 
 
     /*
       ======================================================
-      WORKSPACE
+      REQUIREMENT NORMALIZATION
       ======================================================
     */
 
-    function saveRequirementToWorkspace(
+    function normalizeAnalysis(
+      data
+    ) {
+
+      const analysis =
+        data &&
+        typeof data === "object"
+          ? data
+          : {};
+
+
+      return {
+
+        title:
+          analysis.title ||
+          "Requirement",
+
+        summary:
+          analysis.summary ||
+          "",
+
+        requirementType:
+          analysis.requirementType ||
+          analysis.type ||
+          "Other",
+
+        priority:
+          analysis.priority ||
+          "Unknown",
+
+        clarityScore:
+          normalizeScore(
+            analysis.clarityScore
+          ),
+
+        completenessScore:
+          normalizeScore(
+            analysis.completenessScore
+          ),
+
+        testabilityScore:
+          normalizeScore(
+            analysis.testabilityScore
+          ),
+
+        ambiguities:
+          safeArray(
+            analysis.ambiguities
+          ),
+
+        missingInformation:
+          safeArray(
+            analysis.missingInformation
+          ),
+
+        assumptions:
+          safeArray(
+            analysis.assumptions
+          ),
+
+        businessRules:
+          safeArray(
+            analysis.businessRules
+          ),
+
+        openQuestions:
+          safeArray(
+            analysis.openQuestions
+          ),
+
+        edgeCases:
+          safeArray(
+            analysis.edgeCases
+          ),
+
+        analystNotes:
+          safeArray(
+            analysis.analystNotes
+          ),
+
+        primaryRequirement:
+          analysis.primaryRequirement ||
+          "",
+
+        detectedRequirements:
+          Array.isArray(
+            analysis.detectedRequirements
+          )
+            ? analysis.detectedRequirements
+            : []
+
+      };
+
+    }
+
+
+    /*
+      ======================================================
+      ARTIFACT STORE
+      ======================================================
+    */
+
+    function buildRequirementArtifact(
       data,
       originalRequirement,
       sourceInfo
     ) {
 
+      const normalized =
+        normalizeAnalysis(
+          data
+        );
+
+
+      const description =
+        normalized.primaryRequirement ||
+        originalRequirement ||
+        normalized.summary ||
+        "";
+
+
+      const requirementData = {
+
+        title:
+          normalized.title,
+
+        description,
+
+        requirement:
+          description,
+
+        summary:
+          normalized.summary,
+
+        requirementType:
+          normalized.requirementType,
+
+        priority:
+          normalized.priority,
+
+        analysis: {
+
+          clarityScore:
+            normalized.clarityScore,
+
+          completenessScore:
+            normalized.completenessScore,
+
+          testabilityScore:
+            normalized.testabilityScore,
+
+          ambiguities:
+            normalized.ambiguities,
+
+          missingInformation:
+            normalized.missingInformation,
+
+          assumptions:
+            normalized.assumptions,
+
+          businessRules:
+            normalized.businessRules,
+
+          openQuestions:
+            normalized.openQuestions,
+
+          edgeCases:
+            normalized.edgeCases,
+
+          analystNotes:
+            normalized.analystNotes
+
+        }
+
+      };
+
+
+      const source =
+        sourceInfo
+          ? {
+              type:
+                sourceInfo.type ||
+                "",
+
+              name:
+                sourceInfo.name ||
+                "",
+
+              size:
+                sourceInfo.size ||
+                null
+            }
+          : null;
+
+
+      /*
+       * Prefer the new Artifact Store.
+       */
+
       if (
-        !window.BADataModel ||
-        typeof window.BADataModel
-          .createRequirement !==
+        window.BAArtifactStore &&
+        typeof window.BAArtifactStore.create ===
           "function"
       ) {
 
-        return;
+        const existing =
+          window.BAArtifactStore
+            .getByType("requirement")
+            .find(
+              artifact =>
+                artifact.metadata &&
+                artifact.metadata
+                  .sourceKey ===
+                "requirement-analyzer-current"
+            );
+
+
+        let artifact;
+
+
+        if (existing) {
+
+          artifact =
+            window.BAArtifactStore.update(
+              existing.id,
+              {
+
+                title:
+                  requirementData.title,
+
+                content:
+                  requirementData,
+
+                metadata: {
+
+                  sourceKey:
+                    "requirement-analyzer-current",
+
+                  sourceTool:
+                    "requirement-analyzer",
+
+                  language:
+                    currentLanguage(),
+
+                  detail:
+                    detailEl.value,
+
+                  analyzerVersion:
+                    "1.0"
+
+                },
+
+                source
+
+              }
+            );
+
+        } else {
+
+          artifact =
+            window.BAArtifactStore.create(
+              "requirement",
+              requirementData,
+              {
+
+                title:
+                  requirementData.title,
+
+                metadata: {
+
+                  sourceKey:
+                    "requirement-analyzer-current",
+
+                  sourceTool:
+                    "requirement-analyzer",
+
+                  language:
+                    currentLanguage(),
+
+                  detail:
+                    detailEl.value,
+
+                  analyzerVersion:
+                    "1.0"
+
+                },
+
+                source
+
+              }
+            );
+
+        }
+
+
+        currentRequirementArtifact =
+          artifact;
+
+
+        return artifact;
 
       }
 
 
-      const requirement =
-        window.BADataModel
-          .createRequirement({
+      return null;
 
-            title:
-              data.title ||
-              data.summary ||
-              "Requirement",
+    }
 
-            description:
-              originalRequirement ||
-              data.summary ||
-              "",
 
-            source:
-              sourceInfo?.name
-                ? `Requirement Analyzer · ${sourceInfo.name}`
-                : "Requirement Analyzer",
+    /*
+      ======================================================
+      BACKWARD COMPATIBILITY
+      ======================================================
+    */
 
-            priority:
-              String(
-                data.priority ||
-                "medium"
-              ).toLowerCase(),
+    function saveLegacyRequirement(
+      artifact,
+      data,
+      originalRequirement,
+      sourceInfo
+    ) {
 
-            requirementType:
-              data.requirementType ||
-              "Other",
-
-            analysis: {
-
-              clarityScore:
-                normalizeScore(
-                  data.clarityScore
-                ),
-
-              completenessScore:
-                normalizeScore(
-                  data.completenessScore
-                ),
-
-              testabilityScore:
-                normalizeScore(
-                  data.testabilityScore
-                ),
-
-              ambiguities:
-                Array.isArray(
-                  data.ambiguities
-                )
-                  ? data.ambiguities
-                  : [],
-
-              missingInformation:
-                Array.isArray(
-                  data.missingInformation
-                )
-                  ? data.missingInformation
-                  : [],
-
-              assumptions:
-                Array.isArray(
-                  data.assumptions
-                )
-                  ? data.assumptions
-                  : [],
-
-              businessRules:
-                Array.isArray(
-                  data.businessRules
-                )
-                  ? data.businessRules
-                  : [],
-
-              openQuestions:
-                Array.isArray(
-                  data.openQuestions
-                )
-                  ? data.openQuestions
-                  : [],
-
-              edgeCases:
-                Array.isArray(
-                  data.edgeCases
-                )
-                  ? data.edgeCases
-                  : [],
-
-              analystNotes:
-                Array.isArray(
-                  data.analystNotes
-                )
-                  ? data.analystNotes
-                  : [
-                      data.analystNotes
-                    ].filter(Boolean)
-
-            }
-
-          });
+      const normalized =
+        normalizeAnalysis(
+          data
+        );
 
 
       /*
-        Backward compatibility.
+       * Keep the old sessionStorage
+       * bridge temporarily so the
+       * downstream screens continue
+       * working during migration.
+       */
 
-        Until core/data-model.js is upgraded,
-        explicitly preserve these new fields.
-      */
+      const requirement = {
 
-      requirement.requirementType =
-        data.requirementType ||
-        requirement.requirementType ||
-        "Other";
+        id:
+          artifact?.id ||
+          `req-${Date.now()}`,
 
+        type:
+          "requirement",
 
-      requirement.analysis =
-        requirement.analysis ||
-        {};
+        title:
+          normalized.title,
 
+        description:
+          artifact?.content?.description ||
+          originalRequirement ||
+          normalized.summary ||
+          "",
 
-      requirement.analysis.analystNotes =
-        Array.isArray(
-          data.analystNotes
-        )
-          ? data.analystNotes
-          : [
-              data.analystNotes
-            ].filter(Boolean);
+        requirement:
+          artifact?.content?.description ||
+          originalRequirement ||
+          normalized.summary ||
+          "",
+
+        summary:
+          normalized.summary,
+
+        requirementType:
+          normalized.requirementType,
+
+        priority:
+          normalized.priority,
+
+        analysis: {
+
+          clarityScore:
+            normalized.clarityScore,
+
+          completenessScore:
+            normalized.completenessScore,
+
+          testabilityScore:
+            normalized.testabilityScore,
+
+          ambiguities:
+            normalized.ambiguities,
+
+          missingInformation:
+            normalized.missingInformation,
+
+          assumptions:
+            normalized.assumptions,
+
+          businessRules:
+            normalized.businessRules,
+
+          openQuestions:
+            normalized.openQuestions,
+
+          edgeCases:
+            normalized.edgeCases,
+
+          analystNotes:
+            normalized.analystNotes
+
+        },
+
+        source:
+          sourceInfo
+            ? `Requirement Analyzer · ${sourceInfo.name || "source"}`
+            : "Requirement Analyzer",
+
+        createdAt:
+          artifact?.createdAt ||
+          new Date().toISOString(),
+
+        updatedAt:
+          artifact?.updatedAt ||
+          new Date().toISOString()
+
+      };
 
 
       try {
@@ -2965,31 +2952,74 @@
         sessionStorage.setItem(
           "baforge-analyzer-source",
           JSON.stringify(
-            sourceInfo ||
-            {}
+            sourceInfo || {}
           )
         );
-
-
-        document.getElementById(
-          "savedIndicator"
-        ).style.display =
-          "block";
-
-
-        document.getElementById(
-          "savedIndicator"
-        ).textContent =
-          t("saved");
 
       } catch (error) {
 
         console.warn(
-          "Unable to save requirement:",
+          "Legacy workspace bridge could not be saved:",
           error
         );
 
       }
+
+
+      return requirement;
+
+    }
+
+
+    /*
+      ======================================================
+      SAVE REQUIREMENT
+      ======================================================
+    */
+
+    function saveRequirementToWorkspace(
+      data,
+      originalRequirement,
+      sourceInfo
+    ) {
+
+      const normalized =
+        normalizeAnalysis(
+          data
+        );
+
+
+      const artifact =
+        buildRequirementArtifact(
+          normalized,
+          originalRequirement,
+          sourceInfo
+        );
+
+
+      saveLegacyRequirement(
+        artifact,
+        normalized,
+        originalRequirement,
+        sourceInfo
+      );
+
+
+      const savedIndicator =
+        document.getElementById(
+          "savedIndicator"
+        );
+
+
+      savedIndicator.style.display =
+        "block";
+
+
+      savedIndicator.textContent =
+        t("saved");
+
+
+      return artifact;
 
     }
 
@@ -3014,7 +3044,6 @@
         document.getElementById(
           "detectedSection"
         );
-
 
       const grid =
         document.getElementById(
@@ -3126,7 +3155,14 @@
       }
 
 
+      const selected =
+        normalizeAnalysis(
+          item
+        );
+
+
       const text =
+        selected.primaryRequirement ||
         item.requirement ||
         item.description ||
         item.summary ||
@@ -3141,69 +3177,17 @@
       updateCharacterCount();
 
 
-      const workspaceData = {
+      /*
+       * Re-render the selected requirement
+       * as the active analysis.
+       */
 
-        title:
-          item.title ||
-          "Requirement",
-
-        summary:
-          item.summary ||
-          text,
-
-        requirementType:
-          item.requirementType ||
-          "Other",
-
-        priority:
-          item.priority ||
-          "Unknown",
-
-        clarityScore:
-          item.clarityScore ??
-          0,
-
-        completenessScore:
-          item.completenessScore ??
-          0,
-
-        testabilityScore:
-          item.testabilityScore ??
-          0,
-
-        ambiguities:
-          item.ambiguities ||
-          [],
-
-        missingInformation:
-          item.missingInformation ||
-          [],
-
-        assumptions:
-          item.assumptions ||
-          [],
-
-        businessRules:
-          item.businessRules ||
-          [],
-
-        openQuestions:
-          item.openQuestions ||
-          [],
-
-        edgeCases:
-          item.edgeCases ||
-          [],
-
-        analystNotes:
-          item.analystNotes ||
-          []
-
-      };
+      currentAnalysis =
+        selected;
 
 
-      saveRequirementToWorkspace(
-        workspaceData,
+      renderResult(
+        selected,
         text,
         selectedFile
           ? {
@@ -3211,7 +3195,10 @@
                 selectedFile.name,
 
               type:
-                selectedFile.type
+                selectedFile.type,
+
+              size:
+                selectedFile.size
             }
           : null
       );
@@ -3221,12 +3208,6 @@
         "savedIndicator"
       ).textContent =
         t("selected");
-
-
-      document.getElementById(
-        "savedIndicator"
-      ).style.display =
-        "block";
 
     }
 
@@ -3243,27 +3224,37 @@
       sourceInfo
     ) {
 
+      const normalized =
+        normalizeAnalysis(
+          data
+        );
+
+
+      currentAnalysis =
+        normalized;
+
+
       renderDetectedRequirements(
-        data.detectedRequirements
+        normalized.detectedRequirements
       );
 
 
       renderScore(
-        data.clarityScore,
+        normalized.clarityScore,
         "clarityScore",
         "clarityBar"
       );
 
 
       renderScore(
-        data.completenessScore,
+        normalized.completenessScore,
         "completenessScore",
         "completenessBar"
       );
 
 
       renderScore(
-        data.testabilityScore,
+        normalized.testabilityScore,
         "testabilityScore",
         "testabilityBar"
       );
@@ -3272,14 +3263,20 @@
       document.getElementById(
         "summary"
       ).textContent =
-        data.summary ||
+        normalized.summary ||
         t("empty");
 
+
+      /*
+       * Explicit requirementType assignment.
+       * This fixes the previous "Other" persistence
+       * problem.
+       */
 
       document.getElementById(
         "requirementType"
       ).textContent =
-        data.requirementType ||
+        normalized.requirementType ||
         t("empty");
 
 
@@ -3287,7 +3284,7 @@
         "priority"
       ).innerHTML =
         renderPriority(
-          data.priority
+          normalized.priority
         );
 
 
@@ -3295,7 +3292,7 @@
         "ambiguities"
       ).innerHTML =
         renderList(
-          data.ambiguities
+          normalized.ambiguities
         );
 
 
@@ -3303,7 +3300,7 @@
         "missingInformation"
       ).innerHTML =
         renderList(
-          data.missingInformation
+          normalized.missingInformation
         );
 
 
@@ -3311,7 +3308,7 @@
         "assumptions"
       ).innerHTML =
         renderList(
-          data.assumptions
+          normalized.assumptions
         );
 
 
@@ -3319,7 +3316,7 @@
         "businessRules"
       ).innerHTML =
         renderList(
-          data.businessRules
+          normalized.businessRules
         );
 
 
@@ -3327,7 +3324,7 @@
         "openQuestions"
       ).innerHTML =
         renderList(
-          data.openQuestions
+          normalized.openQuestions
         );
 
 
@@ -3335,27 +3332,34 @@
         "edgeCases"
       ).innerHTML =
         renderList(
-          data.edgeCases
+          normalized.edgeCases
         );
 
+
+      /*
+       * Explicit Analyst Notes handling.
+       * The previous implementation could
+       * lose non-array values.
+       */
 
       document.getElementById(
         "analystNotes"
       ).innerHTML =
         renderNotes(
-          data.analystNotes
+          normalized.analystNotes
         );
 
 
       let sourceText =
         originalRequirement ||
-        data.primaryRequirement ||
-        data.summary ||
+        normalized.primaryRequirement ||
+        normalized.summary ||
         "";
 
 
       if (
-        sourceInfo?.name
+        sourceInfo &&
+        sourceInfo.name
       ) {
 
         sourceText =
@@ -3375,11 +3379,16 @@
         sourceText;
 
 
+      /*
+       * Save immediately after a successful
+       * analysis.
+       */
+
       saveRequirementToWorkspace(
-        data,
-        data.primaryRequirement ||
+        normalized,
+        normalized.primaryRequirement ||
         originalRequirement ||
-        data.summary ||
+        normalized.summary ||
         "",
         sourceInfo
       );
@@ -3413,9 +3422,9 @@
 
 
       /*
-        Important:
-        Text is NOT mandatory when a file exists.
-      */
+       * Text remains optional when
+       * a source file exists.
+       */
 
       if (
         !requirement &&
@@ -3434,14 +3443,11 @@
       analyzeButton.disabled =
         true;
 
-
       clearButton.disabled =
         true;
 
-
       loadingEl.style.display =
         "block";
-
 
       resultEl.style.display =
         "none";
@@ -3560,8 +3566,7 @@
 
         if (
           !data ||
-          typeof data !==
-          "object"
+          typeof data !== "object"
         ) {
 
           throw new Error(
@@ -3571,8 +3576,14 @@
         }
 
 
+        const normalized =
+          normalizeAnalysis(
+            data
+          );
+
+
         renderResult(
-          data,
+          normalized,
           requirement,
           source
             ? {
@@ -3580,7 +3591,10 @@
                   source.name,
 
                 type:
-                  source.type
+                  source.type,
+
+                size:
+                  source.size
               }
             : null
         );
@@ -3604,10 +3618,8 @@
         analyzeButton.disabled =
           false;
 
-
         clearButton.disabled =
           false;
-
 
         loadingEl.style.display =
           "none";
@@ -3628,13 +3640,17 @@
       requirementEl.value =
         "";
 
-
       selectedFile =
         null;
 
-
       detectedRequirements =
         [];
+
+      currentAnalysis =
+        null;
+
+      currentRequirementArtifact =
+        null;
 
 
       pdfInput.value =
@@ -3670,6 +3686,12 @@
         "none";
 
 
+      document.getElementById(
+        "detectedGrid"
+      ).innerHTML =
+        "";
+
+
       requirementEl.focus();
 
     }
@@ -3686,7 +3708,6 @@
       event => {
 
         event.stopPropagation();
-
 
         attachMenu.classList.toggle(
           "open"
@@ -3722,6 +3743,10 @@
       "click",
       () => {
 
+        attachMenu.classList.remove(
+          "open"
+        );
+
         pdfInput.click();
 
       }
@@ -3734,6 +3759,10 @@
       "click",
       () => {
 
+        attachMenu.classList.remove(
+          "open"
+        );
+
         imageInput.click();
 
       }
@@ -3745,6 +3774,10 @@
     ).addEventListener(
       "click",
       () => {
+
+        attachMenu.classList.remove(
+          "open"
+        );
 
         cameraInput.click();
 
@@ -3829,8 +3862,7 @@
             event.ctrlKey ||
             event.metaKey
           ) &&
-          event.key ===
-            "Enter"
+          event.key === "Enter"
         ) {
 
           event.preventDefault();
@@ -3849,11 +3881,45 @@
       ======================================================
     */
 
-    updateLanguage();
+    function initialize() {
 
-    updateCharacterCount();
+      /*
+       * Restore centralized language.
+       */
 
-    updateSourceChip();
+      if (
+        window.BAI18n &&
+        typeof window.BAI18n.getLanguage ===
+          "function"
+      ) {
+
+        const savedLanguage =
+          window.BAI18n.getLanguage();
+
+
+        if (
+          savedLanguage === "en" ||
+          savedLanguage === "tr"
+        ) {
+
+          languageEl.value =
+            savedLanguage;
+
+        }
+
+      }
+
+
+      updateLanguage();
+
+      updateCharacterCount();
+
+      updateSourceChip();
+
+    }
+
+
+    initialize();
 
   </script>
 
