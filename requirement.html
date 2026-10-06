@@ -964,6 +964,118 @@
     }
 
     /* -----------------------------------------
+       REQUIREMENT PICKER
+    ----------------------------------------- */
+
+    .requirement-picker {
+      margin-bottom: 22px;
+    }
+
+    .picker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .picker-title {
+      margin: 0 0 5px;
+      font-size: 20px;
+      color: var(--heading);
+    }
+
+    .picker-description {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .picker-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .picker-field label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .picker-select {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      outline: none;
+    }
+
+    .picker-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+    }
+
+    .picker-count {
+      min-width: 72px;
+      text-align: center;
+      padding: 12px 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .picker-navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .picker-nav-button,
+    .direct-entry-button {
+      min-height: 42px;
+      padding: 9px 14px;
+      border-radius: 10px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .picker-nav-button {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+    }
+
+    .picker-nav-button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .direct-entry-button {
+      border: 1px solid #bfd0f8;
+      background: #eef4ff;
+      color: #1d4ed8;
+      white-space: nowrap;
+    }
+
+    .direct-entry-button:hover,
+    .picker-nav-button:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    /* -----------------------------------------
        RESPONSIVE
     ----------------------------------------- */
 
@@ -1057,6 +1169,20 @@
       .card-header {
         flex-direction: column;
       }
+
+      .picker-header,
+      .picker-row,
+      .picker-navigation {
+        flex-direction: column;
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .direct-entry-button,
+      .picker-nav-button,
+      .picker-count {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -1128,6 +1254,78 @@
         </ul>
         <p class="info-tip" id="howToUseTip">Tip: You can start directly from this screen even when no requirement has been loaded from Requirement Intelligence.</p>
       </div>
+    </section>
+
+
+    <section
+      id="requirementPickerCard"
+      class="card requirement-picker">
+
+      <div class="picker-header">
+
+        <div>
+          <h2
+            class="picker-title"
+            id="pickerTitle">
+            Requirement Set
+          </h2>
+          <p
+            class="picker-description"
+            id="pickerDescription">
+            Select a requirement from the analyzed set or start a new one directly.
+          </p>
+        </div>
+
+        <button
+          id="newRequirementButton"
+          class="direct-entry-button"
+          type="button">
+          + Direct Data Entry
+        </button>
+
+      </div>
+
+      <div class="picker-row">
+
+        <div class="picker-field">
+          <label
+            for="requirementSelector"
+            id="requirementSelectorLabel">
+            Select Requirement
+          </label>
+
+          <select
+            id="requirementSelector"
+            class="picker-select">
+          </select>
+        </div>
+
+        <div
+          id="requirementCount"
+          class="picker-count">
+          0 / 0
+        </div>
+
+      </div>
+
+      <div class="picker-navigation">
+
+        <button
+          id="previousRequirementButton"
+          class="picker-nav-button"
+          type="button">
+          ← Previous
+        </button>
+
+        <button
+          id="nextRequirementButton"
+          class="picker-nav-button"
+          type="button">
+          Next →
+        </button>
+
+      </div>
+
     </section>
 
 
@@ -1656,6 +1854,15 @@
       const REQUIREMENT_KEY =
         "baforge-current-requirement";
 
+      const REQUIREMENT_SET_KEY =
+        "baforge-requirement-set";
+
+      const SELECTED_REQUIREMENT_ID_KEY =
+        "baforge-selected-requirement-id";
+
+      const LEGACY_SELECTED_REQUIREMENTS_KEY =
+        "baforge-selected-requirements";
+
       const WORKFLOW_KEY =
         "baforge-workflow-state";
 
@@ -1691,6 +1898,27 @@
 
           requirementDescription:
             "This requirement was prepared from the Requirement Analyzer. You can review and refine it before continuing.",
+
+          pickerTitle:
+            "Requirement Set",
+
+          pickerDescription:
+            "Select a requirement from the analyzed set or start a new one directly.",
+
+          selectRequirement:
+            "Select Requirement",
+
+          directEntry:
+            "+ Direct Data Entry",
+
+          previousRequirement:
+            "← Previous",
+
+          nextRequirement:
+            "Next →",
+
+          clearError:
+            "The requirement editor could not be cleared.",
 
           howToUseTitle: "How to Use This Screen",
           howToUseDescription: "Review an analyzed requirement or create one directly, refine its content and prepare it for the next BAForge AI step.",
@@ -1909,6 +2137,27 @@
 
           requirementDescription:
             "Bu gereksinim Gereksinim Analizi ekranından hazırlandı. Devam etmeden önce içeriği gözden geçirip düzenleyebilirsiniz.",
+
+          pickerTitle:
+            "Gereksinim Seti",
+
+          pickerDescription:
+            "Analizden gelen gereksinimlerden birini seçin veya doğrudan yeni bir gereksinim girin.",
+
+          selectRequirement:
+            "Gereksinim Seç",
+
+          directEntry:
+            "+ Direkt Veri Girişi",
+
+          previousRequirement:
+            "← Önceki",
+
+          nextRequirement:
+            "Sonraki →",
+
+          clearError:
+            "Gereksinim editörü temizlenemedi.",
 
           howToUseTitle: "Bu Ekran Nasıl Kullanılır?",
           howToUseDescription: "Analiz edilmiş bir gereksinimi gözden geçirin veya doğrudan yeni bir gereksinim oluşturun, içeriğini geliştirin ve BAForge AI iş akışındaki sonraki adıma hazırlayın.",
@@ -2234,6 +2483,24 @@
       const continueButton =
         document.getElementById("continueButton");
 
+      const requirementSelector =
+        document.getElementById("requirementSelector");
+
+      const requirementCountEl =
+        document.getElementById("requirementCount");
+
+      const previousRequirementButton =
+        document.getElementById("previousRequirementButton");
+
+      const nextRequirementButton =
+        document.getElementById("nextRequirementButton");
+
+      const newRequirementButton =
+        document.getElementById("newRequirementButton");
+
+      let requirementSet = [];
+      let selectedRequirementIndex = -1;
+
 
       /* -----------------------------------------
          SAFE HELPERS
@@ -2487,6 +2754,36 @@
           "requirementCardDescription"
         ).textContent =
           t("requirementDescription");
+
+
+        document.getElementById(
+          "pickerTitle"
+        ).textContent =
+          t("pickerTitle");
+
+
+        document.getElementById(
+          "pickerDescription"
+        ).textContent =
+          t("pickerDescription");
+
+
+        document.getElementById(
+          "requirementSelectorLabel"
+        ).textContent =
+          t("selectRequirement");
+
+
+        newRequirementButton.textContent =
+          t("directEntry");
+
+
+        previousRequirementButton.textContent =
+          t("previousRequirement");
+
+
+        nextRequirementButton.textContent =
+          t("nextRequirement");
 
 
         if (
@@ -3006,6 +3303,615 @@
 
 
       /* -----------------------------------------
+         REQUIREMENT SET
+      ----------------------------------------- */
+
+      function normalizeRequirementCandidate(
+        candidate,
+        index = 0
+      ) {
+
+        if (
+          !candidate ||
+          typeof candidate !== "object"
+        ) {
+          return null;
+        }
+
+        const analysis =
+          candidate.analysis &&
+          typeof candidate.analysis === "object"
+            ? { ...candidate.analysis }
+            : {
+                clarityScore:
+                  candidate.clarityScore,
+                completenessScore:
+                  candidate.completenessScore,
+                testabilityScore:
+                  candidate.testabilityScore,
+                ambiguities:
+                  candidate.ambiguities,
+                missingInformation:
+                  candidate.missingInformation,
+                assumptions:
+                  candidate.assumptions,
+                businessRules:
+                  candidate.businessRules,
+                openQuestions:
+                  candidate.openQuestions,
+                edgeCases:
+                  candidate.edgeCases,
+                analystNotes:
+                  candidate.analystNotes
+              };
+
+        const description =
+          candidate.description ||
+          candidate.requirement ||
+          candidate.summary ||
+          "";
+
+        const title =
+          candidate.title ||
+          candidate.name ||
+          `Requirement ${index + 1}`;
+
+        const originalRequirement =
+          candidate.sourceRequirement ||
+          candidate.originalRequirement ||
+          candidate.requirement ||
+          description;
+
+        return {
+          ...candidate,
+          id:
+            candidate.id ||
+            `REQ_SET_${Date.now()}_${index + 1}`,
+          type:
+            candidate.type ||
+            "requirement",
+          title,
+          description,
+          summary:
+            candidate.summary ||
+            description,
+          requirement:
+            candidate.requirement ||
+            description,
+          requirementType:
+            candidate.requirementType ||
+            "Other",
+          priority:
+            String(
+              candidate.priority ||
+              "unknown"
+            ).toLowerCase(),
+          analysis: {
+            clarityScore:
+              analysis.clarityScore,
+            completenessScore:
+              analysis.completenessScore,
+            testabilityScore:
+              analysis.testabilityScore,
+            ambiguities:
+              analysis.ambiguities || [],
+            missingInformation:
+              analysis.missingInformation || [],
+            assumptions:
+              analysis.assumptions || [],
+            businessRules:
+              analysis.businessRules || [],
+            openQuestions:
+              analysis.openQuestions || [],
+            edgeCases:
+              analysis.edgeCases || [],
+            analystNotes:
+              analysis.analystNotes || []
+          },
+          sourceRequirement:
+            originalRequirement,
+          metadata: {
+            ...(candidate.metadata || {}),
+            sourceKey:
+              candidate.metadata?.sourceKey ||
+              "requirement-analyzer-current"
+          }
+        };
+
+      }
+
+
+      function readStoredJson(key) {
+
+        const local =
+          safeParse(
+            localStorage.getItem(key)
+          );
+
+        if (local !== null) {
+          return local;
+        }
+
+        return safeParse(
+          sessionStorage.getItem(key)
+        );
+
+      }
+
+
+      function writeStoredJson(key, value) {
+
+        const serialized =
+          JSON.stringify(value);
+
+        try {
+          localStorage.setItem(
+            key,
+            serialized
+          );
+        } catch (error) {
+          console.warn(
+            "BAForge localStorage write failed.",
+            error
+          );
+        }
+
+        try {
+          sessionStorage.setItem(
+            key,
+            serialized
+          );
+        } catch (error) {
+          console.warn(
+            "BAForge sessionStorage write failed.",
+            error
+          );
+        }
+
+      }
+
+
+      function readRequirementSet() {
+
+        const storedSet =
+          readStoredJson(
+            REQUIREMENT_SET_KEY
+          );
+
+        let candidates =
+          Array.isArray(storedSet)
+            ? storedSet
+            : Array.isArray(storedSet?.requirements)
+              ? storedSet.requirements
+              : Array.isArray(storedSet?.selectedRequirements)
+                ? storedSet.selectedRequirements
+                : Array.isArray(storedSet?.items)
+                  ? storedSet.items
+                  : [];
+
+        if (!candidates.length) {
+          const legacy =
+            readStoredJson(
+              LEGACY_SELECTED_REQUIREMENTS_KEY
+            );
+
+          candidates =
+            Array.isArray(legacy)
+              ? legacy
+              : Array.isArray(legacy?.requirements)
+                ? legacy.requirements
+                : Array.isArray(legacy?.selectedRequirements)
+                  ? legacy.selectedRequirements
+                  : [];
+        }
+
+        return candidates
+          .map(
+            (item, index) =>
+              normalizeRequirementCandidate(
+                item,
+                index
+              )
+          )
+          .filter(Boolean);
+
+      }
+
+
+      function persistRequirementSet() {
+        writeStoredJson(
+          REQUIREMENT_SET_KEY,
+          requirementSet
+        );
+
+        writeStoredJson(
+          LEGACY_SELECTED_REQUIREMENTS_KEY,
+          requirementSet
+        );
+
+      }
+
+
+      function getRequirementLabel(
+        requirement,
+        index
+      ) {
+
+        const title =
+          requirement?.title ||
+          `Requirement ${index + 1}`;
+
+        const short =
+          requirement?.description ||
+          requirement?.summary ||
+          "";
+
+        const suffix =
+          short &&
+          short !== title
+            ? ` — ${short.slice(0, 80)}`
+            : "";
+
+        return `${index + 1}. ${title}${suffix}`;
+
+      }
+
+
+      function renderRequirementPicker() {
+
+        const newOption =
+          document.createElement("option");
+
+        newOption.value = "__new__";
+        newOption.textContent =
+          t("directEntry");
+
+        requirementSelector.innerHTML = "";
+        requirementSelector.appendChild(
+          newOption
+        );
+
+        requirementSet.forEach(
+          (requirement, index) => {
+
+            const option =
+              document.createElement("option");
+
+            option.value =
+              requirement.id;
+
+            option.textContent =
+              getRequirementLabel(
+                requirement,
+                index
+              );
+
+            requirementSelector.appendChild(
+              option
+            );
+
+          }
+        );
+
+        if (
+          selectedRequirementIndex >= 0 &&
+          selectedRequirementIndex <
+            requirementSet.length
+        ) {
+          requirementSelector.value =
+            requirementSet[
+              selectedRequirementIndex
+            ].id;
+        } else {
+          requirementSelector.value =
+            "__new__";
+        }
+
+        const count =
+          requirementSet.length;
+
+        requirementCountEl.textContent =
+          count > 0
+            ? `${selectedRequirementIndex >= 0 ? selectedRequirementIndex + 1 : 0} / ${count}`
+            : "0 / 0";
+
+        previousRequirementButton.disabled =
+          selectedRequirementIndex <= 0;
+
+        nextRequirementButton.disabled =
+          selectedRequirementIndex < 0 ||
+          selectedRequirementIndex >= count - 1;
+
+      }
+
+
+      function saveSelectedRequirementId(
+        id
+      ) {
+
+        if (!id) {
+          try {
+            localStorage.removeItem(
+              SELECTED_REQUIREMENT_ID_KEY
+            );
+          } catch {}
+
+          sessionStorage.removeItem(
+            SELECTED_REQUIREMENT_ID_KEY
+          );
+
+          return;
+        }
+
+        writeStoredJson(
+          SELECTED_REQUIREMENT_ID_KEY,
+          id
+        );
+
+      }
+
+
+      function getSelectedRequirementId() {
+
+        const value =
+          readStoredJson(
+            SELECTED_REQUIREMENT_ID_KEY
+          );
+
+        return typeof value === "string"
+          ? value
+          : null;
+
+      }
+
+
+      function findRequirementInSetById(
+        id
+      ) {
+
+        if (!id) {
+          return null;
+        }
+
+        const index =
+          requirementSet.findIndex(
+            item => item?.id === id
+          );
+
+        if (index < 0) {
+          return null;
+        }
+
+        selectedRequirementIndex =
+          index;
+
+        return requirementSet[index];
+
+      }
+
+
+      function ensureRequirementInSet(
+        requirement
+      ) {
+
+        if (
+          !requirement ||
+          !requirement.id
+        ) {
+          return;
+        }
+
+        const index =
+          requirementSet.findIndex(
+            item => item?.id === requirement.id
+          );
+
+        const normalized =
+          normalizeRequirementCandidate(
+            requirement,
+            index >= 0
+              ? index
+              : requirementSet.length
+          );
+
+        if (!normalized) {
+          return;
+        }
+
+        if (index >= 0) {
+          requirementSet[index] =
+            normalized;
+          selectedRequirementIndex =
+            index;
+        } else {
+          requirementSet.push(
+            normalized
+          );
+          selectedRequirementIndex =
+            requirementSet.length - 1;
+        }
+
+        persistRequirementSet();
+        saveSelectedRequirementId(
+          normalized.id
+        );
+
+      }
+
+
+      function getCanonicalRequirement(
+        id
+      ) {
+
+        if (
+          !id ||
+          !window.BAArtifactStore ||
+          typeof BAArtifactStore.getById !==
+            "function"
+        ) {
+          return null;
+        }
+
+        try {
+          const artifact =
+            BAArtifactStore.getById(id);
+
+          return artifact
+            ? normalizeArtifact(artifact)
+            : null;
+        } catch (error) {
+          console.warn(
+            "BAForge Artifact Store lookup failed.",
+            error
+          );
+          return null;
+        }
+
+      }
+
+
+      function selectRequirementIndex(
+        index,
+        options = {}
+      ) {
+
+        if (
+          index < 0 ||
+          index >= requirementSet.length
+        ) {
+          return false;
+        }
+
+        if (
+          isDirty &&
+          !options.skipConfirm
+        ) {
+          const proceed =
+            window.confirm(
+              language === "tr"
+                ? "Kaydedilmemiş değişiklikleriniz var. Başka bir gereksinime geçmek istiyor musunuz?"
+                : "You have unsaved changes. Do you want to switch to another requirement?"
+            );
+
+          if (!proceed) {
+            renderRequirementPicker();
+            return false;
+          }
+        }
+
+        const selected =
+          requirementSet[index];
+
+        const canonical =
+          getCanonicalRequirement(
+            selected.id
+          );
+
+        currentRequirement =
+          canonical || selected;
+
+        selectedRequirementIndex =
+          index;
+
+        saveSelectedRequirementId(
+          selected.id
+        );
+
+        sessionStorage.setItem(
+          REQUIREMENT_KEY,
+          JSON.stringify(
+            currentRequirement
+          )
+        );
+
+        requirementCardEl.style.display =
+          "block";
+
+        emptyStateEl.style.display =
+          "none";
+
+        populateRequirement();
+        markClean();
+        hideMessages();
+        renderRequirementPicker();
+
+        return true;
+
+      }
+
+
+      function startNewRequirement() {
+
+        currentRequirement =
+          null;
+
+        selectedRequirementIndex =
+          -1;
+
+        saveSelectedRequirementId(
+          null
+        );
+
+        sessionStorage.removeItem(
+          REQUIREMENT_KEY
+        );
+
+        requirementCardEl.style.display =
+          "block";
+
+        emptyStateEl.style.display =
+          "none";
+
+        titleEl.value = "";
+        descriptionEl.value = "";
+        requirementTypeEl.value =
+          "Functional";
+        priorityEl.value =
+          "unknown";
+
+        ambiguitiesEl.value = "";
+        missingInformationEl.value = "";
+        assumptionsEl.value = "";
+        businessRulesEl.value = "";
+        openQuestionsEl.value = "";
+        edgeCasesEl.value = "";
+        analystNotesEl.value = "";
+
+        updateScore(
+          0,
+          clarityScoreEl,
+          clarityBarEl
+        );
+        updateScore(
+          0,
+          completenessScoreEl,
+          completenessBarEl
+        );
+        updateScore(
+          0,
+          testabilityScoreEl,
+          testabilityBarEl
+        );
+
+        requirementIdEl.textContent =
+          t("newRequirement");
+
+        statusPillEl.textContent =
+          t("statusDraft");
+
+        sourceRequirementEl.textContent =
+          t("noOriginal");
+
+        markClean();
+        hideMessages();
+        renderRequirementPicker();
+
+        titleEl.focus();
+
+      }
+
+
+      /* -----------------------------------------
          REQUIREMENT SOURCES
       ----------------------------------------- */
 
@@ -3138,6 +4044,24 @@
           }
 
 
+          const selectedId =
+            getSelectedRequirementId();
+
+          if (selectedId) {
+            const selectedArtifact =
+              artifacts.find(
+                artifact =>
+                  artifact?.id === selectedId
+              );
+
+            if (selectedArtifact) {
+              return normalizeArtifact(
+                selectedArtifact
+              );
+            }
+          }
+
+
           /*
            * First honor an explicit current requirement
            * selected by the upstream Analyzer or this page.
@@ -3209,26 +4133,68 @@
 
       function loadRequirement() {
 
-        /*
-         * 1. Prefer canonical Artifact Store.
-         */
+        requirementSet =
+          readRequirementSet();
+
+        const selectedId =
+          getSelectedRequirementId();
+
+        if (selectedId) {
+          const selected =
+            findRequirementInSetById(
+              selectedId
+            );
+
+          if (selected) {
+            const canonical =
+              getCanonicalRequirement(
+                selected.id
+              );
+
+            currentRequirement =
+              canonical || selected;
+
+            sessionStorage.setItem(
+              REQUIREMENT_KEY,
+              JSON.stringify(
+                currentRequirement
+              )
+            );
+
+            renderRequirementPicker();
+            return true;
+          }
+        }
+
+        const storedCurrent =
+          safeParse(
+            sessionStorage.getItem(
+              REQUIREMENT_KEY
+            )
+          );
+
+        if (storedCurrent) {
+          ensureRequirementInSet(
+            storedCurrent
+          );
+
+          currentRequirement =
+            storedCurrent;
+
+          renderRequirementPicker();
+          return true;
+        }
 
         const artifactRequirement =
           findRequirementInArtifactStore();
 
-
-        if (
-          artifactRequirement
-        ) {
+        if (artifactRequirement) {
+          ensureRequirementInSet(
+            artifactRequirement
+          );
 
           currentRequirement =
             artifactRequirement;
-
-          /*
-           * Keep the legacy bridge
-           * synchronized for downstream
-           * screens during migration.
-           */
 
           sessionStorage.setItem(
             REQUIREMENT_KEY,
@@ -3237,39 +4203,19 @@
             )
           );
 
+          renderRequirementPicker();
           return true;
-
         }
 
-
-        /*
-         * 2. Legacy sessionStorage fallback.
-         */
-
-        const stored =
-          sessionStorage.getItem(
-            REQUIREMENT_KEY
+        if (requirementSet.length > 0) {
+          selectRequirementIndex(
+            0,
+            { skipConfirm: true }
           );
-
-
-        const parsed =
-          safeParse(stored);
-
-
-        if (
-          parsed &&
-          typeof parsed ===
-          "object"
-        ) {
-
-          currentRequirement =
-            parsed;
-
           return true;
-
         }
 
-
+        renderRequirementPicker();
         return false;
 
       }
@@ -3546,6 +4492,9 @@
 
               priority:
                 priorityEl.value,
+
+              requirementType:
+                requirementTypeEl.value,
 
               analysis
 
@@ -3874,6 +4823,11 @@
         }
 
 
+        ensureRequirementInSet(
+          requirement
+        );
+
+
         /*
          * Temporary compatibility bridge.
          */
@@ -3966,227 +4920,16 @@
             t("clearConfirm")
           );
 
-
         if (!confirmed) {
           return;
         }
 
-
-        const artifactId =
-          currentRequirement?.id ||
-          safeParse(
-            sessionStorage.getItem(
-              REQUIREMENT_KEY
-            )
-          )?.id ||
-          null;
-
-
         /*
-         * The Artifact Store is the canonical workspace store.
-         * Do not report a successful clear unless the canonical
-         * artifact was actually removed.
+         * Clear means reset the editor for a fresh data entry.
+         * It intentionally does not delete canonical artifacts.
+         * Deleting saved workspace artifacts is a separate lifecycle action.
          */
-        if (
-          artifactId &&
-          window.BAArtifactStore
-        ) {
-
-          try {
-
-            const removeMethods = [
-              "clearArtifact",
-              "remove",
-              "delete",
-              "removeArtifact"
-            ];
-
-            let clearAttempted = false;
-            let clearSucceeded = false;
-
-            for (const method of removeMethods) {
-
-              if (
-                typeof BAArtifactStore[method] !==
-                "function"
-              ) {
-                continue;
-              }
-
-              clearAttempted = true;
-
-              const result =
-                BAArtifactStore[method](
-                  artifactId
-                );
-
-              if (result !== false) {
-                clearSucceeded = true;
-                break;
-              }
-
-            }
-
-            if (
-              clearAttempted &&
-              !clearSucceeded
-            ) {
-              showError(
-                t("storageError")
-              );
-              return;
-            }
-
-            /*
-             * Verify that the artifact no longer exists when
-             * the store exposes getById/getByType. This prevents
-             * an old requirement from silently reappearing after
-             * reload.
-             */
-            if (
-              clearSucceeded &&
-              typeof BAArtifactStore.getById ===
-              "function"
-            ) {
-              const remaining =
-                BAArtifactStore.getById(
-                  artifactId
-                );
-
-              if (remaining) {
-                showError(
-                  t("storageError")
-                );
-                return;
-              }
-            }
-
-          } catch (error) {
-
-            console.warn(
-              "BAForge Artifact Store clear failed.",
-              error
-            );
-
-            showError(
-              t("storageError")
-            );
-
-            return;
-          }
-
-        }
-
-
-        sessionStorage.removeItem(
-          REQUIREMENT_KEY
-        );
-
-
-        currentRequirement =
-          null;
-
-        markClean();
-
-
-        titleEl.value =
-          "";
-
-        descriptionEl.value =
-          "";
-
-        requirementTypeEl.value =
-          "Functional";
-
-        priorityEl.value =
-          "unknown";
-
-
-        ambiguitiesEl.value =
-          "";
-
-        missingInformationEl.value =
-          "";
-
-        assumptionsEl.value =
-          "";
-
-        businessRulesEl.value =
-          "";
-
-        openQuestionsEl.value =
-          "";
-
-        edgeCasesEl.value =
-          "";
-
-        analystNotesEl.value =
-          "";
-
-
-        updateScore(
-          0,
-          clarityScoreEl,
-          clarityBarEl
-        );
-
-
-        updateScore(
-          0,
-          completenessScoreEl,
-          completenessBarEl
-        );
-
-
-        updateScore(
-          0,
-          testabilityScoreEl,
-          testabilityBarEl
-        );
-
-
-        requirementIdEl.textContent =
-          t("newRequirement");
-
-
-        statusPillEl.textContent =
-          t("statusDraft");
-
-
-        sourceRequirementEl.textContent =
-          t("noOriginal");
-
-
-        hideMessages();
-
-
-        const workflow =
-          loadWorkflow();
-
-
-        try {
-
-          BAWorkflow.resetStep(
-            workflow,
-            "requirement"
-          );
-
-        } catch {}
-
-
-        workflow.currentStep =
-          "requirement";
-
-
-        saveWorkflow(
-          workflow
-        );
-
-
-        renderWorkflow(
-          workflow
-        );
-
+        startNewRequirement();
 
         showSuccess(
           t("cleared")
@@ -4239,6 +4982,64 @@
       continueButton.addEventListener(
         "click",
         continueToUserStory
+      );
+
+
+      requirementSelector.addEventListener(
+        "change",
+        event => {
+
+          const value =
+            event.target.value;
+
+          if (value === "__new__") {
+            startNewRequirement();
+            return;
+          }
+
+          const index =
+            requirementSet.findIndex(
+              item => item?.id === value
+            );
+
+          if (index >= 0) {
+            selectRequirementIndex(index);
+          }
+
+        }
+      );
+
+
+      previousRequirementButton.addEventListener(
+        "click",
+        () => {
+          if (selectedRequirementIndex > 0) {
+            selectRequirementIndex(
+              selectedRequirementIndex - 1
+            );
+          }
+        }
+      );
+
+
+      nextRequirementButton.addEventListener(
+        "click",
+        () => {
+          if (
+            selectedRequirementIndex <
+            requirementSet.length - 1
+          ) {
+            selectRequirementIndex(
+              selectedRequirementIndex + 1
+            );
+          }
+        }
+      );
+
+
+      newRequirementButton.addEventListener(
+        "click",
+        startNewRequirement
       );
 
 
@@ -4307,6 +5108,12 @@
       ----------------------------------------- */
 
       applyLanguage();
+
+
+      requirementSet =
+        readRequirementSet();
+
+      renderRequirementPicker();
 
 
       const hasRequirement =
