@@ -451,9 +451,12 @@ select{
 
 .result-head{
   display:flex;
-  justify-content:space-between;
-  gap:20px;
-  margin-bottom:24px
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:24px;
+  text-align:center
 }
 
 .result-head h2{
@@ -752,42 +755,6 @@ select{
   font-size:12px
 }
 
-/* NEXT */
-
-.next{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  margin-top:22px
-}
-
-.next a{
-  padding:16px;
-  border:1px solid var(--b);
-  border-radius:13px;
-  text-decoration:none;
-  color:var(--t);
-  background:#fff
-}
-
-.next a:hover{
-  border-color:#bfd0f8;
-  background:#f8fbff
-}
-
-.next small{
-  display:block;
-  color:var(--m);
-  font-size:10px;
-  font-weight:800;
-  text-transform:uppercase;
-  margin-bottom:5px
-}
-
-.next b{
-  font-size:14px
-}
-
 /* SINGLE CTA */
 
 .continue{
@@ -823,7 +790,6 @@ select{
 @media(max-width:900px){
 
   .scores,
-  .next,
   .detected-grid{
     grid-template-columns:1fr
   }
@@ -854,10 +820,6 @@ select{
 
   .card{
     padding:20px
-  }
-
-  .result-head{
-    flex-direction:column
   }
 
   .left .meta{
@@ -1546,62 +1508,6 @@ select{
     id="saved"
   >
     ✓ Analiz çalışma alanına kaydedildi.
-  </div>
-
-
-  <div class="next">
-
-    <a href="/requirement.html">
-
-      <small>
-        Sonraki Adım
-      </small>
-
-      <b>
-        Gereksinime Devam Et →
-      </b>
-
-    </a>
-
-
-    <a href="/user-story.html">
-
-      <small>
-        Sonraki Adım
-      </small>
-
-      <b>
-        User Story Oluştur →
-      </b>
-
-    </a>
-
-
-    <a href="/acceptance-criteria.html">
-
-      <small>
-        Devam Et
-      </small>
-
-      <b>
-        Kabul Kriterleri Oluştur →
-      </b>
-
-    </a>
-
-
-    <a href="/uat.html">
-
-      <small>
-        Devam Et
-      </small>
-
-      <b>
-        UAT Test Senaryoları Oluştur →
-      </b>
-
-    </a>
-
   </div>
 
 
@@ -3707,7 +3613,6 @@ async function analyze(){
 
 /* ==================================================
    ANALYZE BUTTON
-   IMPORTANT: THIS WAS MISSING
 ================================================== */
 
 $('analyze').addEventListener(
