@@ -1,2213 +1,828 @@
 /* =========================================================
-   BAForge AI - Central i18n
-   ---------------------------------------------------------
-   Centralized language system for BAForge AI.
+   BAForge AI — Central Internationalization
+   core/i18n.js
+   ========================================================= */
 
-   Supported languages:
-   - en: English
-   - tr: Türkçe
-
-   Future languages can be added without changing
-   individual page implementations.
-========================================================= */
-
-(function (global) {
-
+(function (window) {
   "use strict";
 
+  const VERSION = "2.0.0";
 
-  /* =======================================================
-     LANGUAGE CONFIGURATION
-  ======================================================= */
-
-  const SUPPORTED_LANGUAGES = {
-
+  const TRANSLATIONS = {
     en: {
-      code: "en",
-      name: "English",
-      nativeName: "English"
-    },
-
-    tr: {
-      code: "tr",
-      name: "Turkish",
-      nativeName: "Türkçe"
-    }
-
-  };
-
-
-  /* =======================================================
-     TRANSLATIONS
-  ======================================================= */
-
-  const translations = {
-
-    en: {
-
-      /* ---------------------------------------------------
-         GLOBAL
-      --------------------------------------------------- */
-
-      global: {
-
-        appName:
-          "BAForge AI",
-
-        home:
-          "Home",
-
-        analyzer:
-          "Analyzer",
-
-        requirement:
-          "Requirement",
-
-        userStory:
-          "User Story",
-
-        acceptanceCriteria:
-          "Acceptance Criteria",
-
-        uat:
-          "UAT Test Cases",
-
-        testData:
-          "Test Data",
-
-        processFlow:
-          "Process Flow",
-
-        traceability:
-          "Traceability",
-
-        document:
-          "BA Document",
-
-        tools:
-          "Tools",
-
-        language:
-          "Language",
-
-        previous:
-          "Previous Step",
-
-        next:
-          "Next Step",
-
-        continue:
-          "Continue",
-
-        back:
-          "Back",
-
-        save:
-          "Save",
-
-        clear:
-          "Clear",
-
-        cancel:
-          "Cancel",
-
-        generate:
-          "Generate",
-
-        refresh:
-          "Refresh",
-
-        copy:
-          "Copy",
-
-        delete:
-          "Delete",
-
-        edit:
-          "Edit",
-
-        close:
-          "Close",
-
-        available:
-          "Available",
-
-        notAvailable:
-          "Not Available",
-
-        loading:
-          "Loading...",
-
-        success:
-          "Success",
-
-        error:
-          "Error",
-
-        warning:
-          "Warning",
-
-        noData:
-          "No data available"
-
+      /* =========================
+         Common
+         ========================= */
+      common: {
+        save: "Save",
+        saved: "Saved successfully.",
+        cancel: "Cancel",
+        clear: "Clear",
+        delete: "Delete",
+        edit: "Edit",
+        close: "Close",
+        back: "Back",
+        next: "Next",
+        previous: "Previous",
+        continue: "Continue",
+        loading: "Loading...",
+        required: "Required",
+        optional: "Optional",
+        yes: "Yes",
+        no: "No",
+        unknown: "Unknown",
+        error: "An error occurred.",
+        success: "Success",
+        warning: "Warning",
+        information: "Information",
+        noData: "No data available.",
+        draft: "Draft",
+        active: "Active",
+        completed: "Completed",
+        archived: "Archived"
       },
 
-
-      /* ---------------------------------------------------
-         WORKFLOW
-      --------------------------------------------------- */
-
+      /* =========================
+         Workflow
+         ========================= */
       workflow: {
+        requirement: "Requirement",
+        user_story: "User Story",
+        acceptance_criteria: "Acceptance Criteria",
+        uat: "UAT Test Cases",
+        test_data: "Test Data",
+        process_flow: "Process Flow",
+        traceability: "Traceability",
+        document: "BA Documents",
 
-        requirement:
-          "Requirement",
-
-        userStory:
-          "User Story",
-
-        acceptanceCriteria:
-          "Acceptance Criteria",
-
-        uat:
-          "UAT Test Cases",
-
-        testData:
-          "Test Data",
-
-        processFlow:
-          "Process Flow",
-
-        traceability:
-          "Traceability",
-
-        document:
-          "BA Document",
-
-        previous:
-          "Previous Step",
-
-        next:
-          "Next Step"
-
+        previousStep: "Previous Step",
+        nextStep: "Next Step",
+        workflow: "Workflow"
       },
 
-
-      /* ---------------------------------------------------
-         NAVIGATION
-      --------------------------------------------------- */
-
-      navigation: {
-
-        home:
-          "Home",
-
-        analyzer:
-          "Analyzer",
-
-        requirement:
-          "Requirement",
-
-        userStory:
-          "User Story",
-
-        acceptanceCriteria:
-          "Acceptance Criteria",
-
-        uat:
-          "UAT Test Cases",
-
-        testData:
-          "Test Data",
-
-        processFlow:
-          "Process Flow",
-
-        traceability:
-          "Traceability",
-
-        document:
-          "BA Document",
-
-        tools:
-          "Tools"
-
-      },
-
-
-      /* ---------------------------------------------------
-         REQUIREMENT ANALYZER
-      --------------------------------------------------- */
-
+      /* =========================
+         Requirement Intelligence
+         ========================= */
       analyzer: {
-
-        badge:
-          "Requirement Analyzer",
-
-        title:
-          "Analyze Requirements Before You Build",
-
+        title: "Requirement Intelligence",
         subtitle:
-          "Use text, PDF documents or images as context. Add instructions only when you need them.",
+          "Analyze requirements, identify missing information, ambiguities and testability risks.",
+        analyze: "Analyze Requirement",
+        saveAnalysis: "Save Analysis",
+        clear: "Clear",
+        continue: "Continue with Selected Requirements",
 
-        inputTitle:
-          "What would you like BAForge AI to analyze?",
+        analysisCompleted: "Analysis Completed",
+        noAnalysis: "No analysis available.",
 
-        inputDescription:
-          "Write a requirement, attach a PDF or image, or use both. A written instruction is optional when a source is attached.",
+        requirement: "Requirement",
+        instruction: "Instruction",
+        language: "Language",
+        detail: "Detail Level",
 
-        placeholder:
-          "Tell BAForge AI what you want to analyze...",
+        basic: "Basic",
+        professional: "Professional",
+        comprehensive: "Comprehensive",
 
-        hint:
-          "Optional instruction: focus on limits, rules, gaps or specific sections.",
+        uploadPdf: "Upload PDF",
+        uploadImage: "Upload Image",
+        takePhoto: "Take Photo",
+        removeFile: "Remove File",
 
-        outputLanguage:
-          "Output Language",
+        history: "Recent Analyses",
+        noHistory: "No previous analyses found.",
 
-        analysisDepth:
-          "Analysis Depth",
+        selectRequirement: "Select Requirement",
+        selectedRequirements: "Selected Requirements",
 
-        basic:
-          "Basic",
+        functional: "Functional",
+        nonFunctional: "Non-Functional",
+        businessRule: "Business Rule",
+        regulatory: "Regulatory",
+        data: "Data",
+        integration: "Integration",
+        process: "Process",
+        other: "Other",
 
-        professional:
-          "Professional",
+        high: "High",
+        medium: "Medium",
+        low: "Low",
+        unknown: "Unknown",
 
-        comprehensive:
-          "Comprehensive",
+        titleLabel: "Title",
+        summary: "Summary",
+        requirementType: "Requirement Type",
+        priority: "Priority",
 
-        clear:
-          "Clear",
+        clarityScore: "Clarity",
+        completenessScore: "Completeness",
+        testabilityScore: "Testability",
 
-        analyze:
-          "Analyze",
+        ambiguities: "Ambiguities",
+        missingInformation: "Missing Information",
+        assumptions: "Assumptions",
+        businessRules: "Business Rules",
+        openQuestions: "Open Questions",
+        edgeCases: "Edge Cases",
+        analystNotes: "Analyst Notes",
 
-        loading:
-          "AI is analyzing your input...",
+        sourceDocument: "Source Document",
+        sourceText: "Source Text",
 
-        validation:
-          "Add some text or attach a PDF or image before analyzing.",
-
-        fileTooLarge:
-          "The file is too large. Please use a file up to 4 MB.",
-
-        fileType:
-          "Only PDF and image files are supported.",
-
-        fileReady:
-          "Ready to analyze",
-
-        uploadPdf:
-          "Upload PDF",
-
-        uploadImage:
-          "Upload Image",
-
-        takePhoto:
-          "Take Photo",
-
-        removeAttachment:
-          "Remove attachment",
-
-        genericError:
-          "Something went wrong while analyzing your input.",
-
-        result:
-          "Requirement Analysis",
-
-        resultSubtitle:
-          "Structured analysis generated from your input.",
-
-        complete:
-          "Analysis Complete",
-
-        requirementsFound:
-          "Requirements Found",
-
-        requirementsFoundDescription:
-          "Multiple requirements were detected in the source. Select one to use as the current workspace requirement.",
-
-        useRequirement:
-          "Use This Requirement",
-
-        clarity:
-          "Clarity",
-
-        completeness:
-          "Completeness",
-
-        testability:
-          "Testability",
-
-        summary:
-          "Summary",
-
-        requirementType:
-          "Requirement Type",
-
-        priority:
-          "Priority",
-
-        ambiguities:
-          "Ambiguities",
-
-        missingInformation:
-          "Missing Information",
-
-        assumptions:
-          "Assumptions",
-
-        businessRules:
-          "Business Rules",
-
-        openQuestions:
-          "Open Questions",
-
-        edgeCases:
-          "Edge Cases",
-
-        analystNotes:
-          "Analyst Notes",
-
-        analyzedInput:
-          "Analyzed Input",
-
-        saved:
-          "Requirement saved to the current workspace context.",
-
-        selected:
-          "Requirement selected for the current workspace.",
-
-        nextStep:
-          "Next Step",
-
-        generateUserStory:
-          "Generate User Story",
-
-        continueToAcceptanceCriteria:
-          "Continue to Acceptance Criteria",
-
-        generateUat:
-          "Generate UAT Test Cases"
-
+        noRequirementSelected: "No requirement selected."
       },
 
-
-      /* ---------------------------------------------------
-         REQUIREMENT
-      --------------------------------------------------- */
-
+      /* =========================
+         Requirement Workspace
+         ========================= */
       requirement: {
-
-        title:
-          "Requirement",
-
+        title: "Requirement",
         subtitle:
-          "Define and refine the business requirement.",
+          "Define, review and refine the business requirement.",
 
-        noRequirement:
-          "No Requirement Loaded",
+        requirementTitle: "Requirement Title",
+        requirementType: "Requirement Type",
+        priority: "Priority",
+        description: "Requirement Description",
 
-        requirementDetails:
-          "Requirement Details",
+        quality: "Requirement Quality",
+        clarity: "Clarity",
+        completeness: "Completeness",
+        testability: "Testability",
 
-        description:
-          "Description",
+        summary: "Summary",
+        ambiguities: "Ambiguities",
+        missingInformation: "Missing Information",
+        assumptions: "Assumptions",
+        businessRules: "Business Rules",
+        openQuestions: "Open Questions",
+        edgeCases: "Edge Cases",
+        analystNotes: "Analyst Notes",
 
-        type:
-          "Requirement Type",
+        originalRequirement: "Original Requirement",
 
-        priority:
-          "Priority",
+        noRequirementLoaded: "No Requirement Loaded",
+        noRequirementDescription:
+          "You can start by creating a requirement directly or continue from Requirement Intelligence.",
 
-        source:
-          "Source",
+        saveRequirement: "Save Requirement",
+        clearRequirement: "Clear Requirement",
+        continueToUserStory: "Continue to User Story",
 
-        analysis:
-          "Analysis",
+        saved: "Requirement saved successfully.",
+        cleared: "Requirement cleared successfully.",
+        invalid: "Please complete the required fields.",
 
-        save:
-          "Save Requirement",
-
-        continue:
-          "Continue to User Story"
-
+        selectType: "Select Requirement Type",
+        selectPriority: "Select Priority"
       },
 
-
-      /* ---------------------------------------------------
-         USER STORY
-      --------------------------------------------------- */
-
+      /* =========================
+         User Story
+         ========================= */
       userStory: {
+        title: "User Story",
+        subtitle: "Transform a requirement into a clear and actionable user story.",
 
-        title:
-          "User Story",
+        role: "As a",
+        action: "I want to",
+        benefit: "So that",
 
-        subtitle:
-          "Transform the requirement into a clear, actionable user story.",
+        acceptanceCriteria: "Acceptance Criteria",
+        businessRules: "Business Rules",
+        assumptions: "Assumptions",
+        dependencies: "Dependencies",
+        edgeCases: "Edge Cases",
+        openQuestions: "Open Questions",
 
-        role:
-          "Role",
-
-        goal:
-          "Goal",
-
-        benefit:
-          "Benefit",
-
-        story:
-          "User Story",
-
-        priority:
-          "Priority",
-
-        generate:
-          "Generate User Story",
-
-        clear:
-          "Clear",
-
-        save:
-          "Save User Story",
-
-        continue:
-          "Continue to Acceptance Criteria"
-
+        generate: "Generate User Story",
+        save: "Save User Story"
       },
 
-
-      /* ---------------------------------------------------
-         ACCEPTANCE CRITERIA
-      --------------------------------------------------- */
-
+      /* =========================
+         Acceptance Criteria
+         ========================= */
       acceptanceCriteria: {
-
-        title:
-          "Acceptance Criteria",
-
+        title: "Acceptance Criteria",
         subtitle:
-          "Define clear and testable conditions for the requirement.",
+          "Define clear and testable conditions for the requirement or user story.",
 
-        given:
-          "Given",
+        criterion: "Criterion",
+        criteria: "Acceptance Criteria",
+        add: "Add Criterion",
+        remove: "Remove Criterion",
 
-        when:
-          "When",
-
-        then:
-          "Then",
-
-        priority:
-          "Priority",
-
-        add:
-          "Add Acceptance Criterion",
-
-        generate:
-          "Generate Acceptance Criteria",
-
-        save:
-          "Save Acceptance Criteria",
-
-        continue:
-          "Continue to UAT Test Cases"
-
+        generate: "Generate Acceptance Criteria",
+        save: "Save Acceptance Criteria"
       },
 
-
-      /* ---------------------------------------------------
+      /* =========================
          UAT
-      --------------------------------------------------- */
-
+         ========================= */
       uat: {
-
-        title:
-          "UAT Test Cases",
-
+        title: "UAT Test Cases",
         subtitle:
-          "Generate professional user acceptance test scenarios.",
+          "Create structured user acceptance test cases from the available requirements and acceptance criteria.",
 
-        testCase:
-          "Test Case",
+        testCase: "Test Case",
+        testCases: "Test Cases",
+        testData: "Test Data",
+        precondition: "Precondition",
+        steps: "Steps",
+        expectedResult: "Expected Result",
+        actualResult: "Actual Result",
+        status: "Status",
 
-        titleLabel:
-          "Title",
-
-        purpose:
-          "Purpose",
-
-        preconditions:
-          "Preconditions",
-
-        steps:
-          "Steps",
-
-        expectedResult:
-          "Expected Result",
-
-        priority:
-          "Priority",
-
-        testData:
-          "Test Data",
-
-        generate:
-          "Generate UAT Test Cases",
-
-        save:
-          "Save Test Cases",
-
-        continue:
-          "Continue to Test Data"
-
+        generate: "Generate Test Cases",
+        save: "Save Test Cases"
       },
 
-
-      /* ---------------------------------------------------
-         TEST DATA
-      --------------------------------------------------- */
-
+      /* =========================
+         Test Data
+         ========================= */
       testData: {
-
-        title:
-          "Test Data",
-
+        title: "Test Data",
         subtitle:
-          "Generate realistic and reusable test data for your scenarios.",
+          "Define and manage test data required for validation and UAT.",
 
-        scenarioType:
-          "Scenario Type",
+        dataSet: "Data Set",
+        field: "Field",
+        value: "Value",
+        type: "Type",
 
-        dataDomain:
-          "Data Domain",
-
-        numberOfRecords:
-          "Number of Records",
-
-        outputLanguage:
-          "Output Language",
-
-        generate:
-          "Generate Test Data",
-
-        clear:
-          "Clear",
-
-        save:
-          "Save Test Data",
-
-        continue:
-          "Continue to Process Flow"
-
+        generate: "Generate Test Data",
+        save: "Save Test Data"
       },
 
-
-      /* ---------------------------------------------------
-         PROCESS FLOW
-      --------------------------------------------------- */
-
+      /* =========================
+         Process Flow
+         ========================= */
       processFlow: {
-
-        title:
-          "Process Flow",
-
+        title: "Process Flow",
         subtitle:
-          "Visualize the business process, actors, systems and decision points.",
+          "Visualize the business process and its key steps.",
 
-        processContext:
-          "Process Context",
+        start: "Start",
+        end: "End",
+        process: "Process",
+        decision: "Decision",
 
-        processName:
-          "Process Name",
-
-        businessContext:
-          "Requirement / Business Context",
-
-        outputLanguage:
-          "Output Language",
-
-        detailLevel:
-          "Detail Level",
-
-        generate:
-          "Generate Process Flow",
-
-        clear:
-          "Clear",
-
-        processFlow:
-          "Process Flow",
-
-        actors:
-          "Actors & Systems",
-
-        decisionPoints:
-          "Decision Points",
-
-        processSteps:
-          "Process Steps",
-
-        alternativeFlows:
-          "Alternative Flows",
-
-        exceptionFlows:
-          "Exception Flows",
-
-        copy:
-          "Copy Process Flow",
-
-        save:
-          "Save to Workspace",
-
-        continue:
-          "Continue to Traceability"
-
+        save: "Save Process Flow"
       },
 
-
-      /* ---------------------------------------------------
-         TRACEABILITY
-      --------------------------------------------------- */
-
+      /* =========================
+         Traceability
+         ========================= */
       traceability: {
-
-        title:
-          "Traceability",
-
+        title: "Traceability",
         subtitle:
-          "Connect requirements to delivery artifacts.",
+          "Connect requirements, user stories, acceptance criteria, test cases and other artifacts.",
 
-        overview:
-          "Overview",
+        source: "Source",
+        target: "Target",
+        relationship: "Relationship",
 
-        requirements:
-          "Requirements",
+        requirementToUserStory: "Requirement → User Story",
+        userStoryToAcceptanceCriteria:
+          "User Story → Acceptance Criteria",
+        acceptanceCriteriaToUat:
+          "Acceptance Criteria → UAT",
+        uatToTestData: "UAT → Test Data",
 
-        userStories:
-          "User Stories",
-
-        acceptanceCriteria:
-          "Acceptance Criteria",
-
-        testCases:
-          "Test Cases",
-
-        testData:
-          "Test Data",
-
-        processFlows:
-          "Process Flows",
-
-        coverage:
-          "Coverage",
-
-        gaps:
-          "Traceability Gaps",
-
-        chain:
-          "Traceability Chain",
-
-        matrix:
-          "Traceability Matrix",
-
-        coverageAnalysis:
-          "Coverage Analysis",
-
-        noGaps:
-          "No major gaps detected",
-
-        refresh:
-          "Refresh Traceability",
-
-        copyMatrix:
-          "Copy Matrix",
-
-        save:
-          "Save Traceability",
-
-        continue:
-          "Continue to BA Document"
-
+        noRelationships:
+          "No traceability relationships found."
       },
 
-
-      /* ---------------------------------------------------
-         BA DOCUMENT
-      --------------------------------------------------- */
-
+      /* =========================
+         Documents
+         ========================= */
       document: {
-
-        title:
-          "BA Document",
-
+        title: "BA Documents",
         subtitle:
-          "Turn BA artifacts into a professional Business Analysis document.",
+          "Generate structured business analysis documentation from workspace artifacts.",
 
-        configuration:
-          "Document Configuration",
+        documentType: "Document Type",
+        preview: "Preview",
+        generate: "Generate Document",
+        export: "Export Document",
 
-        configurationDescription:
-          "Define the document title and presentation preferences.",
-
-        documentTitle:
-          "Document Title",
-
-        language:
-          "Language",
-
-        detailLevel:
-          "Detail Level",
-
-        objective:
-          "Document Objective",
-
-        generate:
-          "Generate BA Document",
-
-        clear:
-          "Clear",
-
-        availableArtifacts:
-          "Available BA Artifacts",
-
-        availableArtifactsDescription:
-          "The document is generated from artifacts currently available in the workspace.",
-
-        businessAnalysisDocument:
-          "Business Analysis Document",
-
-        documentType:
-          "Document Type",
-
-        generated:
-          "Generated",
-
-        detail:
-          "Detail",
-
-        notGenerated:
-          "Not generated",
-
-        requirement:
-          "Requirement",
-
-        userStory:
-          "User Story",
-
-        acceptanceCriteria:
-          "Acceptance Criteria",
-
-        uat:
-          "UAT Test Cases",
-
-        testData:
-          "Test Data",
-
-        processFlow:
-          "Process Flow",
-
-        traceability:
-          "Traceability Summary",
-
-        notes:
-          "Notes",
-
-        copy:
-          "Copy Document",
-
-        printPdf:
-          "Print / Save as PDF",
-
-        save:
-          "Save to Workspace",
-
-        saved:
-          "BA Document saved to the workspace.",
-
-        generatedSuccess:
-          "BA Document generated successfully.",
-
-        noRequirement:
-          "No Requirement artifact is currently available.",
-
-        noUserStory:
-          "No User Story artifact is currently available.",
-
-        noAcceptanceCriteria:
-          "No Acceptance Criteria artifacts are currently available.",
-
-        noUat:
-          "No UAT Test Cases artifacts are currently available.",
-
-        noTestData:
-          "No Test Data artifact is currently available.",
-
-        noProcessFlow:
-          "No Process Flow artifact is currently available."
-
-      },
-
-
-      /* ---------------------------------------------------
-         COMMON STATUS MESSAGES
-      --------------------------------------------------- */
-
-      messages: {
-
-        saved:
-          "Saved successfully.",
-
-        generated:
-          "Generated successfully.",
-
-        updated:
-          "Updated successfully.",
-
-        deleted:
-          "Deleted successfully.",
-
-        copied:
-          "Copied successfully.",
-
-        noData:
-          "No data available.",
-
-        loading:
-          "Loading...",
-
-        somethingWentWrong:
-          "Something went wrong.",
-
-        unableToSave:
-          "Unable to save.",
-
-        unableToLoad:
-          "Unable to load.",
-
-        workspaceUnavailable:
-          "Workspace data is currently unavailable."
-
+        requirementsDocument: "Requirements Document",
+        businessAnalysisDocument: "Business Analysis Document",
+        uatDocument: "UAT Document"
       }
-
     },
 
-
-    /* =====================================================
-       TÜRKÇE
-    ===================================================== */
-
     tr: {
-
-      global: {
-
-        appName:
-          "BAForge AI",
-
-        home:
-          "Ana Sayfa",
-
-        analyzer:
-          "Analiz",
-
-        requirement:
-          "Gereksinim",
-
-        userStory:
-          "User Story",
-
-        acceptanceCriteria:
-          "Acceptance Criteria",
-
-        uat:
-          "UAT Test Case'leri",
-
-        testData:
-          "Test Verisi",
-
-        processFlow:
-          "Process Flow",
-
-        traceability:
-          "Traceability",
-
-        document:
-          "BA Dokümanı",
-
-        tools:
-          "Araçlar",
-
-        language:
-          "Dil",
-
-        previous:
-          "Önceki Adım",
-
-        next:
-          "Sonraki Adım",
-
-        continue:
-          "Devam Et",
-
-        back:
-          "Geri",
-
-        save:
-          "Kaydet",
-
-        clear:
-          "Temizle",
-
-        cancel:
-          "İptal",
-
-        generate:
-          "Oluştur",
-
-        refresh:
-          "Yenile",
-
-        copy:
-          "Kopyala",
-
-        delete:
-          "Sil",
-
-        edit:
-          "Düzenle",
-
-        close:
-          "Kapat",
-
-        available:
-          "Mevcut",
-
-        notAvailable:
-          "Mevcut Değil",
-
-        loading:
-          "Yükleniyor...",
-
-        success:
-          "Başarılı",
-
-        error:
-          "Hata",
-
-        warning:
-          "Uyarı",
-
-        noData:
-          "Veri bulunamadı"
-
+      /* =========================
+         Common
+         ========================= */
+      common: {
+        save: "Kaydet",
+        saved: "Başarıyla kaydedildi.",
+        cancel: "İptal",
+        clear: "Temizle",
+        delete: "Sil",
+        edit: "Düzenle",
+        close: "Kapat",
+        back: "Geri",
+        next: "İleri",
+        previous: "Önceki",
+        continue: "Devam Et",
+        loading: "Yükleniyor...",
+        required: "Zorunlu",
+        optional: "Opsiyonel",
+        yes: "Evet",
+        no: "Hayır",
+        unknown: "Bilinmiyor",
+        error: "Bir hata oluştu.",
+        success: "Başarılı",
+        warning: "Uyarı",
+        information: "Bilgi",
+        noData: "Veri bulunamadı.",
+        draft: "Taslak",
+        active: "Aktif",
+        completed: "Tamamlandı",
+        archived: "Arşivlendi"
       },
 
-
+      /* =========================
+         Workflow
+         ========================= */
       workflow: {
+        requirement: "Gereksinim",
+        user_story: "User Story",
+        acceptance_criteria: "Kabul Kriterleri",
+        uat: "UAT Test Senaryoları",
+        test_data: "Test Verisi",
+        process_flow: "Süreç Akışı",
+        traceability: "İzlenebilirlik",
+        document: "BA Dokümanları",
 
-        requirement:
-          "Gereksinim",
-
-        userStory:
-          "User Story",
-
-        acceptanceCriteria:
-          "Acceptance Criteria",
-
-        uat:
-          "UAT Test Case'leri",
-
-        testData:
-          "Test Verisi",
-
-        processFlow:
-          "Process Flow",
-
-        traceability:
-          "Traceability",
-
-        document:
-          "BA Dokümanı",
-
-        previous:
-          "Önceki Adım",
-
-        next:
-          "Sonraki Adım"
-
+        previousStep: "Önceki Adım",
+        nextStep: "Sonraki Adım",
+        workflow: "İş Akışı"
       },
 
-
-      navigation: {
-
-        home:
-          "Ana Sayfa",
-
-        analyzer:
-          "Analiz",
-
-        requirement:
-          "Gereksinim",
-
-        userStory:
-          "User Story",
-
-        acceptanceCriteria:
-          "Acceptance Criteria",
-
-        uat:
-          "UAT Test Case'leri",
-
-        testData:
-          "Test Verisi",
-
-        processFlow:
-          "Process Flow",
-
-        traceability:
-          "Traceability",
-
-        document:
-          "BA Dokümanı",
-
-        tools:
-          "Araçlar"
-
-      },
-
-
+      /* =========================
+         Requirement Intelligence
+         ========================= */
       analyzer: {
-
-        badge:
-          "Gereksinim Analizörü",
-
-        title:
-          "Geliştirmeden Önce Gereksinimi Analiz Et",
-
+        title: "Requirement Intelligence",
         subtitle:
-          "Metin, PDF veya görsel kullanın. Talimat vermek zorunlu değildir.",
+          "Gereksinimleri analiz edin, eksik bilgileri, belirsizlikleri ve test edilebilirlik risklerini belirleyin.",
+        analyze: "Gereksinimi Analiz Et",
+        saveAnalysis: "Analizi Kaydet",
+        clear: "Temizle",
+        continue: "Seçilen Gereksinimlere Devam Et",
 
-        inputTitle:
-          "BAForge AI neyi analiz etsin?",
+        analysisCompleted: "Analiz Tamamlandı",
+        noAnalysis: "Analiz bulunamadı.",
 
-        inputDescription:
-          "Gereksinimi yazın, PDF veya görsel ekleyin ya da ikisini birlikte kullanın. Dosya eklediğinizde yazılı talimat zorunlu değildir.",
+        requirement: "Gereksinim",
+        instruction: "Talimat",
+        language: "Dil",
+        detail: "Detay Seviyesi",
 
-        placeholder:
-          "BAForge AI'a neyi analiz etmesini istediğinizi yazın...",
+        basic: "Temel",
+        professional: "Profesyonel",
+        comprehensive: "Kapsamlı",
 
-        hint:
-          "İsteğe bağlı: limitlere, kurallara, eksiklere veya belirli bölümlere odaklan.",
+        uploadPdf: "PDF Yükle",
+        uploadImage: "Görsel Yükle",
+        takePhoto: "Fotoğraf Çek",
+        removeFile: "Dosyayı Kaldır",
 
-        outputLanguage:
-          "Çıktı Dili",
+        history: "Son Analizler",
+        noHistory: "Önceki analiz bulunamadı.",
 
-        analysisDepth:
-          "Analiz Derinliği",
+        selectRequirement: "Gereksinim Seç",
+        selectedRequirements: "Seçilen Gereksinimler",
 
-        basic:
-          "Temel",
+        functional: "Fonksiyonel",
+        nonFunctional: "Fonksiyonel Olmayan",
+        businessRule: "İş Kuralı",
+        regulatory: "Regülasyon",
+        data: "Veri",
+        integration: "Entegrasyon",
+        process: "Süreç",
+        other: "Diğer",
 
-        professional:
-          "Profesyonel",
+        high: "Yüksek",
+        medium: "Orta",
+        low: "Düşük",
+        unknown: "Bilinmiyor",
 
-        comprehensive:
-          "Kapsamlı",
+        titleLabel: "Başlık",
+        summary: "Özet",
+        requirementType: "Gereksinim Tipi",
+        priority: "Öncelik",
 
-        clear:
-          "Temizle",
+        clarityScore: "Netlik",
+        completenessScore: "Tamlık",
+        testabilityScore: "Test Edilebilirlik",
 
-        analyze:
-          "Analiz Et",
+        ambiguities: "Belirsizlikler",
+        missingInformation: "Eksik Bilgiler",
+        assumptions: "Varsayımlar",
+        businessRules: "İş Kuralları",
+        openQuestions: "Açık Sorular",
+        edgeCases: "Kenar Durumları",
+        analystNotes: "Analist Notları",
 
-        loading:
-          "BAForge girdinizi analiz ediyor...",
+        sourceDocument: "Kaynak Doküman",
+        sourceText: "Kaynak Metin",
 
-        validation:
-          "Analiz için metin yazın veya PDF/görsel ekleyin.",
-
-        fileTooLarge:
-          "Dosya çok büyük. Lütfen 4 MB'a kadar bir dosya kullanın.",
-
-        fileType:
-          "Yalnızca PDF ve görsel dosyaları desteklenir.",
-
-        fileReady:
-          "Analize hazır",
-
-        uploadPdf:
-          "PDF Yükle",
-
-        uploadImage:
-          "Görsel Yükle",
-
-        takePhoto:
-          "Fotoğraf Çek",
-
-        removeAttachment:
-          "Ek dosyayı kaldır",
-
-        genericError:
-          "Girdi analiz edilirken bir hata oluştu.",
-
-        result:
-          "Gereksinim Analizi",
-
-        resultSubtitle:
-          "Girdinizden oluşturulan yapılandırılmış analiz.",
-
-        complete:
-          "Analiz Tamamlandı",
-
-        requirementsFound:
-          "Bulunan Gereksinimler",
-
-        requirementsFoundDescription:
-          "Kaynakta birden fazla gereksinim bulundu. Workspace'te kullanmak istediğiniz gereksinimi seçebilirsiniz.",
-
-        useRequirement:
-          "Bu Gereksinimi Kullan",
-
-        clarity:
-          "Açıklık",
-
-        completeness:
-          "Bütünlük",
-
-        testability:
-          "Test Edilebilirlik",
-
-        summary:
-          "Özet",
-
-        requirementType:
-          "Gereksinim Tipi",
-
-        priority:
-          "Öncelik",
-
-        ambiguities:
-          "Belirsizlikler",
-
-        missingInformation:
-          "Eksik Bilgiler",
-
-        assumptions:
-          "Varsayımlar",
-
-        businessRules:
-          "İş Kuralları",
-
-        openQuestions:
-          "Açık Sorular",
-
-        edgeCases:
-          "Uç Durumlar",
-
-        analystNotes:
-          "Analist Notları",
-
-        analyzedInput:
-          "Analiz Edilen Girdi",
-
-        saved:
-          "Gereksinim mevcut workspace bağlamına kaydedildi.",
-
-        selected:
-          "Gereksinim mevcut workspace için seçildi.",
-
-        nextStep:
-          "Sonraki Adım",
-
-        generateUserStory:
-          "User Story Oluştur",
-
-        continueToAcceptanceCriteria:
-          "Acceptance Criteria'ya Devam Et",
-
-        generateUat:
-          "UAT Test Case'leri Oluştur"
-
+        noRequirementSelected: "Gereksinim seçilmedi."
       },
 
-
+      /* =========================
+         Requirement Workspace
+         ========================= */
       requirement: {
-
-        title:
-          "Gereksinim",
-
+        title: "Gereksinim",
         subtitle:
-          "İş gereksinimini tanımlayın ve geliştirin.",
+          "İş gereksinimini tanımlayın, gözden geçirin ve geliştirin.",
 
-        noRequirement:
-          "Gereksinim Yüklenmedi",
+        requirementTitle: "Gereksinim Başlığı",
+        requirementType: "Gereksinim Tipi",
+        priority: "Öncelik",
+        description: "Gereksinim Açıklaması",
 
-        requirementDetails:
-          "Gereksinim Detayları",
+        quality: "Gereksinim Kalitesi",
+        clarity: "Netlik",
+        completeness: "Tamlık",
+        testability: "Test Edilebilirlik",
 
-        description:
-          "Açıklama",
+        summary: "Özet",
+        ambiguities: "Belirsizlikler",
+        missingInformation: "Eksik Bilgiler",
+        assumptions: "Varsayımlar",
+        businessRules: "İş Kuralları",
+        openQuestions: "Açık Sorular",
+        edgeCases: "Kenar Durumları",
+        analystNotes: "Analist Notları",
 
-        type:
-          "Gereksinim Tipi",
+        originalRequirement: "Orijinal Gereksinim",
 
-        priority:
-          "Öncelik",
+        noRequirementLoaded: "Gereksinim Yüklenmedi",
+        noRequirementDescription:
+          "Doğrudan yeni bir gereksinim oluşturabilir veya Requirement Intelligence üzerinden devam edebilirsiniz.",
 
-        source:
-          "Kaynak",
+        saveRequirement: "Gereksinimi Kaydet",
+        clearRequirement: "Gereksinimi Temizle",
+        continueToUserStory: "User Story'ye Devam Et",
 
-        analysis:
-          "Analiz",
+        saved: "Gereksinim başarıyla kaydedildi.",
+        cleared: "Gereksinim başarıyla temizlendi.",
+        invalid: "Lütfen zorunlu alanları doldurun.",
 
-        save:
-          "Gereksinimi Kaydet",
-
-        continue:
-          "User Story'ye Devam Et"
-
+        selectType: "Gereksinim Tipi Seçin",
+        selectPriority: "Öncelik Seçin"
       },
 
-
+      /* =========================
+         User Story
+         ========================= */
       userStory: {
-
-        title:
-          "User Story",
-
+        title: "User Story",
         subtitle:
-          "Gereksinimi net ve uygulanabilir bir User Story'ye dönüştürün.",
+          "Bir gereksinimi açık ve uygulanabilir bir user story'ye dönüştürün.",
 
-        role:
-          "Rol",
+        role: "Bir",
+        action: "şunu yapmak istiyorum",
+        benefit: "böylece",
 
-        goal:
-          "Hedef",
+        acceptanceCriteria: "Kabul Kriterleri",
+        businessRules: "İş Kuralları",
+        assumptions: "Varsayımlar",
+        dependencies: "Bağımlılıklar",
+        edgeCases: "Kenar Durumları",
+        openQuestions: "Açık Sorular",
 
-        benefit:
-          "Fayda",
-
-        story:
-          "User Story",
-
-        priority:
-          "Öncelik",
-
-        generate:
-          "User Story Oluştur",
-
-        clear:
-          "Temizle",
-
-        save:
-          "User Story'yi Kaydet",
-
-        continue:
-          "Acceptance Criteria'ya Devam Et"
-
+        generate: "User Story Oluştur",
+        save: "User Story'yi Kaydet"
       },
 
-
+      /* =========================
+         Acceptance Criteria
+         ========================= */
       acceptanceCriteria: {
-
-        title:
-          "Acceptance Criteria",
-
+        title: "Kabul Kriterleri",
         subtitle:
-          "Gereksinim için açık ve test edilebilir koşullar tanımlayın.",
+          "Gereksinim veya user story için açık ve test edilebilir koşullar tanımlayın.",
 
-        given:
-          "Ön Koşul",
+        criterion: "Kriter",
+        criteria: "Kabul Kriterleri",
+        add: "Kriter Ekle",
+        remove: "Kriteri Kaldır",
 
-        when:
-          "Eylem",
-
-        then:
-          "Beklenen Sonuç",
-
-        priority:
-          "Öncelik",
-
-        add:
-          "Acceptance Criterion Ekle",
-
-        generate:
-          "Acceptance Criteria Oluştur",
-
-        save:
-          "Acceptance Criteria'yı Kaydet",
-
-        continue:
-          "UAT Test Case'lerine Devam Et"
-
+        generate: "Kabul Kriterleri Oluştur",
+        save: "Kabul Kriterlerini Kaydet"
       },
 
-
+      /* =========================
+         UAT
+         ========================= */
       uat: {
-
-        title:
-          "UAT Test Case'leri",
-
+        title: "UAT Test Senaryoları",
         subtitle:
-          "Profesyonel kullanıcı kabul test senaryoları oluşturun.",
+          "Mevcut gereksinim ve kabul kriterlerinden yapılandırılmış kullanıcı kabul test senaryoları oluşturun.",
 
-        testCase:
-          "Test Case",
+        testCase: "Test Senaryosu",
+        testCases: "Test Senaryoları",
+        testData: "Test Verisi",
+        precondition: "Ön Koşul",
+        steps: "Adımlar",
+        expectedResult: "Beklenen Sonuç",
+        actualResult: "Gerçekleşen Sonuç",
+        status: "Durum",
 
-        titleLabel:
-          "Başlık",
-
-        purpose:
-          "Amaç",
-
-        preconditions:
-          "Ön Koşullar",
-
-        steps:
-          "Adımlar",
-
-        expectedResult:
-          "Beklenen Sonuç",
-
-        priority:
-          "Öncelik",
-
-        testData:
-          "Test Verisi",
-
-        generate:
-          "UAT Test Case'leri Oluştur",
-
-        save:
-          "Test Case'lerini Kaydet",
-
-        continue:
-          "Test Verisine Devam Et"
-
+        generate: "Test Senaryoları Oluştur",
+        save: "Test Senaryolarını Kaydet"
       },
 
-
+      /* =========================
+         Test Data
+         ========================= */
       testData: {
-
-        title:
-          "Test Verisi",
-
+        title: "Test Verisi",
         subtitle:
-          "Senaryolarınız için gerçekçi ve tekrar kullanılabilir test verileri oluşturun.",
+          "Validasyon ve UAT için gerekli test verilerini tanımlayın ve yönetin.",
 
-        scenarioType:
-          "Senaryo Tipi",
+        dataSet: "Veri Seti",
+        field: "Alan",
+        value: "Değer",
+        type: "Tip",
 
-        dataDomain:
-          "Veri Alanı",
-
-        numberOfRecords:
-          "Kayıt Sayısı",
-
-        outputLanguage:
-          "Çıktı Dili",
-
-        generate:
-          "Test Verisi Oluştur",
-
-        clear:
-          "Temizle",
-
-        save:
-          "Test Verisini Kaydet",
-
-        continue:
-          "Process Flow'a Devam Et"
-
+        generate: "Test Verisi Oluştur",
+        save: "Test Verisini Kaydet"
       },
 
-
+      /* =========================
+         Process Flow
+         ========================= */
       processFlow: {
-
-        title:
-          "Process Flow",
-
+        title: "Süreç Akışı",
         subtitle:
-          "İş sürecini, aktörleri, sistemleri ve karar noktalarını görselleştirin.",
+          "İş sürecini ve temel adımlarını görselleştirin.",
 
-        processContext:
-          "Süreç Bağlamı",
+        start: "Başlangıç",
+        end: "Bitiş",
+        process: "Süreç",
+        decision: "Karar",
 
-        processName:
-          "Süreç Adı",
-
-        businessContext:
-          "Gereksinim / İş Bağlamı",
-
-        outputLanguage:
-          "Çıktı Dili",
-
-        detailLevel:
-          "Detay Seviyesi",
-
-        generate:
-          "Process Flow Oluştur",
-
-        clear:
-          "Temizle",
-
-        processFlow:
-          "Process Flow",
-
-        actors:
-          "Aktörler ve Sistemler",
-
-        decisionPoints:
-          "Karar Noktaları",
-
-        processSteps:
-          "Süreç Adımları",
-
-        alternativeFlows:
-          "Alternatif Akışlar",
-
-        exceptionFlows:
-          "Hata / İstisna Akışları",
-
-        copy:
-          "Process Flow'u Kopyala",
-
-        save:
-          "Workspace'e Kaydet",
-
-        continue:
-          "Traceability'ye Devam Et"
-
+        save: "Süreç Akışını Kaydet"
       },
 
-
+      /* =========================
+         Traceability
+         ========================= */
       traceability: {
-
-        title:
-          "Traceability",
-
+        title: "İzlenebilirlik",
         subtitle:
-          "Gereksinimleri teslimat çıktılarıyla ilişkilendirin.",
+          "Gereksinim, user story, kabul kriterleri, test senaryoları ve diğer artifact'ler arasındaki bağlantıları yönetin.",
 
-        overview:
-          "Genel Bakış",
+        source: "Kaynak",
+        target: "Hedef",
+        relationship: "İlişki",
 
-        requirements:
-          "Gereksinimler",
+        requirementToUserStory: "Gereksinim → User Story",
+        userStoryToAcceptanceCriteria:
+          "User Story → Kabul Kriterleri",
+        acceptanceCriteriaToUat:
+          "Kabul Kriterleri → UAT",
+        uatToTestData: "UAT → Test Verisi",
 
-        userStories:
-          "User Story'ler",
-
-        acceptanceCriteria:
-          "Acceptance Criteria",
-
-        testCases:
-          "Test Case'leri",
-
-        testData:
-          "Test Verisi",
-
-        processFlows:
-          "Process Flow'lar",
-
-        coverage:
-          "Kapsama",
-
-        gaps:
-          "Traceability Eksikleri",
-
-        chain:
-          "Traceability Zinciri",
-
-        matrix:
-          "Traceability Matrisi",
-
-        coverageAnalysis:
-          "Kapsama Analizi",
-
-        noGaps:
-          "Önemli bir eksik tespit edilmedi",
-
-        refresh:
-          "Traceability'yi Yenile",
-
-        copyMatrix:
-          "Matrisi Kopyala",
-
-        save:
-          "Traceability'yi Kaydet",
-
-        continue:
-          "BA Dokümanına Devam Et"
-
+        noRelationships:
+          "Herhangi bir izlenebilirlik ilişkisi bulunamadı."
       },
 
-
+      /* =========================
+         Documents
+         ========================= */
       document: {
-
-        title:
-          "BA Dokümanı",
-
+        title: "BA Dokümanları",
         subtitle:
-          "BA çıktılarınızı profesyonel bir Business Analysis dokümanına dönüştürün.",
+          "Workspace artifact'lerinden yapılandırılmış iş analizi dokümanları oluşturun.",
 
-        configuration:
-          "Doküman Yapılandırması",
+        documentType: "Doküman Tipi",
+        preview: "Önizleme",
+        generate: "Doküman Oluştur",
+        export: "Dokümanı Dışa Aktar",
 
-        configurationDescription:
-          "Doküman başlığını ve sunum tercihlerini belirleyin.",
-
-        documentTitle:
-          "Doküman Başlığı",
-
-        language:
-          "Dil",
-
-        detailLevel:
-          "Detay Seviyesi",
-
-        objective:
-          "Doküman Amacı",
-
-        generate:
-          "BA Dokümanı Oluştur",
-
-        clear:
-          "Temizle",
-
-        availableArtifacts:
-          "Mevcut BA Çıktıları",
-
-        availableArtifactsDescription:
-          "Doküman workspace'te mevcut olan çıktılardan oluşturulur.",
-
-        businessAnalysisDocument:
-          "Business Analysis Dokümanı",
-
-        documentType:
-          "Doküman Tipi",
-
-        generated:
-          "Oluşturulma Tarihi",
-
-        detail:
-          "Detay",
-
-        notGenerated:
-          "Henüz oluşturulmadı",
-
-        requirement:
-          "Gereksinim",
-
-        userStory:
-          "User Story",
-
-        acceptanceCriteria:
-          "Acceptance Criteria",
-
-        uat:
-          "UAT Test Case'leri",
-
-        testData:
-          "Test Verisi",
-
-        processFlow:
-          "Process Flow",
-
-        traceability:
-          "Traceability Özeti",
-
-        notes:
-          "Notlar",
-
-        copy:
-          "Dokümanı Kopyala",
-
-        printPdf:
-          "Yazdır / PDF Olarak Kaydet",
-
-        save:
-          "Workspace'e Kaydet",
-
-        saved:
-          "BA Dokümanı workspace'e kaydedildi.",
-
-        generatedSuccess:
-          "BA Dokümanı başarıyla oluşturuldu.",
-
-        noRequirement:
-          "Kullanılabilir bir Gereksinim çıktısı bulunmuyor.",
-
-        noUserStory:
-          "Kullanılabilir bir User Story çıktısı bulunmuyor.",
-
-        noAcceptanceCriteria:
-          "Kullanılabilir Acceptance Criteria çıktısı bulunmuyor.",
-
-        noUat:
-          "Kullanılabilir UAT Test Case çıktısı bulunmuyor.",
-
-        noTestData:
-          "Kullanılabilir Test Verisi bulunmuyor.",
-
-        noProcessFlow:
-          "Kullanılabilir Process Flow bulunmuyor."
-
-      },
-
-
-      messages: {
-
-        saved:
-          "Başarıyla kaydedildi.",
-
-        generated:
-          "Başarıyla oluşturuldu.",
-
-        updated:
-          "Başarıyla güncellendi.",
-
-        deleted:
-          "Başarıyla silindi.",
-
-        copied:
-          "Başarıyla kopyalandı.",
-
-        noData:
-          "Veri bulunamadı.",
-
-        loading:
-          "Yükleniyor...",
-
-        somethingWentWrong:
-          "Bir hata oluştu.",
-
-        unableToSave:
-          "Kaydedilemedi.",
-
-        unableToLoad:
-          "Yüklenemedi.",
-
-        workspaceUnavailable:
-          "Workspace verilerine şu anda erişilemiyor."
-
+        requirementsDocument: "Gereksinim Dokümanı",
+        businessAnalysisDocument: "İş Analizi Dokümanı",
+        uatDocument: "UAT Dokümanı"
       }
-
     }
-
   };
 
-
-  /* =======================================================
-     INTERNAL HELPERS
-  ======================================================= */
+  /* =========================================================
+     Helpers
+     ========================================================= */
 
   function normalizeLanguage(language) {
-
-    if (!language) {
-      return null;
-    }
-
-
-    const normalized =
-      String(language)
-        .toLowerCase()
-        .trim();
-
-
-    if (
-      SUPPORTED_LANGUAGES[normalized]
-    ) {
-
-      return normalized;
-
-    }
-
-
-    if (
-      normalized.startsWith("tr")
-    ) {
-
-      return "tr";
-
-    }
-
-
-    if (
-      normalized.startsWith("en")
-    ) {
-
-      return "en";
-
-    }
-
-
-    return null;
-
+    return language === "tr" ? "tr" : "en";
   }
 
-
-  function getStoredLanguage() {
-
-    try {
-
-      const stored =
-        localStorage.getItem(
-          "baforge-language"
-        );
-
-
-      return normalizeLanguage(
-        stored
-      );
-
-    } catch {
-
-      return null;
-
+  function getByPath(object, path) {
+    if (!object || !path) {
+      return undefined;
     }
 
-  }
+    const parts = String(path).split(".");
+    let current = object;
 
-
-  function detectLanguage() {
-
-    const stored =
-      getStoredLanguage();
-
-
-    if (stored) {
-      return stored;
-    }
-
-
-    const browserLanguage =
-      navigator.language ||
-      "en";
-
-
-    return (
-      normalizeLanguage(
-        browserLanguage
-      ) ||
-      "en"
-    );
-
-  }
-
-
-  let currentLanguage =
-    detectLanguage();
-
-
-  /* =======================================================
-     CORE API
-  ======================================================= */
-
-  function getLanguage() {
-
-    return currentLanguage;
-
-  }
-
-
-  function setLanguage(language) {
-
-    const normalized =
-      normalizeLanguage(
-        language
-      );
-
-
-    if (!normalized) {
-
-      return currentLanguage;
-
-    }
-
-
-    currentLanguage =
-      normalized;
-
-
-    try {
-
-      localStorage.setItem(
-        "baforge-language",
-        currentLanguage
-      );
-
-    } catch {}
-
-
-    document.documentElement.lang =
-      currentLanguage;
-
-
-    return currentLanguage;
-
-  }
-
-
-  function getTranslations(
-    language
-  ) {
-
-    const normalized =
-      normalizeLanguage(
-        language
-      ) ||
-      currentLanguage;
-
-
-    return (
-      translations[normalized] ||
-      translations.en
-    );
-
-  }
-
-
-  function get(
-    path,
-    fallback
-  ) {
-
-    const dictionary =
-      getTranslations();
-
-
-    if (!path) {
-
-      return (
-        fallback !== undefined
-          ? fallback
-          : ""
-      );
-
-    }
-
-
-    const parts =
-      String(path)
-        .split(".")
-        .filter(Boolean);
-
-
-    let value =
-      dictionary;
-
-
-    for (
-      let i = 0;
-      i < parts.length;
-      i++
-    ) {
-
+    for (const part of parts) {
       if (
-        value === null ||
-        value === undefined ||
-        !Object.prototype.hasOwnProperty.call(
-          value,
-          parts[i]
-        )
+        current === null ||
+        current === undefined ||
+        typeof current !== "object" ||
+        !(part in current)
       ) {
-
-        return (
-          fallback !== undefined
-            ? fallback
-            : path
-        );
-
+        return undefined;
       }
 
-
-      value =
-        value[parts[i]];
-
+      current = current[part];
     }
 
-
-    if (
-      value === null ||
-      value === undefined
-    ) {
-
-      return (
-        fallback !== undefined
-          ? fallback
-          : path
-      );
-
-    }
-
-
-    return value;
-
+    return current;
   }
 
-
-  function translate(
-    path,
-    fallback
-  ) {
-
-    return get(
-      path,
-      fallback
+  function translate(key, language) {
+    const lang = normalizeLanguage(
+      language ||
+        window.localStorage.getItem("baforge-language") ||
+        "en"
     );
 
+    const primary = getByPath(TRANSLATIONS[lang], key);
+
+    if (primary !== undefined) {
+      return primary;
+    }
+
+    const fallback = getByPath(TRANSLATIONS.en, key);
+
+    if (fallback !== undefined) {
+      return fallback;
+    }
+
+    return key;
   }
 
-
-  /* =======================================================
-     PAGE TRANSLATION
-  ======================================================= */
-
-  function apply(
-    root
-  ) {
-
-    const container =
-      root ||
-      document;
-
-
-    container
-      .querySelectorAll(
-        "[data-i18n]"
-      )
-      .forEach(
-        element => {
-
-          const key =
-            element.getAttribute(
-              "data-i18n"
-            );
-
-
-          const value =
-            get(key);
-
-
-          if (
-            value === undefined ||
-            value === null
-          ) {
-
-            return;
-
-          }
-
-
-          element.textContent =
-            value;
-
-        }
-      );
-
-
-    container
-      .querySelectorAll(
-        "[data-i18n-placeholder]"
-      )
-      .forEach(
-        element => {
-
-          const key =
-            element.getAttribute(
-              "data-i18n-placeholder"
-            );
-
-
-          element.placeholder =
-            get(key);
-
-        }
-      );
-
-
-    container
-      .querySelectorAll(
-        "[data-i18n-title]"
-      )
-      .forEach(
-        element => {
-
-          const key =
-            element.getAttribute(
-              "data-i18n-title"
-            );
-
-
-          element.title =
-            get(key);
-
-        }
-      );
-
-
-    container
-      .querySelectorAll(
-        "[data-i18n-aria-label]"
-      )
-      .forEach(
-        element => {
-
-          const key =
-            element.getAttribute(
-              "data-i18n-aria-label"
-            );
-
-
-          element.setAttribute(
-            "aria-label",
-            get(key)
-          );
-
-        }
-      );
-
-
-    document.documentElement.lang =
-      currentLanguage;
-
-
-    return container;
-
-  }
-
-
-  /* =======================================================
-     LANGUAGE CHANGE EVENT
-  ======================================================= */
-
-  function emitLanguageChange() {
+  function setLanguage(language) {
+    const normalized = normalizeLanguage(language);
 
     try {
-
-      window.dispatchEvent(
-        new CustomEvent(
-          "baforge:languagechange",
-          {
-            detail: {
-              language:
-                currentLanguage
-            }
-          }
-        )
+      window.localStorage.setItem(
+        "baforge-language",
+        normalized
       );
+    } catch (error) {
+      // Storage may be unavailable in restricted environments.
+    }
 
-    } catch {}
-
-  }
-
-
-  function changeLanguage(
-    language
-  ) {
-
-    const result =
-      setLanguage(
-        language
-      );
-
-
-    apply();
-
-    emitLanguageChange();
-
-
-    return result;
-
-  }
-
-
-  /* =======================================================
-     SELECT OPTIONS
-  ======================================================= */
-
-  function getLanguageOptions() {
-
-    return Object.values(
-      SUPPORTED_LANGUAGES
-    ).map(
-      language => ({
-        code:
-          language.code,
-
-        name:
-          language.name,
-
-        nativeName:
-          language.nativeName
+    window.dispatchEvent(
+      new CustomEvent("baforge:language-changed", {
+        detail: {
+          language: normalized
+        }
       })
     );
 
+    return normalized;
   }
 
+  function getLanguage() {
+    try {
+      return normalizeLanguage(
+        window.localStorage.getItem("baforge-language") || "en"
+      );
+    } catch (error) {
+      return "en";
+    }
+  }
 
-  /* =======================================================
-     PUBLIC API
-  ======================================================= */
+  function getTranslations(language) {
+    const lang = normalizeLanguage(language || getLanguage());
 
-  const I18N = {
-
-    version:
-      "1.0.0",
-
-    languages:
-      SUPPORTED_LANGUAGES,
-
-    translations,
-
-    getLanguage,
-
-    setLanguage,
-
-    changeLanguage,
-
-    getTranslations,
-
-    get,
-
-    t:
-      translate,
-
-    translate,
-
-    apply,
-
-    getLanguageOptions
-
-  };
-
-
-  /* =======================================================
-     GLOBAL EXPORT
-  ======================================================= */
-
-  global.BAForgeI18n =
-    I18N;
-
+    return TRANSLATIONS[lang];
+  }
 
   /*
-   * Backward-compatible short alias.
+   * Supports:
+   *
+   *   BAI18n.t("requirement.title")
+   *
+   * and:
+   *
+   *   BAI18n.t("requirement.title", "tr")
+   *
+   * The second argument is intentionally supported because
+   * core/workflow.js may request a specific language.
    */
+  function t(key, language) {
+    return translate(key, language);
+  }
 
-  global.BAI18n =
-    I18N;
+  /*
+   * Translate an element using:
+   *
+   *   data-i18n="requirement.title"
+   *
+   * Optional:
+   *
+   *   data-i18n-placeholder="requirement.description"
+   *   data-i18n-title="common.save"
+   */
+  function translatePage(root, language) {
+    const container = root || document;
 
+    container
+      .querySelectorAll("[data-i18n]")
+      .forEach(function (element) {
+        const key = element.getAttribute("data-i18n");
 
-  /* =======================================================
-     INITIAL LANGUAGE
-  ======================================================= */
+        if (!key) {
+          return;
+        }
 
-  try {
+        element.textContent = t(key, language);
+      });
 
-    document.documentElement.lang =
-      currentLanguage;
+    container
+      .querySelectorAll("[data-i18n-placeholder]")
+      .forEach(function (element) {
+        const key = element.getAttribute(
+          "data-i18n-placeholder"
+        );
 
-  } catch {}
+        if (!key) {
+          return;
+        }
 
+        element.setAttribute(
+          "placeholder",
+          t(key, language)
+        );
+      });
+
+    container
+      .querySelectorAll("[data-i18n-title]")
+      .forEach(function (element) {
+        const key = element.getAttribute("data-i18n-title");
+
+        if (!key) {
+          return;
+        }
+
+        element.setAttribute("title", t(key, language));
+      });
+
+    return normalizeLanguage(language || getLanguage());
+  }
+
+  function applyLanguage(language) {
+    const normalized = setLanguage(language);
+
+    document.documentElement.lang = normalized;
+
+    translatePage(document, normalized);
+
+    return normalized;
+  }
+
+  /* =========================================================
+     Public API
+     ========================================================= */
+
+  window.BAI18n = {
+    VERSION,
+
+    translations: TRANSLATIONS,
+
+    t,
+    getLanguage,
+    setLanguage,
+    applyLanguage,
+    translatePage,
+    getTranslations,
+
+    normalizeLanguage
+  };
+
+  /*
+   * Automatically apply the saved language when the page is
+   * ready. This does not interfere with pages that already
+   * have their own initialization logic.
+   */
+  document.addEventListener("DOMContentLoaded", function () {
+    const language = getLanguage();
+
+    document.documentElement.lang = language;
+
+    translatePage(document, language);
+  });
 
 })(window);
