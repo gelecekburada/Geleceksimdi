@@ -370,7 +370,7 @@
       position: relative; padding-left: 20px; color: #475467;
       font-size: 12px; line-height: 1.55;
     }
-    .info-list li::before { content: "鉁�"; position: absolute; left: 0; top: 0; color: var(--primary); font-weight: 800; }
+    .info-list li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--primary); font-weight: 800; }
     .info-tip { margin-top: 13px !important; margin-bottom: 0 !important; padding-top: 11px; border-top: 1px solid #dbe5ff; color: #344054 !important; }
 
     /* -----------------------------------------
@@ -1100,21 +1100,21 @@
         id="previousStep"
         class="step-link"
         href="/requirement-analyzer.html">
-        鈫� Requirement Analyzer
+        ← Requirement Analyzer
       </a>
 
       <a
         id="nextStep"
         class="step-link next"
         href="/user-story.html">
-        User Story 鈫�
+        User Story →
       </a>
 
     </div>
 
 
     <section class="info-box" aria-labelledby="howToUseTitle">
-      <div class="info-icon" aria-hidden="true">鈩�</div>
+      <div class="info-icon" aria-hidden="true">ℹ</div>
       <div>
         <h2 id="howToUseTitle">How to Use This Screen</h2>
         <p id="howToUseDescription">Review an analyzed requirement or create one directly, refine its content and prepare it for the next BAForge AI step.</p>
@@ -1599,7 +1599,7 @@
             id="continueButton"
             class="next-button"
             type="button">
-            User Story 鈫�
+            User Story →
           </button>
 
         </div>
@@ -1628,7 +1628,7 @@
         class="step-link"
         href="/requirement-analyzer.html"
         id="emptyAnalyzerLink">
-        鈫� Open Requirement Analyzer
+        ← Open Requirement Analyzer
       </a>
 
     </section>
@@ -1681,10 +1681,10 @@
             "Review the analyzed requirement, refine its content and prepare it for the next step in the BAForge AI workflow.",
 
           previous:
-            "鈫� Requirement Analyzer",
+            "← Requirement Analyzer",
 
           next:
-            "User Story 鈫�",
+            "User Story →",
 
           requirement:
             "Requirement",
@@ -1805,7 +1805,7 @@
             "Save Requirement",
 
           continue:
-            "User Story 鈫�",
+            "User Story →",
 
           emptyTitle:
             "No Requirement Loaded",
@@ -1814,7 +1814,7 @@
             "No requirement is currently available in the workspace. You can start from the Requirement Analyzer or create a requirement directly here.",
 
           openAnalyzer:
-            "鈫� Open Requirement Analyzer",
+            "← Open Requirement Analyzer",
 
           titleRequired:
             "Please enter a requirement title.",
@@ -1887,38 +1887,38 @@
         tr: {
 
           badge:
-            "Gereksinim 脟al谋艧ma Alan谋",
+            "Gereksinim Çalışma Alanı",
 
           title:
             "Profesyonel Bir ",
 
           titleHighlight:
-            "Gereksinim Tan谋mlay谋n",
+            "Gereksinim Tanımlayın",
 
           description:
-            "Analiz edilmi艧 gereksinimi g枚zden ge莽irin, i莽eri臒ini geli艧tirin ve BAForge AI i艧 ak谋艧谋ndaki sonraki ad谋ma haz谋rlay谋n.",
+            "Analiz edilmiş gereksinimi gözden geçirin, içeriğini geliştirin ve BAForge AI iş akışındaki sonraki adıma hazırlayın.",
 
           previous:
-            "鈫� Gereksinim Analizi",
+            "← Gereksinim Analizi",
 
           next:
-            "Kullan谋c谋 Hik芒yesi 鈫�",
+            "Kullanıcı Hikâyesi →",
 
           requirement:
             "Gereksinim",
 
           requirementDescription:
-            "Bu gereksinim Gereksinim Analizi ekran谋ndan haz谋rland谋. Devam etmeden 枚nce i莽eri臒i g枚zden ge莽irip d眉zenleyebilirsiniz.",
+            "Bu gereksinim Gereksinim Analizi ekranından hazırlandı. Devam etmeden önce içeriği gözden geçirip düzenleyebilirsiniz.",
 
-          howToUseTitle: "Bu Ekran Nas谋l Kullan谋l谋r?",
-          howToUseDescription: "Analiz edilmi艧 bir gereksinimi g枚zden ge莽irin veya do臒rudan yeni bir gereksinim olu艧turun, i莽eri臒ini geli艧tirin ve BAForge AI i艧 ak谋艧谋ndaki sonraki ad谋ma haz谋rlay谋n.",
-          howToUseItem1: "Gereksinim ba艧l谋臒谋n谋 ve a莽谋klamas谋n谋 g枚zden ge莽irin veya do臒rudan girin.",
-          howToUseItem2: "Gereksinim t眉r眉n眉 ve 枚nceli臒ini belirleyin.",
-          howToUseItem3: "Kalite skorlar谋n谋 kontrol edin ve analiz detaylar谋n谋 geli艧tirin.",
-          howToUseItem4: "Belirsizlikleri, eksik bilgileri, varsay谋mlar谋 ve i艧 kurallar谋n谋 g枚zden ge莽irin.",
-          howToUseItem5: "Gereksinim haz谋r oldu臒unda 莽al谋艧ma alan谋na kaydedin.",
-          howToUseItem6: "Gereksinim haz谋r oldu臒unda User Story ad谋m谋na devam edin.",
-          howToUseTip: "陌pucu: Requirement Intelligence'dan herhangi bir gereksinim gelmese bile bu ekrandan do臒rudan ba艧layabilirsiniz.",
+          howToUseTitle: "Bu Ekran Nasıl Kullanılır?",
+          howToUseDescription: "Analiz edilmiş bir gereksinimi gözden geçirin veya doğrudan yeni bir gereksinim oluşturun, içeriğini geliştirin ve BAForge AI iş akışındaki sonraki adıma hazırlayın.",
+          howToUseItem1: "Gereksinim başlığını ve açıklamasını gözden geçirin veya doğrudan girin.",
+          howToUseItem2: "Gereksinim türünü ve önceliğini belirleyin.",
+          howToUseItem3: "Kalite skorlarını kontrol edin ve analiz detaylarını geliştirin.",
+          howToUseItem4: "Belirsizlikleri, eksik bilgileri, varsayımları ve iş kurallarını gözden geçirin.",
+          howToUseItem5: "Gereksinim hazır olduğunda çalışma alanına kaydedin.",
+          howToUseItem6: "Gereksinim hazır olduğunda User Story adımına devam edin.",
+          howToUseTip: "İpucu: Requirement Intelligence'dan herhangi bir gereksinim gelmese bile bu ekrandan doğrudan başlayabilirsiniz.",
 
           newRequirement:
             "Yeni Gereksinim",
@@ -1927,25 +1927,25 @@
             "Taslak",
 
           requirementTitle:
-            "Gereksinim Ba艧l谋臒谋",
+            "Gereksinim Başlığı",
 
           titlePlaceholder:
-            "A莽谋k ve anla艧谋l谋r bir gereksinim ba艧l谋臒谋 girin",
+            "Açık ve anlaşılır bir gereksinim başlığı girin",
 
           requirementType:
-            "Gereksinim T眉r眉",
+            "Gereksinim Türü",
 
           priority:
-            "脰ncelik",
+            "Öncelik",
 
           descriptionLabel:
-            "Gereksinim A莽谋klamas谋",
+            "Gereksinim Açıklaması",
 
           descriptionPlaceholder:
-            "陌艧 gereksinimini a莽谋k ve anla艧谋l谋r 艧ekilde a莽谋klay谋n...",
+            "İş gereksinimini açık ve anlaşılır şekilde açıklayın...",
 
           descriptionHelp:
-            "Bu gereksinim sonraki BA ara莽lar谋nda kullan谋lacakt谋r.",
+            "Bu gereksinim sonraki BA araçlarında kullanılacaktır.",
 
           quality:
             "Gereksinim Kalitesi",
@@ -1960,61 +1960,61 @@
             "Test Edilebilirlik",
 
           analysis:
-            "Analiz Detaylar谋",
+            "Analiz Detayları",
 
           ambiguities:
             "Belirsizlikler",
 
           ambiguitiesPlaceholder:
-            "Her maddeyi ayr谋 sat谋ra yaz谋n...",
+            "Her maddeyi ayrı satıra yazın...",
 
           ambiguitiesHelp:
-            "Belirsiz veya farkl谋 yorumlanabilecek ifadeler.",
+            "Belirsiz veya farklı yorumlanabilecek ifadeler.",
 
           missing:
             "Eksik Bilgiler",
 
           missingPlaceholder:
-            "Her maddeyi ayr谋 sat谋ra yaz谋n...",
+            "Her maddeyi ayrı satıra yazın...",
 
           missingHelp:
-            "Geli艧tirmeye ba艧lanmadan 枚nce ihtiya莽 duyulabilecek bilgiler.",
+            "Geliştirmeye başlanmadan önce ihtiyaç duyulabilecek bilgiler.",
 
           assumptions:
-            "Varsay谋mlar",
+            "Varsayımlar",
 
           assumptionsHelp:
-            "Kesinle艧mi艧 gereksinim olmayan ancak makul kabul edilen varsay谋mlar.",
+            "Kesinleşmiş gereksinim olmayan ancak makul kabul edilen varsayımlar.",
 
           businessRules:
-            "陌艧 Kurallar谋",
+            "İş Kuralları",
 
           businessRulesHelp:
-            "Gereksinim taraf谋ndan desteklenen i艧 kurallar谋.",
+            "Gereksinim tarafından desteklenen iş kuralları.",
 
           openQuestions:
-            "A莽谋k Sorular",
+            "Açık Sorular",
 
           openQuestionsHelp:
-            "Payda艧larla netle艧tirilmesi gereken sorular.",
+            "Paydaşlarla netleştirilmesi gereken sorular.",
 
           edgeCases:
-            "U莽 Durumlar",
+            "Uç Durumlar",
 
           edgeCasesHelp:
-            "Analiz, geli艧tirme ve test s谋ras谋nda dikkate al谋nmas谋 gereken senaryolar.",
+            "Analiz, geliştirme ve test sırasında dikkate alınması gereken senaryolar.",
 
           analystNotes:
-            "Analist Notlar谋",
+            "Analist Notları",
 
           analystNotesHelp:
-            "BA analizi s谋ras谋nda ortaya 莽谋kan g枚zlemler ve 枚neriler.",
+            "BA analizi sırasında ortaya çıkan gözlemler ve öneriler.",
 
           original:
             "Orijinal Gereksinim",
 
           noOriginal:
-            "Orijinal gereksinim y眉klenmedi.",
+            "Orijinal gereksinim yüklenmedi.",
 
           clear:
             "Temizle",
@@ -2023,31 +2023,31 @@
             "Gereksinimi Kaydet",
 
           continue:
-            "Kullan谋c谋 Hik芒yesi 鈫�",
+            "Kullanıcı Hikâyesi →",
 
           emptyTitle:
-            "Gereksinim Bulunamad谋",
+            "Gereksinim Bulunamadı",
 
           emptyDescription:
-            "脟al谋艧ma alan谋nda mevcut bir gereksinim bulunamad谋. Gereksinim Analizi ekran谋ndan ba艧layabilir veya buradan do臒rudan bir gereksinim olu艧turabilirsiniz.",
+            "Çalışma alanında mevcut bir gereksinim bulunamadı. Gereksinim Analizi ekranından başlayabilir veya buradan doğrudan bir gereksinim oluşturabilirsiniz.",
 
           openAnalyzer:
-            "鈫� Gereksinim Analizini A莽",
+            "← Gereksinim Analizini Aç",
 
           titleRequired:
-            "L眉tfen gereksinim ba艧l谋臒谋n谋 girin.",
+            "Lütfen gereksinim başlığını girin.",
 
           descriptionRequired:
-            "L眉tfen gereksinim a莽谋klamas谋n谋 girin.",
+            "Lütfen gereksinim açıklamasını girin.",
 
           saved:
-            "Gereksinim ba艧ar谋yla kaydedildi.",
+            "Gereksinim başarıyla kaydedildi.",
 
           storageError:
             "Gereksinim workspace'e kaydedilemedi.",
 
           cleared:
-            "Gereksinim 莽al谋艧ma alan谋 temizlendi.",
+            "Gereksinim çalışma alanı temizlendi.",
 
           clearConfirm:
             "Mevcut gereksinim ve analiz verileri temizlensin mi?",
@@ -2059,10 +2059,10 @@
             "Fonksiyonel Olmayan",
 
           businessRule:
-            "陌艧 Kural谋",
+            "İş Kuralı",
 
           regulatory:
-            "Reg眉lasyon",
+            "Regülasyon",
 
           data:
             "Veri",
@@ -2071,19 +2071,19 @@
             "Entegrasyon",
 
           process:
-            "S眉re莽",
+            "Süreç",
 
           other:
-            "Di臒er",
+            "Diğer",
 
           high:
-            "Y眉ksek",
+            "Yüksek",
 
           medium:
             "Orta",
 
           low:
-            "D眉艧眉k",
+            "Düşük",
 
           unknown:
             "Bilinmiyor",
@@ -2095,10 +2095,10 @@
             "Aktif",
 
           statusCompleted:
-            "Tamamland谋",
+            "Tamamlandı",
 
           statusArchived:
-            "Ar艧ivlendi"
+            "Arşivlendi"
         }
 
       };
@@ -2960,7 +2960,7 @@
 
                 ${
                   status === "completed"
-                    ? "鉁�"
+                    ? "✓"
                     : index + 1
                 }
 
@@ -4288,7 +4288,7 @@
               const proceed =
                 window.confirm(
                   language === "tr"
-                    ? "Kaydedilmemi艧 de臒i艧iklikleriniz var. Sayfadan ayr谋lmak istiyor musunuz?"
+                    ? "Kaydedilmemiş değişiklikleriniz var. Sayfadan ayrılmak istiyor musunuz?"
                     : "You have unsaved changes. Do you want to leave this page?"
                 );
 
