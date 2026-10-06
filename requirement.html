@@ -345,6 +345,35 @@
     }
 
     /* -----------------------------------------
+       HOW TO USE / INFORMATION
+    ----------------------------------------- */
+
+    .info-box {
+      display: grid; grid-template-columns: auto 1fr; gap: 16px;
+      align-items: start; margin-bottom: 22px; padding: 20px 22px;
+      border: 1px solid #c7d7fe; border-radius: 16px;
+      background: linear-gradient(135deg, #f8fbff, #eef4ff);
+    }
+    .info-icon {
+      width: 38px; height: 38px; display: flex; align-items: center;
+      justify-content: center; border-radius: 12px; background: #fff;
+      border: 1px solid #c7d7fe; color: var(--primary);
+      font-size: 19px; font-weight: 800; flex-shrink: 0;
+    }
+    .info-box h2 { margin: 0 0 6px; font-size: 16px; color: var(--heading); }
+    .info-box p { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+    .info-list {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 18px; margin: 0; padding: 0; list-style: none;
+    }
+    .info-list li {
+      position: relative; padding-left: 20px; color: #475467;
+      font-size: 12px; line-height: 1.55;
+    }
+    .info-list li::before { content: "鉁�"; position: absolute; left: 0; top: 0; color: var(--primary); font-weight: 800; }
+    .info-tip { margin-top: 13px !important; margin-bottom: 0 !important; padding-top: 11px; border-top: 1px solid #dbe5ff; color: #344054 !important; }
+
+    /* -----------------------------------------
        CARD
     ----------------------------------------- */
 
@@ -980,8 +1009,19 @@
 
       .form-grid,
       .score-grid,
-      .analysis-grid {
+      .analysis-grid,
+      .info-list {
         grid-template-columns: 1fr;
+      }
+
+      .info-box {
+        grid-template-columns: 1fr;
+        padding: 18px;
+      }
+
+      .info-icon {
+        width: 34px;
+        height: 34px;
       }
 
       .analysis-box.full {
@@ -1017,7 +1057,6 @@
       .card-header {
         flex-direction: column;
       }
-
     }
   </style>
 </head>
@@ -1026,72 +1065,75 @@
 
   <main>
 
-    <!-- WORKFLOW -->
-
-    <div
-      class="workflow-wrapper"
-      id="workflowWrapper"
-    >
+    <div class="workflow-wrapper">
       <div
         class="workflow"
-        id="workflow"
-      ></div>
+        id="workflow">
+      </div>
     </div>
 
 
-    <!-- HERO -->
-
     <section class="hero">
 
-      <div class="badge">
-        BAForge AI
+      <div
+        class="badge"
+        id="pageBadge">
+        Requirement Workspace
       </div>
 
-      <h1>
-        Requirement
-        <span>Workspace</span>
+      <h1 id="pageTitle">
+        Define a
+        <span>Professional Requirement</span>
       </h1>
 
-      <p id="heroDescription">
-        Turn a business need into a structured,
-        testable and traceable requirement.
+      <p id="pageDescription">
+        Review the analyzed requirement, refine its content and prepare it
+        for the next step in the BAForge AI workflow.
       </p>
 
     </section>
 
 
-    <!-- STEP NAVIGATION -->
-
-    <div
-      class="step-navigation"
-      id="stepNavigation"
-    >
+    <div class="step-navigation">
 
       <a
         id="previousStep"
         class="step-link"
-        href="/requirement-analyzer.html"
-      >
-        ← Previous Step
+        href="/requirement-analyzer.html">
+        鈫� Requirement Analyzer
       </a>
 
       <a
         id="nextStep"
         class="step-link next"
-        href="/user-story.html"
-      >
-        Next Step →
+        href="/user-story.html">
+        User Story 鈫�
       </a>
 
     </div>
 
 
-    <!-- REQUIREMENT CARD -->
+    <section class="info-box" aria-labelledby="howToUseTitle">
+      <div class="info-icon" aria-hidden="true">鈩�</div>
+      <div>
+        <h2 id="howToUseTitle">How to Use This Screen</h2>
+        <p id="howToUseDescription">Review an analyzed requirement or create one directly, refine its content and prepare it for the next BAForge AI step.</p>
+        <ul class="info-list">
+          <li id="howToUseItem1">Review or enter the requirement title and description.</li>
+          <li id="howToUseItem2">Select the requirement type and priority.</li>
+          <li id="howToUseItem3">Check the quality scores and refine the analysis details.</li>
+          <li id="howToUseItem4">Review ambiguities, missing information, assumptions and business rules.</li>
+          <li id="howToUseItem5">Save the requirement when it is ready for the workspace.</li>
+          <li id="howToUseItem6">Continue to User Story when the requirement is ready.</li>
+        </ul>
+        <p class="info-tip" id="howToUseTip">Tip: You can start directly from this screen even when no requirement has been loaded from Requirement Intelligence.</p>
+      </div>
+    </section>
+
 
     <section
-      class="card"
       id="requirementCard"
-    >
+      class="card">
 
       <div class="card-header">
 
@@ -1099,45 +1141,37 @@
 
           <h2
             class="card-title"
-            id="requirementTitle"
-          >
+            id="requirementCardTitle">
             Requirement
           </h2>
 
           <p
             class="card-description"
-            id="cardDescription"
-          >
-            Review, refine and save the requirement.
+            id="requirementCardDescription">
+            This requirement was prepared from the Requirement Analyzer.
+            You can review and refine it before continuing.
           </p>
 
         </div>
 
+        <div class="action-group">
 
-        <div
-          class="action-group"
-        >
-
-          <span
-            class="status-pill"
-            id="statusPill"
-          >
-            Draft
-          </span>
-
-          <span
-            class="id-box"
+          <div
             id="requirementId"
-          >
+            class="id-box">
             New Requirement
-          </span>
+          </div>
+
+          <div
+            id="statusPill"
+            class="status-pill">
+            Draft
+          </div>
 
         </div>
 
       </div>
 
-
-      <!-- BASIC INFORMATION -->
 
       <div class="form-grid">
 
@@ -1145,17 +1179,15 @@
 
           <label
             for="title"
-            id="titleLabel"
-          >
+            id="titleLabel">
             Requirement Title
           </label>
 
           <input
             id="title"
             type="text"
-            autocomplete="off"
-            placeholder="Enter a clear requirement title"
-          >
+            maxlength="200"
+            placeholder="Enter a clear requirement title">
 
         </div>
 
@@ -1164,14 +1196,11 @@
 
           <label
             for="requirementType"
-            id="requirementTypeLabel"
-          >
+            id="typeLabel">
             Requirement Type
           </label>
 
-          <select
-            id="requirementType"
-          >
+          <select id="requirementType">
 
             <option value="Functional">
               Functional
@@ -1214,28 +1243,25 @@
 
           <label
             for="priority"
-            id="priorityLabel"
-          >
+            id="priorityLabel">
             Priority
           </label>
 
-          <select
-            id="priority"
-          >
+          <select id="priority">
 
-            <option value="High">
+            <option value="high">
               High
             </option>
 
-            <option value="Medium">
+            <option value="medium">
               Medium
             </option>
 
-            <option value="Low">
+            <option value="low">
               Low
             </option>
 
-            <option value="Unknown">
+            <option value="unknown">
               Unknown
             </option>
 
@@ -1246,41 +1272,31 @@
       </div>
 
 
-      <!-- DESCRIPTION -->
-
-      <div
-        class="field description-field"
-      >
+      <div class="description-field">
 
         <label
           for="description"
-          id="descriptionLabel"
-        >
+          id="descriptionLabel">
           Requirement Description
         </label>
 
         <textarea
           id="description"
-          placeholder="Describe the requirement in clear business terms."
-        ></textarea>
+          maxlength="10000"
+          placeholder="Describe the business requirement clearly..."></textarea>
 
         <div
           class="field-help"
-          id="descriptionHelp"
-        >
-          Keep the requirement specific,
-          measurable and testable.
+          id="descriptionHelp">
+          This is the requirement that will be used by downstream BA tools.
         </div>
 
       </div>
 
 
-      <!-- QUALITY SCORES -->
-
       <h3
         class="section-title"
-        id="qualityTitle"
-      >
+        id="qualityTitle">
         Requirement Quality
       </h3>
 
@@ -1291,8 +1307,7 @@
 
           <div
             class="score-label"
-            id="clarityLabel"
-          >
+            id="clarityLabel">
             Clarity
           </div>
 
@@ -1311,9 +1326,9 @@
           <div class="score-bar">
 
             <div
-              class="score-fill"
               id="clarityBar"
-            ></div>
+              class="score-fill">
+            </div>
 
           </div>
 
@@ -1324,8 +1339,7 @@
 
           <div
             class="score-label"
-            id="completenessLabel"
-          >
+            id="completenessLabel">
             Completeness
           </div>
 
@@ -1344,9 +1358,9 @@
           <div class="score-bar">
 
             <div
-              class="score-fill"
               id="completenessBar"
-            ></div>
+              class="score-fill">
+            </div>
 
           </div>
 
@@ -1357,8 +1371,7 @@
 
           <div
             class="score-label"
-            id="testabilityLabel"
-          >
+            id="testabilityLabel">
             Testability
           </div>
 
@@ -1377,9 +1390,9 @@
           <div class="score-bar">
 
             <div
-              class="score-fill"
               id="testabilityBar"
-            ></div>
+              class="score-fill">
+            </div>
 
           </div>
 
@@ -1388,13 +1401,10 @@
       </div>
 
 
-      <!-- ANALYSIS -->
-
       <h3
         class="section-title"
-        id="analysisTitle"
-      >
-        Analysis
+        id="analysisTitle">
+        Analysis Details
       </h3>
 
 
@@ -1408,15 +1418,12 @@
 
           <textarea
             id="ambiguities"
-            placeholder="List unclear or ambiguous points."
-          ></textarea>
+            placeholder="One item per line..."></textarea>
 
           <div
             class="analysis-help"
-            id="ambiguitiesHelp"
-          >
-            Identify wording that could lead to
-            multiple interpretations.
+            id="ambiguitiesHelp">
+            Unclear or potentially ambiguous statements.
           </div>
 
         </div>
@@ -1424,21 +1431,18 @@
 
         <div class="analysis-box">
 
-          <h3 id="missingInformationTitle">
+          <h3 id="missingTitle">
             Missing Information
           </h3>
 
           <textarea
             id="missingInformation"
-            placeholder="List information that is still needed."
-          ></textarea>
+            placeholder="One item per line..."></textarea>
 
           <div
             class="analysis-help"
-            id="missingInformationHelp"
-          >
-            Capture missing actors, rules,
-            data or expected outcomes.
+            id="missingHelp">
+            Information that may be required before implementation.
           </div>
 
         </div>
@@ -1452,14 +1456,12 @@
 
           <textarea
             id="assumptions"
-            placeholder="List assumptions."
-          ></textarea>
+            placeholder="One item per line..."></textarea>
 
           <div
             class="analysis-help"
-            id="assumptionsHelp"
-          >
-            Record assumptions made during analysis.
+            id="assumptionsHelp">
+            Reasonable assumptions that are not confirmed requirements.
           </div>
 
         </div>
@@ -1473,15 +1475,12 @@
 
           <textarea
             id="businessRules"
-            placeholder="List business rules."
-          ></textarea>
+            placeholder="One item per line..."></textarea>
 
           <div
             class="analysis-help"
-            id="businessRulesHelp"
-          >
-            Record rules or constraints
-            that govern the requirement.
+            id="businessRulesHelp">
+            Rules explicitly supported by the requirement.
           </div>
 
         </div>
@@ -1495,15 +1494,12 @@
 
           <textarea
             id="openQuestions"
-            placeholder="List open questions."
-          ></textarea>
+            placeholder="One item per line..."></textarea>
 
           <div
             class="analysis-help"
-            id="openQuestionsHelp"
-          >
-            Capture unresolved questions
-            before implementation.
+            id="openQuestionsHelp">
+            Questions that should be clarified with stakeholders.
           </div>
 
         </div>
@@ -1517,22 +1513,18 @@
 
           <textarea
             id="edgeCases"
-            placeholder="List edge cases."
-          ></textarea>
+            placeholder="One item per line..."></textarea>
 
           <div
             class="analysis-help"
-            id="edgeCasesHelp"
-          >
-            Identify exceptional or boundary scenarios.
+            id="edgeCasesHelp">
+            Scenarios that should be considered during refinement and testing.
           </div>
 
         </div>
 
 
-        <div
-          class="analysis-box full"
-        >
+        <div class="analysis-box full">
 
           <h3 id="analystNotesTitle">
             Analyst Notes
@@ -1540,15 +1532,12 @@
 
           <textarea
             id="analystNotes"
-            placeholder="Add analyst notes."
-          ></textarea>
+            placeholder="One item per line..."></textarea>
 
           <div
             class="analysis-help"
-            id="analystNotesHelp"
-          >
-            Add reasoning, observations
-            or implementation considerations.
+            id="analystNotesHelp">
+            Practical observations and recommendations from the BA analysis.
           </div>
 
         </div>
@@ -1556,58 +1545,48 @@
       </div>
 
 
-      <!-- SOURCE -->
-
       <div class="source-box">
 
         <div
           class="source-label"
-          id="sourceLabel"
-        >
+          id="sourceLabel">
           Original Requirement
         </div>
 
         <div
-          class="source-text"
           id="sourceRequirement"
-        >
+          class="source-text">
           No original requirement loaded.
         </div>
 
       </div>
 
 
-      <!-- MESSAGES -->
-
       <div
-        class="message success"
         id="successMessage"
-      ></div>
+        class="message success">
+      </div>
 
       <div
-        class="message error"
         id="errorMessage"
-      ></div>
+        class="message error">
+      </div>
 
-
-      <!-- ACTIONS -->
 
       <div class="actions">
 
         <div class="action-group">
 
           <button
-            type="button"
-            class="secondary-button"
             id="clearButton"
-          >
+            class="secondary-button"
+            type="button">
             Clear
           </button>
 
           <button
-            type="button"
             id="saveButton"
-          >
+            type="button">
             Save Requirement
           </button>
 
@@ -1617,11 +1596,10 @@
         <div class="action-group">
 
           <button
-            type="button"
-            class="next-button"
             id="continueButton"
-          >
-            Continue to User Story →
+            class="next-button"
+            type="button">
+            User Story 鈫�
           </button>
 
         </div>
@@ -1631,29 +1609,26 @@
     </section>
 
 
-    <!-- EMPTY STATE -->
-
     <section
-      class="card empty-state"
       id="emptyState"
-      style="display:none;"
-    >
+      class="card empty-state"
+      style="display:none;">
 
       <h2 id="emptyTitle">
         No Requirement Loaded
       </h2>
 
       <p id="emptyDescription">
-        You can start directly by creating a new
-        requirement or return to Requirement Intelligence.
+        No requirement is currently available in the workspace.
+        You can start from the Requirement Analyzer or create a
+        requirement directly here.
       </p>
 
       <a
-        class="step-link next"
-        id="emptyAction"
+        class="step-link"
         href="/requirement-analyzer.html"
-      >
-        Open Requirement Intelligence
+        id="emptyAnalyzerLink">
+        鈫� Open Requirement Analyzer
       </a>
 
     </section>
@@ -1661,12 +1636,11 @@
   </main>
 
 
-  <!-- CORE -->
-
   <script src="/core/data-model.js"></script>
   <script src="/core/artifact-store.js"></script>
   <script src="/core/workflow.js"></script>
   <script src="/core/i18n.js"></script>
+
 
   <script>
 
@@ -1676,187 +1650,14 @@
 
 
       /* -----------------------------------------
-         CONSTANTS
+         STORAGE
       ----------------------------------------- */
 
       const REQUIREMENT_KEY =
         "baforge-current-requirement";
 
       const WORKFLOW_KEY =
-        "baforge-workflow";
-
-
-      /* -----------------------------------------
-         STATE
-      ----------------------------------------- */
-
-      let currentRequirement =
-        null;
-
-      let isDirty =
-        false;
-
-      let language =
-        localStorage.getItem(
-          "baforge-language"
-        ) === "tr"
-          ? "tr"
-          : "en";
-
-
-      /* -----------------------------------------
-         ELEMENTS
-      ----------------------------------------- */
-
-      const workflowEl =
-        document.getElementById(
-          "workflow"
-        );
-
-      const previousStepEl =
-        document.getElementById(
-          "previousStep"
-        );
-
-      const nextStepEl =
-        document.getElementById(
-          "nextStep"
-        );
-
-      const requirementCardEl =
-        document.getElementById(
-          "requirementCard"
-        );
-
-      const emptyStateEl =
-        document.getElementById(
-          "emptyState"
-        );
-
-      const requirementIdEl =
-        document.getElementById(
-          "requirementId"
-        );
-
-      const statusPillEl =
-        document.getElementById(
-          "statusPill"
-        );
-
-      const titleEl =
-        document.getElementById(
-          "title"
-        );
-
-      const descriptionEl =
-        document.getElementById(
-          "description"
-        );
-
-      const requirementTypeEl =
-        document.getElementById(
-          "requirementType"
-        );
-
-      const priorityEl =
-        document.getElementById(
-          "priority"
-        );
-
-      const clarityScoreEl =
-        document.getElementById(
-          "clarityScore"
-        );
-
-      const completenessScoreEl =
-        document.getElementById(
-          "completenessScore"
-        );
-
-      const testabilityScoreEl =
-        document.getElementById(
-          "testabilityScore"
-        );
-
-      const clarityBarEl =
-        document.getElementById(
-          "clarityBar"
-        );
-
-      const completenessBarEl =
-        document.getElementById(
-          "completenessBar"
-        );
-
-      const testabilityBarEl =
-        document.getElementById(
-          "testabilityBar"
-        );
-
-      const ambiguitiesEl =
-        document.getElementById(
-          "ambiguities"
-        );
-
-      const missingInformationEl =
-        document.getElementById(
-          "missingInformation"
-        );
-
-      const assumptionsEl =
-        document.getElementById(
-          "assumptions"
-        );
-
-      const businessRulesEl =
-        document.getElementById(
-          "businessRules"
-        );
-
-      const openQuestionsEl =
-        document.getElementById(
-          "openQuestions"
-        );
-
-      const edgeCasesEl =
-        document.getElementById(
-          "edgeCases"
-        );
-
-      const analystNotesEl =
-        document.getElementById(
-          "analystNotes"
-        );
-
-      const sourceRequirementEl =
-        document.getElementById(
-          "sourceRequirement"
-        );
-
-      const saveButton =
-        document.getElementById(
-          "saveButton"
-        );
-
-      const clearButton =
-        document.getElementById(
-          "clearButton"
-        );
-
-      const continueButton =
-        document.getElementById(
-          "continueButton"
-        );
-
-      const successMessageEl =
-        document.getElementById(
-          "successMessage"
-        );
-
-      const errorMessageEl =
-        document.getElementById(
-          "errorMessage"
-        );
+        "baforge-workflow-state";
 
 
       /* -----------------------------------------
@@ -1867,25 +1668,47 @@
 
         en: {
 
-          heroDescription:
-            "Turn a business need into a structured, testable and traceable requirement.",
+          badge:
+            "Requirement Workspace",
+
+          title:
+            "Define a ",
+
+          titleHighlight:
+            "Professional Requirement",
+
+          description:
+            "Review the analyzed requirement, refine its content and prepare it for the next step in the BAForge AI workflow.",
 
           previous:
-            "← Previous Step",
+            "鈫� Requirement Analyzer",
 
           next:
-            "Next Step →",
+            "User Story 鈫�",
 
           requirement:
             "Requirement",
 
-          workspace:
-            "Workspace",
+          requirementDescription:
+            "This requirement was prepared from the Requirement Analyzer. You can review and refine it before continuing.",
 
-          cardDescription:
-            "Review, refine and save the requirement.",
+          howToUseTitle: "How to Use This Screen",
+          howToUseDescription: "Review an analyzed requirement or create one directly, refine its content and prepare it for the next BAForge AI step.",
+          howToUseItem1: "Review or enter the requirement title and description.",
+          howToUseItem2: "Select the requirement type and priority.",
+          howToUseItem3: "Check the quality scores and refine the analysis details.",
+          howToUseItem4: "Review ambiguities, missing information, assumptions and business rules.",
+          howToUseItem5: "Save the requirement when it is ready for the workspace.",
+          howToUseItem6: "Continue to User Story when the requirement is ready.",
+          howToUseTip: "Tip: You can start directly from this screen even when no requirement has been loaded from Requirement Intelligence.",
 
-          title:
+          newRequirement:
+            "New Requirement",
+
+          draft:
+            "Draft",
+
+          requirementTitle:
             "Requirement Title",
 
           titlePlaceholder:
@@ -1897,14 +1720,14 @@
           priority:
             "Priority",
 
-          description:
+          descriptionLabel:
             "Requirement Description",
 
           descriptionPlaceholder:
-            "Describe the requirement in clear business terms.",
+            "Describe the business requirement clearly...",
 
           descriptionHelp:
-            "Keep the requirement specific, measurable and testable.",
+            "This is the requirement that will be used by downstream BA tools.",
 
           quality:
             "Requirement Quality",
@@ -1919,72 +1742,57 @@
             "Testability",
 
           analysis:
-            "Analysis",
+            "Analysis Details",
 
           ambiguities:
             "Ambiguities",
 
           ambiguitiesPlaceholder:
-            "List unclear or ambiguous points.",
+            "One item per line...",
 
           ambiguitiesHelp:
-            "Identify wording that could lead to multiple interpretations.",
+            "Unclear or potentially ambiguous statements.",
 
-          missingInformation:
+          missing:
             "Missing Information",
 
-          missingInformationPlaceholder:
-            "List information that is still needed.",
+          missingPlaceholder:
+            "One item per line...",
 
-          missingInformationHelp:
-            "Capture missing actors, rules, data or expected outcomes.",
+          missingHelp:
+            "Information that may be required before implementation.",
 
           assumptions:
             "Assumptions",
 
-          assumptionsPlaceholder:
-            "List assumptions.",
-
           assumptionsHelp:
-            "Record assumptions made during analysis.",
+            "Reasonable assumptions that are not confirmed requirements.",
 
           businessRules:
             "Business Rules",
 
-          businessRulesPlaceholder:
-            "List business rules.",
-
           businessRulesHelp:
-            "Record rules or constraints that govern the requirement.",
+            "Rules explicitly supported by the requirement.",
 
           openQuestions:
             "Open Questions",
 
-          openQuestionsPlaceholder:
-            "List open questions.",
-
           openQuestionsHelp:
-            "Capture unresolved questions before implementation.",
+            "Questions that should be clarified with stakeholders.",
 
           edgeCases:
             "Edge Cases",
 
-          edgeCasesPlaceholder:
-            "List edge cases.",
-
           edgeCasesHelp:
-            "Identify exceptional or boundary scenarios.",
+            "Scenarios that should be considered during refinement and testing.",
 
           analystNotes:
             "Analyst Notes",
 
-          analystNotesPlaceholder:
-            "Add analyst notes.",
-
           analystNotesHelp:
-            "Add reasoning, observations or implementation considerations.",
+            "Practical observations and recommendations from the BA analysis.",
 
-          originalRequirement:
+          original:
             "Original Requirement",
 
           noOriginal:
@@ -1997,120 +1805,147 @@
             "Save Requirement",
 
           continue:
-            "Continue to User Story →",
+            "User Story 鈫�",
 
           emptyTitle:
             "No Requirement Loaded",
 
           emptyDescription:
-            "You can start directly by creating a new requirement or return to Requirement Intelligence.",
+            "No requirement is currently available in the workspace. You can start from the Requirement Analyzer or create a requirement directly here.",
 
-          emptyAction:
-            "Open Requirement Intelligence",
+          openAnalyzer:
+            "鈫� Open Requirement Analyzer",
 
-          newRequirement:
-            "New Requirement",
+          titleRequired:
+            "Please enter a requirement title.",
 
-          statusDraft:
-            "Draft",
+          descriptionRequired:
+            "Please enter a requirement description.",
 
           saved:
             "Requirement saved successfully.",
 
-          cleared:
-            "Requirement cleared.",
-
           storageError:
-            "The workspace could not be updated. Please try again.",
+            "The requirement could not be saved to the workspace.",
 
-          titleRequired:
-            "Requirement title is required.",
-
-          descriptionRequired:
-            "Requirement description is required.",
+          cleared:
+            "Requirement workspace cleared.",
 
           clearConfirm:
-            "Are you sure you want to clear this requirement?",
+            "Clear the current requirement and analysis data?",
 
-          typeFunctional:
+          functional:
             "Functional",
 
-          typeNonFunctional:
+          nonFunctional:
             "Non-Functional",
 
-          typeBusinessRule:
+          businessRule:
             "Business Rule",
 
-          typeRegulatory:
+          regulatory:
             "Regulatory",
 
-          typeData:
+          data:
             "Data",
 
-          typeIntegration:
+          integration:
             "Integration",
 
-          typeProcess:
+          process:
             "Process",
 
-          typeOther:
+          other:
             "Other",
 
-          priorityHigh:
+          high:
             "High",
 
-          priorityMedium:
+          medium:
             "Medium",
 
-          priorityLow:
+          low:
             "Low",
 
-          priorityUnknown:
-            "Unknown"
+          unknown:
+            "Unknown",
 
+          statusDraft:
+            "Draft",
+
+          statusActive:
+            "Active",
+
+          statusCompleted:
+            "Completed",
+
+          statusArchived:
+            "Archived"
         },
 
 
         tr: {
 
-          heroDescription:
-            "İş ihtiyacını yapılandırılmış, test edilebilir ve izlenebilir bir gereksinime dönüştürün.",
+          badge:
+            "Gereksinim 脟al谋艧ma Alan谋",
+
+          title:
+            "Profesyonel Bir ",
+
+          titleHighlight:
+            "Gereksinim Tan谋mlay谋n",
+
+          description:
+            "Analiz edilmi艧 gereksinimi g枚zden ge莽irin, i莽eri臒ini geli艧tirin ve BAForge AI i艧 ak谋艧谋ndaki sonraki ad谋ma haz谋rlay谋n.",
 
           previous:
-            "← Önceki Adım",
+            "鈫� Gereksinim Analizi",
 
           next:
-            "Sonraki Adım →",
+            "Kullan谋c谋 Hik芒yesi 鈫�",
 
           requirement:
             "Gereksinim",
 
-          workspace:
-            "Çalışma Alanı",
+          requirementDescription:
+            "Bu gereksinim Gereksinim Analizi ekran谋ndan haz谋rland谋. Devam etmeden 枚nce i莽eri臒i g枚zden ge莽irip d眉zenleyebilirsiniz.",
 
-          cardDescription:
-            "Gereksinimi inceleyin, geliştirin ve kaydedin.",
+          howToUseTitle: "Bu Ekran Nas谋l Kullan谋l谋r?",
+          howToUseDescription: "Analiz edilmi艧 bir gereksinimi g枚zden ge莽irin veya do臒rudan yeni bir gereksinim olu艧turun, i莽eri臒ini geli艧tirin ve BAForge AI i艧 ak谋艧谋ndaki sonraki ad谋ma haz谋rlay谋n.",
+          howToUseItem1: "Gereksinim ba艧l谋臒谋n谋 ve a莽谋klamas谋n谋 g枚zden ge莽irin veya do臒rudan girin.",
+          howToUseItem2: "Gereksinim t眉r眉n眉 ve 枚nceli臒ini belirleyin.",
+          howToUseItem3: "Kalite skorlar谋n谋 kontrol edin ve analiz detaylar谋n谋 geli艧tirin.",
+          howToUseItem4: "Belirsizlikleri, eksik bilgileri, varsay谋mlar谋 ve i艧 kurallar谋n谋 g枚zden ge莽irin.",
+          howToUseItem5: "Gereksinim haz谋r oldu臒unda 莽al谋艧ma alan谋na kaydedin.",
+          howToUseItem6: "Gereksinim haz谋r oldu臒unda User Story ad谋m谋na devam edin.",
+          howToUseTip: "陌pucu: Requirement Intelligence'dan herhangi bir gereksinim gelmese bile bu ekrandan do臒rudan ba艧layabilirsiniz.",
 
-          title:
-            "Gereksinim Başlığı",
+          newRequirement:
+            "Yeni Gereksinim",
+
+          draft:
+            "Taslak",
+
+          requirementTitle:
+            "Gereksinim Ba艧l谋臒谋",
 
           titlePlaceholder:
-            "Açık ve anlaşılır bir gereksinim başlığı girin",
+            "A莽谋k ve anla艧谋l谋r bir gereksinim ba艧l谋臒谋 girin",
 
           requirementType:
-            "Gereksinim Türü",
+            "Gereksinim T眉r眉",
 
           priority:
-            "Öncelik",
+            "脰ncelik",
 
-          description:
-            "Gereksinim Açıklaması",
+          descriptionLabel:
+            "Gereksinim A莽谋klamas谋",
 
           descriptionPlaceholder:
-            "Gereksinimi açık iş kuralları ve beklentiler ile tanımlayın.",
+            "陌艧 gereksinimini a莽谋k ve anla艧谋l谋r 艧ekilde a莽谋klay谋n...",
 
           descriptionHelp:
-            "Gereksinimi spesifik, ölçülebilir ve test edilebilir tutun.",
+            "Bu gereksinim sonraki BA ara莽lar谋nda kullan谋lacakt谋r.",
 
           quality:
             "Gereksinim Kalitesi",
@@ -2119,82 +1954,67 @@
             "Netlik",
 
           completeness:
-            "Tamlık",
+            "Eksiksizlik",
 
           testability:
             "Test Edilebilirlik",
 
           analysis:
-            "Analiz",
+            "Analiz Detaylar谋",
 
           ambiguities:
             "Belirsizlikler",
 
           ambiguitiesPlaceholder:
-            "Belirsiz veya birden fazla yoruma açık noktaları listeleyin.",
+            "Her maddeyi ayr谋 sat谋ra yaz谋n...",
 
           ambiguitiesHelp:
-            "Birden fazla yoruma neden olabilecek ifadeleri belirleyin.",
+            "Belirsiz veya farkl谋 yorumlanabilecek ifadeler.",
 
-          missingInformation:
+          missing:
             "Eksik Bilgiler",
 
-          missingInformationPlaceholder:
-            "Henüz ihtiyaç duyulan bilgileri listeleyin.",
+          missingPlaceholder:
+            "Her maddeyi ayr谋 sat谋ra yaz谋n...",
 
-          missingInformationHelp:
-            "Eksik aktörleri, kuralları, verileri veya beklenen sonuçları belirtin.",
+          missingHelp:
+            "Geli艧tirmeye ba艧lanmadan 枚nce ihtiya莽 duyulabilecek bilgiler.",
 
           assumptions:
-            "Varsayımlar",
-
-          assumptionsPlaceholder:
-            "Varsayımları listeleyin.",
+            "Varsay谋mlar",
 
           assumptionsHelp:
-            "Analiz sırasında yapılan varsayımları kaydedin.",
+            "Kesinle艧mi艧 gereksinim olmayan ancak makul kabul edilen varsay谋mlar.",
 
           businessRules:
-            "İş Kuralları",
-
-          businessRulesPlaceholder:
-            "İş kurallarını listeleyin.",
+            "陌艧 Kurallar谋",
 
           businessRulesHelp:
-            "Gereksinimi yöneten kuralları veya kısıtları kaydedin.",
+            "Gereksinim taraf谋ndan desteklenen i艧 kurallar谋.",
 
           openQuestions:
-            "Açık Sorular",
-
-          openQuestionsPlaceholder:
-            "Açık soruları listeleyin.",
+            "A莽谋k Sorular",
 
           openQuestionsHelp:
-            "Geliştirme öncesinde çözülmesi gereken soruları kaydedin.",
+            "Payda艧larla netle艧tirilmesi gereken sorular.",
 
           edgeCases:
-            "Uç Durumlar",
-
-          edgeCasesPlaceholder:
-            "Uç durumları listeleyin.",
+            "U莽 Durumlar",
 
           edgeCasesHelp:
-            "İstisnai veya sınır senaryolarını belirleyin.",
+            "Analiz, geli艧tirme ve test s谋ras谋nda dikkate al谋nmas谋 gereken senaryolar.",
 
           analystNotes:
-            "Analist Notları",
-
-          analystNotesPlaceholder:
-            "Analist notlarını ekleyin.",
+            "Analist Notlar谋",
 
           analystNotesHelp:
-            "Gerekçeleri, gözlemleri veya uygulama değerlendirmelerini ekleyin.",
+            "BA analizi s谋ras谋nda ortaya 莽谋kan g枚zlemler ve 枚neriler.",
 
-          originalRequirement:
+          original:
             "Orijinal Gereksinim",
 
           noOriginal:
-            "Orijinal gereksinim yüklenmedi.",
+            "Orijinal gereksinim y眉klenmedi.",
 
           clear:
             "Temizle",
@@ -2203,94 +2023,125 @@
             "Gereksinimi Kaydet",
 
           continue:
-            "User Story'ye Devam Et →",
+            "Kullan谋c谋 Hik芒yesi 鈫�",
 
           emptyTitle:
-            "Gereksinim Yüklenmedi",
+            "Gereksinim Bulunamad谋",
 
           emptyDescription:
-            "Doğrudan yeni bir gereksinim oluşturabilir veya Requirement Intelligence ekranına dönebilirsiniz.",
+            "脟al谋艧ma alan谋nda mevcut bir gereksinim bulunamad谋. Gereksinim Analizi ekran谋ndan ba艧layabilir veya buradan do臒rudan bir gereksinim olu艧turabilirsiniz.",
 
-          emptyAction:
-            "Requirement Intelligence'ı Aç",
+          openAnalyzer:
+            "鈫� Gereksinim Analizini A莽",
 
-          newRequirement:
-            "Yeni Gereksinim",
+          titleRequired:
+            "L眉tfen gereksinim ba艧l谋臒谋n谋 girin.",
+
+          descriptionRequired:
+            "L眉tfen gereksinim a莽谋klamas谋n谋 girin.",
+
+          saved:
+            "Gereksinim ba艧ar谋yla kaydedildi.",
+
+          storageError:
+            "Gereksinim workspace'e kaydedilemedi.",
+
+          cleared:
+            "Gereksinim 莽al谋艧ma alan谋 temizlendi.",
+
+          clearConfirm:
+            "Mevcut gereksinim ve analiz verileri temizlensin mi?",
+
+          functional:
+            "Fonksiyonel",
+
+          nonFunctional:
+            "Fonksiyonel Olmayan",
+
+          businessRule:
+            "陌艧 Kural谋",
+
+          regulatory:
+            "Reg眉lasyon",
+
+          data:
+            "Veri",
+
+          integration:
+            "Entegrasyon",
+
+          process:
+            "S眉re莽",
+
+          other:
+            "Di臒er",
+
+          high:
+            "Y眉ksek",
+
+          medium:
+            "Orta",
+
+          low:
+            "D眉艧眉k",
+
+          unknown:
+            "Bilinmiyor",
 
           statusDraft:
             "Taslak",
 
-          saved:
-            "Gereksinim başarıyla kaydedildi.",
+          statusActive:
+            "Aktif",
 
-          cleared:
-            "Gereksinim temizlendi.",
+          statusCompleted:
+            "Tamamland谋",
 
-          storageError:
-            "Çalışma alanı güncellenemedi. Lütfen tekrar deneyin.",
-
-          titleRequired:
-            "Gereksinim başlığı zorunludur.",
-
-          descriptionRequired:
-            "Gereksinim açıklaması zorunludur.",
-
-          clearConfirm:
-            "Bu gereksinimi temizlemek istediğinizden emin misiniz?",
-
-          typeFunctional:
-            "Fonksiyonel",
-
-          typeNonFunctional:
-            "Fonksiyonel Olmayan",
-
-          typeBusinessRule:
-            "İş Kuralı",
-
-          typeRegulatory:
-            "Regülasyon",
-
-          typeData:
-            "Veri",
-
-          typeIntegration:
-            "Entegrasyon",
-
-          typeProcess:
-            "Süreç",
-
-          typeOther:
-            "Diğer",
-
-          priorityHigh:
-            "Yüksek",
-
-          priorityMedium:
-            "Orta",
-
-          priorityLow:
-            "Düşük",
-
-          priorityUnknown:
-            "Bilinmiyor"
-
+          statusArchived:
+            "Ar艧ivlendi"
         }
 
       };
 
 
-      /* -----------------------------------------
-         TRANSLATION HELPER
-      ----------------------------------------- */
+      function getLanguage() {
+
+        let lang =
+          localStorage.getItem(
+            "baforge-language"
+          ) || "en";
+
+        if (
+          window.BAI18n &&
+          typeof window.BAI18n.getLanguage ===
+          "function"
+        ) {
+
+          try {
+
+            lang =
+              window.BAI18n.getLanguage() ||
+              lang;
+
+          } catch {}
+
+        }
+
+        return lang === "tr"
+          ? "tr"
+          : "en";
+
+      }
+
+
+      let language =
+        getLanguage();
+
 
       function t(key) {
 
-        const dictionary =
-          translations[language] ||
-          translations.en;
-
         return (
-          dictionary[key] ??
+          translations[language]?.[key] ??
           translations.en[key] ??
           key
         );
@@ -2299,7 +2150,93 @@
 
 
       /* -----------------------------------------
-         SAFE PARSE
+         ELEMENTS
+      ----------------------------------------- */
+
+      const titleEl =
+        document.getElementById("title");
+
+      const descriptionEl =
+        document.getElementById("description");
+
+      const requirementTypeEl =
+        document.getElementById("requirementType");
+
+      const priorityEl =
+        document.getElementById("priority");
+
+      const clarityScoreEl =
+        document.getElementById("clarityScore");
+
+      const completenessScoreEl =
+        document.getElementById("completenessScore");
+
+      const testabilityScoreEl =
+        document.getElementById("testabilityScore");
+
+      const clarityBarEl =
+        document.getElementById("clarityBar");
+
+      const completenessBarEl =
+        document.getElementById("completenessBar");
+
+      const testabilityBarEl =
+        document.getElementById("testabilityBar");
+
+      const ambiguitiesEl =
+        document.getElementById("ambiguities");
+
+      const missingInformationEl =
+        document.getElementById("missingInformation");
+
+      const assumptionsEl =
+        document.getElementById("assumptions");
+
+      const businessRulesEl =
+        document.getElementById("businessRules");
+
+      const openQuestionsEl =
+        document.getElementById("openQuestions");
+
+      const edgeCasesEl =
+        document.getElementById("edgeCases");
+
+      const analystNotesEl =
+        document.getElementById("analystNotes");
+
+      const sourceRequirementEl =
+        document.getElementById("sourceRequirement");
+
+      const requirementIdEl =
+        document.getElementById("requirementId");
+
+      const statusPillEl =
+        document.getElementById("statusPill");
+
+      const successMessageEl =
+        document.getElementById("successMessage");
+
+      const errorMessageEl =
+        document.getElementById("errorMessage");
+
+      const emptyStateEl =
+        document.getElementById("emptyState");
+
+      const requirementCardEl =
+        document.getElementById("requirementCard");
+
+      const saveButton =
+        document.getElementById("saveButton");
+
+      const clearButton =
+        document.getElementById("clearButton");
+
+      const continueButton =
+        document.getElementById("continueButton");
+
+
+      /* -----------------------------------------
+         SAFE HELPERS
       ----------------------------------------- */
 
       function safeParse(value) {
@@ -2309,143 +2246,78 @@
         }
 
         try {
-
-          return JSON.parse(
-            value
-          );
-
+          return JSON.parse(value);
         } catch {
-
           return null;
-
         }
 
       }
 
 
-      /* -----------------------------------------
-         NORMALIZERS
-      ----------------------------------------- */
+      function normalizeArray(value) {
 
-      function normalizePriority(
-        value
-      ) {
-
-        const normalized =
-          String(
-            value || ""
-          ).trim().toLowerCase();
-
-        if (
-          normalized === "high" ||
-          normalized === "yüksek"
-        ) {
-          return "High";
+        if (!Array.isArray(value)) {
+          return [];
         }
 
-        if (
-          normalized === "medium" ||
-          normalized === "orta"
-        ) {
-          return "Medium";
-        }
+        return value
+          .map(item => {
 
-        if (
-          normalized === "low" ||
-          normalized === "düşük"
-        ) {
-          return "Low";
-        }
+            if (
+              item === null ||
+              item === undefined
+            ) {
+              return "";
+            }
 
-        return "Unknown";
+            if (
+              typeof item === "object"
+            ) {
+
+              return JSON.stringify(
+                item
+              );
+
+            }
+
+            return String(item);
+
+          })
+          .map(
+            item => item.trim()
+          )
+          .filter(Boolean);
 
       }
 
 
-      function normalizeRequirementType(
-        value
-      ) {
+      function arrayToText(value) {
 
-        const normalized =
-          String(
-            value || ""
-          ).trim().toLowerCase();
-
-        const map = {
-
-          "functional":
-            "Functional",
-
-          "fonksiyonel":
-            "Functional",
-
-          "non-functional":
-            "Non-Functional",
-
-          "non functional":
-            "Non-Functional",
-
-          "fonksiyonel olmayan":
-            "Non-Functional",
-
-          "business rule":
-            "Business Rule",
-
-          "iş kuralı":
-            "Business Rule",
-
-          "regulatory":
-            "Regulatory",
-
-          "regülasyon":
-            "Regulatory",
-
-          "regulation":
-            "Regulatory",
-
-          "data":
-            "Data",
-
-          "veri":
-            "Data",
-
-          "integration":
-            "Integration",
-
-          "entegrasyon":
-            "Integration",
-
-          "process":
-            "Process",
-
-          "süreç":
-            "Process",
-
-          "other":
-            "Other",
-
-          "diğer":
-            "Other"
-
-        };
-
-        return (
-          map[normalized] ||
-          "Other"
-        );
+        return normalizeArray(value)
+          .join("\n");
 
       }
 
 
-      function normalizeScore(
-        value
-      ) {
+      function textToArray(value) {
 
-        const number =
+        return String(value || "")
+          .split(/\r?\n/)
+          .map(
+            item => item.trim()
+          )
+          .filter(Boolean);
+
+      }
+
+
+      function normalizeScore(value) {
+
+        const score =
           Number(value);
 
         if (
-          !Number.isFinite(number)
+          !Number.isFinite(score)
         ) {
           return 0;
         }
@@ -2454,9 +2326,95 @@
           0,
           Math.min(
             100,
-            Math.round(number)
+            Math.round(score)
           )
         );
+
+      }
+
+
+      function escapeHtml(value) {
+
+        return String(
+          value ?? ""
+        )
+          .replace(
+            /&/g,
+            "&amp;"
+          )
+          .replace(
+            /</g,
+            "&lt;"
+          )
+          .replace(
+            />/g,
+            "&gt;"
+          )
+          .replace(
+            /"/g,
+            "&quot;"
+          )
+          .replace(
+            /'/g,
+            "&#039;"
+          );
+
+      }
+
+
+      function updateScore(
+        score,
+        valueElement,
+        barElement
+      ) {
+
+        const normalized =
+          normalizeScore(score);
+
+        valueElement.textContent =
+          normalized;
+
+        barElement.style.width =
+          `${normalized}%`;
+
+      }
+
+
+      function showSuccess(message) {
+
+        successMessageEl.textContent =
+          message;
+
+        successMessageEl.style.display =
+          "block";
+
+        errorMessageEl.style.display =
+          "none";
+
+      }
+
+
+      function showError(message) {
+
+        errorMessageEl.textContent =
+          message;
+
+        errorMessageEl.style.display =
+          "block";
+
+        successMessageEl.style.display =
+          "none";
+
+      }
+
+
+      function hideMessages() {
+
+        successMessageEl.style.display =
+          "none";
+
+        errorMessageEl.style.display =
+          "none";
 
       }
 
@@ -2467,67 +2425,102 @@
 
       function applyLanguage() {
 
+        language =
+          getLanguage();
+
         document.documentElement.lang =
           language;
 
-
         document.title =
-          "BAForge AI - " +
-          t("requirement") +
-          " " +
-          t("workspace");
-
-
-        const heroDescription =
-          document.getElementById(
-            "heroDescription"
-          );
-
-        if (heroDescription) {
-
-          heroDescription.textContent =
-            t("heroDescription");
-
-        }
-
-
-        previousStepEl.textContent =
-          t("previous");
-
-        nextStepEl.textContent =
-          t("next");
-
-
-        const requirementTitle =
-          document.getElementById(
-            "requirementTitle"
-          );
-
-        if (requirementTitle) {
-
-          requirementTitle.innerHTML =
-            `${t("requirement")} <span>${t("workspace")}</span>`;
-
-        }
+          language === "tr"
+            ? "BAForge AI - Gereksinim"
+            : "BAForge AI - Requirement";
 
 
         document.getElementById(
-          "cardDescription"
+          "pageBadge"
         ).textContent =
-          t("cardDescription");
+          t("badge");
+
+
+        document.getElementById(
+          "pageTitle"
+        ).innerHTML =
+          `${t("title")}<span>${t("titleHighlight")}</span>`;
+
+
+        document.getElementById(
+          "pageDescription"
+        ).textContent =
+          t("description");
+
+        document.getElementById("howToUseTitle").textContent = t("howToUseTitle");
+        document.getElementById("howToUseDescription").textContent = t("howToUseDescription");
+
+        for (let i = 1; i <= 6; i += 1) {
+          const item = document.getElementById(`howToUseItem${i}`);
+          if (item) item.textContent = t(`howToUseItem${i}`);
+        }
+
+        document.getElementById("howToUseTip").textContent = t("howToUseTip");
+
+
+        document.getElementById(
+          "previousStep"
+        ).textContent =
+          t("previous");
+
+
+        document.getElementById(
+          "nextStep"
+        ).textContent =
+          t("next");
+
+
+        document.getElementById(
+          "requirementCardTitle"
+        ).textContent =
+          t("requirement");
+
+
+        document.getElementById(
+          "requirementCardDescription"
+        ).textContent =
+          t("requirementDescription");
+
+
+        if (
+          !currentRequirement
+        ) {
+
+          requirementIdEl.textContent =
+            t("newRequirement");
+
+        }
+
+
+        if (
+          !currentRequirement
+        ) {
+
+          statusPillEl.textContent =
+            t("draft");
+
+        }
 
 
         document.getElementById(
           "titleLabel"
         ).textContent =
-          t("title");
+          t("requirementTitle");
+
 
         titleEl.placeholder =
           t("titlePlaceholder");
 
 
         document.getElementById(
-          "requirementTypeLabel"
+          "typeLabel"
         ).textContent =
           t("requirementType");
 
@@ -2541,10 +2534,12 @@
         document.getElementById(
           "descriptionLabel"
         ).textContent =
-          t("description");
+          t("descriptionLabel");
+
 
         descriptionEl.placeholder =
           t("descriptionPlaceholder");
+
 
         document.getElementById(
           "descriptionHelp"
@@ -2563,10 +2558,12 @@
         ).textContent =
           t("clarity");
 
+
         document.getElementById(
           "completenessLabel"
         ).textContent =
           t("completeness");
+
 
         document.getElementById(
           "testabilityLabel"
@@ -2580,188 +2577,121 @@
           t("analysis");
 
 
-        const analysisBindings = [
-
-          [
-            "ambiguitiesTitle",
-            "ambiguities"
-          ],
-
-          [
-            "missingInformationTitle",
-            "missingInformation"
-          ],
-
-          [
-            "assumptionsTitle",
-            "assumptions"
-          ],
-
-          [
-            "businessRulesTitle",
-            "businessRules"
-          ],
-
-          [
-            "openQuestionsTitle",
-            "openQuestions"
-          ],
-
-          [
-            "edgeCasesTitle",
-            "edgeCases"
-          ],
-
-          [
-            "analystNotesTitle",
-            "analystNotes"
-          ]
-
-        ];
+        document.getElementById(
+          "ambiguitiesTitle"
+        ).textContent =
+          t("ambiguities");
 
 
-        analysisBindings.forEach(
-          ([elementId, key]) => {
-
-            const element =
-              document.getElementById(
-                elementId
-              );
-
-            if (element) {
-              element.textContent =
-                t(key);
-            }
-
-          }
-        );
+        ambiguitiesEl.placeholder =
+          t("ambiguitiesPlaceholder");
 
 
-        const placeholderBindings = [
-
-          [
-            "ambiguities",
-            "ambiguitiesPlaceholder"
-          ],
-
-          [
-            "missingInformation",
-            "missingInformationPlaceholder"
-          ],
-
-          [
-            "assumptions",
-            "assumptionsPlaceholder"
-          ],
-
-          [
-            "businessRules",
-            "businessRulesPlaceholder"
-          ],
-
-          [
-            "openQuestions",
-            "openQuestionsPlaceholder"
-          ],
-
-          [
-            "edgeCases",
-            "edgeCasesPlaceholder"
-          ],
-
-          [
-            "analystNotes",
-            "analystNotesPlaceholder"
-          ]
-
-        ];
+        document.getElementById(
+          "ambiguitiesHelp"
+        ).textContent =
+          t("ambiguitiesHelp");
 
 
-        placeholderBindings.forEach(
-          ([elementId, key]) => {
-
-            const element =
-              document.getElementById(
-                elementId
-              );
-
-            if (element) {
-              element.placeholder =
-                t(key);
-            }
-
-          }
-        );
+        document.getElementById(
+          "missingTitle"
+        ).textContent =
+          t("missing");
 
 
-        const helpBindings = [
-
-          [
-            "ambiguitiesHelp",
-            "ambiguitiesHelp"
-          ],
-
-          [
-            "missingInformationHelp",
-            "missingInformationHelp"
-          ],
-
-          [
-            "assumptionsHelp",
-            "assumptionsHelp"
-          ],
-
-          [
-            "businessRulesHelp",
-            "businessRulesHelp"
-          ],
-
-          [
-            "openQuestionsHelp",
-            "openQuestionsHelp"
-          ],
-
-          [
-            "edgeCasesHelp",
-            "edgeCasesHelp"
-          ],
-
-          [
-            "analystNotesHelp",
-            "analystNotesHelp"
-          ]
-
-        ];
+        missingInformationEl.placeholder =
+          t("missingPlaceholder");
 
 
-        helpBindings.forEach(
-          ([elementId, key]) => {
+        document.getElementById(
+          "missingHelp"
+        ).textContent =
+          t("missingHelp");
 
-            const element =
-              document.getElementById(
-                elementId
-              );
 
-            if (element) {
-              element.textContent =
-                t(key);
-            }
+        document.getElementById(
+          "assumptionsTitle"
+        ).textContent =
+          t("assumptions");
 
-          }
-        );
+
+        document.getElementById(
+          "assumptionsHelp"
+        ).textContent =
+          t("assumptionsHelp");
+
+
+        document.getElementById(
+          "businessRulesTitle"
+        ).textContent =
+          t("businessRules");
+
+
+        document.getElementById(
+          "businessRulesHelp"
+        ).textContent =
+          t("businessRulesHelp");
+
+
+        document.getElementById(
+          "openQuestionsTitle"
+        ).textContent =
+          t("openQuestions");
+
+
+        document.getElementById(
+          "openQuestionsHelp"
+        ).textContent =
+          t("openQuestionsHelp");
+
+
+        document.getElementById(
+          "edgeCasesTitle"
+        ).textContent =
+          t("edgeCases");
+
+
+        document.getElementById(
+          "edgeCasesHelp"
+        ).textContent =
+          t("edgeCasesHelp");
+
+
+        document.getElementById(
+          "analystNotesTitle"
+        ).textContent =
+          t("analystNotes");
+
+
+        document.getElementById(
+          "analystNotesHelp"
+        ).textContent =
+          t("analystNotesHelp");
 
 
         document.getElementById(
           "sourceLabel"
         ).textContent =
-          t("originalRequirement");
+          t("original");
+
+
+        if (
+          !currentRequirement
+        ) {
+
+          sourceRequirementEl.textContent =
+            t("noOriginal");
+
+        }
 
 
         clearButton.textContent =
           t("clear");
 
+
         saveButton.textContent =
           t("save");
+
 
         continueButton.textContent =
           t("continue");
@@ -2780,25 +2710,9 @@
 
 
         document.getElementById(
-          "emptyAction"
+          "emptyAnalyzerLink"
         ).textContent =
-          t("emptyAction");
-
-
-        if (
-          !currentRequirement
-        ) {
-
-          requirementIdEl.textContent =
-            t("newRequirement");
-
-          statusPillEl.textContent =
-            t("statusDraft");
-
-          sourceRequirementEl.textContent =
-            t("noOriginal");
-
-        }
+          t("openAnalyzer");
 
 
         updateSelectLabels();
@@ -2806,135 +2720,84 @@
       }
 
 
-      /* -----------------------------------------
-         SELECT LABELS
-      ----------------------------------------- */
-
       function updateSelectLabels() {
 
-        const typeOptions =
-          requirementTypeEl.options;
+        const typeLabels = {
 
-        if (typeOptions.length >= 8) {
+          Functional:
+            t("functional"),
 
-          typeOptions[0].textContent =
-            t("typeFunctional");
+          "Non-Functional":
+            t("nonFunctional"),
 
-          typeOptions[1].textContent =
-            t("typeNonFunctional");
+          "Business Rule":
+            t("businessRule"),
 
-          typeOptions[2].textContent =
-            t("typeBusinessRule");
+          Regulatory:
+            t("regulatory"),
 
-          typeOptions[3].textContent =
-            t("typeRegulatory");
+          Data:
+            t("data"),
 
-          typeOptions[4].textContent =
-            t("typeData");
+          Integration:
+            t("integration"),
 
-          typeOptions[5].textContent =
-            t("typeIntegration");
+          Process:
+            t("process"),
 
-          typeOptions[6].textContent =
-            t("typeProcess");
+          Other:
+            t("other")
 
-          typeOptions[7].textContent =
-            t("typeOther");
-
-        }
+        };
 
 
-        const priorityOptions =
-          priorityEl.options;
+        Array.from(
+          requirementTypeEl.options
+        ).forEach(option => {
 
-        if (priorityOptions.length >= 4) {
+          if (
+            typeLabels[option.value]
+          ) {
 
-          priorityOptions[0].textContent =
-            t("priorityHigh");
+            option.textContent =
+              typeLabels[option.value];
 
-          priorityOptions[1].textContent =
-            t("priorityMedium");
+          }
 
-          priorityOptions[2].textContent =
-            t("priorityLow");
-
-          priorityOptions[3].textContent =
-            t("priorityUnknown");
-
-        }
-
-      }
+        });
 
 
-      /* -----------------------------------------
-         MESSAGE HELPERS
-      ----------------------------------------- */
+        const priorityLabels = {
 
-      function hideMessages() {
+          high:
+            t("high"),
 
-        successMessageEl.style.display =
-          "none";
+          medium:
+            t("medium"),
 
-        errorMessageEl.style.display =
-          "none";
+          low:
+            t("low"),
 
-        successMessageEl.textContent =
-          "";
+          unknown:
+            t("unknown")
 
-        errorMessageEl.textContent =
-          "";
-
-      }
+        };
 
 
-      function showSuccess(
-        message
-      ) {
+        Array.from(
+          priorityEl.options
+        ).forEach(option => {
 
-        successMessageEl.textContent =
-          message;
+          if (
+            priorityLabels[option.value]
+          ) {
 
-        successMessageEl.style.display =
-          "block";
+            option.textContent =
+              priorityLabels[option.value];
 
-        errorMessageEl.style.display =
-          "none";
+          }
 
-      }
-
-
-      function showError(
-        message
-      ) {
-
-        errorMessageEl.textContent =
-          message;
-
-        errorMessageEl.style.display =
-          "block";
-
-        successMessageEl.style.display =
-          "none";
-
-      }
-
-
-      /* -----------------------------------------
-         DIRTY STATE
-      ----------------------------------------- */
-
-      function markDirty() {
-
-        isDirty =
-          true;
-
-      }
-
-
-      function markClean() {
-
-        isDirty =
-          false;
+        });
 
       }
 
@@ -2946,389 +2809,461 @@
       function loadWorkflow() {
 
         const stored =
-          safeParse(
-            sessionStorage.getItem(
-              WORKFLOW_KEY
-            )
+          sessionStorage.getItem(
+            WORKFLOW_KEY
           );
 
-        if (
-          stored &&
-          typeof stored === "object"
-        ) {
+        if (stored) {
 
-          return stored;
+          const parsed =
+            safeParse(stored);
+
+          if (
+            parsed &&
+            window.BAWorkflow
+          ) {
+
+            try {
+
+              return BAWorkflow.deserialize(
+                parsed
+              );
+
+            } catch {}
+
+          }
 
         }
 
 
+        return BAWorkflow.createWorkflowState({
+          currentStep:
+            "requirement"
+        });
+
+      }
+
+
+      function saveWorkflow(workflow) {
+
+        sessionStorage.setItem(
+          WORKFLOW_KEY,
+          BAWorkflow.serialize(
+            workflow
+          )
+        );
+
+      }
+
+
+      function getStepUrl(step) {
+
+        const urls = {
+
+          requirement:
+            "/requirement.html",
+
+          user_story:
+            "/user-story.html",
+
+          acceptance_criteria:
+            "/acceptance-criteria.html",
+
+          uat:
+            "/uat.html",
+
+          test_data:
+            "/test-data.html",
+
+          process_flow:
+            "/process-flow.html",
+
+          traceability:
+            "/traceability.html",
+
+          document:
+            "/document.html"
+
+        };
+
+        return (
+          urls[step] ||
+          "#"
+        );
+
+      }
+
+
+      function renderWorkflow(workflow) {
+
+        const container =
+          document.getElementById(
+            "workflow"
+          );
+
+        container.innerHTML =
+          "";
+
+        const definition =
+          BAWorkflow.getWorkflowDefinition();
+
+
+        definition.forEach(
+          (item, index) => {
+
+            const status =
+              BAWorkflow.getStepStatus(
+                workflow,
+                item.step
+              );
+
+
+            const step =
+              document.createElement(
+                "a"
+              );
+
+            step.className =
+              "workflow-step";
+
+            step.href =
+              getStepUrl(
+                item.step
+              );
+
+
+            if (
+              status === "current"
+            ) {
+
+              step.classList.add(
+                "active"
+              );
+
+            }
+
+
+            if (
+              status === "completed"
+            ) {
+
+              step.classList.add(
+                "completed"
+              );
+
+            }
+
+
+            step.innerHTML = `
+
+              <span class="workflow-dot">
+
+                ${
+                  status === "completed"
+                    ? "鉁�"
+                    : index + 1
+                }
+
+              </span>
+
+              <span class="workflow-label">
+                ${escapeHtml(
+                  item.label
+                )}
+              </span>
+
+            `;
+
+
+            container.appendChild(
+              step
+            );
+
+
+            if (
+              index <
+              definition.length - 1
+            ) {
+
+              const line =
+                document.createElement(
+                  "div"
+                );
+
+              line.className =
+                "workflow-line";
+
+              container.appendChild(
+                line
+              );
+
+            }
+
+          }
+        );
+
+      }
+
+
+      /* -----------------------------------------
+         REQUIREMENT SOURCES
+      ----------------------------------------- */
+
+      let currentRequirement =
+        null;
+
+      let isDirty = false;
+
+
+      function markDirty() {
+
+        isDirty = true;
+
+      }
+
+
+      function markClean() {
+
+        isDirty = false;
+
+      }
+
+
+      function normalizeArtifact(
+        artifact
+      ) {
+
         if (
-          window.BAWorkflow &&
-          typeof BAWorkflow.createInitialState ===
-          "function"
+          !artifact ||
+          typeof artifact !==
+          "object"
         ) {
-
-          return BAWorkflow.createInitialState();
-
+          return null;
         }
+
+
+        const content =
+          artifact.content &&
+          typeof artifact.content ===
+          "object"
+            ? artifact.content
+            : artifact;
+
+
+        const metadata =
+          artifact.metadata &&
+          typeof artifact.metadata ===
+          "object"
+            ? artifact.metadata
+            : {};
+
+
+        const analysis =
+          content.analysis ||
+          artifact.analysis ||
+          {};
 
 
         return {
 
-          version:
-            "2.0.0",
+          ...content,
 
-          currentStep:
+          id:
+            artifact.id ||
+            content.id ||
+            null,
+
+          type:
+            artifact.type ||
+            content.type ||
             "requirement",
 
-          steps: {}
+          createdAt:
+            artifact.createdAt ||
+            content.createdAt,
+
+          updatedAt:
+            artifact.updatedAt ||
+            content.updatedAt,
+
+          version:
+            artifact.version ||
+            content.version ||
+            1,
+
+          status:
+            artifact.status ||
+            content.status ||
+            "draft",
+
+          metadata,
+
+          analysis
 
         };
 
       }
 
 
-      function saveWorkflow(
-        workflow
-      ) {
-
-        try {
-
-          sessionStorage.setItem(
-            WORKFLOW_KEY,
-            JSON.stringify(
-              workflow
-            )
-          );
-
-        } catch (
-          error
-        ) {
-
-          console.warn(
-            "BAForge workflow state could not be saved.",
-            error
-          );
-
-        }
-
-      }
-
-
-      function renderWorkflow(
-        workflow
-      ) {
+      function findRequirementInArtifactStore() {
 
         if (
-          !window.BAWorkflow ||
-          typeof BAWorkflow.renderWorkflow !==
-          "function"
+          !window.BAArtifactStore
         ) {
-
-          return;
-
+          return null;
         }
 
 
         try {
 
-          BAWorkflow.renderWorkflow(
-            workflowEl,
-            workflow,
-            "requirement"
-          );
-
-        } catch (
-          error
-        ) {
-
-          console.warn(
-            "BAForge workflow rendering failed.",
-            error
-          );
-
-        }
-
-      }
-
-
-      /* -----------------------------------------
-         ARTIFACT STORE
-      ----------------------------------------- */
-
-      function getArtifactStore() {
-
-        return (
-          window.BAArtifactStore ||
-          null
-        );
-
-      }
-
-
-      function saveToArtifactStore(
-        requirement
-      ) {
-
-        const store =
-          getArtifactStore();
-
-        if (!store) {
-
-          console.warn(
-            "BAForge Artifact Store is not available."
-          );
-
-          return false;
-
-        }
-
-
-        try {
-
-          const artifact =
-            typeof store.createRequirementArtifact ===
+          if (
+            typeof BAArtifactStore.getByType !==
             "function"
-              ? store.createRequirementArtifact(
-                  requirement
-                )
-              : (
-                  typeof store.createArtifact ===
-                  "function"
-                    ? store.createArtifact(
-                        requirement
-                      )
-                    : null
-                );
+          ) {
+            return null;
+          }
 
-          if (!artifact) {
 
-            return false;
+          const artifacts =
+            BAArtifactStore.getByType(
+              "requirement"
+            ) || [];
+
+
+          if (
+            !Array.isArray(artifacts) ||
+            artifacts.length === 0
+          ) {
+            return null;
+          }
+
+
+          /*
+           * First honor an explicit current requirement
+           * selected by the upstream Analyzer or this page.
+           */
+          const storedCurrent =
+            safeParse(
+              sessionStorage.getItem(
+                REQUIREMENT_KEY
+              )
+            );
+
+          const currentId =
+            storedCurrent?.id ||
+            null;
+
+          if (currentId) {
+
+            const currentArtifact =
+              artifacts.find(
+                artifact =>
+                  artifact?.id === currentId
+              );
+
+            if (currentArtifact) {
+              return normalizeArtifact(
+                currentArtifact
+              );
+            }
 
           }
 
 
           /*
-           * Preserve source provenance.
-           * The Requirement workspace must not overwrite
-           * the Analyzer source key.
+           * If the Analyzer explicitly marked a current
+           * artifact, use that artifact. Do not silently
+           * select an arbitrary historical requirement.
            */
-
-          artifact.metadata =
-            artifact.metadata || {};
-
-          if (
-            requirement.metadata &&
-            requirement.metadata.sourceKey
-          ) {
-
-            artifact.metadata.sourceKey =
-              requirement.metadata.sourceKey;
-
-          }
-
-          artifact.metadata.origin =
-            artifact.metadata.origin ||
-            requirement.source?.origin ||
-            "requirement-workspace";
-
-
-          const existing =
-            typeof store.getById ===
-            "function"
-              ? store.getById(
-                  requirement.id
-                )
-              : null;
-
-
-          if (
-            existing &&
-            typeof store.update ===
-            "function"
-          ) {
-
-            const updated =
-              store.update(
-                requirement.id,
-                artifact
-              );
-
-            return Boolean(
-              updated
+          const analyzerArtifact =
+            artifacts.find(
+              artifact =>
+                artifact?.metadata
+                  ?.sourceKey ===
+                "requirement-analyzer-current"
             );
 
-          }
 
-
-          if (
-            typeof store.save ===
-            "function"
-          ) {
-
-            const saved =
-              store.save(
-                artifact
-              );
-
-            return Boolean(
-              saved
+          if (analyzerArtifact) {
+            return normalizeArtifact(
+              analyzerArtifact
             );
-
           }
 
 
-          if (
-            typeof store.createArtifact ===
-            "function"
-          ) {
+          return null;
 
-            return Boolean(
-              store.createArtifact(
-                artifact
-              )
-            );
+        } catch (error) {
 
-          }
-
-
-          return false;
-
-        } catch (
-          error
-        ) {
-
-          console.error(
-            "BAForge Artifact Store save failed.",
+          console.warn(
+            "BAForge Artifact Store read failed.",
             error
           );
 
-          return false;
+          return null;
 
         }
 
       }
 
 
-      /* -----------------------------------------
-         REQUIREMENT LOAD
-      ----------------------------------------- */
-
       function loadRequirement() {
 
         /*
-         * Artifact Store is canonical.
+         * 1. Prefer canonical Artifact Store.
          */
 
-        const store =
-          getArtifactStore();
+        const artifactRequirement =
+          findRequirementInArtifactStore();
+
 
         if (
-          store &&
-          typeof store.getByType ===
-          "function"
+          artifactRequirement
         ) {
 
-          try {
+          currentRequirement =
+            artifactRequirement;
 
-            const artifacts =
-              store.getByType(
-                "requirement"
-              );
+          /*
+           * Keep the legacy bridge
+           * synchronized for downstream
+           * screens during migration.
+           */
 
-            if (
-              Array.isArray(artifacts) &&
-              artifacts.length > 0
-            ) {
+          sessionStorage.setItem(
+            REQUIREMENT_KEY,
+            JSON.stringify(
+              artifactRequirement
+            )
+          );
 
-              /*
-               * Prefer an explicitly selected/current artifact.
-               */
-
-              const currentId =
-                safeParse(
-                  localStorage.getItem(
-                    "baforge-current-requirement"
-                  )
-                )?.id ||
-                safeParse(
-                  sessionStorage.getItem(
-                    REQUIREMENT_KEY
-                  )
-                )?.id ||
-                null;
-
-              const selected =
-                currentId
-                  ? artifacts.find(
-                      artifact =>
-                        artifact.id ===
-                        currentId
-                    )
-                  : null;
-
-              const artifact =
-                selected ||
-                artifacts[
-                  artifacts.length - 1
-                ];
-
-              currentRequirement =
-                typeof store.toRequirement ===
-                "function"
-                  ? store.toRequirement(
-                      artifact
-                    )
-                  : (
-                      typeof window.BADataModel?.artifactToRequirement ===
-                      "function"
-                        ? BADataModel.artifactToRequirement(
-                            artifact
-                          )
-                        : artifact
-                    );
-
-              if (
-                currentRequirement
-              ) {
-
-                return true;
-
-              }
-
-            }
-
-          } catch (
-            error
-          ) {
-
-            console.warn(
-              "BAForge Artifact Store requirement load failed.",
-              error
-            );
-
-          }
+          return true;
 
         }
 
 
         /*
-         * Compatibility bridge.
+         * 2. Legacy sessionStorage fallback.
          */
 
-        const sessionRequirement =
-          safeParse(
-            sessionStorage.getItem(
-              REQUIREMENT_KEY
-            )
+        const stored =
+          sessionStorage.getItem(
+            REQUIREMENT_KEY
           );
 
+
+        const parsed =
+          safeParse(stored);
+
+
         if (
-          sessionRequirement
+          parsed &&
+          typeof parsed ===
+          "object"
         ) {
 
           currentRequirement =
-            sessionRequirement;
+            parsed;
 
           return true;
 
@@ -3336,30 +3271,6 @@
 
 
         return false;
-
-      }
-
-
-      /* -----------------------------------------
-         SCORE UPDATE
-      ----------------------------------------- */
-
-      function updateScore(
-        value,
-        scoreElement,
-        barElement
-      ) {
-
-        const score =
-          normalizeScore(
-            value
-          );
-
-        scoreElement.textContent =
-          score;
-
-        barElement.style.width =
-          `${score}%`;
 
       }
 
@@ -3377,191 +3288,161 @@
         }
 
 
-        const requirement =
-          currentRequirement;
+        const analysis =
+          currentRequirement.analysis ||
+          {};
 
 
         titleEl.value =
-          requirement.title ||
+          currentRequirement.title ||
           "";
 
 
         descriptionEl.value =
-          requirement.description ||
-          requirement.summary ||
+          currentRequirement.description ||
+          currentRequirement.requirement ||
           "";
 
 
+        const type =
+          currentRequirement.requirementType ||
+          currentRequirement.type ||
+          "Functional";
+
+
         requirementTypeEl.value =
-          normalizeRequirementType(
-            requirement.requirementType
-          );
+          [
+            "Functional",
+            "Non-Functional",
+            "Business Rule",
+            "Regulatory",
+            "Data",
+            "Integration",
+            "Process",
+            "Other"
+          ].includes(type)
+            ? type
+            : "Other";
+
+
+        const priority =
+          String(
+            currentRequirement.priority ||
+            "medium"
+          ).toLowerCase();
 
 
         priorityEl.value =
-          normalizePriority(
-            requirement.priority
-          );
-
-
-        const quality =
-          requirement.quality ||
-          {};
+          [
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ].includes(priority)
+            ? priority
+            : "unknown";
 
 
         updateScore(
-          requirement.clarityScore ??
-          quality.clarity ??
-          0,
+          analysis.clarityScore,
           clarityScoreEl,
           clarityBarEl
         );
 
 
         updateScore(
-          requirement.completenessScore ??
-          quality.completeness ??
-          0,
+          analysis.completenessScore,
           completenessScoreEl,
           completenessBarEl
         );
 
 
         updateScore(
-          requirement.testabilityScore ??
-          quality.testability ??
-          0,
+          analysis.testabilityScore,
           testabilityScoreEl,
           testabilityBarEl
         );
 
 
         ambiguitiesEl.value =
-          Array.isArray(
-            requirement.ambiguities
-          )
-            ? requirement.ambiguities.join(
-                "\n"
-              )
-            : (
-                requirement.ambiguities ||
-                ""
-              );
+          arrayToText(
+            analysis.ambiguities
+          );
 
 
         missingInformationEl.value =
-          Array.isArray(
-            requirement.missingInformation
-          )
-            ? requirement.missingInformation.join(
-                "\n"
-              )
-            : (
-                requirement.missingInformation ||
-                ""
-              );
+          arrayToText(
+            analysis.missingInformation
+          );
 
 
         assumptionsEl.value =
-          Array.isArray(
-            requirement.assumptions
-          )
-            ? requirement.assumptions.join(
-                "\n"
-              )
-            : (
-                requirement.assumptions ||
-                ""
-              );
+          arrayToText(
+            analysis.assumptions
+          );
 
 
         businessRulesEl.value =
-          Array.isArray(
-            requirement.businessRules
-          )
-            ? requirement.businessRules.join(
-                "\n"
-              )
-            : (
-                requirement.businessRules ||
-                ""
-              );
+          arrayToText(
+            analysis.businessRules
+          );
 
 
         openQuestionsEl.value =
-          Array.isArray(
-            requirement.openQuestions
-          )
-            ? requirement.openQuestions.join(
-                "\n"
-              )
-            : (
-                requirement.openQuestions ||
-                ""
-              );
+          arrayToText(
+            analysis.openQuestions
+          );
 
 
         edgeCasesEl.value =
-          Array.isArray(
-            requirement.edgeCases
-          )
-            ? requirement.edgeCases.join(
-                "\n"
-              )
-            : (
-                requirement.edgeCases ||
-                ""
-              );
+          arrayToText(
+            analysis.edgeCases
+          );
 
 
         analystNotesEl.value =
-          Array.isArray(
-            requirement.analystNotes
-          )
-            ? requirement.analystNotes.join(
-                "\n"
-              )
-            : (
-                requirement.analystNotes ||
-                ""
-              );
+          arrayToText(
+            analysis.analystNotes
+          );
 
 
-        requirementIdEl.textContent =
-          requirement.id ||
-          t("newRequirement");
-
-
-        statusPillEl.textContent =
-          requirement.status ===
-          "completed"
-            ? (
-                language === "tr"
-                  ? "Tamamlandı"
-                  : "Completed"
-              )
-            : t("statusDraft");
-
-
-        /*
-         * Only show a value as the "Original Requirement"
-         * when it is explicitly stored as source data.
-         * Never fall back to the current edited description.
-         */
-
-        const original =
-          requirement.originalRequirement ||
-          requirement.sourceRequirement ||
-          requirement.source?.text ||
-          requirement.metadata?.originalRequirement ||
+        const originalRequirement =
+          currentRequirement.sourceRequirement ||
+          (
+            currentRequirement.source &&
+            typeof currentRequirement.source === "object"
+              ? currentRequirement.source.text
+              : ""
+          ) ||
+          currentRequirement.metadata?.originalRequirement ||
           "";
 
+
         sourceRequirementEl.textContent =
-          original ||
+          originalRequirement ||
           t("noOriginal");
 
 
-        markClean();
+        requirementIdEl.textContent =
+          currentRequirement.id ||
+          t("newRequirement");
+
+
+        const status =
+          currentRequirement.status ||
+          "draft";
+
+
+        const statusLabels = {
+          draft: t("statusDraft"),
+          active: t("statusActive"),
+          completed: t("statusCompleted"),
+          archived: t("statusArchived")
+        };
+
+        statusPillEl.textContent =
+          statusLabels[status] ||
+          String(status);
 
       }
 
@@ -3572,229 +3453,354 @@
 
       function buildRequirement() {
 
-        const now =
-          new Date().toISOString();
+        const existingId =
+          currentRequirement?.id ||
+          null;
 
 
-        const existing =
-          currentRequirement ||
+        const previousAnalysis =
+          currentRequirement?.analysis ||
           {};
 
 
-        const requirementId =
-          existing.id ||
-          (
-            typeof crypto !== "undefined" &&
-            typeof crypto.randomUUID ===
-            "function"
-              ? crypto.randomUUID()
-              : (
-                  "req-" +
-                  Date.now() +
-                  "-" +
-                  Math.random()
-                    .toString(36)
-                    .slice(2, 8)
-                )
-          );
-
-
-        const sourceRequirement =
-          existing.originalRequirement ||
-          existing.sourceRequirement ||
-          existing.source?.text ||
-          existing.metadata?.originalRequirement ||
-          "";
-
-
-        const requirement = {
-
-          ...existing,
-
-          id:
-            requirementId,
-
-          artifactType:
-            "requirement",
-
-          title:
-            titleEl.value.trim(),
-
-          requirementType:
-            normalizeRequirementType(
-              requirementTypeEl.value
-            ),
-
-          priority:
-            normalizePriority(
-              priorityEl.value
-            ),
-
-          description:
-            descriptionEl.value.trim(),
-
-          summary:
-            existing.summary ||
-            descriptionEl.value.trim(),
-
-          originalRequirement:
-            sourceRequirement,
-
-          sourceRequirement:
-            sourceRequirement,
-
-          source:
-            {
-              ...(existing.source || {})
-            },
+        const analysis = {
 
           clarityScore:
             normalizeScore(
-              clarityScoreEl.textContent
+              previousAnalysis.clarityScore
             ),
 
           completenessScore:
             normalizeScore(
-              completenessScoreEl.textContent
+              previousAnalysis.completenessScore
             ),
 
           testabilityScore:
             normalizeScore(
-              testabilityScoreEl.textContent
+              previousAnalysis.testabilityScore
             ),
 
           ambiguities:
-            ambiguitiesEl.value
-              .split("\n")
-              .map(
-                item =>
-                  item.trim()
-              )
-              .filter(Boolean),
+            textToArray(
+              ambiguitiesEl.value
+            ),
 
           missingInformation:
-            missingInformationEl.value
-              .split("\n")
-              .map(
-                item =>
-                  item.trim()
-              )
-              .filter(Boolean),
+            textToArray(
+              missingInformationEl.value
+            ),
 
           assumptions:
-            assumptionsEl.value
-              .split("\n")
-              .map(
-                item =>
-                  item.trim()
-              )
-              .filter(Boolean),
+            textToArray(
+              assumptionsEl.value
+            ),
 
           businessRules:
-            businessRulesEl.value
-              .split("\n")
-              .map(
-                item =>
-                  item.trim()
-              )
-              .filter(Boolean),
+            textToArray(
+              businessRulesEl.value
+            ),
 
           openQuestions:
-            openQuestionsEl.value
-              .split("\n")
-              .map(
-                item =>
-                  item.trim()
-              )
-              .filter(Boolean),
+            textToArray(
+              openQuestionsEl.value
+            ),
 
           edgeCases:
-            edgeCasesEl.value
-              .split("\n")
-              .map(
-                item =>
-                  item.trim()
-              )
-              .filter(Boolean),
+            textToArray(
+              edgeCasesEl.value
+            ),
 
           analystNotes:
-            analystNotesEl.value
-              .split("\n")
-              .map(
-                item =>
-                  item.trim()
-              )
-              .filter(Boolean),
-
-          quality:
-            {
-              clarity:
-                normalizeScore(
-                  clarityScoreEl.textContent
-                ),
-
-              completeness:
-                normalizeScore(
-                  completenessScoreEl.textContent
-                ),
-
-              testability:
-                normalizeScore(
-                  testabilityScoreEl.textContent
-                )
-            },
-
-          status:
-            existing.status ||
-            "draft",
-
-          metadata:
-            {
-              ...(existing.metadata || {}),
-
-              sourceKey:
-                existing.metadata?.sourceKey ||
-                existing.source?.key ||
-                "requirement-workspace",
-
-              origin:
-                existing.metadata?.origin ||
-                existing.source?.origin ||
-                "requirement-workspace",
-
-              lastSavedAt:
-                now
-            },
-
-          createdAt:
-            existing.createdAt ||
-            now,
-
-          updatedAt:
-            now
+            textToArray(
+              analystNotesEl.value
+            )
 
         };
 
 
-        /*
-         * Preserve source metadata without replacing it.
-         */
+        let requirement;
+
 
         if (
-          existing.source &&
-          typeof existing.source ===
-          "object"
+          window.BADataModel &&
+          typeof
+            BADataModel.createRequirement ===
+          "function"
         ) {
 
-          requirement.source =
-            {
-              ...existing.source
-            };
+          requirement =
+            BADataModel.createRequirement({
+
+              id:
+                existingId,
+
+              title:
+                titleEl.value.trim(),
+
+              description:
+                descriptionEl.value.trim(),
+
+              source:
+                currentRequirement?.source ||
+                "Requirement Workspace",
+
+              priority:
+                priorityEl.value,
+
+              analysis
+
+            });
+
+        } else {
+
+          requirement = {
+
+            id:
+              existingId ||
+              `REQ_${Date.now()}`,
+
+            type:
+              "requirement",
+
+            createdAt:
+              currentRequirement?.createdAt ||
+              new Date().toISOString(),
+
+            updatedAt:
+              new Date().toISOString(),
+
+            version:
+              currentRequirement?.version ||
+              1,
+
+            status:
+              "draft",
+
+            title:
+              titleEl.value.trim(),
+
+            description:
+              descriptionEl.value.trim(),
+
+            source:
+              currentRequirement?.source ||
+              "Requirement Workspace",
+
+            priority:
+              priorityEl.value,
+
+            analysis
+
+          };
 
         }
 
 
+        requirement.requirementType =
+          requirementTypeEl.value;
+
+
+        requirement.analysis =
+          requirement.analysis ||
+          analysis;
+
+
+        requirement.analysis.analystNotes =
+          analysis.analystNotes;
+
+
+        /*
+         * Preserve analyzer context.
+         */
+
+        if (
+          currentRequirement?.summary
+        ) {
+
+          requirement.summary =
+            currentRequirement.summary;
+
+        }
+
+
+        if (
+          currentRequirement?.sourceRequirement
+        ) {
+
+          requirement.sourceRequirement =
+            currentRequirement.sourceRequirement;
+
+        }
+
+
+        const existingMetadata =
+          currentRequirement?.metadata &&
+          typeof currentRequirement.metadata === "object"
+            ? currentRequirement.metadata
+            : {};
+
+        const originalSourceKey =
+          existingMetadata.originSourceKey ||
+          existingMetadata.sourceKey ||
+          null;
+
+        requirement.metadata =
+          {
+            ...existingMetadata,
+            sourceKey:
+              "requirement-workspace",
+            ...(
+              originalSourceKey &&
+              originalSourceKey !== "requirement-workspace"
+                ? { originSourceKey: originalSourceKey }
+                : {}
+            )
+          };
+
+
+        /*
+         * Preserve the original requirement text separately
+         * from the editable downstream description.
+         */
+        if (
+          currentRequirement?.sourceRequirement
+        ) {
+          requirement.sourceRequirement =
+            currentRequirement.sourceRequirement;
+        }
+
+        if (
+          currentRequirement?.metadata?.originalRequirement
+        ) {
+          requirement.metadata.originalRequirement =
+            currentRequirement.metadata.originalRequirement;
+        }
+
+        if (
+          !requirement.sourceRequirement &&
+          !requirement.metadata.originalRequirement &&
+          currentRequirement?.source?.text
+        ) {
+          requirement.sourceRequirement =
+            currentRequirement.source.text;
+        }
+
+
         return requirement;
+
+      }
+
+
+      /* -----------------------------------------
+         ARTIFACT STORE SAVE
+      ----------------------------------------- */
+
+      function saveToArtifactStore(
+        requirement
+      ) {
+
+        if (
+          !window.BAArtifactStore
+        ) {
+          return false;
+        }
+
+
+        try {
+
+          const getByType =
+            BAArtifactStore.getByType;
+
+          if (
+            typeof getByType !==
+            "function"
+          ) {
+            return false;
+          }
+
+
+          const artifacts =
+            getByType.call(
+              BAArtifactStore,
+              "requirement"
+            ) || [];
+
+
+          const existing =
+            artifacts.find(
+              artifact =>
+                artifact?.id ===
+                requirement.id
+            );
+
+
+          const metadata =
+            {
+              ...(existing?.metadata || {}),
+              ...(requirement.metadata || {}),
+              sourceKey:
+                "requirement-workspace"
+            };
+
+
+          if (
+            existing &&
+            typeof BAArtifactStore.update ===
+            "function"
+          ) {
+
+            const result =
+              BAArtifactStore.update(
+                existing.id,
+                {
+                  ...requirement,
+                  content:
+                    {
+                      ...requirement
+                    },
+                  metadata
+                }
+              );
+
+            return result !== false;
+
+          }
+
+
+          if (
+            typeof BAArtifactStore.create ===
+            "function"
+          ) {
+
+            const created =
+              BAArtifactStore.create(
+                "requirement",
+                {
+                  ...requirement
+                },
+                {
+                  ...metadata,
+                  source:
+                    requirement.source ||
+                    "Requirement Workspace"
+                }
+              );
+
+            return Boolean(created);
+
+          }
+
+        } catch (error) {
+
+          console.warn(
+            "BAForge Artifact Store save failed.",
+            error
+          );
+
+        }
+
+
+        return false;
 
       }
 
@@ -3812,6 +3818,7 @@
 
         const title =
           titleEl.value.trim();
+
 
         const description =
           descriptionEl.value.trim();
@@ -3851,7 +3858,6 @@
          * Canonical workspace storage.
          * Do not report success if the canonical save fails.
          */
-
         const artifactSaved =
           saveToArtifactStore(
             requirement
@@ -3973,7 +3979,7 @@
               REQUIREMENT_KEY
             )
           )?.id ||
-            null;
+          null;
 
 
         /*
@@ -3981,7 +3987,6 @@
          * Do not report a successful clear unless the canonical
          * artifact was actually removed.
          */
-
         if (
           artifactId &&
           window.BAArtifactStore
@@ -3996,17 +4001,10 @@
               "removeArtifact"
             ];
 
-            let clearAttempted =
-              false;
+            let clearAttempted = false;
+            let clearSucceeded = false;
 
-            let clearSucceeded =
-              false;
-
-
-            for (
-              const method of
-              removeMethods
-            ) {
+            for (const method of removeMethods) {
 
               if (
                 typeof BAArtifactStore[method] !==
@@ -4015,73 +4013,55 @@
                 continue;
               }
 
-              clearAttempted =
-                true;
+              clearAttempted = true;
 
               const result =
                 BAArtifactStore[method](
                   artifactId
                 );
 
-              if (
-                result !== false
-              ) {
-
-                clearSucceeded =
-                  true;
-
+              if (result !== false) {
+                clearSucceeded = true;
                 break;
-
               }
 
             }
-
 
             if (
               clearAttempted &&
               !clearSucceeded
             ) {
-
               showError(
                 t("storageError")
               );
-
               return;
-
             }
-
 
             /*
              * Verify that the artifact no longer exists when
-             * the store exposes getById/getByType.
+             * the store exposes getById/getByType. This prevents
+             * an old requirement from silently reappearing after
+             * reload.
              */
-
             if (
               clearSucceeded &&
               typeof BAArtifactStore.getById ===
               "function"
             ) {
-
               const remaining =
                 BAArtifactStore.getById(
                   artifactId
                 );
 
               if (remaining) {
-
                 showError(
                   t("storageError")
                 );
-
                 return;
-
               }
-
             }
 
-          } catch (
-            error
-          ) {
+          } catch (error) {
 
             console.warn(
               "BAForge Artifact Store clear failed.",
@@ -4093,7 +4073,6 @@
             );
 
             return;
-
           }
 
         }
@@ -4120,7 +4099,7 @@
           "Functional";
 
         priorityEl.value =
-          "Unknown";
+          "unknown";
 
 
         ambiguitiesEl.value =
@@ -4169,8 +4148,10 @@
         requirementIdEl.textContent =
           t("newRequirement");
 
+
         statusPillEl.textContent =
           t("statusDraft");
+
 
         sourceRequirementEl.textContent =
           t("noOriginal");
@@ -4293,40 +4274,32 @@
 
 
       document
-        .querySelectorAll(
-          "a.workflow-step, a.step-link"
-        )
-        .forEach(
-          link => {
+        .querySelectorAll("a.workflow-step, a.step-link")
+        .forEach(link => {
 
-            link.addEventListener(
-              "click",
-              event => {
+          link.addEventListener(
+            "click",
+            event => {
 
-                if (!isDirty) {
-                  return;
-                }
-
-
-                const proceed =
-                  window.confirm(
-                    language === "tr"
-                      ? "Kaydedilmemiş değişiklikleriniz var. Sayfadan ayrılmak istiyor musunuz?"
-                      : "You have unsaved changes. Do you want to leave this page?"
-                  );
-
-
-                if (!proceed) {
-
-                  event.preventDefault();
-
-                }
-
+              if (!isDirty) {
+                return;
               }
-            );
 
-          }
-        );
+              const proceed =
+                window.confirm(
+                  language === "tr"
+                    ? "Kaydedilmemi艧 de臒i艧iklikleriniz var. Sayfadan ayr谋lmak istiyor musunuz?"
+                    : "You have unsaved changes. Do you want to leave this page?"
+                );
+
+              if (!proceed) {
+                event.preventDefault();
+              }
+
+            }
+          );
+
+        });
 
 
       /* -----------------------------------------
@@ -4357,7 +4330,6 @@
          * Show a blank editable requirement instead
          * of forcing the user back to Analyzer.
          */
-
         currentRequirement =
           null;
 
