@@ -7,10 +7,17 @@
 
   "use strict";
 
-  const STORAGE_KEY = "baforge-workspace-v1";
-  const STORE_VERSION = 1;
+  const STORAGE_KEY = "baforge-workspace-v2";
+  const LEGACY_STORAGE_KEY = "baforge-workspace-v1";
+  const STORE_VERSION = 2;
+
+
+  /* =======================================================
+     ARTIFACT TYPES
+  ======================================================= */
 
   const ARTIFACT_TYPES = Object.freeze({
+
     REQUIREMENT: "requirement",
     USER_STORY: "user_story",
     ACCEPTANCE_CRITERION: "acceptance_criterion",
@@ -21,6 +28,7 @@
     DOCUMENT: "document",
 
     /* Future tools */
+
     API_DEFINITION: "api_definition",
     BPMN_DIAGRAM: "bpmn_diagram",
     ER_DIAGRAM: "er_diagram",
@@ -31,6 +39,21 @@
     MOCK_DATA: "mock_data",
     SQL_DOCUMENT: "sql_document",
     REGEX_PATTERN: "regex_pattern"
+
+  });
+
+
+  /* =======================================================
+     ARTIFACT STATUS
+  ======================================================= */
+
+  const ARTIFACT_STATUS = Object.freeze({
+
+    DRAFT: "draft",
+    ACTIVE: "active",
+    COMPLETED: "completed",
+    ARCHIVED: "archived"
+
   });
 
 
@@ -39,7 +62,38 @@
   ======================================================= */
 
   function now() {
+
     return new Date().toISOString();
+
+  }
+
+
+  function clone(value) {
+
+    if (
+      value === undefined ||
+      value === null
+    ) {
+
+      return value;
+
+    }
+
+    return JSON.parse(
+      JSON.stringify(value)
+    );
+
+  }
+
+
+  function isObject(value) {
+
+    return (
+      value !== null &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    );
+
   }
 
 
@@ -56,32 +110,24 @@
         .toString(36)
         .slice(2, 10);
 
-    return `${prefix || "artifact"}-${Date.now()}-${random}`;
+    return (
+      `${prefix || "artifact"}-${Date.now()}-${random}`
+    );
+
   }
 
 
-  function clone(value) {
+  function normalizeType(type) {
 
-    if (
-      value === undefined ||
-      value === null
-    ) {
-      return value;
+    if (!type) {
+
+      return "unknown";
+
     }
 
-    return JSON.parse(
-      JSON.stringify(value)
-    );
-  }
-
-
-  function isObject(value) {
-
-    return (
-      value !== null &&
-      typeof value === "object" &&
-      !Array.isArray(value)
-    );
+    return String(type)
+      .trim()
+      .toLowerCase();
 
   }
 
@@ -127,7 +173,91 @@
       relationships: [],
 
       snapshots: []
+
     };
+
+  }
+
+
+  /* =======================================================
+     MIGRATION
+  ======================================================= */
+
+  function migrateWorkspace(workspace) {
+
+    if (
+      !workspace ||
+      typeof workspace !== "object"
+    ) {
+
+      return createWorkspace();
+
+    }
+
+    const migrated =
+      clone(workspace);
+
+    if (!migrated.id) {
+
+      migrated.id =
+        "default-workspace";
+
+    }
+
+    if (!migrated.name) {
+
+      migrated.name =
+        "BAForge Workspace";
+
+    }
+
+    if (!Array.isArray(migrated.artifacts)) {
+
+      migrated.artifacts = [];
+
+    }
+
+    if (!Array.isArray(migrated.relationships)) {
+
+      migrated.relationships = [];
+
+    }
+
+    if (!Array.isArray(migrated.snapshots)) {
+
+      migrated.snapshots = [];
+
+    }
+
+    if (!isObject(migrated.metadata)) {
+
+      migrated.metadata = {};
+
+    }
+
+    migrated.artifacts =
+      migrated.artifacts.map(
+        normalizeArtifact
+      );
+
+    migrated.version =
+      STORE_VERSION;
+
+    if (!migrated.createdAt) {
+
+      migrated.createdAt =
+        now();
+
+    }
+
+    if (!migrated.updatedAt) {
+
+      migrated.updatedAt =
+        now();
+
+    }
+
+    return migrated;
 
   }
 
@@ -136,83 +266,106 @@
      STORAGE
   ======================================================= */
 
-  function readWorkspace() {
+  function readRawStorage(key) {
 
     try {
 
       const raw =
-        localStorage.getItem(
-          STORAGE_KEY
-        );
+        localStorage.getItem(key);
 
       if (!raw) {
 
-        const workspace =
-          createWorkspace();
-
-        writeWorkspace(
-          workspace
-        );
-
-        return workspace;
+        return null;
 
       }
 
-      const parsed =
-        JSON.parse(raw);
-
-      if (
-        !parsed ||
-        typeof parsed !== "object"
-      ) {
-
-        const workspace =
-          createWorkspace();
-
-        writeWorkspace(
-          workspace
-        );
-
-        return workspace;
-
-      }
-
-
-      if (!Array.isArray(parsed.artifacts)) {
-        parsed.artifacts = [];
-      }
-
-      if (!Array.isArray(parsed.relationships)) {
-        parsed.relationships = [];
-      }
-
-      if (!Array.isArray(parsed.snapshots)) {
-        parsed.snapshots = [];
-      }
-
-
-      if (!parsed.version) {
-        parsed.version = STORE_VERSION;
-      }
-
-
-      return parsed;
+      return JSON.parse(raw);
 
     } catch (error) {
 
       console.error(
-        "[BAForge ArtifactStore] Failed to read workspace:",
+        "[BAForge ArtifactStore] Failed to read storage:",
         error
       );
 
-      return createWorkspace();
+      return null;
 
     }
 
   }
 
 
-  function writeWorkspace(workspace) {
+  function readWorkspace() {
+
+    let parsed =
+      readRawStorage(
+        STORAGE_KEY
+      );
+
+
+    /*
+     * Backward compatibility:
+     * migrate v1 workspace automatically.
+     */
+
+    if (!parsed) {
+
+      const legacy =
+        readRawStorage(
+          LEGACY_STORAGE_KEY
+        );
+
+      if (legacy) {
+
+        parsed =
+          migrateWorkspace(
+            legacy
+          );
+
+        writeWorkspace(
+          parsed
+        );
+
+        return parsed;
+
+      }
+
+    }
+
+
+    if (!parsed) {
+
+      const workspace =
+        createWorkspace();
+
+      writeWorkspace(
+        workspace
+      );
+
+      return workspace;
+
+    }
+
+
+    return migrateWorkspace(
+      parsed
+    );
+
+  }
+
+
+  function writeWorkspace(
+    workspace
+  ) {
+
+    if (
+      !workspace ||
+      typeof workspace !== "object"
+    ) {
+
+      return false;
+
+    }
 
     workspace.updatedAt =
       now();
@@ -252,27 +405,55 @@
     options =
       options || {};
 
-    const timestamp =
-      now();
-
     const source =
       isObject(artifact)
         ? clone(artifact)
         : {};
 
     const type =
-      options.type ||
-      source.type ||
-      "unknown";
+      normalizeType(
+        options.type ||
+        source.type
+      );
 
     const id =
       options.id ||
       source.id ||
       generateId(type);
 
-    const existingCreatedAt =
-      source.createdAt ||
-      timestamp;
+    const timestamp =
+      now();
+
+    const metadata =
+      isObject(source.metadata)
+        ? clone(source.metadata)
+        : {};
+
+    /*
+     * Preserve explicit provenance.
+     * Never overwrite source metadata merely because
+     * the artifact is saved from another workspace screen.
+     */
+
+    if (
+      options.sourceKey !== undefined &&
+      metadata.sourceKey === undefined
+    ) {
+
+      metadata.sourceKey =
+        options.sourceKey;
+
+    }
+
+    if (
+      options.origin !== undefined &&
+      metadata.origin === undefined
+    ) {
+
+      metadata.origin =
+        options.origin;
+
+    }
 
     return {
 
@@ -281,28 +462,34 @@
       type,
 
       title:
-        options.title ||
-        source.title ||
-        source.name ||
-        "",
+        options.title !== undefined
+          ? String(options.title || "")
+          : String(
+              source.title ||
+              source.name ||
+              ""
+            ),
 
       content:
         source.content !== undefined
           ? clone(source.content)
           : clone(source),
 
-      metadata:
-        isObject(source.metadata)
-          ? clone(source.metadata)
-          : {},
+      metadata,
 
       source:
-        isObject(source.source)
+        source.source !== undefined
           ? clone(source.source)
-          : null,
+          : (
+              options.source !== undefined
+                ? clone(options.source)
+                : null
+            ),
 
       relationships:
-        Array.isArray(source.relationships)
+        Array.isArray(
+          source.relationships
+        )
           ? clone(source.relationships)
           : [],
 
@@ -311,13 +498,15 @@
 
       status:
         source.status ||
-        "active",
+        ARTIFACT_STATUS.DRAFT,
 
       createdAt:
-        existingCreatedAt,
+        source.createdAt ||
+        timestamp,
 
       updatedAt:
         timestamp
+
     };
 
   }
@@ -331,6 +520,9 @@
     artifact,
     options
   ) {
+
+    options =
+      options || {};
 
     const workspace =
       readWorkspace();
@@ -355,12 +547,43 @@
           existingIndex
         ];
 
+
+      /*
+       * Identity is immutable.
+       */
+
+      normalized.id =
+        existing.id;
+
+      normalized.type =
+        existing.type;
+
       normalized.createdAt =
         existing.createdAt ||
         normalized.createdAt;
 
       normalized.version =
         Number(existing.version || 1) + 1;
+
+
+      /*
+       * Preserve provenance if the incoming
+       * object does not explicitly provide it.
+       */
+
+      if (
+        isObject(existing.metadata)
+      ) {
+
+        normalized.metadata =
+          Object.assign(
+            {},
+            clone(existing.metadata),
+            clone(normalized.metadata || {})
+          );
+
+      }
+
 
       workspace.artifacts[
         existingIndex
@@ -375,9 +598,23 @@
     }
 
 
-    writeWorkspace(
-      workspace
-    );
+    const written =
+      writeWorkspace(
+        workspace
+      );
+
+
+    /*
+     * Never pretend a failed localStorage write
+     * was successful.
+     */
+
+    if (!written) {
+
+      return null;
+
+    }
+
 
     return clone(
       normalized
@@ -395,13 +632,19 @@
     options =
       options || {};
 
+    const normalizedType =
+      normalizeType(type);
+
     const artifact = {
 
       id:
         options.id ||
-        generateId(type),
+        generateId(
+          normalizedType
+        ),
 
-      type,
+      type:
+        normalizedType,
 
       title:
         options.title ||
@@ -429,18 +672,20 @@
 
       status:
         options.status ||
-        "active",
+        ARTIFACT_STATUS.DRAFT,
 
       createdAt:
         now(),
 
       updatedAt:
         now()
+
     };
 
 
     return save(
-      artifact
+      artifact,
+      options
     );
 
   }
@@ -453,7 +698,9 @@
   function get(id) {
 
     if (!id) {
+
       return null;
+
     }
 
     const workspace =
@@ -476,13 +723,17 @@
     type
   ) {
 
+    const normalizedType =
+      normalizeType(type);
+
     const workspace =
       readWorkspace();
 
     return workspace.artifacts
       .filter(
         item =>
-          item.type === type
+          item.type ===
+          normalizedType
       )
       .map(clone);
 
@@ -505,11 +756,16 @@
 
     if (options.type) {
 
+      const normalizedType =
+        normalizeType(
+          options.type
+        );
+
       result =
         result.filter(
           item =>
             item.type ===
-            options.type
+            normalizedType
         );
 
     }
@@ -569,7 +825,9 @@
     );
 
 
-    return clone(result);
+    return clone(
+      result
+    );
 
   }
 
@@ -584,7 +842,9 @@
   ) {
 
     if (!id) {
+
       return null;
+
     }
 
     const workspace =
@@ -598,21 +858,37 @@
 
 
     if (index < 0) {
+
       return null;
+
     }
 
 
     const current =
       workspace.artifacts[index];
 
+    const safeChanges =
+      isObject(changes)
+        ? clone(changes)
+        : {};
+
+
+    /*
+     * Identity and type cannot be changed.
+     */
+
+    delete safeChanges.id;
+    delete safeChanges.type;
+    delete safeChanges.createdAt;
+    delete safeChanges.version;
+    delete safeChanges.updatedAt;
+
 
     const updated =
       Object.assign(
         {},
         current,
-        isObject(changes)
-          ? clone(changes)
-          : {}
+        safeChanges
       );
 
 
@@ -626,7 +902,9 @@
       current.createdAt;
 
     updated.version =
-      Number(current.version || 1) + 1;
+      Number(
+        current.version || 1
+      ) + 1;
 
     updated.updatedAt =
       now();
@@ -636,9 +914,17 @@
       updated;
 
 
-    writeWorkspace(
-      workspace
-    );
+    const written =
+      writeWorkspace(
+        workspace
+      );
+
+
+    if (!written) {
+
+      return null;
+
+    }
 
 
     return clone(
@@ -657,7 +943,9 @@
   ) {
 
     if (!id) {
+
       return false;
+
     }
 
     const workspace =
@@ -685,8 +973,8 @@
 
 
     /*
-     * Remove relationships
-     * connected to deleted artifact.
+     * Remove every relationship connected
+     * to the deleted artifact.
      */
 
     workspace.relationships =
@@ -697,12 +985,85 @@
       );
 
 
-    writeWorkspace(
-      workspace
-    );
+    /*
+     * Keep historical snapshots.
+     * They are intentionally not deleted.
+     */
 
 
-    return true;
+    const written =
+      writeWorkspace(
+        workspace
+      );
+
+
+    return written;
+
+  }
+
+
+  function removeByType(
+    type
+  ) {
+
+    const normalizedType =
+      normalizeType(type);
+
+    const workspace =
+      readWorkspace();
+
+    const ids =
+      workspace.artifacts
+        .filter(
+          item =>
+            item.type ===
+            normalizedType
+        )
+        .map(
+          item =>
+            item.id
+        );
+
+
+    if (!ids.length) {
+
+      return 0;
+
+    }
+
+
+    const idSet =
+      new Set(ids);
+
+
+    workspace.artifacts =
+      workspace.artifacts.filter(
+        item =>
+          !idSet.has(item.id)
+      );
+
+
+    workspace.relationships =
+      workspace.relationships.filter(
+        relation =>
+          !idSet.has(
+            relation.sourceId
+          ) &&
+          !idSet.has(
+            relation.targetId
+          )
+      );
+
+
+    const written =
+      writeWorkspace(
+        workspace
+      );
+
+
+    return written
+      ? ids.length
+      : 0;
 
   }
 
@@ -726,6 +1087,38 @@
 
       throw new Error(
         "A relationship requires sourceId and targetId."
+      );
+
+    }
+
+
+    /*
+     * Do not allow relationships to
+     * non-existing artifacts.
+     */
+
+    const sourceExists =
+      workspace.artifacts.some(
+        artifact =>
+          artifact.id ===
+          relationship.sourceId
+      );
+
+    const targetExists =
+      workspace.artifacts.some(
+        artifact =>
+          artifact.id ===
+          relationship.targetId
+      );
+
+
+    if (
+      !sourceExists ||
+      !targetExists
+    ) {
+
+      throw new Error(
+        "Both source and target artifacts must exist."
       );
 
     }
@@ -768,6 +1161,7 @@
 
       updatedAt:
         now()
+
     };
 
 
@@ -797,9 +1191,17 @@
     );
 
 
-    writeWorkspace(
-      workspace
-    );
+    const written =
+      writeWorkspace(
+        workspace
+      );
+
+
+    if (!written) {
+
+      return null;
+
+    }
 
 
     return clone(
@@ -809,9 +1211,56 @@
   }
 
 
+  function removeRelationship(
+    id
+  ) {
+
+    if (!id) {
+
+      return false;
+
+    }
+
+    const workspace =
+      readWorkspace();
+
+    const before =
+      workspace.relationships.length;
+
+
+    workspace.relationships =
+      workspace.relationships.filter(
+        relation =>
+          relation.id !== id
+      );
+
+
+    if (
+      workspace.relationships.length ===
+      before
+    ) {
+
+      return false;
+
+    }
+
+
+    return writeWorkspace(
+      workspace
+    );
+
+  }
+
+
   function getRelationships(
     artifactId
   ) {
+
+    if (!artifactId) {
+
+      return [];
+
+    }
 
     const workspace =
       readWorkspace();
@@ -826,6 +1275,10 @@
 
   }
 
+
+  /* =======================================================
+     WORKSPACE
+  ======================================================= */
 
   function getWorkspace() {
 
@@ -855,7 +1308,9 @@
 
 
     if (!artifact) {
+
       return null;
+
     }
 
 
@@ -889,9 +1344,17 @@
     );
 
 
-    writeWorkspace(
-      workspace
-    );
+    const written =
+      writeWorkspace(
+        workspace
+      );
+
+
+    if (!written) {
+
+      return null;
+
+    }
 
 
     return clone(
@@ -952,73 +1415,84 @@
     }
 
 
-    const imported = {
+    const imported =
+      migrateWorkspace({
+        id:
+          data.id ||
+          "default-workspace",
 
-      id:
-        data.id ||
-        "default-workspace",
+        name:
+          data.name ||
+          "BAForge Workspace",
 
-      name:
-        data.name ||
-        "BAForge Workspace",
+        version:
+          data.version ||
+          STORE_VERSION,
 
-      version:
-        data.version ||
-        STORE_VERSION,
+        createdAt:
+          data.createdAt ||
+          now(),
 
-      createdAt:
-        data.createdAt ||
-        now(),
+        updatedAt:
+          now(),
 
-      updatedAt:
-        now(),
+        metadata:
+          clone(
+            data.metadata || {}
+          ),
 
-      metadata:
-        clone(
-          data.metadata || {}
-        ),
+        artifacts:
+          Array.isArray(
+            data.artifacts
+          )
+            ? clone(
+                data.artifacts
+              )
+            : [],
 
-      artifacts:
-        Array.isArray(
-          data.artifacts
-        )
-          ? clone(data.artifacts)
-          : [],
+        relationships:
+          Array.isArray(
+            data.relationships
+          )
+            ? clone(
+                data.relationships
+              )
+            : [],
 
-      relationships:
-        Array.isArray(
-          data.relationships
-        )
-          ? clone(data.relationships)
-          : [],
+        snapshots:
+          Array.isArray(
+            data.snapshots
+          )
+            ? clone(
+                data.snapshots
+              )
+            : []
 
-      snapshots:
-        Array.isArray(
-          data.snapshots
-        )
-          ? clone(data.snapshots)
-          : []
-
-    };
+      });
 
 
     if (
       options.replace !== false
     ) {
 
-      writeWorkspace(
-        imported
-      );
+      const written =
+        writeWorkspace(
+          imported
+        );
+
+
+      if (!written) {
+
+        return null;
+
+      }
+
 
       return clone(
         imported
       );
 
     }
-
-
-    const workspace =
-      readWorkspace();
 
 
     imported.artifacts.forEach(
@@ -1035,9 +1509,20 @@
     imported.relationships.forEach(
       relationship => {
 
-        addRelationship(
-          relationship
-        );
+        try {
+
+          addRelationship(
+            relationship
+          );
+
+        } catch (error) {
+
+          console.warn(
+            "[BAForge ArtifactStore] Skipped invalid relationship:",
+            error
+          );
+
+        }
 
       }
     );
@@ -1060,6 +1545,16 @@
         STORAGE_KEY
       );
 
+      /*
+       * Remove the legacy store as well.
+       * Otherwise an old workspace could be
+       * migrated back after a clear.
+       */
+
+      localStorage.removeItem(
+        LEGACY_STORAGE_KEY
+      );
+
       return true;
 
     } catch (error) {
@@ -1077,6 +1572,19 @@
 
 
   /* =======================================================
+     CLEAR ARTIFACT
+  ======================================================= */
+
+  function clearArtifact(
+    id
+  ) {
+
+    return remove(id);
+
+  }
+
+
+  /* =======================================================
      PUBLIC API
   ======================================================= */
 
@@ -1088,6 +1596,8 @@
     STORAGE_KEY,
 
     ARTIFACT_TYPES,
+
+    ARTIFACT_STATUS,
 
     createWorkspace,
 
@@ -1107,7 +1617,13 @@
 
     remove,
 
+    removeByType,
+
+    clearArtifact,
+
     addRelationship,
+
+    removeRelationship,
 
     getRelationships,
 
