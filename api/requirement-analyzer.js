@@ -703,10 +703,25 @@ The JSON must have exactly this structure:
       "requirement": "...",
       "summary": "...",
       "requirementType": "Functional",
-      "priority": "Unknown"
+      "priority": "Unknown",
+      "clarityScore": 0,
+      "completenessScore": 0,
+      "testabilityScore": 0,
+      "ambiguities": [],
+      "missingInformation": [],
+      "assumptions": [],
+      "businessRules": [],
+      "openQuestions": [],
+      "edgeCases": []
     }
   ]
 }
+
+For EVERY item in detectedRequirements, score and analyze THAT
+requirement on its own, using the same 0-100 scoring rules as above.
+The per-requirement scores and lists must describe only that one
+requirement, not the whole document. They may differ from the
+document-level scores and from each other.
 
 `;
 
@@ -1165,6 +1180,36 @@ The JSON must have exactly this structure:
     }
 
 
+    function cleanOptionalScore(
+      value
+    ) {
+
+      if (
+        value === null ||
+        value === undefined ||
+        value === ""
+      ) {
+        return null;
+      }
+
+      const score =
+        Number(value);
+
+      if (!Number.isFinite(score)) {
+        return null;
+      }
+
+      return Math.max(
+        0,
+        Math.min(
+          100,
+          Math.round(score)
+        )
+      );
+
+    }
+
+
     function cleanScore(
       value
     ) {
@@ -1318,6 +1363,53 @@ The JSON must have exactly this structure:
                 priority:
                   normalizePriority(
                     item?.priority
+                  ),
+
+                // Per-requirement analysis. A missing or invalid score
+                // stays null ("no data"), it is never turned into a 0.
+                clarityScore:
+                  cleanOptionalScore(
+                    item?.clarityScore
+                  ),
+
+                completenessScore:
+                  cleanOptionalScore(
+                    item?.completenessScore
+                  ),
+
+                testabilityScore:
+                  cleanOptionalScore(
+                    item?.testabilityScore
+                  ),
+
+                ambiguities:
+                  cleanArray(
+                    item?.ambiguities
+                  ),
+
+                missingInformation:
+                  cleanArray(
+                    item?.missingInformation
+                  ),
+
+                assumptions:
+                  cleanArray(
+                    item?.assumptions
+                  ),
+
+                businessRules:
+                  cleanArray(
+                    item?.businessRules
+                  ),
+
+                openQuestions:
+                  cleanArray(
+                    item?.openQuestions
+                  ),
+
+                edgeCases:
+                  cleanArray(
+                    item?.edgeCases
                   )
 
               })

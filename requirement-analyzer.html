@@ -2841,6 +2841,38 @@ function toggleRequirement(
    RENDER DETECTED
 ================================================== */
 
+/* A requirement may carry its own analysis scores. */
+function hasOwnScores(item){
+  return !!item && [
+    item.clarityScore,
+    item.completenessScore,
+    item.testabilityScore
+  ].some(
+    v => v !== null && v !== undefined && v !== '' && Number.isFinite(Number(v))
+  );
+}
+
+function fmtScore(v){
+  return (v === null || v === undefined || v === '' || !Number.isFinite(Number(v)))
+    ? '\u2014'
+    : String(Math.round(Number(v)));
+}
+
+function ownAnalysis(item){
+  return {
+    clarityScore: item.clarityScore,
+    completenessScore: item.completenessScore,
+    testabilityScore: item.testabilityScore,
+    ambiguities: item.ambiguities || [],
+    missingInformation: item.missingInformation || [],
+    assumptions: item.assumptions || [],
+    businessRules: item.businessRules || [],
+    openQuestions: item.openQuestions || [],
+    edgeCases: item.edgeCases || [],
+    analystNotes: item.analystNotes || []
+  };
+}
+
 function renderDetected(){
 
   if(
@@ -2965,6 +2997,19 @@ function renderDetected(){
                   item.requirement ||
                   '-'
                 )
+              }
+
+              ${
+                hasOwnScores(item)
+                  ? `<br><br><b>Netlik / Tamlık / Test Edilebilirlik:</b>
+                     ${
+                       fmtScore(item.clarityScore)
+                     } / ${
+                       fmtScore(item.completenessScore)
+                     } / ${
+                       fmtScore(item.testabilityScore)
+                     }`
+                  : ''
               }
 
             </div>
@@ -3148,7 +3193,11 @@ function transferSelected(){
 
     analysis:
       first.analysis ||
-      currentResult
+      (
+        hasOwnScores(first)
+          ? ownAnalysis(first)
+          : currentResult
+      )
 
   };
 
