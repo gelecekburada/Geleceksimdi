@@ -311,6 +311,14 @@
       text-transform: uppercase;
     }
 
+
+    /* Categorised tools (home) */
+    .group-title { margin: 34px 0 14px; font-size: 17px; }
+    .tools-grid.two { grid-template-columns: repeat(2, 1fr); }
+    .tool-card.compact { min-height: 0; padding: 22px; }
+    .tool-step { position: absolute; top: 16px; right: 18px; font-size: 11px; font-weight: 700; opacity: .6; }
+    @media (max-width: 1000px) { .tools-grid, .tools-grid.two { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 700px) { .tools-grid, .tools-grid.two { grid-template-columns: 1fr; } }
     /* =========================================================
        TOOL CARDS
     ========================================================= */
@@ -1017,306 +1025,108 @@
 
 
     <!-- =======================================================
-         ACTIVE TOOLKIT
+         TOOLS BY CATEGORY
     ======================================================== -->
 
-    <section
-      class="section"
-      id="tools"
-    >
+    <section class="section" id="tools">
 
       <div class="section-heading">
-
         <div>
-
-          <span class="section-kicker">
-            Core Toolkit
-          </span>
-
-          <h2>
-            BA / QA Toolkit
-          </h2>
-
-          <p>
-            Three focused AI tools covering the most common stages
-            of requirements analysis, acceptance definition and UAT.
-          </p>
-
+          <span class="section-kicker" data-i18n="tools.k">Tools</span>
+          <h2 data-i18n="tools.h">Everything You Can Open Today</h2>
+          <p data-i18n="tools.p">Open any tool directly. The BA Workflow tools can also be used one after another, step by step.</p>
         </div>
-
       </div>
 
+      <h3 class="group-title" data-i18n="g.req">Requirement</h3>
+      <div class="tools-grid two">
+        <a class="tool-card compact" href="/requirement-analyzer.html">
+          <div class="tool-icon">🔍</div>
+          <h3 data-i18n="analyzer.t">Requirement Analyzer</h3>
+          <p data-i18n="analyzer.d">Optional pre-analysis: scores clarity, completeness and testability and finds ambiguities before you start.</p>
+          <span class="tool-link" data-i18n="analyzer.l">Open Analyzer →</span>
+        </a>
 
+        <a class="tool-card compact" href="/requirement.html">
+          <span class="tool-step" data-i18n="workspace.step">Step 1</span>
+          <div class="tool-icon">📋</div>
+          <h3 data-i18n="workspace.t">Requirement Workspace</h3>
+          <p data-i18n="workspace.d">Create or refine requirements directly, no analysis needed. The first step of the BA Workflow.</p>
+          <span class="tool-link" data-i18n="workspace.l">Open Workspace →</span>
+        </a>
+      </div>
+
+      <h3 class="group-title" data-i18n="g.wf">BA Workflow</h3>
       <div class="tools-grid">
-
-        <!-- USER STORY -->
-
-        <a
-          class="tool-card"
-          href="/user-story.html"
-        >
-
-          <div class="tool-icon">
-            📝
-          </div>
-
-          <h3>
-            User Story Generator
-          </h3>
-
-          <p>
-            Transform a business requirement into a structured
-            User Story with business value, acceptance criteria,
-            business rules, assumptions and edge cases.
-          </p>
-
-          <span class="tool-link">
-            Open Generator →
-          </span>
-
+        <a class="tool-card compact" href="/user-story.html">
+          <span class="tool-step" data-i18n="story.step">Step 2</span>
+          <div class="tool-icon">📝</div>
+          <h3 data-i18n="story.t">User Story Generator</h3>
+          <p data-i18n="story.d">Turn a requirement into a structured User Story with business value, rules, assumptions and edge cases.</p>
+          <span class="tool-link" data-i18n="story.l">Open Generator →</span>
         </a>
 
-
-        <!-- ACCEPTANCE CRITERIA -->
-
-        <a
-          class="tool-card"
-          href="/acceptance-criteria.html"
-        >
-
-          <div class="tool-icon">
-            ✓
-          </div>
-
-          <h3>
-            Acceptance Criteria
-          </h3>
-
-          <p>
-            Convert requirements into testable Given / When / Then
-            acceptance criteria and identify coverage gaps,
-            assumptions and open questions.
-          </p>
-
-          <span class="tool-link">
-            Open Generator →
-          </span>
-
+        <a class="tool-card compact" href="/acceptance-criteria.html">
+          <span class="tool-step" data-i18n="ac.step">Step 3</span>
+          <div class="tool-icon">✓</div>
+          <h3 data-i18n="ac.t">Acceptance Criteria</h3>
+          <p data-i18n="ac.d">Convert requirements into testable Given / When / Then criteria and find coverage gaps.</p>
+          <span class="tool-link" data-i18n="ac.l">Open Generator →</span>
         </a>
 
-
-        <!-- UAT -->
-
-        <a
-          class="tool-card"
-          href="/uat.html"
-        >
-
-          <div class="tool-icon">
-            🧪
-          </div>
-
-          <h3>
-            UAT Test Cases
-          </h3>
-
-          <p>
-            Generate structured UAT test cases covering business
-            rules, validation, negative scenarios, edge cases,
-            regression and API-focused testing.
-          </p>
-
-          <span class="tool-link">
-            Open Generator →
-          </span>
-
+        <a class="tool-card compact" href="/uat.html">
+          <span class="tool-step" data-i18n="uat.step">Step 4</span>
+          <div class="tool-icon">🧪</div>
+          <h3 data-i18n="uat.t">UAT Test Cases</h3>
+          <p data-i18n="uat.d">Generate professional UAT test cases from your requirements.</p>
+          <span class="tool-link" data-i18n="uat.l">Open Generator →</span>
         </a>
 
+        <a class="tool-card compact" href="/test-data.html">
+          <span class="tool-step" data-i18n="td.step">Step 5</span>
+          <div class="tool-icon">🗂️</div>
+          <h3 data-i18n="td.t">Test Data Generator</h3>
+          <p data-i18n="td.d">Create realistic synthetic data sets for QA and UAT.</p>
+          <span class="tool-link" data-i18n="td.l">Open Generator →</span>
+        </a>
+
+        <a class="tool-card compact" href="/process-flow.html">
+          <span class="tool-step" data-i18n="pf.step">Step 6</span>
+          <div class="tool-icon">🔀</div>
+          <h3 data-i18n="pf.t">Process & Flow Generator</h3>
+          <p data-i18n="pf.d">Model the business process as steps, decisions and alternative flows.</p>
+          <span class="tool-link" data-i18n="pf.l">Open Generator →</span>
+        </a>
+
+        <a class="tool-card compact" href="/traceability.html">
+          <span class="tool-step" data-i18n="tr.step">Step 7</span>
+          <div class="tool-icon">🔗</div>
+          <h3 data-i18n="tr.t">Traceability Matrix</h3>
+          <p data-i18n="tr.d">See how requirements, stories, criteria and tests connect.</p>
+          <span class="tool-link" data-i18n="tr.l">Open Matrix →</span>
+        </a>
+
+        <a class="tool-card compact" href="/document.html">
+          <span class="tool-step" data-i18n="doc.step">Step 8</span>
+          <div class="tool-icon">📄</div>
+          <h3 data-i18n="doc.t">BA Document Generator</h3>
+          <p data-i18n="doc.d">Assemble your work into a structured BA document.</p>
+          <span class="tool-link" data-i18n="doc.l">Open Generator →</span>
+        </a>
+      </div>
+
+      <h3 class="group-title" data-i18n="g.dev">Developer Tools</h3>
+      <div class="tools-grid">
+        <a class="tool-card compact" href="/json-xml.html">
+          <div class="tool-icon">🔄</div>
+          <h3 data-i18n="json.t">JSON ↔ XML Converter</h3>
+          <p data-i18n="json.d">Convert between JSON and XML in your browser. Nothing is sent to a server.</p>
+          <span class="tool-link" data-i18n="json.l">Open Converter →</span>
+        </a>
       </div>
 
     </section>
 
-
-    <!-- =======================================================
-         FUTURE BA TOOLKIT
-    ======================================================== -->
-
-    <section class="future-section">
-
-      <div class="future-header">
-
-        <div>
-
-          <span class="section-kicker">
-            Product Roadmap
-          </span>
-
-          <h2>
-            More BA Tools Are Coming
-          </h2>
-
-          <p>
-            BAForge AI is evolving from a few generators into
-            a broader Business Analysis and QA workspace.
-          </p>
-
-        </div>
-
-        <div class="roadmap-badge">
-          Coming Soon
-        </div>
-
-      </div>
-
-
-      <div class="future-grid">
-
-        <!-- REQUIREMENT ANALYZER -->
-
-        <div class="future-card">
-
-          <span class="coming-soon">
-            Coming Soon
-          </span>
-
-          <div class="future-icon">
-            🔍
-          </div>
-
-          <h3>
-            Requirement Analyzer
-          </h3>
-
-          <p>
-            Analyze requirements for ambiguity, missing information,
-            business rules, assumptions and potential gaps.
-          </p>
-
-        </div>
-
-
-        <!-- RTM -->
-
-        <div class="future-card">
-
-          <span class="coming-soon">
-            Coming Soon
-          </span>
-
-          <div class="future-icon">
-            🔗
-          </div>
-
-          <h3>
-            Traceability Matrix
-          </h3>
-
-          <p>
-            Connect requirements, user stories, acceptance criteria
-            and test cases through a structured traceability view.
-          </p>
-
-        </div>
-
-
-        <!-- TEST DATA -->
-
-        <div class="future-card">
-
-          <span class="coming-soon">
-            Coming Soon
-          </span>
-
-          <div class="future-icon">
-            🧾
-          </div>
-
-          <h3>
-            Test Data Generator
-          </h3>
-
-          <p>
-            Generate realistic test data sets for positive,
-            negative, boundary and validation scenarios.
-          </p>
-
-        </div>
-
-
-        <!-- PROCESS FLOW -->
-
-        <div class="future-card">
-
-          <span class="coming-soon">
-            Coming Soon
-          </span>
-
-          <div class="future-icon">
-            🔄
-          </div>
-
-          <h3>
-            Process & Flow Generator
-          </h3>
-
-          <p>
-            Turn business requirements into structured process
-            flows, decision points and business scenarios.
-          </p>
-
-        </div>
-
-
-        <!-- BA DASHBOARD -->
-
-        <div class="future-card">
-
-          <span class="coming-soon">
-            Coming Soon
-          </span>
-
-          <div class="future-icon">
-            📊
-          </div>
-
-          <h3>
-            BA Dashboard
-          </h3>
-
-          <p>
-            Track requirements, stories, acceptance criteria,
-            test coverage and analysis progress in one workspace.
-          </p>
-
-        </div>
-
-
-        <!-- DOCUMENT GENERATOR -->
-
-        <div class="future-card">
-
-          <span class="coming-soon">
-            Coming Soon
-          </span>
-
-          <div class="future-icon">
-            📄
-          </div>
-
-          <h3>
-            BA Document Generator
-          </h3>
-
-          <p>
-            Create structured BA deliverables and project
-            documentation from analyzed requirements.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
 
 
     <!-- =======================================================
@@ -1326,96 +1136,61 @@
     <section class="section">
 
       <div class="section-heading">
-
         <div>
-
-          <span class="section-kicker">
-            Workflow
-          </span>
-
-          <h2>
-            From Requirement to UAT
-          </h2>
-
-          <p>
-            A connected workflow for turning business requirements
-            into structured and testable delivery artifacts.
-          </p>
-
+          <span class="section-kicker" data-i18n="wf.k">Workflow</span>
+          <h2 data-i18n="wf.h">From Requirement to BA Document</h2>
+          <p data-i18n="wf.p">A connected eight-step workflow for turning business requirements into structured and testable delivery artifacts.</p>
         </div>
-
       </div>
 
-
       <div class="workflow">
-
         <div class="workflow-step">
-
-          <div class="workflow-number">
-            01
-          </div>
-
-          <h3>
-            Requirement
-          </h3>
-
-          <p>
-            Start with the business requirement.
-          </p>
-
+          <div class="workflow-number">01</div>
+          <h3 data-i18n="w1.t">Requirement</h3>
+          <p data-i18n="w1.d">Start with the business requirement.</p>
         </div>
 
-
         <div class="workflow-step">
-
-          <div class="workflow-number">
-            02
-          </div>
-
-          <h3>
-            User Story
-          </h3>
-
-          <p>
-            Structure the requirement clearly.
-          </p>
-
+          <div class="workflow-number">02</div>
+          <h3 data-i18n="w2.t">User Story</h3>
+          <p data-i18n="w2.d">Structure the requirement clearly.</p>
         </div>
 
-
         <div class="workflow-step">
-
-          <div class="workflow-number">
-            03
-          </div>
-
-          <h3>
-            Acceptance Criteria
-          </h3>
-
-          <p>
-            Define measurable conditions.
-          </p>
-
+          <div class="workflow-number">03</div>
+          <h3 data-i18n="w3.t">Acceptance Criteria</h3>
+          <p data-i18n="w3.d">Define measurable conditions.</p>
         </div>
 
-
         <div class="workflow-step">
-
-          <div class="workflow-number">
-            04
-          </div>
-
-          <h3>
-            UAT Test Cases
-          </h3>
-
-          <p>
-            Turn requirements into executable tests.
-          </p>
-
+          <div class="workflow-number">04</div>
+          <h3 data-i18n="w4.t">UAT Test Cases</h3>
+          <p data-i18n="w4.d">Turn requirements into executable tests.</p>
         </div>
 
+        <div class="workflow-step">
+          <div class="workflow-number">05</div>
+          <h3 data-i18n="w5.t">Test Data</h3>
+          <p data-i18n="w5.d">Prepare realistic synthetic data.</p>
+        </div>
+
+        <div class="workflow-step">
+          <div class="workflow-number">06</div>
+          <h3 data-i18n="w6.t">Process Flow</h3>
+          <p data-i18n="w6.d">Model the process and its decisions.</p>
+        </div>
+
+        <div class="workflow-step">
+          <div class="workflow-number">07</div>
+          <h3 data-i18n="w7.t">Traceability</h3>
+          <p data-i18n="w7.d">Connect requirements to tests.</p>
+        </div>
+
+        <div class="workflow-step">
+          <div class="workflow-number">08</div>
+          <h3 data-i18n="w8.t">BA Document</h3>
+          <p data-i18n="w8.d">Assemble the final document.</p>
+        </div>
       </div>
 
     </section>

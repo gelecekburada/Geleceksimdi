@@ -28,6 +28,8 @@
     currentPage = "traceability";
   } else if (path.endsWith("/document.html")) {
     currentPage = "document";
+  } else if (path.endsWith("/json-xml.html")) {
+    currentPage = "json-xml";
   }
 
   /* =========================================================
@@ -80,6 +82,11 @@
         processFlow: "Process Flow",
         traceability: "Traceability",
         document: "BA Document",
+        workspace: "Requirement Workspace",
+        groupRequirement: "Requirement",
+        groupWorkflow: "BA Workflow",
+        groupDev: "Developer Tools",
+        jsonXml: "JSON ↔ XML Converter",
         language: "Language",
         menu: "Menu"
       },
@@ -126,6 +133,11 @@
         processFlow: "Süreç Akışı",
         traceability: "İzlenebilirlik",
         document: "BA Dokümanı",
+        workspace: "Gereksinim Çalışma Alanı",
+        groupRequirement: "Gereksinim",
+        groupWorkflow: "BA Akışı",
+        groupDev: "Geliştirici Araçları",
+        jsonXml: "JSON ↔ XML Dönüştürücü",
         language: "Dil",
         menu: "Menü"
       },
@@ -304,8 +316,7 @@
         align-items: center;
         gap: 3px;
         margin-left: auto;
-        overflow-x: auto;
-        scrollbar-width: none;
+        overflow: visible;
         max-width: calc(100vw - 250px);
         white-space: nowrap;
       }
@@ -334,6 +345,75 @@
       .baforge-link.active {
         color: white;
         background: #2563eb;
+      }
+
+      .baforge-dd {
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      .baforge-dd-btn {
+        border: 0;
+        background: transparent;
+        font-family: inherit;
+        cursor: pointer;
+        font-size: 12px;
+      }
+
+      .baforge-dd-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        min-width: 230px;
+        padding: 6px;
+        border-radius: 12px;
+        background: rgba(15, 23, 42, 0.99);
+        border: 1px solid rgba(255,255,255,0.12);
+        box-shadow: 0 12px 32px rgba(15,23,42,0.35);
+        z-index: 10000;
+      }
+
+      .baforge-dd.open .baforge-dd-menu {
+        display: block;
+      }
+
+      @media (hover: hover) {
+        .baforge-dd:hover .baforge-dd-menu {
+          display: block;
+        }
+      }
+
+      .baforge-dd-item {
+        display: block;
+        padding: 9px 12px;
+        border-radius: 8px;
+        color: #cbd5e1;
+        font-size: 12.5px;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .baforge-dd-item:hover {
+        color: white;
+        background: rgba(255,255,255,0.08);
+      }
+
+      .baforge-dd-item.active {
+        color: white;
+        background: #2563eb;
+      }
+
+      .baforge-mobile-heading {
+        grid-column: 1 / -1;
+        margin-top: 6px;
+        padding: 4px 4px 0;
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
       }
 
       .baforge-language {
@@ -557,9 +637,83 @@
       processFlow: t("nav.processFlow"),
       traceability: t("nav.traceability"),
       document: t("nav.document"),
+      workspace: t("nav.workspace"),
+      groupRequirement: t("nav.groupRequirement"),
+      groupWorkflow: t("nav.groupWorkflow"),
+      groupDev: t("nav.groupDev"),
+      jsonXml: t("nav.jsonXml"),
       language: t("nav.language"),
       menu: t("nav.menu")
     };
+
+    /* =======================================================
+       MENU MODEL
+       Product navigation (categories) lives here. Workflow
+       navigation (steps, Previous/Next) is configured separately
+       below and is NOT driven by this list.
+    ======================================================= */
+
+    const menuGroups = [
+      {
+        label: navText.groupRequirement,
+        items: [
+          ["requirement-analyzer", "/requirement-analyzer.html", navText.analyzer],
+          ["requirement", "/requirement.html", navText.workspace]
+        ]
+      },
+      {
+        label: navText.groupWorkflow,
+        items: [
+          ["requirement", "/requirement.html", "1 · " + navText.requirement],
+          ["user-story", "/user-story.html", "2 · " + navText.story],
+          ["acceptance-criteria", "/acceptance-criteria.html", "3 · " + navText.criteria],
+          ["uat", "/uat.html", "4 · " + navText.uat],
+          ["test-data", "/test-data.html", "5 · " + navText.testData],
+          ["process-flow", "/process-flow.html", "6 · " + navText.processFlow],
+          ["traceability", "/traceability.html", "7 · " + navText.traceability],
+          ["document", "/document.html", "8 · " + navText.document]
+        ]
+      },
+      {
+        label: navText.groupDev,
+        items: [
+          ["json-xml", "/json-xml.html", navText.jsonXml]
+        ]
+      }
+    ];
+
+    function menuLink(item, cls) {
+      return '<a href="' + item[1] + '" class="' + cls +
+        (currentPage === item[0] ? " active" : "") + '">' +
+        item[2] + "</a>";
+    }
+
+    const desktopLinksHtml =
+      menuLink(["home", "/", navText.home], "baforge-link") +
+      menuGroups.map(function (g) {
+        const active = g.items.some(function (i) {
+          return i[0] === currentPage;
+        });
+        return '<div class="baforge-dd">' +
+          '<button type="button" class="baforge-link baforge-dd-btn' +
+          (active ? " active" : "") +
+          '" aria-haspopup="true" aria-expanded="false">' +
+          g.label + ' <span aria-hidden="true">▾</span></button>' +
+          '<div class="baforge-dd-menu">' +
+          g.items.map(function (i) {
+            return menuLink(i, "baforge-dd-item");
+          }).join("") +
+          "</div></div>";
+      }).join("");
+
+    const mobileLinksHtml =
+      menuLink(["home", "/", navText.home], "baforge-mobile-link") +
+      menuGroups.map(function (g) {
+        return '<div class="baforge-mobile-heading">' + g.label + "</div>" +
+          g.items.map(function (i) {
+            return menuLink(i, "baforge-mobile-link");
+          }).join("");
+      }).join("");
 
     /* =======================================================
        CREATE NAV
@@ -579,107 +733,7 @@
           BA<span>Forge</span> AI
         </a>
 
-        <div class="baforge-links">
-
-          <a
-            href="/"
-            class="baforge-link ${
-              currentPage === "home" ? "active" : ""
-            }">
-            ${navText.home}
-          </a>
-
-          <a
-            href="/requirement-analyzer.html"
-            class="baforge-link ${
-              currentPage === "requirement-analyzer"
-                ? "active"
-                : ""
-            }">
-            ${navText.analyzer}
-          </a>
-
-          <a
-            href="/requirement.html"
-            class="baforge-link ${
-              currentPage === "requirement"
-                ? "active"
-                : ""
-            }">
-            ${navText.requirement}
-          </a>
-
-          <a
-            href="/user-story.html"
-            class="baforge-link ${
-              currentPage === "user-story"
-                ? "active"
-                : ""
-            }">
-            ${navText.story}
-          </a>
-
-          <a
-            href="/acceptance-criteria.html"
-            class="baforge-link ${
-              currentPage === "acceptance-criteria"
-                ? "active"
-                : ""
-            }">
-            ${navText.criteria}
-          </a>
-
-          <a
-            href="/uat.html"
-            class="baforge-link ${
-              currentPage === "uat"
-                ? "active"
-                : ""
-            }">
-            ${navText.uat}
-          </a>
-
-          <a
-            href="/test-data.html"
-            class="baforge-link ${
-              currentPage === "test-data"
-                ? "active"
-                : ""
-            }">
-            ${navText.testData}
-          </a>
-
-          <a
-            href="/process-flow.html"
-            class="baforge-link ${
-              currentPage === "process-flow"
-                ? "active"
-                : ""
-            }">
-            ${navText.processFlow}
-          </a>
-
-          <a
-            href="/traceability.html"
-            class="baforge-link ${
-              currentPage === "traceability"
-                ? "active"
-                : ""
-            }">
-            ${navText.traceability}
-          </a>
-
-          <a
-            href="/document.html"
-            class="baforge-link ${
-              currentPage === "document"
-                ? "active"
-                : ""
-            }">
-            ${navText.document}
-          </a>
-
-        </div>
+        <div class="baforge-links">${desktopLinksHtml}</div>
 
         <div class="baforge-language">
 
@@ -714,107 +768,7 @@
       <div
         class="baforge-mobile-menu"
         id="baforgeMobileMenu">
-
-        <a
-          href="/"
-          class="baforge-mobile-link ${
-            currentPage === "home"
-              ? "active"
-              : ""
-          }">
-          ${navText.home}
-        </a>
-
-        <a
-          href="/requirement-analyzer.html"
-          class="baforge-mobile-link ${
-            currentPage === "requirement-analyzer"
-              ? "active"
-              : ""
-          }">
-          ${navText.analyzer}
-        </a>
-
-        <a
-          href="/requirement.html"
-          class="baforge-mobile-link ${
-            currentPage === "requirement"
-              ? "active"
-              : ""
-          }">
-          ${navText.requirement}
-        </a>
-
-        <a
-          href="/user-story.html"
-          class="baforge-mobile-link ${
-            currentPage === "user-story"
-              ? "active"
-              : ""
-          }">
-          ${navText.story}
-        </a>
-
-        <a
-          href="/acceptance-criteria.html"
-          class="baforge-mobile-link ${
-            currentPage === "acceptance-criteria"
-              ? "active"
-              : ""
-          }">
-          ${navText.criteria}
-        </a>
-
-        <a
-          href="/uat.html"
-          class="baforge-mobile-link ${
-            currentPage === "uat"
-              ? "active"
-              : ""
-          }">
-          ${navText.uat}
-        </a>
-
-        <a
-          href="/test-data.html"
-          class="baforge-mobile-link ${
-            currentPage === "test-data"
-              ? "active"
-              : ""
-          }">
-          ${navText.testData}
-        </a>
-
-        <a
-          href="/process-flow.html"
-          class="baforge-mobile-link ${
-            currentPage === "process-flow"
-              ? "active"
-              : ""
-          }">
-          ${navText.processFlow}
-        </a>
-
-        <a
-          href="/traceability.html"
-          class="baforge-mobile-link ${
-            currentPage === "traceability"
-              ? "active"
-              : ""
-          }">
-          ${navText.traceability}
-        </a>
-
-        <a
-          href="/document.html"
-          class="baforge-mobile-link ${
-            currentPage === "document"
-              ? "active"
-              : ""
-          }">
-          ${navText.document}
-        </a>
-
+        ${mobileLinksHtml}
       </div>
     `;
 
@@ -918,6 +872,45 @@
     /* =======================================================
        MOBILE MENU
     ======================================================= */
+
+    const dropdowns = Array.prototype.slice.call(
+      nav.querySelectorAll(".baforge-dd")
+    );
+
+    function closeDropdowns(except) {
+      dropdowns.forEach(function (dd) {
+        if (dd !== except) {
+          dd.classList.remove("open");
+          const b = dd.querySelector(".baforge-dd-btn");
+          if (b) {
+            b.setAttribute("aria-expanded", "false");
+          }
+        }
+      });
+    }
+
+    dropdowns.forEach(function (dd) {
+      const b = dd.querySelector(".baforge-dd-btn");
+      if (!b) {
+        return;
+      }
+      b.addEventListener("click", function (event) {
+        event.stopPropagation();
+        const open = dd.classList.toggle("open");
+        b.setAttribute("aria-expanded", String(open));
+        closeDropdowns(dd);
+      });
+    });
+
+    document.addEventListener("click", function () {
+      closeDropdowns(null);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeDropdowns(null);
+      }
+    });
 
     const menuButton =
       document.getElementById("baforgeMenuButton");
@@ -1431,124 +1424,149 @@
             : "Explore Tools";
       }
 
-      const headings =
-        document.querySelectorAll(
-          ".section-heading h2"
-        );
-
-      if (headings[0]) {
-        headings[0].textContent =
-          isTr
-            ? "BA / QA Araç Seti"
-            : "BA / QA Toolkit";
-      }
-
-      if (headings[1]) {
-        headings[1].textContent =
-          isTr
-            ? "Gereksinimden BA Dokümanına"
-            : "From Requirement to BA Document";
-      }
-
-      const workflowTitles =
-        document.querySelectorAll(
-          ".workflow-step h3"
-        );
-
-      const workflowDescriptions =
-        document.querySelectorAll(
-          ".workflow-step p"
-        );
-
-      const workflowTR = [
-
-        [
-          "Gereksinim",
-          "İş gereksinimini yapılandırın."
-        ],
-
-        [
-          "Kullanıcı Hikâyesi",
-          "Gereksinimi kullanıcı ihtiyacına dönüştürün."
-        ],
-
-        [
-          "Kabul Kriterleri",
-          "Ölçülebilir kabul koşullarını tanımlayın."
-        ],
-
-        [
-          "UAT Test Senaryoları",
-          "Gereksinimleri uygulanabilir testlere dönüştürün."
-        ],
-
-        [
-          "Test Verileri",
-          "Test senaryoları için veri oluşturun."
-        ],
-
-        [
-          "Süreç Akışı",
-          "İş sürecini ve karar noktalarını görselleştirin."
-        ]
-
-      ];
-
-      const workflowEN = [
-
-        [
-          "Requirement",
-          "Structure the business requirement."
-        ],
-
-        [
-          "User Story",
-          "Turn the requirement into a user need."
-        ],
-
-        [
-          "Acceptance Criteria",
-          "Define measurable acceptance conditions."
-        ],
-
-        [
-          "UAT Test Cases",
-          "Turn requirements into executable tests."
-        ],
-
-        [
-          "Test Data",
-          "Create realistic test data."
-        ],
-
-        [
-          "Process Flow",
-          "Visualize the process and decision points."
-        ]
-
-      ];
-
-      const workflowData =
-        isTr
-          ? workflowTR
-          : workflowEN;
-
-      workflowTitles.forEach(
-        (el, index) => {
-
-          if (workflowData[index]) {
-            el.textContent =
-              workflowData[index][0];
-          }
+      /* Home page texts are tagged with data-i18n in index.html. */
+      const homeText = {
+        "en": {
+          "analyzer.t": "Requirement Analyzer",
+          "analyzer.d": "Optional pre-analysis: scores clarity, completeness and testability and finds ambiguities before you start.",
+          "analyzer.l": "Open Analyzer →",
+          "workspace.step": "Step 1",
+          "workspace.t": "Requirement Workspace",
+          "workspace.d": "Create or refine requirements directly, no analysis needed. The first step of the BA Workflow.",
+          "workspace.l": "Open Workspace →",
+          "story.step": "Step 2",
+          "story.t": "User Story Generator",
+          "story.d": "Turn a requirement into a structured User Story with business value, rules, assumptions and edge cases.",
+          "story.l": "Open Generator →",
+          "ac.step": "Step 3",
+          "ac.t": "Acceptance Criteria",
+          "ac.d": "Convert requirements into testable Given / When / Then criteria and find coverage gaps.",
+          "ac.l": "Open Generator →",
+          "uat.step": "Step 4",
+          "uat.t": "UAT Test Cases",
+          "uat.d": "Generate professional UAT test cases from your requirements.",
+          "uat.l": "Open Generator →",
+          "td.step": "Step 5",
+          "td.t": "Test Data Generator",
+          "td.d": "Create realistic synthetic data sets for QA and UAT.",
+          "td.l": "Open Generator →",
+          "pf.step": "Step 6",
+          "pf.t": "Process & Flow Generator",
+          "pf.d": "Model the business process as steps, decisions and alternative flows.",
+          "pf.l": "Open Generator →",
+          "tr.step": "Step 7",
+          "tr.t": "Traceability Matrix",
+          "tr.d": "See how requirements, stories, criteria and tests connect.",
+          "tr.l": "Open Matrix →",
+          "doc.step": "Step 8",
+          "doc.t": "BA Document Generator",
+          "doc.d": "Assemble your work into a structured BA document.",
+          "doc.l": "Open Generator →",
+          "json.t": "JSON ↔ XML Converter",
+          "json.d": "Convert between JSON and XML in your browser. Nothing is sent to a server.",
+          "json.l": "Open Converter →",
+          "tools.k": "Tools",
+          "tools.h": "Everything You Can Open Today",
+          "tools.p": "Open any tool directly. The BA Workflow tools can also be used one after another, step by step.",
+          "g.req": "Requirement",
+          "g.wf": "BA Workflow",
+          "g.dev": "Developer Tools",
+          "w1.t": "Requirement",
+          "w1.d": "Start with the business requirement.",
+          "w2.t": "User Story",
+          "w2.d": "Structure the requirement clearly.",
+          "w3.t": "Acceptance Criteria",
+          "w3.d": "Define measurable conditions.",
+          "w4.t": "UAT Test Cases",
+          "w4.d": "Turn requirements into executable tests.",
+          "w5.t": "Test Data",
+          "w5.d": "Prepare realistic synthetic data.",
+          "w6.t": "Process Flow",
+          "w6.d": "Model the process and its decisions.",
+          "w7.t": "Traceability",
+          "w7.d": "Connect requirements to tests.",
+          "w8.t": "BA Document",
+          "w8.d": "Assemble the final document.",
+          "wf.k": "Workflow",
+          "wf.h": "From Requirement to BA Document",
+          "wf.p": "A connected eight-step workflow for turning business requirements into structured and testable delivery artifacts."
+        },
+        "tr": {
+          "analyzer.t": "Gereksinim Analizörü",
+          "analyzer.d": "İsteğe bağlı ön analiz: netlik, bütünlük ve test edilebilirlik puanlarını verir, belirsizlikleri bulur.",
+          "analyzer.l": "Analizörü Aç →",
+          "workspace.step": "Adım 1",
+          "workspace.t": "Gereksinim Çalışma Alanı",
+          "workspace.d": "Gereksinimleri doğrudan oluşturun veya düzenleyin, analiz gerekmez. BA Akışı'nın ilk adımı.",
+          "workspace.l": "Çalışma Alanını Aç →",
+          "story.step": "Adım 2",
+          "story.t": "Kullanıcı Hikâyesi Üretici",
+          "story.d": "Bir gereksinimi iş değeri, kurallar, varsayımlar ve uç durumlarla yapılandırılmış bir Kullanıcı Hikâyesine dönüştürün.",
+          "story.l": "Üreticiyi Aç →",
+          "ac.step": "Adım 3",
+          "ac.t": "Kabul Kriterleri",
+          "ac.d": "Gereksinimleri test edilebilir Given / When / Then kriterlerine çevirin ve kapsam boşluklarını bulun.",
+          "ac.l": "Üreticiyi Aç →",
+          "uat.step": "Adım 4",
+          "uat.t": "UAT Test Senaryoları",
+          "uat.d": "Gereksinimlerinizden profesyonel UAT test senaryoları üretin.",
+          "uat.l": "Üreticiyi Aç →",
+          "td.step": "Adım 5",
+          "td.t": "Test Verisi Üretici",
+          "td.d": "QA ve UAT için gerçekçi, sentetik veri setleri oluşturun.",
+          "td.l": "Üreticiyi Aç →",
+          "pf.step": "Adım 6",
+          "pf.t": "Süreç ve Akış Üretici",
+          "pf.d": "İş sürecini adımlar, kararlar ve alternatif akışlar olarak modelleyin.",
+          "pf.l": "Üreticiyi Aç →",
+          "tr.step": "Adım 7",
+          "tr.t": "İzlenebilirlik Matrisi",
+          "tr.d": "Gereksinim, hikâye, kriter ve testlerin birbirine nasıl bağlandığını görün.",
+          "tr.l": "Matrisi Aç →",
+          "doc.step": "Adım 8",
+          "doc.t": "BA Doküman Üretici",
+          "doc.d": "Çalışmanızı yapılandırılmış bir BA dokümanında birleştirin.",
+          "doc.l": "Üreticiyi Aç →",
+          "json.t": "JSON ↔ XML Dönüştürücü",
+          "json.d": "JSON ve XML arasında tarayıcınızda dönüştürün. Hiçbir şey sunucuya gönderilmez.",
+          "json.l": "Dönüştürücüyü Aç →",
+          "tools.k": "Araçlar",
+          "tools.h": "Bugün Açabileceğiniz Her Şey",
+          "tools.p": "Herhangi bir aracı doğrudan açın. BA Akışı araçları isterseniz adım adım, art arda da kullanılabilir.",
+          "g.req": "Gereksinim",
+          "g.wf": "BA Akışı",
+          "g.dev": "Geliştirici Araçları",
+          "w1.t": "Gereksinim",
+          "w1.d": "İş gereksinimiyle başlayın.",
+          "w2.t": "Kullanıcı Hikâyesi",
+          "w2.d": "Gereksinimi net biçimde yapılandırın.",
+          "w3.t": "Kabul Kriterleri",
+          "w3.d": "Ölçülebilir koşulları tanımlayın.",
+          "w4.t": "UAT Test Senaryoları",
+          "w4.d": "Gereksinimleri uygulanabilir testlere dönüştürün.",
+          "w5.t": "Test Verisi",
+          "w5.d": "Gerçekçi sentetik veri hazırlayın.",
+          "w6.t": "Süreç Akışı",
+          "w6.d": "Süreci ve karar noktalarını modelleyin.",
+          "w7.t": "İzlenebilirlik",
+          "w7.d": "Gereksinimleri testlere bağlayın.",
+          "w8.t": "BA Dokümanı",
+          "w8.d": "Nihai dokümanı oluşturun.",
+          "wf.k": "Akış",
+          "wf.h": "Gereksinimden BA Dokümanına",
+          "wf.p": "İş gereksinimlerini yapılandırılmış ve test edilebilir teslimat çıktılarına dönüştüren, bağlantılı sekiz adımlı bir akış."
         }
-      );
+      };
 
-      workflowDescriptions.forEach(
-        (el, index) => {
+      const dict = homeText[isTr ? "tr" : "en"];
 
-          if (workflowData[index]) {
-            el.textContent =
-              workflowData[index][1];
+      document.querySelectorAll("[data-i18n]").forEach(
+        (el) => {
+
+          const value = dict[el.getAttribute("data-i18n")];
+
+          if (value !== undefined) {
+            el.textContent = value;
           }
         }
       );
