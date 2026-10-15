@@ -2644,6 +2644,20 @@
   }
 
 
+  /*
+   * BADataModel has no createAcceptanceCriterion yet. Calling it unguarded
+   * threw a TypeError that blocked Save and Continue, so fall back to the
+   * plain fields when it is missing.
+   */
+  function createAcceptanceCriterionSafe(fields) {
+    return (
+      window.BADataModel &&
+      typeof BADataModel.createAcceptanceCriterion === "function"
+    )
+      ? BADataModel.createAcceptanceCriterion(fields)
+      : fields;
+  }
+
   function draft() {
 
     sync();
@@ -2727,7 +2741,7 @@
       const criteria =
         data.acceptanceCriteria.map(
           criterion =>
-            BADataModel.createAcceptanceCriterion(
+            createAcceptanceCriterionSafe(
               {
 
                 id:
