@@ -824,6 +824,98 @@
     );
 
     /* =======================================================
+       UNIFIED WORKFLOW STEPPER
+       One progress bar on every workflow page, replacing the
+       differing page-local ones (hidden via CSS below).
+    ======================================================= */
+
+    (function buildUnifiedStepper() {
+
+      const steps = [
+        ["requirement", "step_requirement", "/requirement.html", "Requirement", "Gereksinim"],
+        ["user-story", "step_story", "/user-story.html", "User Story", "Kullanıcı Hikâyesi"],
+        ["acceptance-criteria", "step_ac", "/acceptance-criteria.html", "Acceptance Criteria", "Kabul Kriterleri"],
+        ["uat", "step_uat", "/uat.html", "UAT", "UAT"],
+        ["test-data", "step_td", "/test-data.html", "Test Data", "Test Verisi"],
+        ["process-flow", "step_pf", "/process-flow.html", "Process Flow", "Süreç Akışı"],
+        ["traceability", "step_tr", "/traceability.html", "Traceability", "İzlenebilirlik"],
+        ["document", "step_doc", "/document.html", "BA Document", "BA Dokümanı"]
+      ];
+
+      const index = steps.findIndex(function (x) {
+        return x[0] === currentPage;
+      });
+
+      if (index === -1) {
+        return;
+      }
+
+      const stateIds = {
+        requirement: "requirement",
+        "user-story": "user_story",
+        "acceptance-criteria": "acceptance_criteria",
+        uat: "uat",
+        "test-data": "test_data",
+        "process-flow": "process_flow",
+        traceability: "traceability",
+        document: "document"
+      };
+
+      let done = [];
+
+      try {
+        const st = JSON.parse(
+          sessionStorage.getItem("baforge-workflow-state")
+        );
+        if (st && Array.isArray(st.completedSteps)) {
+          done = st.completedSteps;
+        }
+      } catch (error) {}
+
+      if (!document.getElementById("baforge-stepper-style")) {
+        const st = document.createElement("style");
+        st.id = "baforge-stepper-style";
+        st.textContent =
+          "body.baforge-has-stepper .workflow-wrapper," +
+          "body.baforge-has-stepper section.workflow," +
+          "body.baforge-has-stepper div.workflow{display:none !important}" +
+          ".baforge-stepper{display:flex;gap:6px;overflow-x:auto;padding:10px 16px;margin:0 auto;max-width:1200px;-webkit-overflow-scrolling:touch}" +
+          ".baforge-stepper a{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;text-decoration:none;font-size:13px;color:inherit;border:1px solid rgba(128,138,160,.45);opacity:.8;white-space:nowrap}" +
+          ".baforge-stepper a .n{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(128,138,160,.3);font-size:11px;font-weight:700}" +
+          ".baforge-stepper a.done{opacity:1}" +
+          ".baforge-stepper a.done .n{background:#22c55e;color:#04200f}" +
+          ".baforge-stepper a.current{opacity:1;border-color:#818cf8;background:rgba(129,140,248,.18);font-weight:700}" +
+          ".baforge-stepper a.current .n{background:#818cf8;color:#0b0b1a}";
+        document.head.appendChild(st);
+      }
+
+      const bar = document.createElement("nav");
+      bar.className = "baforge-stepper";
+      bar.setAttribute("aria-label", language === "tr" ? "İş akışı adımları" : "Workflow steps");
+
+      steps.forEach(function (x, i) {
+        const a = document.createElement("a");
+        a.href = x[2];
+        const isCurrent = i === index;
+        const isDone = !isCurrent && done.indexOf(stateIds[x[0]]) !== -1;
+        a.className = isCurrent ? "current" : (isDone ? "done" : "");
+        if (isCurrent) {
+          a.setAttribute("aria-current", "step");
+        }
+        const n = document.createElement("span");
+        n.className = "n";
+        n.textContent = isDone ? "✓" : String(i + 1);
+        a.appendChild(n);
+        a.appendChild(document.createTextNode(language === "tr" ? x[4] : x[3]));
+        bar.appendChild(a);
+      });
+
+      nav.parentNode.insertBefore(bar, nav.nextSibling);
+      document.body.classList.add("baforge-has-stepper");
+
+    })();
+
+    /* =======================================================
        MOBILE MENU
     ======================================================= */
 

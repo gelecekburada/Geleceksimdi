@@ -185,15 +185,15 @@
     st.id = "baforge-history-style";
     st.textContent =
       ".ba-history{max-width:1100px;margin:24px auto;padding:0 16px;font-family:inherit}" +
-      ".ba-history details{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 16px}" +
+      ".ba-history details{background:rgba(128,138,160,.1);border:1px solid rgba(128,138,160,.4);border-radius:14px;padding:12px 16px}" +
       ".ba-history summary{cursor:pointer;font-weight:700;color:inherit}" +
       ".ba-history ul{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}" +
-      ".ba-history li{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.05)}" +
+      ".ba-history li{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 12px;border-radius:10px;background:rgba(128,138,160,.12)}" +
       ".ba-history .ba-h-text{flex:1 1 220px;min-width:0}" +
       ".ba-history .ba-h-label{display:block;overflow-wrap:anywhere}" +
       ".ba-history .ba-h-time{display:block;font-size:12px;opacity:.65}" +
-      ".ba-history button{cursor:pointer;border:1px solid rgba(255,255,255,.25);background:transparent;color:inherit;border-radius:8px;padding:6px 12px;font:inherit;font-size:13px}" +
-      ".ba-history button:hover{background:rgba(255,255,255,.1)}" +
+      ".ba-history button{cursor:pointer;border:1px solid rgba(128,138,160,.6);background:transparent;color:inherit;border-radius:8px;padding:6px 12px;font:inherit;font-size:13px}" +
+      ".ba-history button:hover{background:rgba(128,138,160,.25)}" +
       ".ba-history .ba-h-empty,.ba-history .ba-h-note{font-size:13px;opacity:.7;margin:10px 0 0}";
     document.head.appendChild(st);
   }
