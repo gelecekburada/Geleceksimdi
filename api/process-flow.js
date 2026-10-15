@@ -21,6 +21,13 @@ export default async function handler(req, res) {
   try {
     const body = req.body || {};
 
+    // Reject oversized requests before anything is sent to the AI service.
+    if (JSON.stringify(body).length > 100000) {
+      return res.status(413).json({
+        error: "Request is too large."
+      });
+    }
+
     const context = String(
       body.context ||
       body.requirement ||
@@ -285,9 +292,8 @@ JSON RULES:
         const errorData =
           JSON.parse(raw);
 
-        errorMessage =
-          errorData?.error?.message ||
-          errorMessage;
+        // Keep the upstream message in server logs only.
+        console.error("OpenAI request failed:", response.status, errorData?.error?.message);
 
       } catch {
         // Keep default error.
@@ -489,7 +495,6 @@ JSON RULES:
 
     return res.status(500).json({
       error:
-        error?.message ||
         "Unexpected Process Flow generation error."
     });
 

@@ -970,9 +970,11 @@ document-level scores and from each other.
       );
 
 
+      // Full upstream message goes to server logs only, never to the browser.
+      console.error("OpenAI request failed:", response.status, data?.error?.message);
+
       const apiError =
-        data?.error?.message ||
-        "OpenAI request failed";
+        "AI service request failed (status " + response.status + ")";
 
 
       return res.status(
@@ -1547,7 +1549,6 @@ document-level scores and from each other.
     return res.status(500).json({
 
       error:
-        error?.message ||
         "Internal server error"
 
     });

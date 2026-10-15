@@ -181,6 +181,9 @@
       language = "en";
     }
 
+    /* Keep the page language attribute in sync on every page. */
+    document.documentElement.lang = language;
+
     if (i18n) {
       try {
         language =
@@ -1088,6 +1091,78 @@
       }
     };
 
+    const WORKFLOW_STEP_BY_PAGE = {
+      requirement: "requirement",
+      "user-story": "user_story",
+      "acceptance-criteria": "acceptance_criteria",
+      uat: "uat",
+      "test-data": "test_data",
+      "process-flow": "process_flow",
+      traceability: "traceability",
+      document: "document"
+    };
+
+    function markWorkflowStepDone(page, nextHref) {
+
+      try {
+
+        const step =
+          WORKFLOW_STEP_BY_PAGE[page];
+
+        if (!step) {
+          return;
+        }
+
+        const nextPage =
+          String(nextHref || "")
+            .replace(/^\//, "")
+            .replace(/\.html.*$/, "");
+
+        const nextStep =
+          WORKFLOW_STEP_BY_PAGE[nextPage] || step;
+
+        let state = null;
+
+        try {
+          state = JSON.parse(
+            sessionStorage.getItem(
+              "baforge-workflow-state"
+            )
+          );
+        } catch (error) {
+          state = null;
+        }
+
+        if (
+          !state ||
+          typeof state !== "object"
+        ) {
+          state = {};
+        }
+
+        const done =
+          Array.isArray(state.completedSteps)
+            ? state.completedSteps
+            : [];
+
+        if (!done.includes(step)) {
+          done.push(step);
+        }
+
+        state.completedSteps = done;
+        state.currentStep = nextStep;
+
+        sessionStorage.setItem(
+          "baforge-workflow-state",
+          JSON.stringify(state)
+        );
+
+      } catch (error) {
+        /* Progress tracking must never block navigation. */
+      }
+
+    }
+
     function addWorkflowNavigation() {
 
       /*
@@ -1150,6 +1225,21 @@
 
         next.textContent =
           `${config.next.label} →`;
+
+        /*
+         * Going forward marks the current step as completed in the shared
+         * workflow state, so progress is tracked on every page, not only
+         * on Requirement and Acceptance Criteria.
+         */
+        next.addEventListener(
+          "click",
+          function () {
+            markWorkflowStepDone(
+              currentPage,
+              config.next.href
+            );
+          }
+        );
 
         section.appendChild(next);
       }

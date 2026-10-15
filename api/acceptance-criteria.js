@@ -11,6 +11,13 @@ module.exports = async (req, res) => {
     const body =
       req.body || {};
 
+    // Reject oversized requests before anything is sent to the AI service.
+    if (JSON.stringify(body).length > 100000) {
+      return res.status(413).json({
+        error: "Request is too large."
+      });
+    }
+
     const requirement =
       String(
         body.requirement || ""
@@ -350,12 +357,14 @@ JSON STRUCTURE:
 
     if (!response.ok) {
 
+      // Full upstream message goes to server logs only, never to the browser.
+      console.error("OpenAI request failed:", response.status, data?.error?.message);
+
       return res.status(
         response.status
       ).json({
         error:
-          data?.error?.message ||
-          "OpenAI request failed"
+          "AI service request failed (status " + response.status + ")"
       });
 
     }
