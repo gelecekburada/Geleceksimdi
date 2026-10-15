@@ -1089,6 +1089,7 @@ tr:last-child td{
 <script src="/core/data-model.js"></script>
 <script src="/core/workflow.js"></script>
 
+<script src="/core/history.js"></script>
 <script>
 
 /* =========================================================
@@ -3056,6 +3057,10 @@ async function generateProcessFlow(){
 
     renderResult(result);
 
+    if (window.BAHistory) {
+      BAHistory.record();
+    }
+
 
     writeStorage(
       "baforge-process-flow",
@@ -3471,6 +3476,32 @@ saveButton.addEventListener(
 ========================================================= */
 
 loadWorkflowContext();
+
+if (window.BAHistory) {
+  BAHistory.init({
+    page: "process-flow",
+    label: function (d) {
+      return d.processName || d.context;
+    },
+    capture: function () {
+      return currentResult ? {
+        processName: processNameEl.value,
+        context: contextEl.value,
+        language: languageEl.value,
+        detail: detailEl.value,
+        result: currentResult
+      } : null;
+    },
+    restore: function (d) {
+      processNameEl.value = d.processName || "";
+      contextEl.value = d.context || "";
+      languageEl.value = d.language || languageEl.value;
+      detailEl.value = d.detail || detailEl.value;
+      hideError();
+      renderResult(d.result);
+    }
+  });
+}
 
 </script>
 

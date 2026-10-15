@@ -710,6 +710,7 @@
 
 <script src="/core/data-model.js"></script>
 
+<script src="/core/history.js"></script>
 <script>
 
 const contextEl =
@@ -1316,6 +1317,10 @@ Test Data Rules:
 
     renderRows(rows);
 
+    if (window.BAHistory) {
+      BAHistory.record();
+    }
+
     resultEl.style.display =
       "block";
 
@@ -1500,6 +1505,36 @@ copyButton.addEventListener(
 ----------------------------------------- */
 
 loadContext();
+
+if (window.BAHistory) {
+  BAHistory.init({
+    page: "test-data",
+    label: function (d) {
+      return d.context;
+    },
+    capture: function () {
+      return {
+        context: contextEl.value,
+        scenario: scenarioEl.value,
+        domain: domainEl.value,
+        count: countEl.value,
+        language: languageEl.value,
+        rows: generatedRows
+      };
+    },
+    restore: function (d) {
+      contextEl.value = d.context || "";
+      scenarioEl.value = d.scenario || scenarioEl.value;
+      domainEl.value = d.domain || domainEl.value;
+      countEl.value = d.count || countEl.value;
+      languageEl.value = d.language || languageEl.value;
+      generatedRows = d.rows || [];
+      hideError();
+      renderRows(generatedRows);
+      resultEl.style.display = "block";
+    }
+  });
+}
 
 </script>
 

@@ -1181,6 +1181,7 @@
 </main>
 
 <script src="/core/data-model.js"></script>
+<script src="/core/history.js"></script>
 <script src="/nav.js"></script>
 
 <script>
@@ -2692,6 +2693,10 @@
         "visible"
       );
 
+      if (window.BAHistory) {
+        BAHistory.record();
+      }
+
       document
         .getElementById("workspaceStatus")
         .textContent =
@@ -2892,6 +2897,27 @@
   loadAnalyzerSource();
 
   loadDraft();
+
+  if (window.BAHistory) {
+    BAHistory.init({
+      page: "user-story",
+      label: function (d) {
+        return d.title || d.story || d.requirement;
+      },
+      capture: function () {
+        return buildWorkspaceData();
+      },
+      restore: function (d) {
+        try {
+          sessionStorage.setItem(
+            "baforge-current-user-story",
+            JSON.stringify(d)
+          );
+        } catch (e) {}
+        loadDraft();
+      }
+    });
+  }
 
   if (
     !document.querySelector(

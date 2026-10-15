@@ -560,6 +560,7 @@
 
 </main>
 
+<script src="/core/history.js"></script>
 <script>
   const translations = {
     en: {
@@ -627,6 +628,7 @@
     }
   };
 
+  let lastGenerated = null;
   const languageEl = document.getElementById("language");
   const requirementEl = document.getElementById("requirement");
   const typeEl = document.getElementById("type");
@@ -1579,6 +1581,21 @@
         type
       );
 
+      lastGenerated = {
+        requirement,
+        type,
+        number,
+        detail,
+        language,
+        focus,
+        priority,
+        cases: data.cases
+      };
+
+      if (window.BAHistory) {
+        BAHistory.record();
+      }
+
       const generatedData = {
         requirement,
         type,
@@ -1770,6 +1787,28 @@
   updateLanguage();
 
   loadWorkflowContext();
+
+  if (window.BAHistory) {
+    BAHistory.init({
+      page: "uat",
+      label: function (d) {
+        return d.requirement;
+      },
+      capture: function () {
+        return lastGenerated;
+      },
+      restore: function (d) {
+        requirementEl.value = d.requirement || "";
+        typeEl.value = d.type || typeEl.value;
+        numberEl.value = d.number || numberEl.value;
+        detailEl.value = d.detail || detailEl.value;
+        focusEl.value = d.focus || focusEl.value;
+        priorityEl.value = d.priority || priorityEl.value;
+        languageEl.value = d.language || languageEl.value;
+        renderResults(d.cases || [], d.type);
+      }
+    });
+  }
 
   clearWorkflowUrlParameter();
 </script>

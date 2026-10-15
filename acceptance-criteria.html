@@ -1060,6 +1060,7 @@
 
 <script src="/core/data-model.js"></script>
 <script src="/core/workflow.js"></script>
+<script src="/core/history.js"></script>
 <script src="/nav.js"></script>
 
 <script>
@@ -2622,6 +2623,9 @@
       render();
 
       save(false);
+      if (window.BAHistory) {
+        BAHistory.record();
+      }
 
     } catch (error) {
 
@@ -3761,6 +3765,29 @@
 
   }
 
+
+  if (window.BAHistory) {
+    BAHistory.init({
+      page: "acceptance-criteria",
+      label: function (d) {
+        return d.requirement;
+      },
+      capture: function () {
+        sync();
+        return JSON.parse(JSON.stringify(s));
+      },
+      restore: function (d) {
+        Object.assign(s, d);
+        e.req.value = s.requirement || "";
+        e.lang.value = s.language || e.lang.value;
+        e.detail.value = s.detail || e.detail.value;
+        e.priority.value = s.priority || e.priority.value;
+        e.source.value = s.source || e.source.value;
+        s.saved = false;
+        render();
+      }
+    });
+  }
 
   init();
 
