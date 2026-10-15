@@ -781,7 +781,7 @@ Artifacts detected from the current BAForge workspace.
 </div>
 
 <div id="coverageCard" class="summary warning">
-<div class="summary-label">Coverage</div>
+<div class="summary-label">Stage Coverage</div>
 <div id="coverage" class="summary-value">0%</div>
 </div>
 
@@ -2663,15 +2663,30 @@ function renderStatus(
     available === 6
   ){
 
+    /*
+     * Having at least one artifact per category is stage coverage only.
+     * Links between a specific requirement and its story, criteria and
+     * tests are not tracked, so do not claim full traceability when
+     * there are more requirements than user stories.
+     */
+    if(
+      counts.requirements >
+      counts.userStories
+    ){
+      status.classList.add(
+        "warning"
+      );
+      status.textContent =
+        `⚠ All 6 artifact categories exist, but there are ${counts.requirements} requirements and only ${counts.userStories} user stor${counts.userStories === 1 ? "y" : "ies"}. Links between each requirement and its artifacts are not tracked yet, so this is stage coverage, not full traceability.`;
+      return;
+    }
+
     status.classList.add(
       "success"
     );
-
     status.textContent =
-      "✓ Full traceability detected across the BA workflow.";
-
+      "✓ All 6 artifact categories are present across the BA workflow.";
     return;
-
   }
 
 

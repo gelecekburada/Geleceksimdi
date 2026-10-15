@@ -877,7 +877,7 @@ function stringifyContext(value) {
 
     if (value.requirement) {
       parts.push(
-        `Requirement: ${value.requirement}`
+        `Requirement: ${String(value.requirement).replace(/^\s*Requirement:\s*/i, "").trim()}`
       );
     }
 

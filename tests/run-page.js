@@ -39,15 +39,16 @@ function makeEl(tag) {
     classList: { add() {}, remove() {}, toggle() {}, contains() { return false; } },
     appendChild(c) { el.children.push(c); return c; },
     append(...cs) { cs.forEach((c) => el.children.push(c)); },
-    remove() {}, addEventListener() {}, removeEventListener() {},
+    remove() {}, _l: {}, addEventListener(t, f) { (el._l[t] = el._l[t] || []).push(f); }, removeEventListener() {},
+    fire(t, ev) { (el._l[t] || []).forEach((f) => f(Object.assign({ target: el, preventDefault() {}, stopPropagation() {} }, ev || {}))); },
     setAttribute(k, v) { el.attrs[k] = v; }, getAttribute(k) { return el.attrs[k] ?? null; },
     removeAttribute(k) { delete el.attrs[k]; },
-    querySelector() { return makeEl(); }, querySelectorAll() { return []; },
-    focus() {}, blur() {}, click() {}, select() {}, scrollIntoView() {},
+    querySelector(sel) { el._q = el._q || {}; return (el._q[sel] = el._q[sel] || makeEl()); }, querySelectorAll() { return []; },
+    focus() {}, blur() {}, click() { el.fire('click'); }, select() {}, scrollIntoView() {},
     closest() { return null; }, contains() { return false; },
     insertAdjacentHTML() {}, dispatchEvent() {}, replaceChildren() { el.children = []; },
   };
-  Object.defineProperty(el, "options", { get() { return el.children; } });
+  Object.defineProperty(el, "options", { get() { return el.children.length ? el.children : Array.from({ length: 40 }, () => makeEl("option")); } });
   return new Proxy(el, {
     get(t, p) {
       if (p in t) return t[p];
@@ -58,16 +59,17 @@ function makeEl(tag) {
   });
 }
 
-function runPage({ file = "requirement.html", local = {}, session = {}, lang, tail = "", patch = true }) {
-  const localStorage = new MemoryStorage(local);
-  const sessionStorage = new MemoryStorage(session);
+function runPage({ file = "requirement.html", local = {}, session = {}, lang, tail = "", patch = true, ls, ss, fetchImpl, elements = {} }) {
+  const localStorage = ls || new MemoryStorage(local);
+  const sessionStorage = ss || new MemoryStorage(session);
   if (lang) localStorage.setItem("baforge-language", lang);
 
   const els = new Map();
+  for (const [id, props] of Object.entries(elements)) { const e = makeEl('div'); Object.assign(e, props); els.set(id, e); }
   const logs = [];
   const document = {
     getElementById(id) { if (!els.has(id)) els.set(id, makeEl("div")); return els.get(id); },
-    querySelector() { return makeEl(); },
+    _q: {}, querySelector(sel) { return (document._q[sel] = document._q[sel] || makeEl()); },
     querySelectorAll() { return []; },
     createElement(t) { return makeEl(t); },
     createTextNode(t) { return { textContent: t }; },
@@ -77,10 +79,10 @@ function runPage({ file = "requirement.html", local = {}, session = {}, lang, ta
   };
   const window = {
     document, localStorage, sessionStorage,
-    location: { pathname: "/" + file, href: "", search: "", hash: "", assign() {}, replace() {}, reload() {} },
+    location: { pathname: "/" + file, href: "https://preview.test/" + file, origin: "https://preview.test", host: "preview.test", search: "", hash: "", assign() {}, replace() {}, reload() {} },
     navigator: { language: "tr-TR", userAgent: "node-harness" },
     confirm() { return true; }, alert() {}, prompt() { return null; },
-    addEventListener() {}, removeEventListener() {}, dispatchEvent() {},
+    _l: {}, addEventListener(t, f) { (window._l[t] = window._l[t] || []).push(f); }, removeEventListener() {}, dispatchEvent() {},
     setTimeout: (f) => { try { f(); } catch (e) { logs.push("timeout-err:" + e.message); } return 0; },
     clearTimeout() {}, setInterval() { return 0; }, clearInterval() {},
     requestAnimationFrame: (f) => { try { f(); } catch (e) {} return 0; },
@@ -95,7 +97,7 @@ function runPage({ file = "requirement.html", local = {}, session = {}, lang, ta
       info() {}, debug() {},
     },
     URL, URLSearchParams, Blob: function () {}, FileReader: function () {},
-    fetch: () => Promise.reject(new Error("no network in harness")),
+    fetch: fetchImpl || (() => Promise.reject(new Error("no network in harness"))),
     structuredClone: (v) => JSON.parse(JSON.stringify(v)),
   };
   window.window = window; window.self = window; window.top = window; window.globalThis = window;

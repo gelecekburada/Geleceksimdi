@@ -1534,6 +1534,130 @@ function renderArtifactCards(
    FIRST ITEM
 ===================================================== */
 
+/*
+ * The requirement the user is working on (Workspace selection) is the one
+ * the story, criteria and tests belong to. Pick it instead of blindly
+ * taking the first requirement of the list.
+ */
+function activeRequirement(
+  list
+){
+  if(
+    !Array.isArray(list) ||
+    !list.length
+  ){
+    return null;
+  }
+
+  let current=null;
+
+  try{
+    current=safeParse(
+      sessionStorage.getItem(
+        "baforge-current-requirement"
+      )
+    )||safeParse(
+      localStorage.getItem(
+        "baforge-current-requirement"
+      )
+    );
+  }catch(error){
+    current=null;
+  }
+
+  if(
+    current &&
+    typeof current==="object"
+  ){
+    const norm=value=>String(value||"")
+      .replace(/\s+/g," ")
+      .trim()
+      .toLowerCase();
+
+    const title=norm(
+      current.title||current.name
+    );
+
+    const body=norm(
+      current.description||
+      current.requirement||
+      current.summary
+    );
+
+    const found=list.find(
+      item=>item && (
+        (current.id && item.id===current.id) ||
+        (
+          (title||body) &&
+          norm(item.title||item.name)===title &&
+          norm(
+            item.description||
+            item.requirement||
+            item.summary
+          )===body
+        )
+      )
+    );
+
+    if(found){
+      return found;
+    }
+  }
+
+  return list[0];
+}
+
+
+function renderRequirementOverview(
+  list,
+  active
+){
+  if(
+    !Array.isArray(list) ||
+    list.length<2
+  ){
+    return "";
+  }
+
+  const rows=list.map(
+    (item,index)=>`
+      <tr>
+        <td>${index+1}</td>
+        <td>${escapeHtml(item?.title||item?.name||"-")}</td>
+        <td>${escapeHtml(item?.requirementType||"-")}</td>
+        <td>${escapeHtml(item?.priority||"-")}</td>
+        <td>${item===active?"&#9679;":""}</td>
+      </tr>
+    `
+  ).join("");
+
+  return `
+    <div class="document-section">
+      <h3>
+        Requirements in Scope (${list.length})
+      </h3>
+      <p>
+        The sections below detail the requirement marked with a dot.
+      </p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Requirement</th>
+              <th>Type</th>
+              <th>Priority</th>
+              <th>Detailed here</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+
 function first(
   list
 ){
@@ -2448,7 +2572,7 @@ function generateDocument(){
 
 
   const requirement =
-    first(
+    activeRequirement(
       data.requirements
     );
 
@@ -2476,6 +2600,12 @@ function generateDocument(){
 
   }
 
+
+  content +=
+    renderRequirementOverview(
+      data.requirements,
+      requirement
+    );
 
   content +=
     renderRequirement(

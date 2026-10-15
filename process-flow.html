@@ -1293,7 +1293,9 @@ function textFromValue(value){
     if(value.requirement)
       parts.push(
         "Requirement: " +
-        value.requirement
+        String(value.requirement)
+          .replace(/^\s*Requirement:\s*/i, "")
+          .trim()
       );
 
     if(value.summary)
@@ -3154,8 +3156,7 @@ function saveToWorkspace(){
 
     try{
 
-      const processFlow =
-        BADataModel.createProcessFlow({
+      const processFlowFields = {
 
           requirementId:null,
 
@@ -3171,14 +3172,22 @@ function saveToWorkspace(){
           connections:
             currentResult.decisions
 
-        });
+        };
 
-
-      writeStorage(
-        "baforge-process-flow-artifact",
-        processFlow
-      );
-
+      /*
+       * BADataModel has no createProcessFlow yet. The flow itself is already
+       * saved above (baforge-process-flow); writing a second artifact copy
+       * would make Traceability count the same flow twice, so only write the
+       * extra artifact when the data model can really create it.
+       */
+      if (
+        typeof BADataModel.createProcessFlow === "function"
+      ) {
+        writeStorage(
+          "baforge-process-flow-artifact",
+          BADataModel.createProcessFlow(processFlowFields)
+        );
+      }
     }catch(error){
 
       console.warn(
