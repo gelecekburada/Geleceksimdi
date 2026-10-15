@@ -383,6 +383,23 @@
       );
 
 
+    /*
+     * Callers (Requirement Intelligence, Workspace) place analysis data
+     * inside a nested `analysis` object. Top-level fields win; the nested
+     * object is only a fallback so no analysis data is silently dropped.
+     */
+    const nestedAnalysis =
+      isObject(source.analysis)
+        ? source.analysis
+        : {};
+
+    function pickAnalysis(key) {
+      return source[key] !== undefined
+        ? source[key]
+        : nestedAnalysis[key];
+    }
+
+
     const quality =
       isObject(
         source.quality
@@ -471,69 +488,69 @@
 
           ambiguities:
             Array.isArray(
-              source.ambiguities
+              pickAnalysis("ambiguities")
             )
               ? clone(
-                  source.ambiguities
+                  pickAnalysis("ambiguities")
                 )
               : [],
 
           missingInformation:
             Array.isArray(
-              source.missingInformation
+              pickAnalysis("missingInformation")
             )
               ? clone(
-                  source.missingInformation
+                  pickAnalysis("missingInformation")
                 )
               : [],
 
           assumptions:
             Array.isArray(
-              source.assumptions
+              pickAnalysis("assumptions")
             )
               ? clone(
-                  source.assumptions
+                  pickAnalysis("assumptions")
                 )
               : [],
 
           businessRules:
             Array.isArray(
-              source.businessRules
+              pickAnalysis("businessRules")
             )
               ? clone(
-                  source.businessRules
+                  pickAnalysis("businessRules")
                 )
               : [],
 
           openQuestions:
             Array.isArray(
-              source.openQuestions
+              pickAnalysis("openQuestions")
             )
               ? clone(
-                  source.openQuestions
+                  pickAnalysis("openQuestions")
                 )
               : [],
 
           edgeCases:
             Array.isArray(
-              source.edgeCases
+              pickAnalysis("edgeCases")
             )
               ? clone(
-                  source.edgeCases
+                  pickAnalysis("edgeCases")
                 )
               : [],
 
           analystNotes:
             Array.isArray(
-              source.analystNotes
+              pickAnalysis("analystNotes")
             )
               ? clone(
-                  source.analystNotes
+                  pickAnalysis("analystNotes")
                 )
               : (
-                  source.analystNotes
+                  pickAnalysis("analystNotes")
                     ? [String(
-                        source.analystNotes
+                        pickAnalysis("analystNotes")
                       )]
                     : []
                 )
@@ -546,19 +563,22 @@
           clarity:
             normalizeScore(
               quality.clarity ??
-              source.clarityScore
+              source.clarityScore ??
+              nestedAnalysis.clarityScore
             ),
 
           completeness:
             normalizeScore(
               quality.completeness ??
-              source.completenessScore
+              source.completenessScore ??
+              nestedAnalysis.completenessScore
             ),
 
           testability:
             normalizeScore(
               quality.testability ??
-              source.testabilityScore
+              source.testabilityScore ??
+              nestedAnalysis.testabilityScore
             )
 
         },
