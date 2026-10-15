@@ -2060,7 +2060,7 @@
             "Requirement workspace cleared.",
 
           clearConfirm:
-            "Clear the current requirement and analysis data?",
+            "Remove all requirements from the workspace? Saved artifacts are kept.",
 
           functional:
             "Functional",
@@ -2299,7 +2299,7 @@
             "Gereksinim çalışma alanı temizlendi.",
 
           clearConfirm:
-            "Mevcut gereksinim ve analiz verileri temizlensin mi?",
+            "Çalışma alanındaki tüm gereksinimler kaldırılsın mı? Kaydedilmiş artifact'ler korunur.",
 
           functional:
             "Fonksiyonel",
@@ -2578,7 +2578,19 @@
       }
 
 
+      /*
+       * Returns null when there is no score at all, so that
+       * "no data" is never shown as a real score of 0.
+       */
       function normalizeScore(value) {
+
+        if (
+          value === null ||
+          value === undefined ||
+          value === ""
+        ) {
+          return null;
+        }
 
         const score =
           Number(value);
@@ -2586,7 +2598,7 @@
         if (
           !Number.isFinite(score)
         ) {
-          return 0;
+          return null;
         }
 
         return Math.max(
@@ -2639,10 +2651,12 @@
           normalizeScore(score);
 
         valueElement.textContent =
-          normalized;
+          normalized === null
+            ? "\u2014"
+            : normalized;
 
         barElement.style.width =
-          `${normalized}%`;
+          `${normalized === null ? 0 : normalized}%`;
 
       }
 
@@ -3306,6 +3320,42 @@
          REQUIREMENT SET
       ----------------------------------------- */
 
+      /*
+       * Deterministic id: the same requirement text always yields the
+       * same id, so reading the set twice never creates new identities.
+       */
+      function stableRequirementId(
+        candidate,
+        index
+      ) {
+
+        const text =
+          String(
+            (candidate.title || candidate.name || "") +
+            "|" +
+            (candidate.description ||
+              candidate.requirement ||
+              candidate.summary ||
+              "")
+          );
+
+        let hash = 5381;
+
+        for (
+          let i = 0;
+          i < text.length;
+          i++
+        ) {
+          hash =
+            ((hash << 5) + hash + text.charCodeAt(i)) |
+            0;
+        }
+
+        return `REQ_SET_${(hash >>> 0).toString(36)}_${index + 1}`;
+
+      }
+
+
       function normalizeRequirementCandidate(
         candidate,
         index = 0
@@ -3366,7 +3416,10 @@
           ...candidate,
           id:
             candidate.id ||
-            `REQ_SET_${Date.now()}_${index + 1}`,
+            stableRequirementId(
+              candidate,
+              index
+            ),
           type:
             candidate.type ||
             "requirement",
@@ -3746,7 +3799,7 @@
         if (
           !id ||
           !window.BAArtifactStore ||
-          typeof BAArtifactStore.getById !==
+          typeof BAArtifactStore.get !==
             "function"
         ) {
           return null;
@@ -3754,7 +3807,7 @@
 
         try {
           const artifact =
-            BAArtifactStore.getById(id);
+            BAArtifactStore.get(id);
 
           return artifact
             ? normalizeArtifact(artifact)
@@ -4131,6 +4184,76 @@
       }
 
 
+      function normalizeMatchText(value) {
+        return String(value || "")
+          .trim()
+          .replace(/\s+/g, " ")
+          .toLowerCase();
+      }
+
+
+      /*
+       * The analyzer also hands over the first selected requirement as
+       * "current requirement". It belongs to the transferred set, so it
+       * must be matched to that set instead of being added a second time.
+       */
+      function findMatchingSetIndex(candidate) {
+
+        if (!candidate) {
+          return -1;
+        }
+
+        const byId =
+          candidate.id
+            ? requirementSet.findIndex(
+                item => item?.id === candidate.id
+              )
+            : -1;
+
+        if (byId >= 0) {
+          return byId;
+        }
+
+        const title =
+          normalizeMatchText(
+            candidate.title || candidate.name
+          );
+
+        const body =
+          normalizeMatchText(
+            candidate.description ||
+            candidate.requirement ||
+            candidate.summary
+          );
+
+        if (!title && !body) {
+          return -1;
+        }
+
+        return requirementSet.findIndex(
+          item =>
+            normalizeMatchText(item?.title) === title &&
+            normalizeMatchText(
+              item?.description ||
+              item?.requirement ||
+              item?.summary
+            ) === body
+        );
+
+      }
+
+
+      function hasAnyScore(analysis) {
+        return Boolean(analysis) && [
+          analysis.clarityScore,
+          analysis.completenessScore,
+          analysis.testabilityScore
+        ].some(
+          value => normalizeScore(value) !== null
+        );
+      }
+
+
       function loadRequirement() {
 
         requirementSet =
@@ -4172,6 +4295,50 @@
               REQUIREMENT_KEY
             )
           );
+
+        const matchedIndex =
+          storedCurrent
+            ? findMatchingSetIndex(storedCurrent)
+            : -1;
+
+        if (storedCurrent && matchedIndex >= 0) {
+
+          const matched =
+            requirementSet[matchedIndex];
+
+          if (
+            !hasAnyScore(matched.analysis) &&
+            hasAnyScore(storedCurrent.analysis)
+          ) {
+            matched.analysis =
+              normalizeRequirementCandidate(
+                storedCurrent,
+                matchedIndex
+              ).analysis;
+            persistRequirementSet();
+          }
+
+          selectedRequirementIndex =
+            matchedIndex;
+
+          saveSelectedRequirementId(
+            matched.id
+          );
+
+          currentRequirement =
+            getCanonicalRequirement(matched.id) ||
+            matched;
+
+          sessionStorage.setItem(
+            REQUIREMENT_KEY,
+            JSON.stringify(
+              currentRequirement
+            )
+          );
+
+          renderRequirementPicker();
+          return true;
+        }
 
         if (storedCurrent) {
           ensureRequirementInSet(
@@ -4559,6 +4726,33 @@
 
 
         /*
+         * Scores come from the analysis, never from the editor.
+         * A requirement without a score keeps "no data" (null) instead
+         * of a fake 0.
+         */
+        ["clarity", "completeness", "testability"]
+          .forEach(name => {
+
+            const score =
+              normalizeScore(
+                previousAnalysis[`${name}Score`]
+              );
+
+            requirement.analysis[`${name}Score`] =
+              score;
+
+            if (
+              score === null &&
+              requirement.quality &&
+              typeof requirement.quality === "object"
+            ) {
+              requirement.quality[name] = null;
+            }
+
+          });
+
+
+        /*
          * Preserve analyzer context.
          */
 
@@ -4668,19 +4862,21 @@
           }
 
 
-          const artifacts =
-            getByType.call(
-              BAArtifactStore,
-              "requirement"
-            ) || [];
-
-
+          /*
+           * The workspace requirement id is the artifact id, so saving
+           * the same requirement again updates it instead of adding a copy.
+           */
           const existing =
-            artifacts.find(
-              artifact =>
-                artifact?.id ===
-                requirement.id
-            );
+            typeof BAArtifactStore.get === "function"
+              ? BAArtifactStore.get(requirement.id)
+              : (getByType.call(
+                  BAArtifactStore,
+                  "requirement"
+                ) || []).find(
+                  artifact =>
+                    artifact?.id ===
+                    requirement.id
+                );
 
 
           const metadata =
@@ -4728,7 +4924,11 @@
                   ...requirement
                 },
                 {
-                  ...metadata,
+                  id:
+                    requirement.id,
+                  title:
+                    requirement.title,
+                  metadata,
                   source:
                     requirement.source ||
                     "Requirement Workspace"
@@ -4925,11 +5125,26 @@
         }
 
         /*
-         * Clear means reset the editor for a fresh data entry.
-         * It intentionally does not delete canonical artifacts.
-         * Deleting saved workspace artifacts is a separate lifecycle action.
+         * Clear removes the requirement list from the workspace, so that
+         * nothing comes back after a reload. Saved artifacts in the
+         * Artifact Store are intentionally kept; deleting them is a
+         * separate lifecycle action.
          */
+        [
+          REQUIREMENT_SET_KEY,
+          LEGACY_SELECTED_REQUIREMENTS_KEY,
+          SELECTED_REQUIREMENT_ID_KEY,
+          REQUIREMENT_KEY
+        ].forEach(key => {
+          try { localStorage.removeItem(key); } catch {}
+          try { sessionStorage.removeItem(key); } catch {}
+        });
+
+        requirementSet = [];
+
         startNewRequirement();
+
+        renderRequirementPicker();
 
         showSuccess(
           t("cleared")

@@ -3079,6 +3079,21 @@ function transferSelected(){
   }
 
 
+  /*
+   * A new transfer replaces the previous workspace list. Without this,
+   * the old list kept in localStorage would hide the new selection.
+   */
+  [
+    'baforge-requirement-set',
+    'baforge-selected-requirement-id',
+    'baforge-selected-requirements',
+    'baforge-current-requirement'
+  ].forEach(function(key){
+    try{ localStorage.removeItem(key); }catch(e){}
+    try{ sessionStorage.removeItem(key); }catch(e){}
+  });
+
+
   sessionStorage.setItem(
     'baforge-selected-requirements',
     JSON.stringify(
