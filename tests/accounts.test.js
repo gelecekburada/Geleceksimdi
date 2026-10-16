@@ -93,14 +93,30 @@ async function t(name, fn) { reset(); try { await fn(); n++; } catch (e) { conso
     assert.strictEqual(last.statusCode, 429);
   });
 
-  await t("login: validates email, sends link with redirect, never leaks keys, throttles", async () => {
-    assert.strictEqual((await run(login, "POST", { body: { email: "nope" } })).statusCode, 400);
-    const ok = await run(login, "POST", { body: { email: " A@B.com " }, headers: { host: "geleceksimdi.vercel.app", "x-forwarded-proto": "https" } });
-    assert.strictEqual(ok.statusCode, 200); assert.deepStrictEqual(ok.body, { ok: true });
-    assert.strictEqual(otpCalls[0].body.email, "a@b.com");
-    assert.ok(otpCalls[0].url.includes("redirect_to=" + encodeURIComponent("https://geleceksimdi.vercel.app/login.html")));
-    assert.ok(!JSON.stringify(ok.body).includes("key"));
-    let last; for (let i = 0; i < 6; i++) last = await run(login, "POST", { body: { email: "t@t.com" }, headers: { "x-forwarded-for": "1.1.1.1" } });
+  await t("login: sign-up creates a confirmed user, no email is sent, signs in at once", async () => {
+    assert.strictEqual((await run(login, "POST", { body: { action: "signup", email: "nope", password: "12345678" } })).statusCode, 400);
+    assert.strictEqual((await run(login, "POST", { body: { action: "signup", email: "n@x.com", password: "short" } })).statusCode, 400);
+    const ok = await run(login, "POST", { body: { action: "signup", email: " New@X.com ", password: "sifre-12345" } });
+    assert.strictEqual(ok.statusCode, 200); assert.ok(ok.body.session.access_token && ok.body.session.refresh_token && ok.body.session.expires_at);
+    assert.strictEqual(otpCalls.length, 0);
+    assert.ok(fake.db.profiles.some((p) => p.email === "new@x.com" && p.role === "user"));
+    assert.ok(!JSON.stringify(ok.body).includes("service-key") && !JSON.stringify(ok.body).includes("anon-key"));
+    const dup = await run(login, "POST", { body: { action: "signup", email: "new@x.com", password: "baska-sifre-1" } });
+    assert.strictEqual(dup.statusCode, 409); assert.strictEqual(dup.body.code, "exists");
+  });
+  await t("login: sign-in with password, wrong password, and the token works", async () => {
+    await run(login, "POST", { body: { action: "signup", email: "p@x.com", password: "dogru-sifre-1" } });
+    const ok = await run(login, "POST", { body: { action: "signin", email: "p@x.com", password: "dogru-sifre-1" } });
+    assert.strictEqual(ok.statusCode, 200);
+    const info = await run(require("../api/me"), "GET", { token: ok.body.session.access_token });
+    assert.strictEqual(info.statusCode, 200); assert.strictEqual(info.body.email, "p@x.com");
+    const bad = await run(login, "POST", { body: { action: "signin", email: "p@x.com", password: "yanlis" } });
+    assert.strictEqual(bad.statusCode, 401); assert.strictEqual(bad.body.code, "bad_credentials");
+    assert.strictEqual((await run(login, "POST", { body: { action: "signin", email: "yok@x.com", password: "whatever12" } })).statusCode, 401);
+    assert.strictEqual((await run(login, "POST", { body: { action: "signin", email: "p@x.com", password: "" } })).statusCode, 400);
+  });
+  await t("login: throttled after 10 tries", async () => {
+    let last; for (let i = 0; i < 11; i++) last = await run(login, "POST", { body: { action: "signin", email: "t@t.com", password: "x12345678" }, headers: { "x-forwarded-for": "1.1.1.1" } });
     assert.strictEqual(last.statusCode, 429);
   });
   await t("refresh: good and bad token", async () => {

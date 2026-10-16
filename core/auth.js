@@ -1,6 +1,6 @@
 /*
  * BAAuth — browser side of accounts (loaded by nav.js on every page).
- *  - keeps the Supabase session (magic-link sign-in) in localStorage `baforge-auth`
+ *  - keeps the Supabase session (email + password sign-in) in localStorage `baforge-auth`
  *  - adds "Authorization: Bearer <token>" to same-origin /api/ calls when signed in
  *  - shows a Sign in / account chip in the nav and a small Feedback button
  *  - records page views for signed-in users
@@ -123,12 +123,18 @@
   function signOut() { writeSession(null); }
   function onChange(fn) { listeners.push(fn); }
 
-  function sendLink(email) {
-    return origFetch("/api/auth-login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: email, language: lang() }) })
-      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, error: d.error || "" }; }); });
+  /* action: "signin" | "signup". Resolves { ok, error, code }; on success the session is stored. */
+  function credentials(action, email, password) {
+    return origFetch("/api/auth-login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: action, email: email, password: password, language: lang() }) })
+      .then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (d) {
+          if (r.ok && d.session && d.session.access_token) { writeSession(d.session); return { ok: true, error: "", code: "" }; }
+          return { ok: false, error: d.error || "", code: d.code || "" };
+        });
+      });
   }
 
-  root.BAAuth = { me: me, signOut: signOut, onChange: onChange, sendLink: sendLink, getToken: getToken, isSignedIn: function () { return !!readSession(); }, hashError: hashError, takeHashSession: takeHashSession };
+  root.BAAuth = { me: me, signOut: signOut, onChange: onChange, credentials: credentials, getToken: getToken, isSignedIn: function () { return !!readSession(); }, hashError: hashError, takeHashSession: takeHashSession };
 
   takeHashSession();
 
