@@ -33,6 +33,7 @@
       progress: "İlerleme", cancel: "İptal", retry: "Eksik kısımları yeniden dene",
       accept: "Seçilenleri uygula", discard: "Vazgeç",
       result: "Analiz", search: "Ara", onlyPending: "Yalnızca onay bekleyen satırlar",
+      showDetail: "Ayrıntılı inceleme için satırları da göster",
       howTitle: "Nasıl çalışır?",
       howList: "<li>PDF'ler tarayıcıda metne çevrilir ve bölümlere ayrılır; her bölümden mesajlar, alanlar, kurallar, kısıtlar, hata kodları ve akışlar çıkarılır. Her bulgunun yanında <b>sayfa numarası ve PDF'ten kısa alıntı</b> bulunur; alıntı PDF metninde gerçekten aranır (✓ bulundu, ⚠ bulunamadı).</li><li>Sonra dokümanda <b>olmayan</b> konular (muhasebe, dekont, iade, onay, yetki, ekranlar, veri modeli, durum geçişleri, işlem adımları, örnek mesajlar, testler, öneriler) yapay zekâ tarafından <b>öneri</b> olarak hazırlanır ve ayrı etiketlenir.</li><li>Her satırı <b>Onaylandı / Reddedildi</b> olarak işaretleyebilirsiniz. Reddedilenler Word'e yazılmaz.</li><li>Word'de düzeltip geri yükleyebilirsiniz; değişiklikler okunur, ne değiştiği gösterilir. \"Değişiklik talimatları\" kutusuna yazdıklarınız yapay zekâ tarafından değişiklik önerisine çevrilir; siz tek tek onaylarsınız.</li><li>Her değişiklikte sürüm numarası artar ve Word'ün sonundaki değişiklik kaydına eklenir.</li><li><b>Önemli:</b> Yapay zekâ hata yapabilir. Kaynak sayfası ve alıntı bunun için vardır; ⚠ işaretli ve \"Öneri\" etiketli satırları mutlaka gözden geçirin.</li>",
       reading: "PDF okunuyor…", readOk: "{p} sayfa, {c} karakter", scanned: "Bu PDF'ten çok az metin çıktı; taranmış (görüntü) bir belge olabilir. Metin katmanı olan bir PDF kullanın.",
@@ -86,6 +87,7 @@
       progress: "Progress", cancel: "Cancel", retry: "Retry the missing parts",
       accept: "Apply selected", discard: "Discard",
       result: "Analysis", search: "Search", onlyPending: "Only rows waiting for approval",
+      showDetail: "Show the rows for detailed review",
       howTitle: "How does it work?",
       howList: "<li>PDFs are turned into text in your browser and cut into sections; messages, fields, rules, constraints, error codes and flows are extracted from each. Every finding carries the <b>page number and a short quote from the PDF</b>; the quote is searched in the PDF text (✓ found, ⚠ not found).</li><li>Then topics the document does <b>not</b> contain (accounting, receipt, returns, approvals, authorization, screens, data model, state transitions, processing steps, sample messages, tests, recommendations) are prepared by the AI as <b>proposals</b> and labelled separately.</li><li>Mark each row <b>Approved / Rejected</b>. Rejected rows are not written to Word.</li><li>Correct the Word file and upload it back; changes are read and shown. What you write in the \"Change instructions\" box is turned into proposed changes by the AI; you accept them one by one.</li><li>Every change raises the version number and is added to the change log at the end of the Word file.</li><li><b>Important:</b> the AI can make mistakes. The source page and quote exist for that; always review rows marked ⚠ and labelled \"Proposal\".</li>",
       reading: "Reading the PDF…", readOk: "{p} pages, {c} characters", scanned: "Very little text came out of this PDF; it may be a scanned (image) document. Use a PDF with a text layer.",
@@ -458,6 +460,8 @@
     warn(w);
     status("ok", t("analyzed", { m: S.items(state.model, "messages").length, f: S.items(state.model, "fields").length, r: S.items(state.model, "rules").length }));
     state.tab = "overview"; render(); saveNow();
+    if (!w.length) { $("progressCard").hidden = true; }
+    $("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   /* ---------- instructions (revise) ---------- */
@@ -626,12 +630,17 @@
     $("tiles").innerHTML = [["tNum", c.total, ""], ["tApproved", c.approved, ""], ["tPending", c.pending, ""], ["tRejected", c.rejected, ""], ["tUnverified", c.unverified, c.unverified ? "warn" : ""], ["tProposal", c.proposals, ""]]
       .map(function (x) { return '<div class="tile ' + x[2] + '"><b>' + x[1] + "</b><span>" + esc(t(x[0])) + "</span></div>"; }).join("");
     $("tabs").innerHTML = TABS.map(function (tb) { return '<button type="button" role="tab" data-tab="' + tb.id + '" aria-selected="' + (state.tab === tb.id) + '">' + esc(t(tb.label)) + "</button>"; }).join("");
+    $("metaTitle").value = $("metaTitle").value || (state.model.meta && state.model.meta.title) || "";
+    $("metaAuthor").value = $("metaAuthor").value || (state.model.meta && state.model.meta.author) || "";
+    var sl = [];
+    TABS.forEach(function (tb) { if (!tb.secs) { return; } tb.secs.forEach(function (k) { var n = S.items(state.model, k).filter(function (it) { return it.status !== "rejected"; }).length; if (n) { sl.push('<li><span>' + esc(secLabel(k)) + "</span><b>" + n + "</b></li>"); } }); });
+    $("sumlist").innerHTML = sl.join("");
+    $("detail").hidden = !$("showDetail").checked;
+    if ($("detail").hidden) { return; }
     var q = $("filter").value.trim().toLowerCase(), only = $("onlyPending").checked, tab = TABS.filter(function (x) { return x.id === state.tab; })[0] || TABS[0], html = "";
     if (tab.id === "overview") { html = overviewHtml(); }
     else { html = tab.secs.map(function (k) { return renderSection(S.BY_KEY[k], q, only); }).join(""); }
     $("panel").innerHTML = html || '<p class="hint">' + esc(t("noRows")) + "</p>";
-    $("metaTitle").value = $("metaTitle").value || (state.model.meta && state.model.meta.title) || "";
-    $("metaAuthor").value = $("metaAuthor").value || (state.model.meta && state.model.meta.author) || "";
   }
 
   function refreshButtons() {
@@ -695,6 +704,8 @@
     $("btnRetry").addEventListener("click", analyze);
     $("btnApply").addEventListener("click", applyInstructions);
     $("btnDownload").addEventListener("click", download);
+    $("btnDownload2").addEventListener("click", download);
+    $("showDetail").addEventListener("change", render);
     $("btnAccept").addEventListener("click", acceptPending);
     $("btnDiscard").addEventListener("click", discardPending);
     $("btnCancel").addEventListener("click", function () { if (state.abort) { state.abort.abort(); } });
