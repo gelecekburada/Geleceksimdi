@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - Functional Spec Builder</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+  <style>
+    main { max-width: 1320px; }
+    .zones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .zone { border: 2px dashed #c9d3e6; border-radius: 14px; padding: 16px; background: #fbfcfe; display: grid; gap: 6px; align-content: start; min-height: 150px; }
+    .zone.drag { border-color: var(--primary); background: #eef3ff; }
+    .zone h3 { margin: 0; font-size: 14px; color: var(--heading); }
+    .zone .hint { font-size: 12.5px; color: var(--muted); }
+    .zone .file { font-size: 13px; font-weight: 700; word-break: break-all; }
+    .zone .meta { font-size: 12.5px; color: var(--muted); }
+    .zone .warn { font-size: 12.5px; color: var(--warn); font-weight: 700; }
+    .zone input[type=file] { display: none; }
+    .notice { border: 1px solid #f0d58a; background: #fff8e1; border-radius: 12px; padding: 12px 14px; font-size: 13.5px; margin-bottom: 14px; }
+    .notice label { display: flex; gap: 8px; align-items: flex-start; margin-top: 8px; font-weight: 700; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+    .two textarea { min-height: 150px; font-family: inherit; font-size: 14px; }
+    .bar { height: 10px; border-radius: 99px; background: #e8edf7; overflow: hidden; margin: 10px 0 12px; }
+    .bar > i { display: block; height: 100%; width: 0; background: var(--primary); transition: width .25s; }
+    .plist { margin: 0; padding: 0; list-style: none; font-size: 13.5px; display: grid; gap: 4px; }
+    .plist li { display: flex; gap: 8px; }
+    .plist .ok { color: var(--success); } .plist .bad { color: var(--danger); } .plist .run { color: var(--primary); }
+    .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .tile { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; background: #fff; }
+    .tile b { display: block; font-size: 22px; color: var(--heading); }
+    .tile span { font-size: 12px; color: var(--muted); }
+    .tile.warn b { color: var(--warn); }
+    .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .tabs button { border: 1px solid var(--border); background: #fff; border-radius: 999px; padding: 7px 14px; font: inherit; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; }
+    .tabs button[aria-selected="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .sec { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; background: #fff; }
+    .sec > summary { cursor: pointer; padding: 10px 14px; font-weight: 700; color: var(--heading); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .sec > summary .count { font-weight: 400; color: var(--muted); font-size: 12.5px; }
+    .sec .body { padding: 0 12px 12px; }
+    .sec table.grid td { font-size: 12.5px; white-space: pre-wrap; word-break: break-word; max-width: 340px; }
+    .sec table.grid td.mono { font-family: Consolas, monospace; font-size: 11.5px; }
+    .sec table.grid tr.rej td { opacity: .45; text-decoration: line-through; }
+    .sec select.st { height: 30px; font-size: 12px; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+    .sec .sub { margin: 4px 0 0; padding: 6px 10px; background: #f6f8fc; border-radius: 8px; font-size: 12px; color: var(--muted); white-space: pre-wrap; }
+    .chk-ok { color: var(--success); font-weight: 700; } .chk-bad { color: var(--danger); font-weight: 700; } .chk-other { color: var(--warn); font-weight: 700; }
+    .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 99px; background: #eef2f9; color: #35507a; }
+    .tag.prop { background: #fff1d6; color: #8a5a00; }
+    .kv { display: grid; grid-template-columns: 200px 1fr; gap: 6px 14px; font-size: 13.5px; }
+    .kv dt { color: var(--muted); font-weight: 700; } .kv dd { margin: 0; white-space: pre-wrap; }
+    .pend { border-left: 4px solid var(--primary); }
+    .pitem { border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; margin-bottom: 8px; font-size: 13px; }
+    .pitem label { display: flex; gap: 8px; align-items: flex-start; font-weight: 700; }
+    .pitem .chg { margin: 6px 0 0 24px; display: grid; gap: 2px; }
+    .pitem del { color: var(--danger); } .pitem ins { color: var(--success); text-decoration: none; background: #e9f9ee; }
+    .tools-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px; }
+    @media (max-width: 900px) { .zones, .two { grid-template-columns: 1fr; } .kv { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+
+  <section class="hero">
+    <h1 data-t="title">Functional Spec Builder</h1>
+    <p data-t="subtitle"></p>
+  </section>
+
+  <section class="card" id="inputCard">
+    <h2 data-t="h1">1 · Sources</h2>
+    <div class="notice" id="privacy">
+      <span data-t-html="privacy"></span>
+      <label><input type="checkbox" id="consent" /> <span data-t="consent"></span></label>
+    </div>
+
+    <div class="zones">
+      <div class="zone" id="zone1" data-slot="1">
+        <h3 data-t="zone1">Main source (PDF)</h3>
+        <div class="hint" data-t="zone1Hint"></div>
+        <div class="file" id="name1"></div><div class="meta" id="meta1"></div><div class="warn" id="warn1"></div>
+        <div class="actions" style="margin-top:4px"><button type="button" class="btn small" data-pick="1" data-t="choose">Choose file</button><button type="button" class="btn small danger" data-clear="1" hidden data-t="remove">Remove</button></div>
+        <input type="file" id="file1" accept="application/pdf,.pdf" />
+      </div>
+      <div class="zone" id="zone2" data-slot="2">
+        <h3 data-t="zone2">Supporting source (PDF, optional)</h3>
+        <div class="hint" data-t="zone2Hint"></div>
+        <div class="file" id="name2"></div><div class="meta" id="meta2"></div><div class="warn" id="warn2"></div>
+        <div class="actions" style="margin-top:4px"><button type="button" class="btn small" data-pick="2" data-t="choose">Choose file</button><button type="button" class="btn small danger" data-clear="2" hidden data-t="remove">Remove</button></div>
+        <input type="file" id="file2" accept="application/pdf,.pdf" />
+      </div>
+      <div class="zone" id="zoneW" data-slot="W">
+        <h3 data-t="zoneW">Edited analysis (Word)</h3>
+        <div class="hint" data-t="zoneWHint"></div>
+        <div class="file" id="nameW"></div><div class="meta" id="metaW"></div><div class="warn" id="warnW"></div>
+        <div class="actions" style="margin-top:4px"><button type="button" class="btn small" data-pick="W" data-t="choose">Choose file</button></div>
+        <input type="file" id="fileW" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+      </div>
+    </div>
+
+    <div class="two">
+      <div>
+        <h2 style="margin-top:0" data-t="bgTitle">Your institution context</h2>
+        <div class="chips" style="margin-bottom:6px"><button type="button" class="chip" id="bgTemplate" data-t="bgTemplate">Insert template</button></div>
+        <textarea id="background" class="short" spellcheck="false" data-t-placeholder="bgPlaceholder"></textarea>
+      </div>
+      <div>
+        <h2 style="margin-top:0" data-t="insTitle">Instructions for changes</h2>
+        <div class="hint" style="font-size:12.5px;color:var(--muted);margin-bottom:6px" data-t="insHint"></div>
+        <textarea id="instruction" class="short" spellcheck="false" data-t-placeholder="insPlaceholder"></textarea>
+      </div>
+    </div>
+
+    <div class="toolbar" style="margin-top:16px">
+      <label class="field" style="flex:1 1 280px"><span data-t="docTitle">Document title</span><input type="text" id="metaTitle" /></label>
+      <label class="field" style="flex:1 1 200px"><span data-t="docAuthor">Prepared by</span><input type="text" id="metaAuthor" /></label>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn primary" id="btnAnalyze" data-t="analyze">Analyze the PDF</button>
+      <button type="button" class="btn primary" id="btnApply" data-t="apply" disabled>Apply instructions</button>
+      <button type="button" class="btn" id="btnDownload" data-t="download" disabled>Download Word</button>
+      <button type="button" class="btn danger" id="btnClear" data-t="clearAll">Start over</button>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <ul class="warnings" id="warnings"></ul>
+  </section>
+
+  <section class="card" id="progressCard" hidden>
+    <h2 data-t="progress">Progress</h2>
+    <div class="bar"><i id="bar"></i></div>
+    <ul class="plist" id="plist"></ul>
+    <div class="actions"><button type="button" class="btn" id="btnCancel" data-t="cancel">Cancel</button><button type="button" class="btn primary" id="btnRetry" hidden data-t="retry">Retry the missing parts</button></div>
+  </section>
+
+  <section class="card pend" id="pendingCard" hidden>
+    <h2 id="pendTitle"></h2>
+    <div id="pendNotes" class="hint" style="font-size:13px;color:var(--muted);margin-bottom:8px"></div>
+    <div id="pendList"></div>
+    <div class="actions"><button type="button" class="btn primary" id="btnAccept" data-t="accept">Apply selected</button><button type="button" class="btn" id="btnDiscard" data-t="discard">Discard</button></div>
+  </section>
+
+  <section class="card" id="resultCard" hidden>
+    <h2 data-t="result">Analysis</h2>
+    <div class="tiles" id="tiles"></div>
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="tools-row">
+      <label class="field" style="flex:1 1 260px"><span data-t="search">Search</span><input type="text" id="filter" autocomplete="off" /></label>
+      <label class="check"><input type="checkbox" id="onlyPending" /> <span data-t="onlyPending">Only rows waiting for approval</span></label>
+    </div>
+    <div id="panel"></div>
+  </section>
+
+  <details class="rules">
+    <summary data-t="howTitle">How it works</summary>
+    <ul data-t-html="howList"></ul>
+  </details>
+
+</main>
+
+<script src="/core/tool-ui.js"></script>
+<script src="/core/docx-lite.js"></script>
+<script src="/core/spec-schema.js"></script>
+<script src="/core/spec-model.js"></script>
+<script src="/core/spec-doc.js"></script>
+<script src="/core/spec-revise.js"></script>
+<script src="/core/spec-page.js"></script>
+<script src="/nav.js"></script>
+</body>
+</html>

@@ -50,6 +50,8 @@
     currentPage = "bpmn-designer";
   } else if (path.endsWith("/ui-designer.html")) {
     currentPage = "ui-designer";
+  } else if (path.endsWith("/spec-analyzer.html")) {
+    currentPage = "spec-analyzer";
   } else if (path.endsWith("/login.html")) {
     currentPage = "login";
   } else if (path.endsWith("/admin.html")) {
@@ -107,6 +109,7 @@
         traceability: "Traceability",
         document: "BA Document",
         workspace: "Requirement Workspace",
+        specAnalyzer: "Functional Spec Builder",
         groupRequirement: "Requirement",
         groupWorkflow: "BA Workflow",
         groupDev: "Developer Tools",
@@ -169,6 +172,7 @@
         traceability: "İzlenebilirlik",
         document: "BA Dokümanı",
         workspace: "Gereksinim Çalışma Alanı",
+        specAnalyzer: "Fonksiyonel Analiz Oluşturucu",
         groupRequirement: "Gereksinim",
         groupWorkflow: "BA Akışı",
         groupDev: "Geliştirici Araçları",
@@ -684,6 +688,7 @@
       traceability: t("nav.traceability"),
       document: t("nav.document"),
       workspace: t("nav.workspace"),
+      specAnalyzer: t("nav.specAnalyzer"),
       groupRequirement: t("nav.groupRequirement"),
       groupWorkflow: t("nav.groupWorkflow"),
       groupDev: t("nav.groupDev"),
@@ -715,7 +720,8 @@
         label: navText.groupRequirement,
         items: [
           ["requirement-analyzer", "/requirement-analyzer.html", navText.analyzer],
-          ["requirement", "/requirement.html", navText.workspace]
+          ["requirement", "/requirement.html", navText.workspace],
+          ["spec-analyzer", "/spec-analyzer.html", navText.specAnalyzer]
         ]
       },
       {
@@ -1540,6 +1546,9 @@
           "sql.t": "SQL Beautifier",
           "sql.d": "Format or minify SQL queries. Nothing is sent to a server.",
           "sql.l": "Open Beautifier →",
+          "spec.t": "Functional Spec Builder",
+          "spec.d": "Turn a specification PDF into a functional analysis Word document a developer can build from, then refine it with edits and instructions.",
+          "spec.l": "Open Builder →",
           "rx.t": "Regex Builder",
           "rx.d": "Test patterns with live highlighting and a plain-language explanation.",
           "rx.l": "Open Builder →",
@@ -1636,6 +1645,9 @@
           "sql.t": "SQL Güzelleştirici",
           "sql.d": "SQL sorgularını biçimlendirin veya sıkıştırın. Hiçbir şey sunucuya gönderilmez.",
           "sql.l": "Güzelleştiriciyi Aç →",
+          "spec.t": "Fonksiyonel Analiz Oluşturucu",
+          "spec.d": "Bir spesifikasyon PDF'inden yazılımcının geliştirebileceği Word fonksiyonel analiz dokümanı çıkarın; düzenleme ve talimatlarla iyileştirin.",
+          "spec.l": "Oluşturucuyu Aç →",
           "rx.t": "Regex Oluşturucu",
           "rx.d": "Desenleri canlı vurgu ve sade açıklamayla test edin.",
           "rx.l": "Oluşturucuyu Aç →",
