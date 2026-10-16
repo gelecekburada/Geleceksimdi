@@ -1,0 +1,31 @@
+/* BA flow screens: shared layout/typography/controls so all screens look alike.
+   Loaded last on every BA page and only overrides what differs between them. */
+html{scroll-behavior:smooth}
+body{padding-bottom:88px} /* keeps content clear of the floating feedback button */
+main,.container{max-width:1240px !important;margin-left:auto !important;margin-right:auto !important}
+.hero{text-align:center}
+.hero h1,.hero h2{
+  font-size:clamp(30px,4.4vw,42px) !important;
+  font-weight:800 !important;
+  line-height:1.15 !important;
+  letter-spacing:-1px !important;
+  text-align:center !important;
+}
+.hero p{margin-left:auto !important;margin-right:auto !important;max-width:760px !important;text-align:center !important;font-size:17px}
+.hero-top,.heroTop{justify-content:center !important;flex-direction:column;align-items:center;gap:10px}
+/* the extra dark "BAForge AI ... workspace" band duplicates the global menu */
+body > header:not(:has(#language)){display:none !important}
+body > header:has(#language){background:none !important;border:0 !important;padding:14px 25px 0 !important;justify-content:flex-end !important;max-width:1240px;margin:0 auto}
+body > header:has(#language) .brand{display:none !important}
+body > header:has(#language) .language-box,body > header:has(#language) label{color:var(--heading,#111827) !important}
+/* controls: same size everywhere, comfortable tap targets */
+main input:not([type=checkbox]):not([type=radio]):not([type=file]),
+.container input:not([type=checkbox]):not([type=radio]):not([type=file]),
+main select,.container select{min-height:44px;font-size:15px}
+main button,.container button{min-height:44px}
+main textarea,.container textarea{font-size:15px;line-height:1.5}
+@media (max-width:720px){
+  main,.container{padding-left:16px !important;padding-right:16px !important}
+  .hero h1,.hero h2{font-size:30px !important}
+}
+body > header:has(#language) select{background:#fff !important;color:#111827 !important;border:1px solid #cbd5e1 !important;border-radius:10px;padding:6px 10px}
