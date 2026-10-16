@@ -275,7 +275,7 @@
       });
     });
   }
-  function isFatal(e) { return e && e.code !== "upstream" && (e.status === 401 || e.status === 403 || e.status === 429 || e.status === 500 && /anahtar|key/i.test(e.message) || e.status === 503); }
+  function isFatal(e) { return e && (e.code === "disabled" || e.status === 410) || e && e.code !== "upstream" && (e.status === 401 || e.status === 403 || e.status === 429 || e.status === 500 && /anahtar|key/i.test(e.message) || e.status === 503); }
   function isSplittable(e) { return e && (["incomplete", "bad_json", "too_long", "timeout", "empty"].indexOf(e.code) > -1 || e.status === 422 || e.status === 413 || e.status === 504); }
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
@@ -418,7 +418,7 @@
         finishRun(run);
       });
     }).catch(function (e) {
-      if (signal.aborted) { status("", t("cancelled")); } else if (isFatal(e)) { status("error", t("limitHit", { msg: e.message })); } else { status("error", t("stepFailed", { msg: e && e.message })); }
+      if (signal.aborted) { status("", t("cancelled")); } else if (e && e.code === "disabled") { status("error", e.message); } else if (isFatal(e)) { status("error", t("limitHit", { msg: e.message })); } else { status("error", t("stepFailed", { msg: e && e.message })); }
       if (state.model) { addFirstLogIfNeeded(); render(); save(); }
       $("btnRetry").hidden = false; run.retry = true;
     }).then(function () {

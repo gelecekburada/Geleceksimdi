@@ -17,6 +17,13 @@ const base = { stage: "extract", language: "tr", docLabel: "TCMB.pdf", docNo: 1,
   process.env.OPENAI_API_KEY = "test-key-not-real";
   fake.install();
 
+  await t("switched off by default: no AI call, clear message", async () => {
+    delete process.env.SPEC_ANALYZER_ENABLED;
+    const r = await call(base); assert.strictEqual(r.status, 410); assert.strictEqual(r.body.code, "disabled");
+    assert.strictEqual(fake.state.calls.length, 0);
+    process.env.SPEC_ANALYZER_ENABLED = "1";
+  });
+
   await t("method and stage validation", async () => {
     assert.strictEqual((await call({}, "GET")).status, 405);
     assert.strictEqual((await call({ stage: "x" })).status, 400);

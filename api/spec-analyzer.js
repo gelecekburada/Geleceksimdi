@@ -239,6 +239,11 @@ function repairJson(text) {
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") { return res.status(405).json({ error: "Method not allowed" }); }
+  /* Switched off: no AI call is made unless SPEC_ANALYZER_ENABLED=1 is set in the environment. */
+  if (process.env.SPEC_ANALYZER_ENABLED !== "1") {
+    const tr = (req.body || {}).language !== "en";
+    return res.status(410).json({ error: tr ? "Bu özellik şimdilik kapalı." : "This feature is switched off for now.", code: "disabled" });
+  }
   if (!(await require("./_lib/guard")(req, res, "spec-analyzer"))) { return; }
 
   const body = req.body || {};

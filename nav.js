@@ -720,8 +720,7 @@
         label: navText.groupRequirement,
         items: [
           ["requirement-analyzer", "/requirement-analyzer.html", navText.analyzer],
-          ["requirement", "/requirement.html", navText.workspace],
-          ["spec-analyzer", "/spec-analyzer.html", navText.specAnalyzer]
+          ["requirement", "/requirement.html", navText.workspace]
         ]
       },
       {
