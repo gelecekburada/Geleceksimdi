@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - ER Diagram Designer</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+</head>
+<body>
+<main id="app"></main>
+
+<script src="/core/diagram.js"></script>
+<script src="/core/tool-ui.js"></script>
+<script src="/core/history.js"></script>
+<script src="/core/diagram-page.js"></script>
+<script>
+
+BADiagramPage.init({
+  page: 'er-diagram', kind: 'er', dir: true, defaultDir: 'LR',
+  sample: 'Customer\n  id PK\n  name\n  email UK\nOrder\n  id PK\n  customer_id FK\n  created_at\nOrderLine\n  id PK\n  order_id FK\n  product_id FK\n  qty\nProduct\n  id PK\n  name\n  price\nCustomer 1--* Order : places\nOrder 1--* OrderLine : contains\nProduct 1--* OrderLine : appears in',
+  dict: {
+    en: {
+      pageTitle: 'BAForge AI - ER Diagram Designer', title: 'ER Diagram Designer',
+      subtitle: 'Describe your tables and relationships as text and get an entity-relationship diagram. Download as SVG or PNG. Runs in your browser.',
+      syntax: [
+        'Write an entity name on its own line, then its attributes indented below it: <code>id PK</code>, <code>customer_id FK</code>, <code>email UK</code>.',
+        'Relationship: <code>Customer 1--* Order : places</code>. Cardinalities: <code>1</code>, <code>0..1</code>, <code>*</code> (many), <code>1..*</code>, <code>0..*</code>.',
+        'Entities used only in a relationship are created automatically.',
+        'Use PK, FK and UK tags after an attribute to mark keys; PK is shown in bold.'
+      ]
+    },
+    tr: {
+      pageTitle: 'BAForge AI - ER Diyagram Tasarımcısı', title: 'ER Diyagram Tasarımcısı',
+      subtitle: 'Tablolarınızı ve ilişkileri metin olarak yazın, varlık-ilişki diyagramı alın. SVG veya PNG indirin. Tarayıcınızda çalışır.',
+      syntax: [
+        'Varlık adını kendi satırına yazın, alanlarını altına girintili ekleyin: <code>id PK</code>, <code>customer_id FK</code>, <code>email UK</code>.',
+        'İlişki: <code>Customer 1--* Order : places</code>. Kardinaliteler: <code>1</code>, <code>0..1</code>, <code>*</code> (çok), <code>1..*</code>, <code>0..*</code>.',
+        'Yalnızca ilişkide geçen varlıklar otomatik oluşturulur.',
+        'Anahtarları işaretlemek için alanın yanına PK, FK, UK yazın; PK kalın gösterilir.'
+      ]
+    }
+  }
+});
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

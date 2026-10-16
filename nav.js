@@ -40,6 +40,16 @@
     currentPage = "mock-data";
   } else if (path.endsWith("/api-designer.html")) {
     currentPage = "api-designer";
+  } else if (path.endsWith("/flowchart.html")) {
+    currentPage = "flowchart";
+  } else if (path.endsWith("/er-diagram.html")) {
+    currentPage = "er-diagram";
+  } else if (path.endsWith("/uml-designer.html")) {
+    currentPage = "uml-designer";
+  } else if (path.endsWith("/bpmn-designer.html")) {
+    currentPage = "bpmn-designer";
+  } else if (path.endsWith("/ui-designer.html")) {
+    currentPage = "ui-designer";
   }
 
   /* =========================================================
@@ -102,6 +112,12 @@
         jsonSchema: "JSON Schema Generator",
         mockData: "Mock Data Generator",
         apiDesigner: "API Designer",
+        groupDesign: "Design Tools",
+        flowchartD: "Flowchart Designer",
+        erDiagram: "ER Diagram Designer",
+        umlDesigner: "UML Designer",
+        bpmnDesigner: "BPMN Designer",
+        uiDesigner: "UI Designer",
         language: "Language",
         menu: "Menu"
       },
@@ -158,6 +174,12 @@
         jsonSchema: "JSON Schema Oluşturucu",
         mockData: "Sahte Veri Üretici",
         apiDesigner: "API Tasarımcısı",
+        groupDesign: "Tasarım Araçları",
+        flowchartD: "Akış Şeması Tasarımcısı",
+        erDiagram: "ER Diyagram Tasarımcısı",
+        umlDesigner: "UML Tasarımcısı",
+        bpmnDesigner: "BPMN Tasarımcısı",
+        uiDesigner: "Arayüz Tasarımcısı",
         language: "Dil",
         menu: "Menü"
       },
@@ -667,6 +689,12 @@
       jsonSchema: t("nav.jsonSchema"),
       mockData: t("nav.mockData"),
       apiDesigner: t("nav.apiDesigner"),
+      groupDesign: t("nav.groupDesign"),
+      flowchartD: t("nav.flowchartD"),
+      erDiagram: t("nav.erDiagram"),
+      umlDesigner: t("nav.umlDesigner"),
+      bpmnDesigner: t("nav.bpmnDesigner"),
+      uiDesigner: t("nav.uiDesigner"),
       language: t("nav.language"),
       menu: t("nav.menu")
     };
@@ -708,6 +736,16 @@
           ["json-schema", "/json-schema.html", navText.jsonSchema],
           ["mock-data", "/mock-data.html", navText.mockData],
           ["api-designer", "/api-designer.html", navText.apiDesigner]
+        ]
+      }
+      ,{
+        label: navText.groupDesign,
+        items: [
+          ["flowchart", "/flowchart.html", navText.flowchartD],
+          ["er-diagram", "/er-diagram.html", navText.erDiagram],
+          ["uml-designer", "/uml-designer.html", navText.umlDesigner],
+          ["bpmn-designer", "/bpmn-designer.html", navText.bpmnDesigner],
+          ["ui-designer", "/ui-designer.html", navText.uiDesigner]
         ]
       }
     ];
@@ -1510,6 +1548,22 @@
           "api.t": "API Designer",
           "api.d": "Design endpoints and export an OpenAPI 3.0.3 document.",
           "api.l": "Open Designer →",
+          "g.design": "Design Tools",
+          "fc.t": "Flowchart Designer",
+          "fc.d": "Write the flow as text and get a flowchart. Export as SVG or PNG.",
+          "fc.l": "Open Designer →",
+          "er.t": "ER Diagram Designer",
+          "er.d": "Describe tables and relationships as text and get an ER diagram.",
+          "er.l": "Open Designer →",
+          "uml.t": "UML Designer",
+          "uml.d": "Create UML class diagrams from simple text.",
+          "uml.l": "Open Designer →",
+          "bpmn.t": "BPMN Designer",
+          "bpmn.d": "Model a process with lanes, tasks and gateways, with basic checks.",
+          "bpmn.l": "Open Designer →",
+          "ui.t": "UI Designer",
+          "ui.d": "Sketch screen wireframes by dragging components.",
+          "ui.l": "Open Designer →",
           "tools.k": "Tools",
           "tools.h": "Everything You Can Open Today",
           "tools.p": "Open any tool directly. The BA Workflow tools can also be used one after another, step by step.",
@@ -1590,6 +1644,22 @@
           "api.t": "API Tasarımcısı",
           "api.d": "Endpoint'leri tasarlayın, OpenAPI 3.0.3 belgesi olarak dışa aktarın.",
           "api.l": "Tasarımcıyı Aç →",
+          "g.design": "Tasarım Araçları",
+          "fc.t": "Akış Şeması Tasarımcısı",
+          "fc.d": "Akışı metin olarak yazın, akış şemasını alın. SVG veya PNG olarak aktarın.",
+          "fc.l": "Tasarımcıyı Aç →",
+          "er.t": "ER Diyagram Tasarımcısı",
+          "er.d": "Tabloları ve ilişkileri metin olarak yazın, ER diyagramı alın.",
+          "er.l": "Tasarımcıyı Aç →",
+          "uml.t": "UML Tasarımcısı",
+          "uml.d": "Basit metinden UML sınıf diyagramları oluşturun.",
+          "uml.l": "Tasarımcıyı Aç →",
+          "bpmn.t": "BPMN Tasarımcısı",
+          "bpmn.d": "Süreci kulvar, görev ve geçitlerle modelleyin; temel kontrollerle.",
+          "bpmn.l": "Tasarımcıyı Aç →",
+          "ui.t": "Arayüz Tasarımcısı",
+          "ui.d": "Bileşenleri sürükleyerek ekran taslakları çizin.",
+          "ui.l": "Tasarımcıyı Aç →",
           "tools.k": "Araçlar",
           "tools.h": "Bugün Açabileceğiniz Her Şey",
           "tools.p": "Herhangi bir aracı doğrudan açın. BA Akışı araçları isterseniz adım adım, art arda da kullanılabilir.",

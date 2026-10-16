@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - Flowchart Designer</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+</head>
+<body>
+<main id="app"></main>
+
+<script src="/core/diagram.js"></script>
+<script src="/core/tool-ui.js"></script>
+<script src="/core/history.js"></script>
+<script src="/core/diagram-page.js"></script>
+<script>
+
+BADiagramPage.init({
+  page: 'flowchart', kind: 'flowchart', dir: true, defaultDir: 'TD',
+  sample: 'flowchart TD\nA[Customer submits order] --> B{Stock available?}\nB -->|Yes| C(Reserve items)\nB -->|No| D[Notify customer]\nC --> E{Payment OK?}\nE -->|Yes| F[Ship order]\nE -->|No| D\nF --> G((Done))\nD --> G',
+  dict: {
+    en: {
+      pageTitle: 'BAForge AI - Flowchart Designer', title: 'Flowchart Designer',
+      subtitle: 'Write the flow as simple text and see the flowchart instantly. Download it as SVG or PNG. Everything runs in your browser.',
+      syntax: [
+        '<code>A[Text]</code> rectangle, <code>A(Text)</code> rounded, <code>A{Text}</code> decision, <code>A((Text))</code> circle, <code>A[[Text]]</code> sub-process.',
+        'Connect with arrows: <code>A --> B</code>. Add a label: <code>B -->|Yes| C</code>. Chains work too: <code>A --> B --> C</code>.',
+        'The first line may set the direction: <code>flowchart LR</code> (left to right) or <code>flowchart TD</code> (top to bottom).',
+        'Use a short id (A, B, C…) once with its text; later you can use just the id.',
+        'Lines starting with <code>%%</code> are comments.'
+      ]
+    },
+    tr: {
+      pageTitle: 'BAForge AI - Akış Şeması Tasarımcısı', title: 'Akış Şeması Tasarımcısı',
+      subtitle: 'Akışı basit bir metin olarak yazın, akış şemasını anında görün. SVG veya PNG olarak indirin. Her şey tarayıcınızda çalışır.',
+      syntax: [
+        '<code>A[Metin]</code> dikdörtgen, <code>A(Metin)</code> yuvarlak köşeli, <code>A{Metin}</code> karar, <code>A((Metin))</code> daire, <code>A[[Metin]]</code> alt süreç.',
+        'Oklarla bağlayın: <code>A --> B</code>. Etiket ekleyin: <code>B -->|Evet| C</code>. Zincir de olur: <code>A --> B --> C</code>.',
+        'İlk satır yönü belirleyebilir: <code>flowchart LR</code> (soldan sağa) veya <code>flowchart TD</code> (yukarıdan aşağı).',
+        'Kısa bir kimliği (A, B, C…) metniyle bir kez yazın; sonra yalnızca kimliği kullanabilirsiniz.',
+        '<code>%%</code> ile başlayan satırlar yorumdur.'
+      ]
+    }
+  }
+});
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

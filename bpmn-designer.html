@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - BPMN Designer</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+</head>
+<body>
+<main id="app"></main>
+
+<script src="/core/diagram.js"></script>
+<script src="/core/tool-ui.js"></script>
+<script src="/core/history.js"></script>
+<script src="/core/diagram-page.js"></script>
+<script>
+
+BADiagramPage.init({
+  page: 'bpmn-designer', kind: 'bpmn', dir: false,
+  sample: 'lane Customer\n  start s: Order placed\n  task t1: Fill in the order form\nlane Sales\n  task t2: Check customer data\n  xor g1: Data valid?\n  task t3: Approve order\n  end e1: Order confirmed\n  end e2: Order rejected\ns -> t1\nt1 -> t2\nt2 -> g1\ng1 -> t3 : yes\ng1 -> e2 : no\nt3 -> e1',
+  dict: {
+    en: {
+      pageTitle: 'BAForge AI - BPMN Designer', title: 'BPMN Designer',
+      subtitle: 'Describe a business process with lanes, tasks, gateways and events, and get a BPMN-style diagram with simple checks. Download as SVG or PNG.',
+      syntax: [
+        'Start a swimlane (who does it): <code>lane Customer</code>. Elements below it belong to that lane.',
+        'Elements: <code>start s: Text</code>, <code>task t1: Text</code>, <code>xor g1: Question?</code> (exclusive gateway), <code>and g2: Text</code> (parallel gateway), <code>event i1: Text</code> (intermediate), <code>subprocess p1: Text</code>, <code>end e1: Text</code>.',
+        'Connect with ids: <code>t1 -&gt; g1</code>, with a label: <code>g1 -&gt; t2 : yes</code>.',
+        'The tool warns about common mistakes: no start/end event, an element nobody reaches, a decision with a single path.'
+      ]
+    },
+    tr: {
+      pageTitle: 'BAForge AI - BPMN Tasarımcısı', title: 'BPMN Tasarımcısı',
+      subtitle: 'İş sürecini kulvarlar, görevler, geçitler ve olaylarla anlatın; basit kontrollerle BPMN tarzı bir diyagram alın. SVG veya PNG indirin.',
+      syntax: [
+        'Kulvarı (işi kimin yaptığı) başlatın: <code>lane Müşteri</code>. Altındaki öğeler o kulvara aittir.',
+        'Öğeler: <code>start s: Metin</code>, <code>task t1: Metin</code>, <code>xor g1: Soru?</code> (özel geçit), <code>and g2: Metin</code> (paralel geçit), <code>event i1: Metin</code> (ara olay), <code>subprocess p1: Metin</code>, <code>end e1: Metin</code>.',
+        'Kimliklerle bağlayın: <code>t1 -&gt; g1</code>, etiketle: <code>g1 -&gt; t2 : evet</code>.',
+        'Araç yaygın hataları uyarır: başlangıç/bitiş olayı yok, hiçbir yerden ulaşılmayan öğe, tek yollu karar.'
+      ]
+    }
+  }
+});
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

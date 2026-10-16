@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - UI Designer</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+  <style>
+    .studio { display: grid; grid-template-columns: 170px minmax(0, 1fr) 230px; gap: 16px; align-items: start; }
+    .palette { display: grid; gap: 6px; }
+    .palette .btn { height: 36px; text-align: left; font-size: 13px; }
+    .stage { border: 1px solid var(--border); border-radius: 12px; background: repeating-conic-gradient(#f1f4f9 0% 25%, #fff 0% 50%) 0 0 / 16px 16px; padding: 16px; overflow: auto; max-height: 760px; text-align: center; }
+    .stage svg { display: inline-block; background: #fff; box-shadow: 0 6px 22px rgba(16,24,40,.12); touch-action: none; user-select: none; max-width: none; }
+    .props { display: grid; gap: 10px; }
+    .props .none { color: var(--muted); font-size: 13px; }
+    .props input[type=text], .props textarea, .props input[type=number] { width: 100%; height: 38px; padding: 0 10px; border: 1px solid var(--border); border-radius: 10px; font: inherit; font-size: 14px; }
+    .props textarea { min-height: 70px; height: auto; padding: 8px 10px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    @media (max-width: 900px) { .studio { grid-template-columns: 1fr; } .palette { grid-template-columns: repeat(3, 1fr); } }
+  </style>
+</head>
+<body>
+<main>
+
+  <section class="hero">
+    <h1 data-t="title">UI Designer</h1>
+    <p data-t="subtitle"></p>
+  </section>
+
+  <section class="card">
+    <div class="toolbar">
+      <label class="field"><span data-t="frame">Screen size</span>
+        <select id="frame"><option value="mobile" data-t="mobile">Mobile 360×640</option><option value="tablet" data-t="tablet">Tablet 768×1024</option><option value="desktop" data-t="desktop">Desktop 1024×640</option></select>
+      </label>
+      <label class="field"><span data-t="zoom">Zoom</span>
+        <select id="zoom"><option value="0.5">50%</option><option value="0.75">75%</option><option value="1" selected>100%</option><option value="1.25">125%</option></select>
+      </label>
+    </div>
+
+    <div class="studio">
+      <div>
+        <h2 data-t="components">Components</h2>
+        <div class="palette" id="palette"></div>
+      </div>
+      <div class="stage" id="stage" aria-label="Canvas"></div>
+      <div>
+        <h2 data-t="properties">Selected component</h2>
+        <div class="props" id="props"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn primary" id="svgButton" data-t="svg">Download SVG</button>
+      <button type="button" class="btn" id="pngButton" data-t="png">Download PNG</button>
+      <button type="button" class="btn" id="jsonButton" data-t="saveJson">Save design (JSON)</button>
+      <button type="button" class="btn" id="loadButton" data-t="loadJson">Open design</button>
+      <input type="file" id="file" accept="application/json,.json" hidden />
+      <button type="button" class="btn" id="sampleButton" data-t="sample">Load sample</button>
+      <button type="button" class="btn" id="clearButton" data-t="clear">Clear</button>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+  </section>
+
+  <details class="rules" open>
+    <summary data-t="rulesTitle">How to use</summary>
+    <ul id="rulesList"></ul>
+  </details>
+
+</main>
+
+<script src="/core/ui-model.js"></script>
+<script src="/core/tool-ui.js"></script>
+<script src="/core/history.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = BATool.$, U = BAUiModel;
+  var DICT = {
+    en: {
+      pageTitle: "BAForge AI - UI Designer", title: "UI Designer",
+      subtitle: "Sketch screen wireframes by clicking components and dragging them into place. Export as SVG or PNG, or save the design and continue later. Runs in your browser.",
+      frame: "Screen size", mobile: "Mobile 360×640", tablet: "Tablet 768×1024", desktop: "Desktop 1024×640", zoom: "Zoom",
+      components: "Components", properties: "Selected component",
+      svg: "Download SVG", png: "Download PNG", saveJson: "Save design (JSON)", loadJson: "Open design", sample: "Load sample", clear: "Clear",
+      rulesTitle: "How to use",
+      types: { heading: "Heading", text: "Text", button: "Button", input: "Text field", textarea: "Text area", select: "Dropdown", checkbox: "Checkbox", radio: "Radio", image: "Image", card: "Card", navbar: "Top bar", table: "Table", divider: "Divider" },
+      none: "Click a component on the canvas to edit it.", text: "Text", textTable: "Columns separated by |", width: "Width", height: "Height",
+      dup: "Duplicate", del: "Delete", front: "Bring to front", back: "Send to back",
+      added: "Component added.", empty: "The canvas is empty. Add a component first.", pngFail: "Could not create the PNG. Try SVG instead.",
+      saved: "Design saved.", loaded: "Design opened.", badFile: "That file is not a UI Designer design.", confirmFrame: "",
+      rules: [
+        "Click a component in the list to add it, then drag it on the canvas. Drag the blue square in the corner to resize.",
+        "Change the text and size in the panel on the right. Use the arrow keys to nudge by 8 px, Delete to remove.",
+        "Everything snaps to an 8 px grid so layouts stay tidy.",
+        "Save the design as JSON to continue later; SVG and PNG are for documents and presentations."
+      ]
+    },
+    tr: {
+      pageTitle: "BAForge AI - Arayüz Tasarımcısı", title: "Arayüz Tasarımcısı",
+      subtitle: "Bileşenlere tıklayıp sürükleyerek ekran taslakları (wireframe) çizin. SVG veya PNG olarak dışa aktarın ya da tasarımı kaydedip sonra devam edin. Tarayıcınızda çalışır.",
+      frame: "Ekran boyutu", mobile: "Mobil 360×640", tablet: "Tablet 768×1024", desktop: "Masaüstü 1024×640", zoom: "Yakınlık",
+      components: "Bileşenler", properties: "Seçili bileşen",
+      svg: "SVG indir", png: "PNG indir", saveJson: "Tasarımı kaydet (JSON)", loadJson: "Tasarım aç", sample: "Örnek yükle", clear: "Temizle",
+      rulesTitle: "Nasıl kullanılır",
+      types: { heading: "Başlık", text: "Metin", button: "Düğme", input: "Metin kutusu", textarea: "Çok satırlı kutu", select: "Açılır liste", checkbox: "Onay kutusu", radio: "Seçenek", image: "Görsel", card: "Kart", navbar: "Üst çubuk", table: "Tablo", divider: "Ayırıcı" },
+      none: "Düzenlemek için tuvaldeki bir bileşene tıklayın.", text: "Metin", textTable: "Sütunlar | ile ayrılır", width: "Genişlik", height: "Yükseklik",
+      dup: "Çoğalt", del: "Sil", front: "Öne getir", back: "Arkaya gönder",
+      added: "Bileşen eklendi.", empty: "Tuval boş. Önce bir bileşen ekleyin.", pngFail: "PNG oluşturulamadı. SVG deneyin.",
+      saved: "Tasarım kaydedildi.", loaded: "Tasarım açıldı.", badFile: "Bu dosya bir Arayüz Tasarımcısı dosyası değil.", confirmFrame: "",
+      rules: [
+        "Listeden bir bileşene tıklayıp ekleyin, sonra tuvalde sürükleyin. Köşedeki mavi kareyi sürükleyerek boyutlandırın.",
+        "Metni ve boyutu sağdaki panelden değiştirin. Ok tuşlarıyla 8 px kaydırın, Delete ile silin.",
+        "Her şey 8 px ızgaraya oturur; düzen derli toplu kalır.",
+        "Sonra devam etmek için JSON olarak kaydedin; SVG ve PNG belge ve sunumlar içindir."
+      ]
+    }
+  };
+  var T = BATool.applyI18n(DICT);
+  $("rulesList").innerHTML = T.rules.map(function (r) { return "<li>" + BATool.esc(r) + "</li>"; }).join("");
+
+  var doc = U.create("mobile"), selected = null, zoom = 1, lastOk = null, stage = $("stage");
+
+  $("palette").innerHTML = Object.keys(U.TYPES).map(function (k) {
+    return '<button type="button" class="btn small" data-type="' + k + '">+ ' + BATool.esc(T.types[k]) + "</button>";
+  }).join("");
+
+  function svgEl() { return stage.querySelector("svg"); }
+
+  function render() {
+    stage.innerHTML = U.toSvg(doc, { editor: true, selectedId: selected });
+    var s = svgEl(); s.setAttribute("width", doc.frame.w * zoom); s.setAttribute("height", doc.frame.h * zoom);
+    lastOk = doc.items.length ? { doc: JSON.parse(JSON.stringify(doc)) } : null;
+  }
+
+  function renderProps() {
+    var p = $("props"), it = selected && U.find(doc, selected);
+    if (!it) { p.innerHTML = '<div class="none">' + BATool.esc(T.none) + "</div>"; return; }
+    var multi = it.type === "table" || it.type === "text" || it.type === "textarea";
+    p.innerHTML =
+      "<div><strong>" + BATool.esc(T.types[it.type]) + "</strong></div>" +
+      (it.type === "divider" ? "" : '<label class="field"><span>' + BATool.esc(it.type === "table" ? T.textTable : T.text) + "</span>" +
+        (multi ? '<textarea id="pText">' + BATool.esc(it.text) + "</textarea>" : '<input type="text" id="pText" value="' + BATool.esc(it.text) + '" />') + "</label>") +
+      '<div class="row2"><label class="field"><span>' + BATool.esc(T.width) + '</span><input type="number" id="pW" value="' + it.w + '" step="8" /></label>' +
+      '<label class="field"><span>' + BATool.esc(T.height) + '</span><input type="number" id="pH" value="' + it.h + '" step="8" /></label></div>' +
+      '<div class="row2"><button type="button" class="btn small" id="pDup">' + BATool.esc(T.dup) + '</button><button type="button" class="btn small danger" id="pDel">' + BATool.esc(T.del) + "</button></div>" +
+      '<div class="row2"><button type="button" class="btn small" id="pFront">' + BATool.esc(T.front) + '</button><button type="button" class="btn small" id="pBack">' + BATool.esc(T.back) + "</button></div>";
+    var t = $("pText");
+    if (t) { t.addEventListener("input", function () { U.setText(doc, selected, t.value); render(); recordSoon(); }); }
+    $("pW").addEventListener("change", function () { U.resize(doc, selected, +$("pW").value, it.h); $("pW").value = it.w; render(); recordSoon(); });
+    $("pH").addEventListener("change", function () { U.resize(doc, selected, it.w, +$("pH").value); $("pH").value = it.h; render(); recordSoon(); });
+    $("pDup").addEventListener("click", function () { var c = U.duplicate(doc, selected); select(c.id); recordSoon(); });
+    $("pDel").addEventListener("click", function () { U.remove(doc, selected); select(null); recordSoon(); });
+    $("pFront").addEventListener("click", function () { U.toFront(doc, selected); render(); recordSoon(); });
+    $("pBack").addEventListener("click", function () { U.toBack(doc, selected); render(); recordSoon(); });
+  }
+
+  function select(id) { selected = id; render(); renderProps(); }
+
+  var recordSoon = BATool.debounce(function () {
+    if (!window.BAHistory || !lastOk) { return; }
+    var top = BAHistory.list("ui-designer")[0];
+    if (!top || JSON.stringify(top.data.doc) !== JSON.stringify(lastOk.doc)) { BAHistory.record(); }
+  }, 1200);
+
+  $("palette").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-type]"); if (!b) { return; }
+    var n = doc.items.length, it = U.add(doc, b.getAttribute("data-type"), 16 + (n % 6) * 8, 16 + (n * 48) % Math.max(48, doc.frame.h - 80));
+    select(it.id); BATool.status("ok", T.added); recordSoon();
+  });
+
+  /* ---- pointer interaction ---- */
+  var drag = null;
+  function toDoc(ev) {
+    var r = svgEl().getBoundingClientRect();
+    return { x: (ev.clientX - r.left) / zoom, y: (ev.clientY - r.top) / zoom };
+  }
+  stage.addEventListener("pointerdown", function (ev) {
+    var svg = svgEl(); if (!svg || !svg.contains(ev.target)) { return; }
+    var pt = toDoc(ev);
+    if (ev.target.getAttribute("data-handle")) {
+      var it = U.find(doc, selected); drag = { mode: "resize", id: selected, dx: pt.x - (it.x + it.w), dy: pt.y - (it.y + it.h) };
+    } else {
+      var id = ev.target.getAttribute("data-id");
+      if (!id) { select(null); return; }
+      if (id !== selected) { select(id); }
+      var cur = U.find(doc, id); drag = { mode: "move", id: id, ox: pt.x - cur.x, oy: pt.y - cur.y };
+    }
+    stage.setPointerCapture(ev.pointerId);
+    ev.preventDefault();
+  });
+  stage.addEventListener("pointermove", function (ev) {
+    if (!drag) { return; }
+    var pt = toDoc(ev), it = U.find(doc, drag.id);
+    if (drag.mode === "move") { U.move(doc, drag.id, pt.x - drag.ox, pt.y - drag.oy); }
+    else { U.resize(doc, drag.id, pt.x - drag.dx - it.x, pt.y - drag.dy - it.y); }
+    render();
+  });
+  function endDrag() { if (drag) { drag = null; renderProps(); recordSoon(); } }
+  stage.addEventListener("pointerup", endDrag);
+  stage.addEventListener("pointercancel", endDrag);
+
+  document.addEventListener("keydown", function (ev) {
+    if (!selected || /INPUT|TEXTAREA|SELECT/.test((ev.target.tagName || ""))) { return; }
+    var it = U.find(doc, selected); if (!it) { return; }
+    var k = ev.key, step = U.GRID;
+    if (k === "Delete" || k === "Backspace") { U.remove(doc, selected); select(null); }
+    else if (k === "ArrowLeft") { U.move(doc, selected, it.x - step, it.y); render(); }
+    else if (k === "ArrowRight") { U.move(doc, selected, it.x + step, it.y); render(); }
+    else if (k === "ArrowUp") { U.move(doc, selected, it.x, it.y - step); render(); }
+    else if (k === "ArrowDown") { U.move(doc, selected, it.x, it.y + step); render(); }
+    else { return; }
+    ev.preventDefault(); recordSoon();
+  });
+
+  $("frame").addEventListener("change", function () { U.setFrame(doc, $("frame").value); render(); renderProps(); recordSoon(); });
+  $("zoom").addEventListener("change", function () { zoom = +$("zoom").value; render(); });
+
+  /* ---- export / import ---- */
+  function cleanSvg() { return '<?xml version="1.0" encoding="UTF-8"?>\n' + U.toSvg(doc); }
+  $("svgButton").addEventListener("click", function () {
+    if (!doc.items.length) { BATool.status("error", T.empty); return; }
+    BATool.download("ui-design.svg", cleanSvg(), "image/svg+xml");
+  });
+  $("pngButton").addEventListener("click", function () {
+    if (!doc.items.length) { BATool.status("error", T.empty); return; }
+    var img = new Image(), url = URL.createObjectURL(new Blob([cleanSvg()], { type: "image/svg+xml" }));
+    img.onload = function () {
+      var c = document.createElement("canvas"); c.width = doc.frame.w * 2; c.height = doc.frame.h * 2;
+      var ctx = c.getContext("2d"); ctx.scale(2, 2); ctx.drawImage(img, 0, 0, doc.frame.w, doc.frame.h);
+      URL.revokeObjectURL(url);
+      c.toBlob(function (b) {
+        if (!b) { BATool.status("error", T.pngFail); return; }
+        var a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "ui-design.png";
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 500);
+      }, "image/png");
+    };
+    img.onerror = function () { BATool.status("error", T.pngFail); };
+    img.src = url;
+  });
+  $("jsonButton").addEventListener("click", function () {
+    if (!doc.items.length) { BATool.status("error", T.empty); return; }
+    BATool.download("ui-design.json", JSON.stringify(doc, null, 2), "application/json");
+    BATool.status("ok", T.saved);
+  });
+  $("loadButton").addEventListener("click", function () { $("file").click(); });
+  $("file").addEventListener("change", function () {
+    var f = $("file").files[0]; if (!f) { return; }
+    var r = new FileReader();
+    r.onload = function () {
+      try { doc = U.load(String(r.result)); $("frame").value = Object.keys(U.FRAMES).filter(function (k) { return U.FRAMES[k].w === doc.frame.w && U.FRAMES[k].h === doc.frame.h; })[0] || $("frame").value; select(null); BATool.status("ok", T.loaded); recordSoon(); }
+      catch (e) { BATool.status("error", T.badFile); }
+      $("file").value = "";
+    };
+    r.readAsText(f);
+  });
+
+  function sample(initial) {
+    doc = U.create("mobile"); $("frame").value = "mobile";
+    function A(type, x, y, w, h, text) { var it = U.add(doc, type, x, y); if (w) { U.resize(doc, it.id, w, h); } if (text !== undefined) { it.text = text; } return it; }
+    A("navbar", 0, 0, 360, 48, "My Bank");
+    A("heading", 16, 72, 328, 40, "Sign in");
+    A("text", 16, 120, 328, 40, "Enter your details to access your account.");
+    A("input", 16, 176, 328, 40, "Email address");
+    A("input", 16, 232, 328, 40, "Password");
+    A("checkbox", 16, 288, 328, 32, "Remember me");
+    A("button", 16, 336, 328, 48, "Sign in");
+    A("divider", 16, 408, 328, 8, "");
+    A("text", 16, 424, 328, 40, "Forgot your password? Reset it here.");
+    select(null); if (initial !== true) { recordSoon(); }
+  }
+  $("sampleButton").addEventListener("click", function () { sample(); });
+  $("clearButton").addEventListener("click", function () { doc = U.create($("frame").value); select(null); BATool.status("", ""); });
+
+  if (window.BAHistory) {
+    BAHistory.init({
+      page: "ui-designer",
+      label: function (d) { return d.doc.items.length + " components · " + d.doc.frame.w + "×" + d.doc.frame.h; },
+      capture: function () { return lastOk; },
+      restore: function (d) { doc = U.load(d.doc); select(null); }
+    });
+  }
+
+  sample(true);
+})();
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

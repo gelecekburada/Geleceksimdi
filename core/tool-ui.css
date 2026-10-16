@@ -106,3 +106,10 @@ table.grid td .inp, table.grid td select { width: 100%; height: 36px; }
   textarea, pre.out { min-height: 220px; }
   .actions .btn { flex: 1 1 140px; }
 }
+
+/* diagram preview */
+.preview { border: 1px solid var(--border); border-radius: 12px; background: #fff; min-height: 320px; max-height: 640px; overflow: auto; padding: 4px; }
+.preview svg { display: block; max-width: none; }
+.field-inline { display: inline-flex; gap: 6px; align-items: center; }
+.pane, .cols-2 > *, .cols-3 > *, .studio > * { min-width: 0; }
+.preview { max-width: 100%; }

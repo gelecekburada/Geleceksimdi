@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - UML Designer</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+</head>
+<body>
+<main id="app"></main>
+
+<script src="/core/diagram.js"></script>
+<script src="/core/tool-ui.js"></script>
+<script src="/core/history.js"></script>
+<script src="/core/diagram-page.js"></script>
+<script>
+
+BADiagramPage.init({
+  page: 'uml-designer', kind: 'uml', dir: true, defaultDir: 'TD',
+  sample: 'interface Payment\n  +pay(amount: number): boolean\nclass CardPayment\n  -cardNo: string\n  +pay(amount: number): boolean\nclass CashPayment\n  +pay(amount: number): boolean\nclass Order\n  -id: number\n  -total: number\n  +addItem(item: Item): void\nclass Item\n  -sku: string\n  -price: number\nPayment <|.. CardPayment\nPayment <|.. CashPayment\nOrder "1" *-- "*" Item : contains\nOrder --> Payment : paid by',
+  dict: {
+    en: {
+      pageTitle: 'BAForge AI - UML Designer', title: 'UML Designer (Class Diagram)',
+      subtitle: 'Write classes and relationships as text and get a UML class diagram. Download as SVG or PNG. Runs in your browser.',
+      syntax: [
+        'Start a class with <code>class Name</code> (also <code>interface</code>, <code>abstract</code>, <code>enum</code>). Indent its members below: <code>-id: number</code> for attributes, <code>+save(): void</code> for methods (anything with brackets is a method).',
+        'Relationships: <code>A &lt;|-- B</code> inheritance, <code>A &lt;|.. B</code> realization (interface), <code>A *-- B</code> composition, <code>A o-- B</code> aggregation, <code>A --&gt; B</code> association, <code>A ..&gt; B</code> dependency, <code>A -- B</code> plain link.',
+        'Add multiplicity in quotes and a label: <code>Order "1" *-- "*" Item : contains</code>.',
+        'Classes used only in a relationship are created automatically.'
+      ]
+    },
+    tr: {
+      pageTitle: 'BAForge AI - UML Tasarımcısı', title: 'UML Tasarımcısı (Sınıf Diyagramı)',
+      subtitle: 'Sınıfları ve ilişkileri metin olarak yazın, UML sınıf diyagramı alın. SVG veya PNG indirin. Tarayıcınızda çalışır.',
+      syntax: [
+        'Sınıfı <code>class Ad</code> ile başlatın (<code>interface</code>, <code>abstract</code>, <code>enum</code> da olur). Üyeleri altına girintili yazın: alan için <code>-id: number</code>, metot için <code>+save(): void</code> (parantezli olan metottur).',
+        'İlişkiler: <code>A &lt;|-- B</code> kalıtım, <code>A &lt;|.. B</code> gerçekleme (arayüz), <code>A *-- B</code> kompozisyon, <code>A o-- B</code> agregasyon, <code>A --&gt; B</code> ilişki, <code>A ..&gt; B</code> bağımlılık, <code>A -- B</code> düz bağ.',
+        'Çokluğu tırnak içinde, etiketi iki nokta sonrası yazın: <code>Order "1" *-- "*" Item : contains</code>.',
+        'Yalnızca ilişkide geçen sınıflar otomatik oluşturulur.'
+      ]
+    }
+  }
+});
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>
