@@ -106,6 +106,7 @@ function install() {
     if (state.mode === "incomplete") { return json(200, { status: "incomplete", output_text: "" }); }
     if (state.mode === "badjson") { return json(200, { output_text: "bu json değil" }); }
     if (state.mode === "empty") { return json(200, { output_text: "" }); }
+    if (state.mode === "truncated") { const full = JSON.stringify(answer(), null, 1); return json(200, { output_text: full.slice(0, Math.floor(full.length * 0.8)) }); }
     if (state.mode === "fenced") { return json(200, { output_text: "```json\n" + JSON.stringify(answer()) + "\n```" }); }
     if (state.mode === "outputarray") {
       return json(200, { output: [{ content: [{ type: "output_text", text: JSON.stringify(answer()) }] }] });

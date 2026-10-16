@@ -97,6 +97,17 @@ const base = { stage: "extract", language: "tr", docLabel: "TCMB.pdf", docNo: 1,
     fake.state.mode = "http500"; r = await call(base); assert.strictEqual(r.status, 500); assert.strictEqual(r.body.code, "upstream");
   });
 
+  await t("a cut-off answer keeps what was complete and is flagged partial", async () => {
+    const rep = handler._repairJson;
+    const r = rep('{"a":[{"x":"1"},{"x":"2"}],"b":[{"y":"ça');
+    assert.deepStrictEqual(r.value, { a: [{ x: "1" }, { x: "2" }] }); assert.strictEqual(r.partial, true);
+    assert.strictEqual(rep('{"a":[1]}').partial, false);
+    assert.throws(() => rep("hiç json yok"));
+    fake.state.mode = "truncated";
+    const res = await call(Object.assign({}, base, { text: TEXT + "\nEk satır olmalıdır E102\n".repeat(20) }));
+    assert.strictEqual(res.status, 200); assert.strictEqual(res.body.partial, true); assert.ok(Array.isArray(res.body.result.messages));
+  });
+
   await t("the key is never echoed back", async () => {
     fake.state.mode = "http500";
     const r = await call(base);
