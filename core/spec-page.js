@@ -42,6 +42,7 @@
       stRead: "PDF'ler okunuyor", stChunk: "{d} · bölüm {i}/{n} (sayfa {a}–{b})", stBusiness: "İş analizi ve muhasebe/onay/yetki önerileri", stDesign: "Teknik tasarım ve analist önerileri", stMerge: "Bulgular birleştiriliyor ve alıntılar doğrulanıyor", stDone: "Tamamlandı",
       failedChunks: "Okunamayan bölümler: {list}. Diğer kısımlar hazır; \"Eksik kısımları yeniden dene\" ile tamamlayabilirsiniz.",
       limitHit: "Günlük yapay zekâ limitinize ulaşıldı ya da giriş gerekiyor: {msg}",
+      partialReady: "Kaynaktan çıkarma bitti ({m} mesaj, {f} alan, {r} kural). Öneriler (muhasebe, onay, yetki, teknik tasarım) arka planda hazırlanıyor…",
       analyzed: "Analiz hazır: {m} mesaj, {f} alan, {r} kural. Önerilen satırlar \"Öneri\" etiketlidir; gözden geçirip onaylayın.",
       noFindings: "PDF'ten hiçbir bulgu çıkarılamadı. Dosyanın metin içerdiğinden emin olun.",
       cancelled: "İptal edildi.", stepFailed: "Bu adım tamamlanamadı: {msg}",
@@ -94,6 +95,7 @@
       stRead: "Reading the PDFs", stChunk: "{d} · section {i}/{n} (pages {a}–{b})", stBusiness: "Business analysis and accounting/approval/authorization proposals", stDesign: "Technical design and analyst recommendations", stMerge: "Merging findings and verifying quotes", stDone: "Done",
       failedChunks: "Sections that could not be read: {list}. The rest is ready; use \"Retry the missing parts\" to complete it.",
       limitHit: "Your daily AI limit was reached or you need to sign in: {msg}",
+      partialReady: "Source extraction finished ({m} messages, {f} fields, {r} rules). Proposals (accounting, approvals, authorization, technical design) are being prepared in the background…",
       analyzed: "Analysis ready: {m} messages, {f} fields, {r} rules. Proposed rows are labelled \"Proposal\"; review and approve them.",
       noFindings: "No findings could be extracted from the PDF. Make sure the file contains text.",
       cancelled: "Cancelled.", stepFailed: "This step could not be completed: {msg}",
@@ -266,11 +268,12 @@
     return fetch("/api/spec-analyzer", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.assign({ language: LANG }, body)), signal: signal }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) {
         if (!r.ok) { var e = new Error(j.error || ("HTTP " + r.status)); e.status = r.status; e.code = j.code || ""; throw e; }
+        if (j.result && typeof j.result === "object") { Object.defineProperty(j.result, "_partial", { value: !!j.partial, enumerable: false }); }
         return j.result;
       });
     });
   }
-  function isFatal(e) { return e && (e.status === 401 || e.status === 403 || e.status === 429 || e.status === 500 && /anahtar|key/i.test(e.message) || e.status === 503); }
+  function isFatal(e) { return e && e.code !== "upstream" && (e.status === 401 || e.status === 403 || e.status === 429 || e.status === 500 && /anahtar|key/i.test(e.message) || e.status === 503); }
   function isSplittable(e) { return e && (["incomplete", "bad_json", "too_long", "timeout", "empty"].indexOf(e.code) > -1 || e.status === 422 || e.status === 413 || e.status === 504); }
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
@@ -280,7 +283,17 @@
     function go() {
       attempts++;
       return callApi({ stage: "extract", docLabel: label, docNo: docNo, docRole: role, from: chunk.from, to: chunk.to, text: chunk.text, context: chunk.context }, signal).then(function (raw) {
-        return [M.normalizeFindings(raw, docNo)];
+        var own = [M.normalizeFindings(raw, docNo)];
+        /* the answer came back cut off: keep what was read, and read the two halves again to fill the gap */
+        if (raw && raw._partial && (depth || 0) < 2) {
+          var halves = M.splitChunk(chunk);
+          if (halves) {
+            return extractSlice(docNo, role, label, halves[0], signal, (depth || 0) + 1).then(function (a) {
+              return extractSlice(docNo, role, label, halves[1], signal, (depth || 0) + 1).then(function (b) { return own.concat(a, b); });
+            }).catch(function (e) { if (isFatal(e) || (signal && signal.aborted)) { throw e; } return own; });
+          }
+        }
+        return own;
       }).catch(function (e) {
         if (signal && signal.aborted) { throw e; }
         if (isFatal(e)) { throw e; }
@@ -292,7 +305,7 @@
             });
           }
         }
-        if (attempts < 3) { return sleep(1200 * attempts).then(go); }
+        if (attempts < 4) { return sleep(1500 * attempts).then(go); }
         throw e;
       });
     }
@@ -342,7 +355,7 @@
     var run = { jobs: [], business: "", design: "", findings: null, model: null, signal: null };
     [1, 2].forEach(function (n) {
       var s = state.slots[n]; if (!s) { return; }
-      var chunks = M.buildChunks(s.pages, { maxChars: 16000, overlap: 1200 });
+      var chunks = M.buildChunks(s.pages, { maxChars: 6000, overlap: 600 });
       chunks.forEach(function (c, i) { run.jobs.push({ docNo: n, role: n === 1 ? "main" : "extra", label: s.name, chunk: c, index: i + 1, of: chunks.length, status: "pending", findings: null, error: "" }); });
     });
     return run;
@@ -366,7 +379,7 @@
     status("", ""); warn([]); refreshButtons(); drawProgress();
 
     var todo = run.jobs.filter(function (j) { return j.status !== "done"; });
-    pool(todo, 3, function (job) {
+    pool(todo, 12, function (job) {
       job.status = "running"; job.error = ""; drawProgress();
       return extractSlice(job.docNo, job.role, job.label, job.chunk, signal, 0).then(function (f) { job.findings = f; job.status = "done"; drawProgress(); })
         .catch(function (e) { job.status = "failed"; job.error = e && e.message || "error"; drawProgress(); throw e; });
@@ -393,9 +406,15 @@
       state.model = run.model;
       if (!S.items(state.model, "messages").length && !S.items(state.model, "rules").length && !S.items(state.model, "fields").length) { throw new Error(t("noFindings")); }
       run.failedList = failed.map(function (j) { return "D" + j.docNo + " s." + j.chunk.from + "–" + j.chunk.to; });
-      return stageBusiness(run, signal);
-    }).then(function () { return stageDesign(run, signal); }).then(function () {
-      finishRun(run);
+      /* the source findings are ready: show them now, then prepare the proposals in parallel */
+      addFirstLogIfNeeded(); state.tab = "source"; render(); saveNow();
+      status("", t("partialReady", { m: S.items(state.model, "messages").length, f: S.items(state.model, "fields").length, r: S.items(state.model, "rules").length }));
+      var settle = function (pr) { return pr.then(function () { return null; }, function (e) { if (signal.aborted || isFatal(e)) { throw e; } return e; }); };
+      return Promise.all([settle(stageBusiness(run, signal)), settle(stageDesign(run, signal))]).then(function (errs) {
+        S.assignIds(state.model);
+        if (errs.some(Boolean)) { var f = errs.filter(Boolean)[0]; throw f; }
+        finishRun(run);
+      });
     }).catch(function (e) {
       if (signal.aborted) { status("", t("cancelled")); } else if (isFatal(e)) { status("error", t("limitHit", { msg: e.message })); } else { status("error", t("stepFailed", { msg: e && e.message })); }
       if (state.model) { addFirstLogIfNeeded(); render(); save(); }
@@ -418,8 +437,8 @@
   function stageDesign(run, signal) {
     if (run.design === "done") { return Promise.resolve(); }
     run.design = "running"; run.designError = ""; drawProgress();
-    var c = M.compactForSynthesis(state.model, 55000), b = M.compactBusiness(state.model, 20000);
-    return callApi({ stage: "design", docs: docsLine(), background: $("background").value, summary: c.text + "\n" + b, omitted: c.omitted.join("; ") }, signal).then(function (raw) {
+    var c = M.compactForSynthesis(state.model, 60000), b = "";
+    return callApi({ stage: "design", docs: docsLine(), background: $("background").value, summary: c.text, omitted: c.omitted.join("; ") }, signal).then(function (raw) {
       S.absorb(state.model, raw, ["states", "transitions", "processing", "mapping", "tables", "architecture", "interfaces", "config", "jobs", "security", "samples", "recommendations"]);
       S.assignIds(state.model); run.design = "done"; drawProgress();
     }).catch(function (e) { run.design = "failed"; run.designError = e && e.message; drawProgress(); throw e; });

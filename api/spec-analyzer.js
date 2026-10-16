@@ -208,6 +208,35 @@ function extractJson(text) {
   return JSON.parse(t.slice(a, b + 1));
 }
 
+/* A long answer sometimes comes back cut off or with one broken item. Keep everything before the
+   break: cut at the last point where a complete object/array ended and close what is still open. */
+function repairJson(text) {
+  let t = String(text || "").trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  const a = t.indexOf("{");
+  if (a < 0) { throw new Error("no json"); }
+  t = t.slice(a);
+  let errPos = t.length;
+  try { JSON.parse(t); return { value: JSON.parse(t), partial: false, error: "" }; } catch (e) {
+    const m = /position (\d+)/.exec(String(e && e.message)); if (m) { errPos = parseInt(m[1], 10); }
+    var firstError = String(e && e.message);
+  }
+  const stack = [], snaps = [];
+  let inStr = false, esc = false;
+  for (let i = 0; i < t.length && i <= errPos; i++) {
+    const c = t[i];
+    if (inStr) { if (esc) { esc = false; } else if (c === "\\") { esc = true; } else if (c === '"') { inStr = false; } continue; }
+    if (c === '"') { inStr = true; }
+    else if (c === "{") { stack.push("}"); }
+    else if (c === "[") { stack.push("]"); }
+    else if (c === "}" || c === "]") { stack.pop(); if (i < errPos) { snaps.push({ i, closers: stack.slice().reverse().join("") }); } }
+  }
+  for (let k = snaps.length - 1; k >= 0 && k >= snaps.length - 40; k--) {
+    const cand = t.slice(0, snaps[k].i + 1) + snaps[k].closers;
+    try { return { value: JSON.parse(cand), partial: true, error: firstError }; } catch (e) { /* try an earlier cut */ }
+  }
+  throw new Error(firstError || "unreadable");
+}
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") { return res.status(405).json({ error: "Method not allowed" }); }
   if (!(await require("./_lib/guard")(req, res, "spec-analyzer"))) { return; }
@@ -297,12 +326,18 @@ module.exports = async (req, res) => {
   }
   if (!out) { return res.status(502).json({ error: L("Yapay zekâ sonuç döndürmedi.", "The AI returned no result."), code: "empty" }); }
 
-  let result;
-  try { result = extractJson(out); } catch (e) {
-    console.error("Invalid JSON from model:", out.slice(0, 300));
-    return res.status(502).json({ error: L("Yapay zekâ yanıtı okunamadı.", "The AI answer could not be read."), code: "bad_json" });
+  let result, partial = false;
+  try { result = extractJson(out); } catch (firstErr) {
+    try {
+      const r = repairJson(out); result = r.value; partial = true;
+      console.error("Model JSON repaired (" + stage + "): length " + out.length + ", " + r.error);
+    } catch (e) {
+      console.error("Invalid JSON from model (" + stage + "): length " + out.length + ", " + String(firstErr && firstErr.message) + " | tail: " + out.slice(-160).replace(/\s+/g, " "));
+      return res.status(502).json({ error: L("Yapay zekâ yanıtı okunamadı.", "The AI answer could not be read."), code: "bad_json" });
+    }
   }
-  return res.status(200).json({ ok: true, stage, result });
+  return res.status(200).json({ ok: true, stage, result, partial });
 };
 
 module.exports._extractJson = extractJson;
+module.exports._repairJson = repairJson;
