@@ -60,7 +60,7 @@ async function authUser(token) {
 
 async function getProfile(id) {
   const r = await rest("profiles?id=eq." + encodeURIComponent(id) + "&select=*");
-  if (!r.ok) { throw new Error("profile lookup failed"); }
+  if (!r.ok) { throw new Error("profile lookup failed: HTTP " + r.status + " " + String((r.data && (r.data.message || r.data.hint || r.data.error || r.data.raw)) || "").slice(0, 200)); }
   return Array.isArray(r.data) && r.data[0] ? r.data[0] : null;
 }
 
