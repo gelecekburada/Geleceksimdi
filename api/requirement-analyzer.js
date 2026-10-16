@@ -10,6 +10,10 @@ module.exports = async (req, res) => {
     });
   }
 
+  if (!(await require("./_lib/guard")(req, res, "requirement-analyzer"))) {
+    return;
+  }
+
 
   try {
 

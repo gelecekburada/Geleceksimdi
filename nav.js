@@ -50,6 +50,10 @@
     currentPage = "bpmn-designer";
   } else if (path.endsWith("/ui-designer.html")) {
     currentPage = "ui-designer";
+  } else if (path.endsWith("/login.html")) {
+    currentPage = "login";
+  } else if (path.endsWith("/admin.html")) {
+    currentPage = "admin";
   }
 
   /* =========================================================
@@ -1703,6 +1707,13 @@
     }
 
     updateHomeLanguage(language);
+
+    /* Accounts: sign-in chip, feedback button, Authorization header on /api calls. */
+    if (!window.BAAuth && !document.querySelector('script[src="/core/auth.js"]')) {
+      const authScript = document.createElement("script");
+      authScript.src = "/core/auth.js";
+      document.head.appendChild(authScript);
+    }
 
     /* =======================================================
        GLOBAL LANGUAGE EVENTS

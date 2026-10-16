@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - Admin</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+  <style>
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .tabs .btn[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 18px; }
+    .tile { border: 1px solid var(--border); border-radius: 12px; padding: 14px; background: #fbfcfe; }
+    .tile b { display: block; font-size: 26px; color: var(--heading); }
+    .tile span { font-size: 12px; color: var(--muted); }
+    .bars { display: flex; align-items: flex-end; gap: 4px; height: 120px; padding-top: 8px; }
+    .bars .col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; min-width: 0; }
+    .bars .bar { width: 100%; background: var(--primary); border-radius: 4px 4px 0 0; min-height: 2px; }
+    .bars .bar.alt { background: #0f766e; }
+    .bars .v { font-size: 10px; color: var(--muted); }
+    .bars .d { font-size: 10px; color: var(--muted); margin-top: 4px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .fb { border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; background: #fff; }
+    .fb.done { opacity: .6; }
+    .fb .meta { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .fb p { margin: 0 0 8px; white-space: pre-wrap; word-break: break-word; }
+    .tag { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: #eef2f7; margin-right: 6px; }
+    .tag.bug { background: #fee4e2; color: #b42318; } .tag.idea { background: #dcfae6; color: #067647; }
+    td .inp { width: 90px !important; }
+  </style>
+</head>
+<body>
+<main>
+
+  <section class="hero">
+    <h1 data-t="title">Admin panel</h1>
+    <p data-t="subtitle"></p>
+  </section>
+
+  <section class="card" id="gate" hidden>
+    <p id="gateMsg"></p>
+    <div class="actions"><a class="btn primary" href="/login.html" style="display:inline-flex;align-items:center;text-decoration:none" data-t="goLogin">Sign in</a></div>
+  </section>
+
+  <section id="panel" hidden>
+    <div class="tabs" role="tablist">
+      <button type="button" class="btn" data-tab="overview" aria-pressed="true" data-t="tOverview">Overview</button>
+      <button type="button" class="btn" data-tab="users" aria-pressed="false" data-t="tUsers">Users</button>
+      <button type="button" class="btn" data-tab="ai" aria-pressed="false" data-t="tAi">AI usage</button>
+      <button type="button" class="btn" data-tab="feedback" aria-pressed="false" data-t="tFeedback">Feedback</button>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <div class="card" id="view"></div>
+  </section>
+
+</main>
+
+<script src="/core/tool-ui.js"></script>
+<script src="/core/auth.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = BATool.$, esc = BATool.esc;
+  var T = BATool.applyI18n({
+    en: {
+      pageTitle: "BAForge AI - Admin", title: "Admin panel", subtitle: "Users, usage and feedback. Only administrators can see this page.",
+      goLogin: "Sign in", tOverview: "Overview", tUsers: "Users", tAi: "AI usage", tFeedback: "Feedback",
+      needLogin: "Please sign in with an administrator account.", notAdmin: "This account is not an administrator.", loadFail: "Could not load data. Try again.",
+      users: "Users", activeUsers: "Active accounts", admins: "Admins", newUsers: "New (7 days)", active7: "Active users (7 days)", openFb: "Open feedback",
+      aiPerDay: "AI requests per day (last 14 days)", pagesPerDay: "Page views per day (signed-in users, last 14 days)", toolsTitle: "Tools (last 30 days)",
+      tool: "Tool", pages: "Page views", ai: "AI requests", email: "Email", role: "Role", active: "Active", limit: "Daily AI limit", joined: "Joined", lastSeen: "Last seen",
+      save: "Save", saved: "Saved.", never: "never", today: "Today", d7: "7 days", anon: "Anonymous (not signed in)", you: "(you)",
+      truncated: "Showing the most recent data only; very large histories are cut off.", fbNone: "No feedback yet.", markDone: "Mark done", reopen: "Reopen",
+      bug: "Bug", idea: "Idea", other: "Other", anonymous: "anonymous", adminRole: "admin", userRole: "user", noData: "No data yet.",
+      note: "Page views count signed-in users only. AI requests also include anonymous calls (shown separately in the AI tab)."
+    },
+    tr: {
+      pageTitle: "BAForge AI - Yönetim", title: "Yönetim paneli", subtitle: "Kullanıcılar, kullanım ve geri bildirimler. Bu sayfayı yalnızca yöneticiler görebilir.",
+      goLogin: "Giriş yap", tOverview: "Genel bakış", tUsers: "Kullanıcılar", tAi: "Yapay zekâ kullanımı", tFeedback: "Geri bildirim",
+      needLogin: "Lütfen yönetici hesabıyla giriş yapın.", notAdmin: "Bu hesap yönetici değil.", loadFail: "Veriler yüklenemedi. Tekrar deneyin.",
+      users: "Kullanıcı", activeUsers: "Aktif hesap", admins: "Yönetici", newUsers: "Yeni (7 gün)", active7: "Aktif kullanıcı (7 gün)", openFb: "Açık geri bildirim",
+      aiPerDay: "Günlük yapay zekâ isteği (son 14 gün)", pagesPerDay: "Günlük sayfa görüntüleme (giriş yapanlar, son 14 gün)", toolsTitle: "Araçlar (son 30 gün)",
+      tool: "Araç", pages: "Sayfa görüntüleme", ai: "Yapay zekâ isteği", email: "E-posta", role: "Rol", active: "Aktif", limit: "Günlük yapay zekâ limiti", joined: "Katıldı", lastSeen: "Son görülme",
+      save: "Kaydet", saved: "Kaydedildi.", never: "hiç", today: "Bugün", d7: "7 gün", anon: "Anonim (giriş yapmamış)", you: "(siz)",
+      truncated: "Yalnızca en yeni veriler gösteriliyor; çok büyük geçmişler kesilir.", fbNone: "Henüz geri bildirim yok.", markDone: "Tamamlandı", reopen: "Yeniden aç",
+      bug: "Hata", idea: "Fikir", other: "Diğer", anonymous: "anonim", adminRole: "yönetici", userRole: "kullanıcı", noData: "Henüz veri yok.",
+      note: "Sayfa görüntüleme yalnızca giriş yapan kullanıcıları sayar. Yapay zekâ isteklerine anonim çağrılar da dahildir (Yapay zekâ sekmesinde ayrı gösterilir)."
+    }
+  });
+  var L = BATool.lang(), view = $("view"), tab = "overview", myId = null;
+
+  function api(path, opts) {
+    return BAAuth.getToken().then(function (tok) {
+      if (!tok) { throw { status: 401 }; }
+      opts = opts || {}; opts.headers = Object.assign({ Authorization: "Bearer " + tok }, opts.headers || {});
+      return fetch(path, opts).then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok) { throw { status: r.status, msg: d.error }; } return d; }); });
+    });
+  }
+  function post(body) { return api("/api/admin", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }); }
+  function gate(msg) { $("gate").hidden = false; $("panel").hidden = true; $("gateMsg").textContent = msg; }
+  function fmt(iso) { return iso ? new Date(iso).toLocaleString(L === "tr" ? "tr-TR" : "en-GB", { dateStyle: "short", timeStyle: "short" }) : T.never; }
+
+  function bars(rows, alt) {
+    var max = Math.max.apply(null, [1].concat(rows.map(function (r) { return r.count; })));
+    return '<div class="bars">' + rows.map(function (r) {
+      return '<div class="col" title="' + esc(r.day + ": " + r.count) + '"><span class="v">' + (r.count || "") + '</span><div class="bar' + (alt ? " alt" : "") + '" style="height:' + Math.round(r.count / max * 90) + '%"></div><span class="d">' + esc(r.day.slice(8)) + "</span></div>";
+    }).join("") + "</div>";
+  }
+
+  function renderOverview(d) {
+    var tiles = [[d.users_total, T.users], [d.users_active, T.activeUsers], [d.admins, T.admins], [d.new_users_7d, T.newUsers], [d.active_users_7d, T.active7], [d.feedback_open, T.openFb]];
+    view.innerHTML = '<div class="tiles">' + tiles.map(function (t) { return '<div class="tile"><b>' + t[0] + "</b><span>" + esc(t[1]) + "</span></div>"; }).join("") + "</div>" +
+      "<h2>" + esc(T.aiPerDay) + "</h2>" + bars(d.ai_14d, false) +
+      '<h2 style="margin-top:20px">' + esc(T.pagesPerDay) + "</h2>" + bars(d.pages_14d, true) +
+      '<h2 style="margin-top:20px">' + esc(T.toolsTitle) + "</h2>" +
+      (d.tools.length ? '<div class="table-wrap"><table class="grid"><thead><tr><th>' + esc(T.tool) + "</th><th>" + esc(T.pages) + "</th><th>" + esc(T.ai) + "</th></tr></thead><tbody>" +
+        d.tools.map(function (t) { return "<tr><td>" + esc(t.tool) + "</td><td>" + t.pages + "</td><td>" + t.ai + "</td></tr>"; }).join("") + "</tbody></table></div>" : '<p class="muted">' + esc(T.noData) + "</p>") +
+      '<p class="muted">' + esc(T.note) + (d.truncated ? " " + esc(T.truncated) : "") + "</p>";
+  }
+
+  function renderUsers(d) {
+    view.innerHTML = '<div class="table-wrap"><table class="grid"><thead><tr><th>' + esc(T.email) + "</th><th>" + esc(T.role) + "</th><th>" + esc(T.active) + "</th><th>" + esc(T.limit) + "</th><th>" + esc(T.joined) + "</th><th>" + esc(T.lastSeen) + "</th><th></th></tr></thead><tbody>" +
+      d.users.map(function (u) {
+        return '<tr data-id="' + esc(u.id) + '"><td>' + esc(u.email) + (u.id === myId ? " " + esc(T.you) : "") + '</td>' +
+          '<td><select class="u-role"><option value="user"' + (u.role === "user" ? " selected" : "") + ">" + esc(T.userRole) + '</option><option value="admin"' + (u.role === "admin" ? " selected" : "") + ">" + esc(T.adminRole) + "</option></select></td>" +
+          '<td><input type="checkbox" class="u-active"' + (u.is_active ? " checked" : "") + " /></td>" +
+          '<td><input type="number" class="inp u-limit" min="0" max="10000" value="' + u.daily_ai_limit + '" /></td>' +
+          "<td>" + esc(fmt(u.created_at)) + "</td><td>" + esc(fmt(u.last_seen_at)) + '</td><td><button type="button" class="btn small u-save">' + esc(T.save) + "</button></td></tr>";
+      }).join("") + "</tbody></table></div>";
+  }
+
+  function renderAi(d) {
+    view.innerHTML = '<div class="table-wrap"><table class="grid"><thead><tr><th>' + esc(T.email) + "</th><th>" + esc(T.today) + "</th><th>" + esc(T.d7) + "</th><th>" + esc(T.limit) + "</th></tr></thead><tbody>" +
+      d.rows.map(function (r) { return "<tr><td>" + esc(r.email) + (r.is_active ? "" : " ⛔") + "</td><td>" + r.today + "</td><td>" + r.d7 + "</td><td>" + (r.role === "admin" ? "∞" : r.daily_ai_limit) + "</td></tr>"; }).join("") +
+      "<tr><td><i>" + esc(T.anon) + "</i></td><td>" + d.anonymous_today + "</td><td>" + d.anonymous_7d + "</td><td>-</td></tr></tbody></table></div>" +
+      (d.truncated ? '<p class="muted">' + esc(T.truncated) + "</p>" : "");
+  }
+
+  function renderFeedback(d) {
+    view.innerHTML = d.feedback.length ? d.feedback.map(function (f) {
+      var cat = { bug: T.bug, idea: T.idea, other: T.other }[f.category] || f.category;
+      return '<div class="fb ' + (f.status === "done" ? "done" : "") + '" data-id="' + f.id + '"><div class="meta"><span class="tag ' + esc(f.category) + '">' + esc(cat) + "</span>" + esc(f.email || T.anonymous) + " · " + esc(f.page || "") + " · " + esc(fmt(f.created_at)) + "</div><p>" + esc(f.message) + '</p><button type="button" class="btn small f-toggle" data-status="' + (f.status === "done" ? "open" : "done") + '">' + esc(f.status === "done" ? T.reopen : T.markDone) + "</button></div>";
+    }).join("") + (d.truncated ? '<p class="muted">' + esc(T.truncated) + "</p>" : "") : '<p class="muted">' + esc(T.fbNone) + "</p>";
+  }
+
+  function load() {
+    BATool.status("", "");
+    view.innerHTML = "";
+    api("/api/admin?view=" + tab).then(function (d) {
+      ({ overview: renderOverview, users: renderUsers, ai: renderAi, feedback: renderFeedback })[tab](d);
+    }).catch(function (e) {
+      if (e.status === 401) { gate(T.needLogin); } else if (e.status === 403) { gate(T.notAdmin); } else { BATool.status("error", T.loadFail); }
+    });
+  }
+
+  document.querySelector(".tabs").addEventListener("click", function (ev) {
+    var b = ev.target.closest("[data-tab]"); if (!b) { return; }
+    tab = b.getAttribute("data-tab");
+    Array.prototype.forEach.call(document.querySelectorAll(".tabs .btn"), function (x) { x.setAttribute("aria-pressed", x === b); });
+    load();
+  });
+
+  view.addEventListener("click", function (ev) {
+    var save = ev.target.closest(".u-save");
+    if (save) {
+      var tr = save.closest("tr");
+      post({ action: "setUser", id: tr.getAttribute("data-id"), role: tr.querySelector(".u-role").value, is_active: tr.querySelector(".u-active").checked, daily_ai_limit: parseInt(tr.querySelector(".u-limit").value, 10) })
+        .then(function () { BATool.status("ok", T.saved); })
+        .catch(function (e) { BATool.status("error", e.msg || T.loadFail); load(); });
+      return;
+    }
+    var tg = ev.target.closest(".f-toggle");
+    if (tg) {
+      post({ action: "feedbackStatus", id: parseInt(tg.closest(".fb").getAttribute("data-id"), 10), status: tg.getAttribute("data-status") })
+        .then(load).catch(function (e) { BATool.status("error", e.msg || T.loadFail); });
+    }
+  });
+
+  if (!BAAuth.isSignedIn()) { gate(T.needLogin); return; }
+  BAAuth.me(true).then(function (info) {
+    if (!info) { gate(T.needLogin); return; }
+    if (info.role !== "admin") { gate(T.notAdmin); return; }
+    myId = info.id; $("panel").hidden = false; load();
+  });
+})();
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

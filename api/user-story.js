@@ -6,6 +6,10 @@ module.exports = async (req, res) => {
     });
   }
 
+  if (!(await require("./_lib/guard")(req, res, "user-story"))) {
+    return;
+  }
+
   try {
 
     const body = req.body || {};

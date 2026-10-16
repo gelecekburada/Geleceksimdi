@@ -18,6 +18,10 @@ export default async function handler(req, res) {
     });
   }
 
+  if (!(await require("./_lib/guard")(req, res, "process-flow"))) {
+    return;
+  }
+
   try {
     const body = req.body || {};
 
