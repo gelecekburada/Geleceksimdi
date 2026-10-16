@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/core/tool-ui.css" />
   <style>
     main { max-width: 1320px; }
+    [hidden] { display: none !important; }
     .zones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
     .zone { border: 2px dashed #c9d3e6; border-radius: 14px; padding: 16px; background: #fbfcfe; display: grid; gap: 6px; align-content: start; min-height: 150px; }
     .zone.drag { border-color: var(--primary); background: #eef3ff; }
@@ -52,6 +53,9 @@
     .pitem label { display: flex; gap: 8px; align-items: flex-start; font-weight: 700; }
     .pitem .chg { margin: 6px 0 0 24px; display: grid; gap: 2px; }
     .pitem del { color: var(--danger); } .pitem ins { color: var(--success); text-decoration: none; background: #e9f9ee; }
+    .sumlist { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 4px 18px; font-size: 13.5px; }
+    .sumlist li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--border); padding: 3px 0; }
+    .sumlist b { color: var(--heading); }
     .tools-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px; }
     @media (max-width: 900px) { .zones, .two { grid-template-columns: 1fr; } .kv { grid-template-columns: 1fr; } }
   </style>
@@ -139,13 +143,18 @@
 
   <section class="card" id="resultCard" hidden>
     <h2 data-t="result">Analysis</h2>
-    <div class="tiles" id="tiles"></div>
+    <div class="tiles" id="tiles" hidden></div>
+    <ul class="sumlist" id="sumlist" hidden></ul>
+    <div class="actions" style="margin:12px 0"><button type="button" class="btn primary" id="btnDownload2" data-t="download">Download Word</button></div>
+    <label class="check" style="margin:6px 0 12px" hidden><input type="checkbox" id="showDetail" /> <span data-t="showDetail">Show the rows for detailed review</span></label>
+    <div id="detail" hidden>
     <div class="tabs" id="tabs" role="tablist"></div>
     <div class="tools-row">
       <label class="field" style="flex:1 1 260px"><span data-t="search">Search</span><input type="text" id="filter" autocomplete="off" /></label>
       <label class="check"><input type="checkbox" id="onlyPending" /> <span data-t="onlyPending">Only rows waiting for approval</span></label>
     </div>
     <div id="panel"></div>
+    </div>
   </section>
 
   <details class="rules">
