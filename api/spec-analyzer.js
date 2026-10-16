@@ -45,7 +45,7 @@ You receive pages ${p.from}-${p.to}. Page markers look like [[Sayfa 12]]. Everyt
 
 STRICT RULES
 1. Use only what is written in the text. Never invent a field, rule, limit, code or page. If a property is not stated, use an empty string.
-2. Every item MUST have "page" (the number from the nearest [[Sayfa N]] marker above the passage) and "quote": an EXACT copy (same language, same spelling, max 160 characters, one line) of a short passage of the text that supports the item. The analyst will check quotes against the PDF, so do not paraphrase inside "quote".
+2. Every item MUST have "page" (the number from the nearest [[Sayfa N]] marker above the passage). Items other than fields also need "quote": an EXACT copy (same language, same spelling, max 100 characters, ONE line, no line breaks or tabs) of a short passage that supports the item. The analyst will check quotes against the PDF, so do not paraphrase inside "quote". Fields (table rows) have no quote, only "page".
 3. Keep identifiers verbatim: message codes, XML element names and paths, code values, error codes. Write descriptive sentences in ${p.outLang}.
 4. Tables: create one field per table row. Keep column meaning (type, length, occurrence, mandatory/optional/conditional, allowed values, format).
 5. A "rule" is any normative statement: must / shall / should / may not / only if / is mandatory / cannot / is rejected when / cut-off or timing statements / calculation or validation logic / conditions between fields. One rule per statement, written so a developer can implement it (condition -> action -> error code if given).
@@ -54,11 +54,11 @@ STRICT RULES
 8. The part marked CONTEXT only shows the end of the previous slice so you can follow a table or sentence that continues. Do NOT extract anything from it.
 9. If the slice contains nothing relevant (cover page, index, blank), return empty arrays.
 
-Return ONLY one JSON object, no markdown, in exactly this shape:
+Return ONLY one MINIFIED JSON object (a single line, no indentation, no markdown), in exactly this shape. Be brief: leave unknown properties as empty strings and keep descriptions to one short sentence.
 {
  "documentInfo": {"title":"","version":"","date":"","publisher":"","purpose":""},
  "messages": [{"code":"","name":"","direction":"","purpose":"","trigger":"","page":0,"quote":""}],
- "fields": [{"message":"","path":"","name":"","type":"","length":"","occurrence":"","presence":"M|O|C","format":"","allowedValues":[],"description":"","rules":"","page":0,"quote":""}],
+ "fields": [{"message":"","path":"","type":"","length":"","occurrence":"","presence":"M|O|C","allowedValues":[],"description":"","page":0}],
  "rules": [{"category":"validation|format|business|timing|limit|security|error-handling|reconciliation|other","title":"","statement":"","condition":"","action":"","errorCode":"","appliesTo":"","page":0,"quote":""}],
  "constraints": [{"kind":"","statement":"","value":"","page":0,"quote":""}],
  "errors": [{"code":"","description":"","cause":"","handling":"","page":0,"quote":""}],
@@ -200,8 +200,24 @@ Return ONLY one JSON object, no markdown:
 {"ops":[ ... ], "notes":"things not done or needing the analyst's decision (may be empty)"}`;
 }
 
+/* raw line breaks / tabs inside a JSON string (copied from a PDF line) make JSON.parse fail: escape them */
+function fixControlChars(t) {
+  let out = "", inStr = false, esc = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i], code = c.charCodeAt(0);
+    if (inStr) {
+      if (esc) { esc = false; out += c; continue; }
+      if (c === "\\") { esc = true; out += c; continue; }
+      if (c === '"') { inStr = false; out += c; continue; }
+      if (code < 32) { out += c === "\n" ? "\\n" : c === "\t" ? "\\t" : c === "\r" ? "" : " "; continue; }
+      out += c;
+    } else { if (c === '"') { inStr = true; } out += c; }
+  }
+  return out;
+}
+
 function extractJson(text) {
-  let t = String(text || "").trim();
+  let t = fixControlChars(String(text || "").trim());
   t = t.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
   const a = t.indexOf("{"), b = t.lastIndexOf("}");
   if (a < 0 || b <= a) { throw new Error("no json"); }
@@ -211,7 +227,7 @@ function extractJson(text) {
 /* A long answer sometimes comes back cut off or with one broken item. Keep everything before the
    break: cut at the last point where a complete object/array ended and close what is still open. */
 function repairJson(text) {
-  let t = String(text || "").trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  let t = fixControlChars(String(text || "").trim()).replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
   const a = t.indexOf("{");
   if (a < 0) { throw new Error("no json"); }
   t = t.slice(a);
