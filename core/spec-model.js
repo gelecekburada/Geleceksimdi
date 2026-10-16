@@ -233,7 +233,7 @@
 
   function fillBlanks(into, from) {
     Object.keys(from).forEach(function (k) {
-      if (k === "sources" || k === "id" || k === "status" || k === "note") { return; }
+      if (k === "sources" || k === "id" || k === "status") { return; }
       if ((into[k] === "" || into[k] == null || (Array.isArray(into[k]) && !into[k].length)) && from[k]) { into[k] = from[k]; }
     });
   }
@@ -264,7 +264,7 @@
       });
     });
     Object.keys(PREFIX).forEach(function (k) {
-      out[k].forEach(function (it, i) { it.id = PREFIX[k] + "-" + pad(i + 1); it.status = it.status || "pending"; it.note = it.note || ""; });
+      out[k].forEach(function (it, i) { it.id = PREFIX[k] + "-" + pad(i + 1); it.status = it.status || "pending"; });
     });
     return out;
   }
@@ -339,58 +339,10 @@
     return { text: parts.join("\n"), omitted: omitted };
   }
 
-  /* ---------- second pass (proposals) ---------- */
-
-  function listOf(v, fn) { return arr(v).map(fn).filter(Boolean); }
-  function origin(v) { return /^(doc|dok)/i.test(squish(v)) ? "document" : "proposal"; }
-
-  function normalizeSynthesis(raw) {
-    raw = raw && typeof raw === "object" ? raw : {};
-    var o = raw.overview && typeof raw.overview === "object" ? raw.overview : {};
-    function refs(v) { return arr(v).map(function (x) { return str(x, 20); }).filter(Boolean); }
-    var acc = raw.accounting && typeof raw.accounting === "object" ? raw.accounting : {};
-    var out = {
-      overview: {
-        purpose: str(o.purpose, 1500), scope: str(o.scope, 1500), outOfScope: str(o.outOfScope, 1000),
-        actors: listOf(o.actors, function (a) { return a && a.name ? { name: str(a.name, 120), role: str(a.role, 400) } : null; }),
-        assumptions: listOf(o.assumptions, function (a) { return str(a, 500) || null; })
-      },
-      accounting: {
-        summary: str(acc.summary, 1500),
-        entries: listOf(acc.entries, function (e) {
-          return e && (e.event || e.description) ? { event: str(e.event, 300), debit: str(e.debit, 200), credit: str(e.credit, 200), amount: str(e.amount, 200), timing: str(e.timing, 200), notes: str(e.notes, 600), origin: origin(e.origin), refs: refs(e.refs) } : null;
-        }),
-        receipt: listOf(acc.receipt, function (r) { return r && r.item ? { item: str(r.item, 200), detail: str(r.detail, 800), origin: origin(r.origin), refs: refs(r.refs) } : null; }),
-        returns: listOf(acc.returns, function (r) { return r && r.item ? { item: str(r.item, 200), detail: str(r.detail, 800), origin: origin(r.origin), refs: refs(r.refs) } : null; }),
-        reconciliation: listOf(acc.reconciliation, function (r) { return r && r.item ? { item: str(r.item, 200), detail: str(r.detail, 800), origin: origin(r.origin), refs: refs(r.refs) } : null; })
-      },
-      approvals: listOf(raw.approvals, function (a) { return a && a.step ? { step: str(a.step, 300), rule: str(a.rule, 800), who: str(a.who, 200), condition: str(a.condition, 400), origin: origin(a.origin), refs: refs(a.refs) } : null; }),
-      authorization: listOf(raw.authorization, function (a) { return a && a.role ? { role: str(a.role, 160), screen: str(a.screen, 200), rights: str(Array.isArray(a.rights) ? a.rights.join(", ") : a.rights, 400), note: str(a.note, 400), origin: origin(a.origin) } : null; }),
-      screens: listOf(raw.screens, function (s) {
-        return s && s.name ? { name: str(s.name, 200), purpose: str(s.purpose, 600), fields: str(Array.isArray(s.fields) ? s.fields.join(", ") : s.fields, 800), actions: str(Array.isArray(s.actions) ? s.actions.join(", ") : s.actions, 400), rules: str(Array.isArray(s.rules) ? s.rules.join(" ") : s.rules, 800), origin: origin(s.origin), refs: refs(s.refs) } : null;
-      }),
-      notifications: listOf(raw.notifications, function (n) { return n && n.event ? { event: str(n.event, 300), channel: str(n.channel, 120), to: str(n.to, 200), note: str(n.note, 400), origin: origin(n.origin) } : null; }),
-      audit: listOf(raw.audit, function (a) { return str(a && a.item ? a.item + (a.detail ? ": " + a.detail : "") : a, 600) || null; }),
-      nonFunctional: listOf(raw.nonFunctional, function (a) { return str(a && a.item ? a.item + (a.detail ? ": " + a.detail : "") : a, 600) || null; }),
-      tests: listOf(raw.tests, function (t) {
-        return t && t.title ? { title: str(t.title, 300), steps: str(Array.isArray(t.steps) ? t.steps.join(" → ") : t.steps, 1000), expected: str(t.expected, 600), refs: refs(t.refs) } : null;
-      }),
-      gaps: listOf(raw.gaps, function (g) { return g && g.text ? { text: str(g.text, 800), refs: refs(g.refs) } : null; }),
-      questions: listOf(raw.questions, function (q) { return q && q.question ? { question: str(q.question, 800), why: str(q.why, 600), owner: str(q.owner, 120) } : null; })
-    };
-    var ids = [["accounting.entries", out.accounting.entries], ["approvals", out.approvals], ["authorization", out.authorization], ["screens", out.screens], ["notifications", out.notifications], ["tests", out.tests], ["questions", out.questions], ["gaps", out.gaps],
-      ["accounting.receipt", out.accounting.receipt], ["accounting.returns", out.accounting.returns], ["accounting.reconciliation", out.accounting.reconciliation]];
-    var pre = { "accounting.entries": "MH", "approvals": "ON", "authorization": "YT", "screens": "EK", "notifications": "BL", "tests": "TS", "questions": "AS", "gaps": "EKS", "accounting.receipt": "DK", "accounting.returns": "IA", "accounting.reconciliation": "MU" };
-    ids.forEach(function (p) {
-      p[1].forEach(function (it, i) { it.id = pre[p[0]] + "-" + pad(i + 1); it.status = "pending"; it.note = ""; });
-    });
-    return out;
-  }
-
   var api = {
     CATEGORIES: CATEGORIES, squish: squish, pageTextFromItems: pageTextFromItems, buildChunks: buildChunks, splitChunk: splitChunk,
     normalizeFindings: normalizeFindings, merge: merge, verifyQuote: verifyQuote, annotate: annotate, stats: stats,
-    compactForSynthesis: compactForSynthesis, normalizeSynthesis: normalizeSynthesis
+    compactForSynthesis: compactForSynthesis
   };
   if (typeof module !== "undefined" && module.exports) { module.exports = api; } else { root.SpecModel = api; }
 })(typeof window !== "undefined" ? window : globalThis);

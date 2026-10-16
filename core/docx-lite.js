@@ -88,12 +88,14 @@
     var pct = b.widths && b.widths.length === cols ? b.widths : Array.apply(null, Array(cols)).map(function () { return 100 / cols; });
     var sum = pct.reduce(function (a, v) { return a + v; }, 0);
     var w = pct.map(function (p) { return Math.max(500, Math.round(totalWidth * p / sum)); });
-    var x = '<w:tbl><w:tblPr><w:tblStyle w:val="LiteTable"/><w:tblW w:w="' + totalWidth + '" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/></w:tblPr><w:tblGrid>';
+    var x = '<w:tbl><w:tblPr><w:tblStyle w:val="LiteTable"/><w:tblW w:w="' + totalWidth + '" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/>' + (b.caption ? '<w:tblCaption w:val="' + esc(b.caption) + '"/>' : "") + '</w:tblPr><w:tblGrid>';
     w.forEach(function (v) { x += '<w:gridCol w:w="' + v + '"/>'; });
     x += "</w:tblGrid>";
+    var mono = b.mono || [];
+    var MONO = '<w:rFonts w:ascii="Consolas" w:hAnsi="Consolas" w:cs="Consolas"/><w:sz w:val="16"/><w:szCs w:val="16"/>';
     function cell(text, i, isHead) {
       return '<w:tc><w:tcPr><w:tcW w:w="' + w[i] + '" w:type="dxa"/>' + (isHead ? '<w:shd w:val="clear" w:color="auto" w:fill="1F3A5F"/>' : "") + "</w:tcPr>" +
-        "<w:p><w:pPr><w:pStyle w:val=\"Cell\"/></w:pPr>" + runs(text, isHead ? '<w:b/><w:color w:val="FFFFFF"/>' : "") + "</w:p></w:tc>";
+        "<w:p><w:pPr><w:pStyle w:val=\"Cell\"/></w:pPr>" + runs(text, isHead ? '<w:b/><w:color w:val="FFFFFF"/>' : mono.indexOf(i) > -1 ? MONO : "") + "</w:p></w:tc>";
     }
     if (head.length) {
       x += '<w:tr><w:trPr><w:cantSplit/><w:tblHeader/></w:trPr>' + head.map(function (h, i) { return cell(h, i, true); }).join("") + "</w:tr>";
@@ -141,7 +143,7 @@
       if (!b) { return; }
       var pb = brk; if (b.t !== "pagebreak") { brk = ""; }
       if (b.t === "h1" || b.t === "h2" || b.t === "h3") { body += para(b.text, { h1: "Heading1", h2: "Heading2", h3: "Heading3" }[b.t], pb); }
-      else if (b.t === "p") { body += para(b.text, "", pb); }
+      else if (b.t === "p") { body += para(b.text, "", pb + (b.keep ? "<w:keepNext/>" : "")); }
       else if (b.t === "note") { body += para(b.text, "Note", pb); }
       else if (b.t === "bullets") { (b.items || []).forEach(function (it) { body += "<w:p><w:pPr><w:pStyle w:val=\"ListParagraph\"/></w:pPr>" + runs("•  " + it) + "</w:p>"; }); }
       else if (b.t === "numbered") { (b.items || []).forEach(function (it, i) { body += "<w:p><w:pPr><w:pStyle w:val=\"ListParagraph\"/></w:pPr>" + runs((i + 1) + ".  " + it) + "</w:p>"; }); }
@@ -172,6 +174,120 @@
     ]);
   }
 
-  var api = { build: build, _zip: zip, _crc32: crc32 };
+
+  /* ---------- reading a .docx back ---------- */
+
+  function u16(b, o) { return b[o] | (b[o + 1] << 8); }
+  function u32(b, o) { return (b[o] | (b[o + 1] << 8) | (b[o + 2] << 16) | (b[o + 3] << 24)) >>> 0; }
+
+  function inflateRaw(bytes) {
+    if (typeof DecompressionStream === "undefined") {
+      return Promise.reject(new Error("This browser cannot open compressed Word files (DecompressionStream missing)."));
+    }
+    var ds = new DecompressionStream("deflate-raw");
+    var w = ds.writable.getWriter();
+    w.write(bytes); w.close();
+    return new Response(ds.readable).arrayBuffer().then(function (ab) { return new Uint8Array(ab); });
+  }
+
+  /* returns Promise<{ "word/document.xml": Uint8Array, ... }> for the requested names */
+  function unzip(bytes, wanted) {
+    var eocd = -1;
+    for (var i = bytes.length - 22; i >= Math.max(0, bytes.length - 65600); i--) { if (u32(bytes, i) === 0x06054b50) { eocd = i; break; } }
+    if (eocd < 0) { return Promise.reject(new Error("Not a valid Word (.docx) file.")); }
+    var count = u16(bytes, eocd + 10), pos = u32(bytes, eocd + 16), found = {};
+    for (var n = 0; n < count; n++) {
+      if (u32(bytes, pos) !== 0x02014b50) { break; }
+      var method = u16(bytes, pos + 10), csize = u32(bytes, pos + 20), nlen = u16(bytes, pos + 28), elen = u16(bytes, pos + 30), clen = u16(bytes, pos + 32), lho = u32(bytes, pos + 42);
+      var name = new TextDecoder().decode(bytes.subarray(pos + 46, pos + 46 + nlen));
+      if (wanted.indexOf(name) > -1) { found[name] = { method: method, csize: csize, lho: lho }; }
+      pos += 46 + nlen + elen + clen;
+    }
+    var out = {}, jobs = Object.keys(found).map(function (name) {
+      var f = found[name], start = f.lho + 30 + u16(bytes, f.lho + 26) + u16(bytes, f.lho + 28);
+      var data = bytes.subarray(start, start + f.csize);
+      if (f.method === 0) { out[name] = data; return Promise.resolve(); }
+      if (f.method === 8) { return inflateRaw(data).then(function (d) { out[name] = d; }); }
+      return Promise.reject(new Error("Unsupported compression in the Word file."));
+    });
+    return Promise.all(jobs).then(function () { return out; });
+  }
+
+  /* tiny XML reader: enough for WordprocessingML (no DOM needed, works in Node too) */
+  function unescapeXml(s) {
+    return s.replace(/&(#x[0-9a-fA-F]+|#\d+|amp|lt|gt|quot|apos);/g, function (m, e) {
+      if (e === "amp") { return "&"; } if (e === "lt") { return "<"; } if (e === "gt") { return ">"; } if (e === "quot") { return '"'; } if (e === "apos") { return "'"; }
+      var code = e[1] === "x" ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10);
+      return isFinite(code) ? String.fromCodePoint(code) : m;
+    });
+  }
+  function parseXml(xml) {
+    var root = { name: "#root", attrs: {}, children: [], text: "" }, stack = [root];
+    var re = /<!--[\s\S]*?-->|<\?[\s\S]*?\?>|<!\[CDATA\[([\s\S]*?)\]\]>|<(\/?)([A-Za-z_][\w:.-]*)((?:\s+[\w:.-]+\s*=\s*(?:"[^"]*"|'[^']*'))*)\s*(\/?)>|([^<]+)/g, m;
+    while ((m = re.exec(xml))) {
+      var top = stack[stack.length - 1];
+      if (m[1] !== undefined) { top.children.push({ name: "#text", text: m[1] }); }
+      else if (m[3]) {
+        if (m[2]) { if (stack.length > 1) { stack.pop(); } }
+        else {
+          var attrs = {}, ar = /([\w:.-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g, a;
+          while ((a = ar.exec(m[4]))) { attrs[a[1]] = unescapeXml(a[2] !== undefined ? a[2] : a[3]); }
+          var node = { name: m[3], attrs: attrs, children: [] };
+          top.children.push(node);
+          if (!m[5]) { stack.push(node); }
+        }
+      } else if (m[6] !== undefined) { top.children.push({ name: "#text", text: unescapeXml(m[6]) }); }
+    }
+    return root;
+  }
+
+  function runText(node) {
+    var out = "";
+    (function walk(n) {
+      if (n.name === "w:del" || n.name === "w:instrText" || n.name === "w:tbl") { return; }
+      if (n.name === "w:t") { n.children.forEach(function (c) { out += c.text || ""; }); return; }
+      if (n.name === "w:tab") { out += "\t"; return; }
+      if (n.name === "w:br" || n.name === "w:cr") { if (!(n.attrs && n.attrs["w:type"] === "page")) { out += "\n"; } return; }
+      if (n.name === "w:noBreakHyphen") { out += "-"; return; }
+      (n.children || []).forEach(walk);
+    })(node);
+    return out;
+  }
+  function paraStyle(p) {
+    var ppr = p.children.filter(function (c) { return c.name === "w:pPr"; })[0];
+    var st = ppr && ppr.children.filter(function (c) { return c.name === "w:pStyle"; })[0];
+    return st ? st.attrs["w:val"] : "";
+  }
+  function cellString(tc) {
+    return tc.children.filter(function (c) { return c.name === "w:p"; }).map(runText).join("\n");
+  }
+
+  /* bytes -> Promise<[ {t:"p", style, text} | {t:"table", caption, rows:[[string]]} ]> */
+  function read(bytes) {
+    return unzip(bytes, ["word/document.xml"]).then(function (files) {
+      if (!files["word/document.xml"]) { throw new Error("This file has no Word document inside."); }
+      var tree = parseXml(new TextDecoder().decode(files["word/document.xml"]));
+      var body = null;
+      (function find(n) { if (n.name === "w:body") { body = n; } else { (n.children || []).forEach(find); } })(tree);
+      if (!body) { throw new Error("This file has no Word document inside."); }
+      var blocks = [];
+      (function walk(n) {
+        n.children.forEach(function (c) {
+          if (c.name === "w:p") { blocks.push({ t: "p", style: paraStyle(c), text: runText(c) }); }
+          else if (c.name === "w:tbl") {
+            var pr = c.children.filter(function (x) { return x.name === "w:tblPr"; })[0];
+            var cap = pr && pr.children.filter(function (x) { return x.name === "w:tblCaption"; })[0];
+            var rows = c.children.filter(function (x) { return x.name === "w:tr"; }).map(function (tr) {
+              return tr.children.filter(function (x) { return x.name === "w:tc"; }).map(cellString);
+            });
+            blocks.push({ t: "table", caption: cap ? cap.attrs["w:val"] || "" : "", rows: rows });
+          } else if (c.name !== "w:sectPr" && c.children && c.children.length) { walk(c); }
+        });
+      })(body);
+      return blocks;
+    });
+  }
+
+  var api = { build: build, read: read, _zip: zip, _crc32: crc32, _parseXml: parseXml };
   if (typeof module !== "undefined" && module.exports) { module.exports = api; } else { root.DocxLite = api; }
 })(typeof window !== "undefined" ? window : globalThis);

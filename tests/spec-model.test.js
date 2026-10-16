@@ -140,23 +140,5 @@ t("compact summary respects its budget and says what it left out", () => {
   assert.ok(small.omitted.length === 0 && small.text.indexOf("R-001") > -1 && small.text.indexOf("pak.008") > -1);
 });
 
-t("synthesis normalize: origin, ids, junk tolerance", () => {
-  const s = S.normalizeSynthesis({
-    overview: { purpose: "Amaç", actors: [{ name: "Operasyon" }, {}], assumptions: ["a", ""] },
-    accounting: { entries: [{ event: "Gelen ödeme", debit: "Muhabir hesap", credit: "Müşteri hesabı", origin: "proposal", refs: ["R-001", ""] }, { }], receipt: [{ item: "Dekont no", origin: "dokümandan" }] },
-    approvals: [{ step: "İade onayı", who: "Yönetici" }],
-    tests: [{ title: "Başarılı akış", steps: ["a", "b"], expected: "ok" }],
-    questions: [{ question: "Hesap planı?", owner: "Muhasebe" }, { why: "x" }]
-  });
-  assert.strictEqual(s.overview.actors.length, 1);
-  assert.deepStrictEqual(s.overview.assumptions, ["a"]);
-  assert.strictEqual(s.accounting.entries.length, 1);
-  assert.strictEqual(s.accounting.entries[0].origin, "proposal");
-  assert.strictEqual(s.accounting.entries[0].id, "MH-001");
-  assert.strictEqual(s.accounting.receipt[0].origin, "document");
-  assert.strictEqual(s.tests[0].steps, "a → b");
-  assert.strictEqual(s.questions.length, 1);
-  assert.deepStrictEqual(S.normalizeSynthesis("junk").approvals, []);
-});
 
 console.log("spec-model: " + n + " checks ALL PASSED");
