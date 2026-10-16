@@ -30,6 +30,16 @@
     currentPage = "document";
   } else if (path.endsWith("/json-xml.html")) {
     currentPage = "json-xml";
+  } else if (path.endsWith("/sql-beautifier.html")) {
+    currentPage = "sql-beautifier";
+  } else if (path.endsWith("/regex-builder.html")) {
+    currentPage = "regex-builder";
+  } else if (path.endsWith("/json-schema.html")) {
+    currentPage = "json-schema";
+  } else if (path.endsWith("/mock-data.html")) {
+    currentPage = "mock-data";
+  } else if (path.endsWith("/api-designer.html")) {
+    currentPage = "api-designer";
   }
 
   /* =========================================================
@@ -87,6 +97,11 @@
         groupWorkflow: "BA Workflow",
         groupDev: "Developer Tools",
         jsonXml: "JSON ↔ XML Converter",
+        sqlBeautifier: "SQL Beautifier",
+        regexBuilder: "Regex Builder",
+        jsonSchema: "JSON Schema Generator",
+        mockData: "Mock Data Generator",
+        apiDesigner: "API Designer",
         language: "Language",
         menu: "Menu"
       },
@@ -138,6 +153,11 @@
         groupWorkflow: "BA Akışı",
         groupDev: "Geliştirici Araçları",
         jsonXml: "JSON ↔ XML Dönüştürücü",
+        sqlBeautifier: "SQL Güzelleştirici",
+        regexBuilder: "Regex Oluşturucu",
+        jsonSchema: "JSON Schema Oluşturucu",
+        mockData: "Sahte Veri Üretici",
+        apiDesigner: "API Tasarımcısı",
         language: "Dil",
         menu: "Menü"
       },
@@ -642,6 +662,11 @@
       groupWorkflow: t("nav.groupWorkflow"),
       groupDev: t("nav.groupDev"),
       jsonXml: t("nav.jsonXml"),
+      sqlBeautifier: t("nav.sqlBeautifier"),
+      regexBuilder: t("nav.regexBuilder"),
+      jsonSchema: t("nav.jsonSchema"),
+      mockData: t("nav.mockData"),
+      apiDesigner: t("nav.apiDesigner"),
       language: t("nav.language"),
       menu: t("nav.menu")
     };
@@ -677,7 +702,12 @@
       {
         label: navText.groupDev,
         items: [
-          ["json-xml", "/json-xml.html", navText.jsonXml]
+          ["json-xml", "/json-xml.html", navText.jsonXml],
+          ["sql-beautifier", "/sql-beautifier.html", navText.sqlBeautifier],
+          ["regex-builder", "/regex-builder.html", navText.regexBuilder],
+          ["json-schema", "/json-schema.html", navText.jsonSchema],
+          ["mock-data", "/mock-data.html", navText.mockData],
+          ["api-designer", "/api-designer.html", navText.apiDesigner]
         ]
       }
     ];
@@ -1465,6 +1495,21 @@
           "json.t": "JSON ↔ XML Converter",
           "json.d": "Convert between JSON and XML in your browser. Nothing is sent to a server.",
           "json.l": "Open Converter →",
+          "sql.t": "SQL Beautifier",
+          "sql.d": "Format or minify SQL queries. Nothing is sent to a server.",
+          "sql.l": "Open Beautifier →",
+          "rx.t": "Regex Builder",
+          "rx.d": "Test patterns with live highlighting and a plain-language explanation.",
+          "rx.l": "Open Builder →",
+          "jsc.t": "JSON Schema Generator",
+          "jsc.d": "Generate a JSON Schema from one or more JSON samples.",
+          "jsc.l": "Open Generator →",
+          "mock.t": "Mock Data Generator",
+          "mock.d": "Create fake test data as JSON, CSV, SQL or NDJSON.",
+          "mock.l": "Open Generator →",
+          "api.t": "API Designer",
+          "api.d": "Design endpoints and export an OpenAPI 3.0.3 document.",
+          "api.l": "Open Designer →",
           "tools.k": "Tools",
           "tools.h": "Everything You Can Open Today",
           "tools.p": "Open any tool directly. The BA Workflow tools can also be used one after another, step by step.",
@@ -1530,6 +1575,21 @@
           "json.t": "JSON ↔ XML Dönüştürücü",
           "json.d": "JSON ve XML arasında tarayıcınızda dönüştürün. Hiçbir şey sunucuya gönderilmez.",
           "json.l": "Dönüştürücüyü Aç →",
+          "sql.t": "SQL Güzelleştirici",
+          "sql.d": "SQL sorgularını biçimlendirin veya sıkıştırın. Hiçbir şey sunucuya gönderilmez.",
+          "sql.l": "Güzelleştiriciyi Aç →",
+          "rx.t": "Regex Oluşturucu",
+          "rx.d": "Desenleri canlı vurgu ve sade açıklamayla test edin.",
+          "rx.l": "Oluşturucuyu Aç →",
+          "jsc.t": "JSON Schema Oluşturucu",
+          "jsc.d": "Bir veya daha fazla JSON örneğinden JSON Schema üretin.",
+          "jsc.l": "Oluşturucuyu Aç →",
+          "mock.t": "Sahte Veri Üretici",
+          "mock.d": "JSON, CSV, SQL veya NDJSON olarak sahte test verisi üretin.",
+          "mock.l": "Üreticiyi Aç →",
+          "api.t": "API Tasarımcısı",
+          "api.d": "Endpoint'leri tasarlayın, OpenAPI 3.0.3 belgesi olarak dışa aktarın.",
+          "api.l": "Tasarımcıyı Aç →",
           "tools.k": "Araçlar",
           "tools.h": "Bugün Açabileceğiniz Her Şey",
           "tools.p": "Herhangi bir aracı doğrudan açın. BA Akışı araçları isterseniz adım adım, art arda da kullanılabilir.",

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - JSON Schema Generator</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+</head>
+<body>
+<main>
+
+  <section class="hero">
+    <h1 data-t="title">JSON Schema Generator</h1>
+    <p data-t="subtitle"></p>
+  </section>
+
+  <section class="card">
+    <div class="toolbar">
+      <label class="field">
+        <span data-t="draft">Schema version</span>
+        <select id="draft"><option value="2020-12">2020-12</option><option value="07">Draft-07</option></select>
+      </label>
+      <label class="field">
+        <span data-t="required">Required fields</span>
+        <select id="required">
+          <option value="common" data-t="reqCommon">Present in every sample</option>
+          <option value="all" data-t="reqAll">All fields</option>
+          <option value="none" data-t="reqNone">None</option>
+        </select>
+      </label>
+      <label class="field">
+        <span data-t="schemaTitle">Title (optional)</span>
+        <input type="text" id="title" />
+      </label>
+      <label class="check"><input type="checkbox" id="strict" /> <span data-t="strict">Forbid extra properties</span></label>
+      <label class="check"><input type="checkbox" id="formats" checked /> <span data-t="formats">Detect formats (email, date…)</span></label>
+    </div>
+
+    <div class="panes">
+      <div class="pane">
+        <h2 data-t="input">JSON sample(s)</h2>
+        <textarea id="input" spellcheck="false" aria-label="JSON"></textarea>
+      </div>
+      <div class="pane">
+        <h2 data-t="output">JSON Schema</h2>
+        <textarea id="output" spellcheck="false" readonly aria-label="Schema"></textarea>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn primary" id="genButton" data-t="generate">Generate schema</button>
+      <button type="button" class="btn" id="copyButton" data-t="copy">Copy</button>
+      <button type="button" class="btn" id="downloadButton" data-t="download">Download</button>
+      <button type="button" class="btn" id="sampleButton" data-t="sample">Load sample</button>
+      <button type="button" class="btn" id="clearButton" data-t="clear">Clear</button>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <ul class="warnings" id="warnings"></ul>
+  </section>
+
+  <details class="rules">
+    <summary data-t="rulesTitle">Notes</summary>
+    <ul id="rulesList"></ul>
+  </details>
+
+</main>
+
+<script src="/core/json-schema.js"></script>
+<script src="/core/tool-ui.js"></script>
+<script src="/core/history.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = BATool.$;
+  var DICT = {
+    en: {
+      pageTitle: "BAForge AI - JSON Schema Generator",
+      title: "JSON Schema Generator",
+      subtitle: "Paste one or more JSON samples and get a JSON Schema. Nothing is sent to a server.",
+      draft: "Schema version", required: "Required fields", reqCommon: "Present in every sample", reqAll: "All fields", reqNone: "None",
+      schemaTitle: "Title (optional)", strict: "Forbid extra properties", formats: "Detect formats (email, date…)",
+      input: "JSON sample(s)", output: "JSON Schema",
+      generate: "Generate schema", copy: "Copy", download: "Download", sample: "Load sample", clear: "Clear",
+      rulesTitle: "Notes",
+      copied: "Copied to clipboard.", copyFail: "Could not copy.", nothing: "There is no output yet.", emptyIn: "Paste some JSON first.",
+      done: "Schema generated.", multi: "Detected several samples (one JSON per line) and merged them.",
+      selfCheck: "Warning: a sample does not pass its own schema.", badJson: "Invalid JSON: ",
+      rules: [
+        "A single sample gives a faithful structure but cannot tell which fields are optional. Add more samples (one JSON per line) for better results.",
+        "Whole numbers become integer, numbers with decimals become number; a field that is sometimes null gets both types.",
+        "Formats are guessed from the text (email, uri, date, date-time, uuid, ipv4) and kept only if every sample agrees.",
+        "Review the result: a schema inferred from examples describes the examples, not your business rules (min/max, patterns, enums)."
+      ]
+    },
+    tr: {
+      pageTitle: "BAForge AI - JSON Schema Oluşturucu",
+      title: "JSON Schema Oluşturucu",
+      subtitle: "Bir veya daha fazla JSON örneği yapıştırın, JSON Schema alın. Hiçbir şey sunucuya gönderilmez.",
+      draft: "Şema sürümü", required: "Zorunlu alanlar", reqCommon: "Her örnekte bulunanlar", reqAll: "Tüm alanlar", reqNone: "Hiçbiri",
+      schemaTitle: "Başlık (isteğe bağlı)", strict: "Fazladan alanı yasakla", formats: "Biçimleri algıla (e-posta, tarih…)",
+      input: "JSON örnek(ler)i", output: "JSON Schema",
+      generate: "Şema üret", copy: "Kopyala", download: "İndir", sample: "Örnek yükle", clear: "Temizle",
+      rulesTitle: "Notlar",
+      copied: "Panoya kopyalandı.", copyFail: "Kopyalanamadı.", nothing: "Henüz çıktı yok.", emptyIn: "Önce bir JSON yapıştırın.",
+      done: "Şema üretildi.", multi: "Birden fazla örnek algılandı (satır başına bir JSON) ve birleştirildi.",
+      selfCheck: "Uyarı: bir örnek kendi şemasından geçemiyor.", badJson: "Geçersiz JSON: ",
+      rules: [
+        "Tek örnek yapıyı doğru verir ama hangi alanların isteğe bağlı olduğunu bilemez. Daha iyi sonuç için birden fazla örnek ekleyin (satır başına bir JSON).",
+        "Tam sayılar integer, ondalıklılar number olur; bazen null olan alan her iki türü de alır.",
+        "Biçimler metinden tahmin edilir (email, uri, date, date-time, uuid, ipv4) ve yalnızca tüm örnekler aynı fikirdeyse korunur.",
+        "Sonucu gözden geçirin: örneklerden çıkarılan şema örnekleri anlatır, iş kurallarınızı (min/maks, desen, enum) değil."
+      ]
+    }
+  };
+  var T = BATool.applyI18n(DICT);
+  $("rulesList").innerHTML = T.rules.map(function (r) { return "<li>" + BATool.esc(r) + "</li>"; }).join("");
+
+  var SAMPLE = '{"id": 101, "customer": {"name": "Ayşe Yılmaz", "email": "ayse@example.com"}, "total": 249.9, "paid": true, "created": "2026-10-16T09:30:00Z", "items": [{"sku": "A-1", "qty": 2}]}\n' +
+    '{"id": 102, "customer": {"name": "Mehmet Demir", "email": "mehmet@example.com", "phone": "+905321234567"}, "total": 80, "paid": false, "created": "2026-10-17T11:00:00Z", "items": [{"sku": "B-7", "qty": 1, "gift": true}], "note": null}';
+
+  var lastOk = null;
+
+  function opts() {
+    return {
+      draft: $("draft").value, required: $("required").value, title: $("title").value.trim(),
+      additionalProperties: $("strict").checked ? false : undefined, formats: $("formats").checked
+    };
+  }
+
+  function run() {
+    var text = $("input").value;
+    BATool.warnings([]);
+    if (!text.trim()) { $("output").value = ""; lastOk = null; BATool.status("error", T.emptyIn); return; }
+    try {
+      var parsed = BASchema.parseSamples(text);
+      var schema = BASchema.infer(parsed.samples, opts());
+      var out = JSON.stringify(schema, null, 2);
+      $("output").value = out;
+      var bad = parsed.samples.some(function (s) { return BASchema.validate(schema, s).length > 0; });
+      BATool.status("ok", T.done);
+      var w = [];
+      if (parsed.multi) { w.push(T.multi); }
+      if (bad) { w.push(T.selfCheck); }
+      BATool.warnings(w);
+      lastOk = { input: text, output: out, o: { draft: $("draft").value, required: $("required").value, title: $("title").value, strict: $("strict").checked, formats: $("formats").checked } };
+      if (window.BAHistory) {
+        var top = BAHistory.list("json-schema")[0];
+        if (!top || top.data.input !== text || JSON.stringify(top.data.o) !== JSON.stringify(lastOk.o)) { BAHistory.record(); }
+      }
+    } catch (e) {
+      $("output").value = ""; lastOk = null;
+      BATool.status("error", T.badJson + (e.message || e));
+    }
+  }
+
+  $("genButton").addEventListener("click", run);
+  $("copyButton").addEventListener("click", function () {
+    var o = $("output").value;
+    if (!o) { BATool.status("error", T.nothing); return; }
+    BATool.copy(o, function () { BATool.status("ok", T.copied); }, function () { BATool.status("error", T.copyFail); });
+  });
+  $("downloadButton").addEventListener("click", function () {
+    var o = $("output").value;
+    if (!o) { BATool.status("error", T.nothing); return; }
+    BATool.download("schema.json", o, "application/json");
+  });
+  $("sampleButton").addEventListener("click", function () { $("input").value = SAMPLE; run(); });
+  $("clearButton").addEventListener("click", function () { $("input").value = ""; $("output").value = ""; lastOk = null; BATool.status("", ""); BATool.warnings([]); $("input").focus(); });
+  $("input").addEventListener("keydown", function (e) { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); run(); } });
+
+  if (window.BAHistory) {
+    BAHistory.init({
+      page: "json-schema",
+      label: function (d) { return d.input; },
+      capture: function () { return lastOk; },
+      restore: function (d) {
+        $("input").value = d.input; $("output").value = d.output;
+        $("draft").value = d.o.draft; $("required").value = d.o.required; $("title").value = d.o.title;
+        $("strict").checked = d.o.strict; $("formats").checked = d.o.formats;
+        BATool.status("", ""); BATool.warnings([]); lastOk = d;
+      }
+    });
+  }
+})();
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - API Designer</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+  <style>
+    .ep { border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 12px; background: #fbfcfe; }
+    .ep-head { display: grid; grid-template-columns: 110px 1fr 1fr 150px auto; gap: 10px; align-items: end; }
+    .ep textarea { min-height: 80px; }
+    .ep .inp, .ep select { width: 100%; height: 40px; padding: 0 10px; border: 1px solid var(--border); border-radius: 10px; font: inherit; font-size: 14px; background: #fff; }
+    .ep h3 { font-size: 13px; margin: 12px 0 4px; color: var(--muted); }
+    .resp { display: grid; grid-template-columns: 80px 1fr auto; gap: 8px; margin-bottom: 6px; align-items: start; }
+    .resp textarea { grid-column: 1 / -1; min-height: 56px; }
+    @media (max-width: 800px) { .ep-head { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+
+  <section class="hero">
+    <h1 data-t="title">API Designer</h1>
+    <p data-t="subtitle"></p>
+  </section>
+
+  <section class="card">
+    <h2 data-t="general">General</h2>
+    <div class="toolbar">
+      <label class="field" style="flex:1 1 200px"><span data-t="apiTitle">API title</span><input type="text" id="apiTitle" value="My API" style="width:100%" /></label>
+      <label class="field"><span data-t="version">Version</span><input type="text" id="apiVersion" value="1.0.0" /></label>
+      <label class="field" style="flex:1 1 240px"><span data-t="server">Server URL (optional)</span><input type="text" id="server" placeholder="https://api.example.com/v1" style="width:100%" /></label>
+    </div>
+    <label class="field"><span data-t="desc">Description (optional)</span><input type="text" id="apiDesc" style="width:100%" /></label>
+  </section>
+
+  <section class="card">
+    <h2 data-t="endpoints">Endpoints</h2>
+    <div id="eps"></div>
+    <div class="actions">
+      <button type="button" class="btn small" id="addEp" data-t="addEp">+ Add endpoint</button>
+      <button type="button" class="btn small" id="sampleButton" data-t="sample">Load sample</button>
+      <button type="button" class="btn small danger" id="clearButton" data-t="clear">Clear</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="toolbar">
+      <div class="segmented" role="group">
+        <button type="button" id="fmtYaml" aria-pressed="true">YAML</button>
+        <button type="button" id="fmtJson" aria-pressed="false">JSON</button>
+      </div>
+      <button type="button" class="btn primary" id="genButton" data-t="generate">Generate OpenAPI</button>
+      <button type="button" class="btn" id="copyButton" data-t="copy">Copy</button>
+      <button type="button" class="btn" id="downloadButton" data-t="download">Download</button>
+    </div>
+    <textarea id="output" spellcheck="false" readonly aria-label="OpenAPI" style="min-height:360px"></textarea>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <ul class="warnings" id="warnings"></ul>
+  </section>
+
+  <details class="rules">
+    <summary data-t="rulesTitle">Notes</summary>
+    <ul id="rulesList"></ul>
+  </details>
+
+</main>
+
+<script src="/core/json-schema.js"></script>
+<script src="/core/openapi.js"></script>
+<script src="/core/tool-ui.js"></script>
+<script src="/core/history.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = BATool.$;
+  var DICT = {
+    en: {
+      pageTitle: "BAForge AI - API Designer",
+      title: "API Designer",
+      subtitle: "Describe your endpoints in a form and get an OpenAPI 3.0.3 document (YAML or JSON) that Swagger UI, Postman and code generators understand. Runs in your browser.",
+      general: "General", apiTitle: "API title", version: "Version", server: "Server URL (optional)", desc: "Description (optional)",
+      endpoints: "Endpoints", addEp: "+ Add endpoint", sample: "Load sample", clear: "Clear",
+      method: "Method", path: "Path", summary: "Summary", tag: "Group (tag)", remove: "Remove",
+      params: "Query / header parameters (one per line: name:type, add * if required, header: prefix for headers)",
+      body: "Request body (JSON example)", responses: "Responses (status, description, JSON example)",
+      code: "Status", respDesc: "Description", respBody: "JSON example (optional)", addResp: "+ Add response",
+      generate: "Generate OpenAPI", copy: "Copy", download: "Download",
+      rulesTitle: "Notes",
+      copied: "Copied to clipboard.", copyFail: "Could not copy.", nothing: "There is no output yet.",
+      done: "OpenAPI document generated.", issues: "Fix these first:",
+      rules: [
+        "Path parameters written as {id} are detected automatically and marked required.",
+        "Body schemas are inferred from your JSON examples (all fields required, formats guessed). Edit the result if some fields are optional.",
+        "A field whose example is null becomes nullable.",
+        "The output follows OpenAPI 3.0.3. Paste it into editor.swagger.io or import it into Postman to check it."
+      ]
+    },
+    tr: {
+      pageTitle: "BAForge AI - API Tasarımcısı",
+      title: "API Tasarımcısı",
+      subtitle: "Endpoint'lerinizi formla anlatın, Swagger UI, Postman ve kod üreticilerin anladığı OpenAPI 3.0.3 belgesini (YAML veya JSON) alın. Tarayıcınızda çalışır.",
+      general: "Genel", apiTitle: "API adı", version: "Sürüm", server: "Sunucu adresi (isteğe bağlı)", desc: "Açıklama (isteğe bağlı)",
+      endpoints: "Endpoint'ler", addEp: "+ Endpoint ekle", sample: "Örnek yükle", clear: "Temizle",
+      method: "Metot", path: "Yol", summary: "Özet", tag: "Grup (etiket)", remove: "Kaldır",
+      params: "Sorgu / header parametreleri (satır başına bir tane: ad:tür, zorunluysa * ekleyin, header için header: öneki)",
+      body: "İstek gövdesi (JSON örneği)", responses: "Yanıtlar (durum kodu, açıklama, JSON örneği)",
+      code: "Kod", respDesc: "Açıklama", respBody: "JSON örneği (isteğe bağlı)", addResp: "+ Yanıt ekle",
+      generate: "OpenAPI üret", copy: "Kopyala", download: "İndir",
+      rulesTitle: "Notlar",
+      copied: "Panoya kopyalandı.", copyFail: "Kopyalanamadı.", nothing: "Henüz çıktı yok.",
+      done: "OpenAPI belgesi üretildi.", issues: "Önce şunları düzeltin:",
+      rules: [
+        "{id} biçimindeki yol parametreleri otomatik algılanır ve zorunlu işaretlenir.",
+        "Gövde şemaları JSON örneklerinizden çıkarılır (tüm alanlar zorunlu, biçimler tahmin edilir). Bazı alanlar isteğe bağlıysa sonucu düzenleyin.",
+        "Örneği null olan alan nullable olur.",
+        "Çıktı OpenAPI 3.0.3'e uyar. Kontrol için editor.swagger.io'ya yapıştırın veya Postman'e aktarın."
+      ]
+    }
+  };
+  var T = BATool.applyI18n(DICT);
+  $("rulesList").innerHTML = T.rules.map(function (r) { return "<li>" + BATool.esc(r) + "</li>"; }).join("");
+
+  var eps = $("eps"), fmt = "yaml", lastOk = null;
+
+  function respRow(r) {
+    r = r || { code: "200", description: "OK", body: "" };
+    var d = document.createElement("div");
+    d.className = "resp";
+    d.innerHTML = '<input class="inp r-code" type="text" value="' + BATool.esc(r.code) + '" aria-label="' + BATool.esc(T.code) + '" />' +
+      '<input class="inp r-desc" type="text" value="' + BATool.esc(r.description) + '" aria-label="' + BATool.esc(T.respDesc) + '" />' +
+      '<button type="button" class="btn small danger r-del" aria-label="' + BATool.esc(T.remove) + '">✕</button>' +
+      '<textarea class="r-body" spellcheck="false" placeholder="' + BATool.esc(T.respBody) + '">' + BATool.esc(r.body || "") + "</textarea>";
+    return d;
+  }
+
+  function addEp(e) {
+    e = e || { method: "get", path: "/items", summary: "", tag: "", params: "", requestBody: "", responses: [{ code: "200", description: "OK", body: "" }] };
+    var d = document.createElement("div");
+    d.className = "ep";
+    var ms = BAOpenApi.METHODS.map(function (m) { return "<option value=\"" + m + "\"" + (m === e.method ? " selected" : "") + ">" + m.toUpperCase() + "</option>"; }).join("");
+    d.innerHTML =
+      '<div class="ep-head">' +
+      '<label class="field"><span>' + BATool.esc(T.method) + '</span><select class="e-method">' + ms + "</select></label>" +
+      '<label class="field"><span>' + BATool.esc(T.path) + '</span><input class="inp e-path" type="text" value="' + BATool.esc(e.path) + '" /></label>' +
+      '<label class="field"><span>' + BATool.esc(T.summary) + '</span><input class="inp e-summary" type="text" value="' + BATool.esc(e.summary) + '" /></label>' +
+      '<label class="field"><span>' + BATool.esc(T.tag) + '</span><input class="inp e-tag" type="text" value="' + BATool.esc(e.tag) + '" /></label>' +
+      '<button type="button" class="btn small danger e-del" aria-label="' + BATool.esc(T.remove) + '">✕</button></div>' +
+      "<h3>" + BATool.esc(T.params) + '</h3><textarea class="short e-params" spellcheck="false">' + BATool.esc(e.params || "") + "</textarea>" +
+      "<h3>" + BATool.esc(T.body) + '</h3><textarea class="short e-body" spellcheck="false">' + BATool.esc(e.requestBody || "") + "</textarea>" +
+      "<h3>" + BATool.esc(T.responses) + '</h3><div class="e-resps"></div>' +
+      '<button type="button" class="btn small e-addresp">' + BATool.esc(T.addResp) + "</button>";
+    var box = d.querySelector(".e-resps");
+    (e.responses || []).forEach(function (r) { box.appendChild(respRow(r)); });
+    eps.appendChild(d);
+  }
+
+  eps.addEventListener("click", function (ev) {
+    var t = ev.target;
+    if (t.classList.contains("e-del")) { t.closest(".ep").remove(); }
+    else if (t.classList.contains("r-del")) { t.closest(".resp").remove(); }
+    else if (t.classList.contains("e-addresp")) { t.closest(".ep").querySelector(".e-resps").appendChild(respRow({ code: "400", description: "Bad request", body: "" })); }
+  });
+
+  function parseParams(text) {
+    return text.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean).map(function (l) {
+      var inHeader = /^header:/i.test(l);
+      if (inHeader) { l = l.replace(/^header:/i, ""); }
+      var req = /\*$/.test(l);
+      if (req) { l = l.replace(/\*$/, ""); }
+      var parts = l.split(":");
+      return { name: parts[0].trim(), type: (parts[1] || "string").trim(), in: inHeader ? "header" : "query", required: req };
+    });
+  }
+
+  function readSpec() {
+    return {
+      title: $("apiTitle").value.trim(), version: $("apiVersion").value.trim(), serverUrl: $("server").value.trim(), description: $("apiDesc").value.trim(),
+      endpoints: Array.prototype.map.call(eps.querySelectorAll(".ep"), function (d) {
+        return {
+          method: d.querySelector(".e-method").value, path: d.querySelector(".e-path").value.trim(),
+          summary: d.querySelector(".e-summary").value.trim(), tag: d.querySelector(".e-tag").value.trim(),
+          params: parseParams(d.querySelector(".e-params").value), requestBody: d.querySelector(".e-body").value,
+          responses: Array.prototype.map.call(d.querySelectorAll(".resp"), function (r) {
+            return { code: r.querySelector(".r-code").value.trim(), description: r.querySelector(".r-desc").value.trim(), body: r.querySelector(".r-body").value };
+          }),
+          /* raw text kept for history restore */
+          _params: d.querySelector(".e-params").value
+        };
+      })
+    };
+  }
+
+  function render(doc) { return fmt === "yaml" ? BAOpenApi.toYaml(doc) : BAOpenApi.toJson(doc); }
+
+  function run() {
+    var spec = readSpec();
+    var r = BAOpenApi.build(spec);
+    BATool.warnings([]);
+    if (r.errors.length) {
+      $("output").value = ""; lastOk = null;
+      BATool.status("error", T.issues);
+      BATool.warnings(r.errors);
+      return;
+    }
+    var out = render(r.doc);
+    $("output").value = out;
+    BATool.status("ok", T.done);
+    lastOk = { spec: spec, doc: r.doc, output: out };
+    if (window.BAHistory) {
+      var top = BAHistory.list("api-designer")[0];
+      if (!top || JSON.stringify(top.data.spec) !== JSON.stringify(spec)) { BAHistory.record(); }
+    }
+  }
+
+  function setFmt(f) {
+    fmt = f;
+    $("fmtYaml").setAttribute("aria-pressed", f === "yaml");
+    $("fmtJson").setAttribute("aria-pressed", f === "json");
+    if (lastOk) { $("output").value = render(lastOk.doc); }
+  }
+  $("fmtYaml").addEventListener("click", function () { setFmt("yaml"); });
+  $("fmtJson").addEventListener("click", function () { setFmt("json"); });
+
+  $("genButton").addEventListener("click", run);
+  $("addEp").addEventListener("click", function () { addEp(); });
+  $("copyButton").addEventListener("click", function () {
+    var o = $("output").value;
+    if (!o) { BATool.status("error", T.nothing); return; }
+    BATool.copy(o, function () { BATool.status("ok", T.copied); }, function () { BATool.status("error", T.copyFail); });
+  });
+  $("downloadButton").addEventListener("click", function () {
+    var o = $("output").value;
+    if (!o) { BATool.status("error", T.nothing); return; }
+    BATool.download("openapi." + (fmt === "yaml" ? "yaml" : "json"), o, fmt === "yaml" ? "text/yaml" : "application/json");
+  });
+
+  var SAMPLE = {
+    title: "Shop API", version: "1.0.0", serverUrl: "https://api.example.com/v1", desc: "Orders and customers",
+    endpoints: [
+      { method: "get", path: "/orders", summary: "List orders", tag: "orders", params: "limit:integer\nstatus:string", requestBody: "", responses: [{ code: "200", description: "A list of orders", body: '[{"id": 1, "status": "paid", "total": 249.9, "created": "2026-10-16T09:30:00Z"}]' }] },
+      { method: "get", path: "/orders/{id}", summary: "Get one order", tag: "orders", params: "", requestBody: "", responses: [{ code: "200", description: "The order", body: '{"id": 1, "status": "paid", "total": 249.9, "note": null}' }, { code: "404", description: "Order not found", body: "" }] },
+      { method: "post", path: "/orders", summary: "Create an order", tag: "orders", params: "header:X-Request-Id:string*", requestBody: '{"customerId": 7, "items": [{"sku": "A-1", "qty": 2}]}', responses: [{ code: "201", description: "Created", body: '{"id": 2}' }, { code: "400", description: "Invalid input", body: "" }] }
+    ]
+  };
+
+  function load(s) {
+    $("apiTitle").value = s.title; $("apiVersion").value = s.version; $("server").value = s.serverUrl || ""; $("apiDesc").value = s.desc || "";
+    eps.innerHTML = "";
+    s.endpoints.forEach(addEp);
+  }
+  $("sampleButton").addEventListener("click", function () { load(SAMPLE); run(); });
+  $("clearButton").addEventListener("click", function () { load({ title: "My API", version: "1.0.0", endpoints: [] }); addEp(); $("output").value = ""; lastOk = null; BATool.status("", ""); BATool.warnings([]); });
+
+  if (window.BAHistory) {
+    BAHistory.init({
+      page: "api-designer",
+      label: function (d) { return d.spec.title + " — " + d.spec.endpoints.length + " endpoint(s)"; },
+      capture: function () { return lastOk ? { spec: lastOk.spec, doc: lastOk.doc, output: lastOk.output } : null; },
+      restore: function (d) {
+        var s = d.spec;
+        load({
+          title: s.title, version: s.version, serverUrl: s.serverUrl, desc: s.description,
+          endpoints: s.endpoints.map(function (e) { return { method: e.method, path: e.path, summary: e.summary, tag: e.tag, params: e._params, requestBody: e.requestBody, responses: e.responses }; })
+        });
+        lastOk = d; $("output").value = render(d.doc); BATool.status("", ""); BATool.warnings([]);
+      }
+    });
+  }
+
+  addEp();
+})();
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

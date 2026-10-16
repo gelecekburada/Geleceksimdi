@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - Regex Builder</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+</head>
+<body>
+<main>
+
+  <section class="hero">
+    <h1 data-t="title">Regex Builder</h1>
+    <p data-t="subtitle"></p>
+  </section>
+
+  <section class="card">
+    <div class="toolbar">
+      <label class="field" style="flex:1 1 320px">
+        <span data-t="pattern">Pattern</span>
+        <input type="text" id="pattern" spellcheck="false" autocomplete="off" style="width:100%;font-family:monospace" />
+      </label>
+      <div class="field" style="display:grid;gap:4px">
+        <span style="font-size:12px;font-weight:700;color:var(--muted)" data-t="flags">Flags</span>
+        <div style="display:flex;gap:10px;height:40px;align-items:center;font-size:14px">
+          <label><input type="checkbox" class="flag" value="g" checked /> g</label>
+          <label><input type="checkbox" class="flag" value="i" /> i</label>
+          <label><input type="checkbox" class="flag" value="m" /> m</label>
+          <label><input type="checkbox" class="flag" value="s" /> s</label>
+          <label><input type="checkbox" class="flag" value="u" /> u</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="pane">
+      <h2 data-t="testText">Test text</h2>
+      <textarea id="text" class="short" spellcheck="false" aria-label="Test text"></textarea>
+    </div>
+
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+
+    <h2 style="margin-top:14px" data-t="result">Result</h2>
+    <pre class="out" id="highlight" style="min-height:90px"></pre>
+
+    <div class="table-wrap" style="margin-top:12px">
+      <table class="grid" id="matchTable" hidden>
+        <thead><tr><th>#</th><th data-t="colMatch">Match</th><th data-t="colPos">Position</th><th data-t="colGroups">Groups</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="cols-2" style="margin-top:16px">
+      <label class="field">
+        <span data-t="replaceWith">Replace with (use $1, $&amp;, $&lt;name&gt;)</span>
+        <input type="text" id="replacement" style="font-family:monospace" />
+      </label>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px" data-t="replaceResult">Replace preview</div>
+        <pre class="out" id="replaceOut" style="min-height:60px"></pre>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn" id="copyButton" data-t="copy">Copy pattern</button>
+      <button type="button" class="btn" id="clearButton" data-t="clear">Clear</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 data-t="explainTitle">What each part means</h2>
+    <div class="table-wrap">
+      <table class="grid" id="explainTable">
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 data-t="libTitle">Common patterns</h2>
+    <div class="chips" id="lib"></div>
+  </section>
+
+  <details class="rules">
+    <summary data-t="rulesTitle">Notes</summary>
+    <ul id="rulesList"></ul>
+  </details>
+
+</main>
+
+<script src="/core/regex-tools.js"></script>
+<script src="/core/tool-ui.js"></script>
+<script src="/core/history.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = BATool.$;
+
+  var DICT = {
+    en: {
+      pageTitle: "BAForge AI - Regex Builder",
+      title: "Regex Builder",
+      subtitle: "Write a regular expression, see the matches highlighted live, preview a replacement and read a plain-language explanation. Everything runs in your browser.",
+      pattern: "Pattern", flags: "Flags", testText: "Test text", result: "Result",
+      colMatch: "Match", colPos: "Position", colGroups: "Groups",
+      replaceWith: "Replace with (use $1, $&, $<name>)", replaceResult: "Replace preview",
+      copy: "Copy pattern", clear: "Clear",
+      explainTitle: "What each part means", libTitle: "Common patterns",
+      rulesTitle: "Notes",
+      copied: "Pattern copied.", copyFail: "Could not copy.",
+      empty: "Type a pattern to start.", none: "No matches.", found: "match(es)", more: "Showing the first matches only.",
+      timeout: "The pattern took too long on this text (it may be backtracking catastrophically). Simplify it.",
+      noGroups: "-",
+      rules: [
+        "Uses the JavaScript regular expression engine. Other languages (Python, Java, .NET) differ in small ways.",
+        "With the g flag every match is listed; without it only the first one.",
+        "A pattern that takes more than 1.5 seconds is stopped to protect your browser.",
+        "The explanation covers common syntax; unusual constructs are shown as plain characters."
+      ]
+    },
+    tr: {
+      pageTitle: "BAForge AI - Regex Oluşturucu",
+      title: "Regex Oluşturucu",
+      subtitle: "Düzenli ifade yazın, eşleşmeleri canlı vurgulu görün, değiştirme önizlemesi yapın ve sade bir açıklama okuyun. Her şey tarayıcınızda çalışır.",
+      pattern: "Desen", flags: "Bayraklar", testText: "Test metni", result: "Sonuç",
+      colMatch: "Eşleşme", colPos: "Konum", colGroups: "Gruplar",
+      replaceWith: "Şununla değiştir ($1, $&, $<ad> kullanılabilir)", replaceResult: "Değiştirme önizlemesi",
+      copy: "Deseni kopyala", clear: "Temizle",
+      explainTitle: "Her parça ne anlama geliyor", libTitle: "Hazır desenler",
+      rulesTitle: "Notlar",
+      copied: "Desen kopyalandı.", copyFail: "Kopyalanamadı.",
+      empty: "Başlamak için bir desen yazın.", none: "Eşleşme yok.", found: "eşleşme", more: "Yalnızca ilk eşleşmeler gösteriliyor.",
+      timeout: "Desen bu metinde çok uzun sürdü (aşırı geri izleme olabilir). Sadeleştirin.",
+      noGroups: "-",
+      rules: [
+        "JavaScript düzenli ifade motorunu kullanır. Diğer dillerde (Python, Java, .NET) küçük farklar olabilir.",
+        "g bayrağıyla tüm eşleşmeler listelenir; olmadan yalnızca ilki.",
+        "1,5 saniyeden uzun süren desenler tarayıcınızı korumak için durdurulur.",
+        "Açıklama yaygın söz dizimini kapsar; alışılmadık yapılar düz karakter olarak gösterilir."
+      ]
+    }
+  };
+
+  var T = BATool.applyI18n(DICT);
+  var L = BATool.lang();
+  $("rulesList").innerHTML = T.rules.map(function (r) { return "<li>" + BATool.esc(r) + "</li>"; }).join("");
+
+  /* ---- worker with timeout ---- */
+  var workerSrc = "var MAX_MATCHES=" + BARegex.MAX_MATCHES + ";" + BARegex.findMatches.toString() +
+    ";onmessage=function(e){var d=e.data;postMessage({id:d.id,r:findMatches(d.p,d.f,d.t)});};";
+  var worker = null, seq = 0, pending = null;
+  function makeWorker() {
+    try {
+      var url = URL.createObjectURL(new Blob([workerSrc], { type: "application/javascript" }));
+      worker = new Worker(url);
+      worker.onmessage = function (e) {
+        if (pending && e.data.id === pending.id) { clearTimeout(pending.timer); var cb = pending.cb; pending = null; cb(e.data.r); }
+      };
+    } catch (err) { worker = null; }
+  }
+  function search(p, f, t, cb) {
+    if (!worker) { makeWorker(); }
+    if (!worker) { cb(BARegex.findMatches(p, f, t)); return; }
+    var id = ++seq;
+    if (pending) { clearTimeout(pending.timer); }
+    pending = {
+      id: id, cb: cb,
+      timer: setTimeout(function () {
+        worker.terminate(); worker = null; pending = null;
+        cb({ matches: [], truncated: false, error: null, timeout: true });
+      }, 1500)
+    };
+    worker.postMessage({ id: id, p: p, f: f, t: t });
+  }
+
+  function flags() {
+    return Array.prototype.filter.call(document.querySelectorAll(".flag"), function (c) { return c.checked; })
+      .map(function (c) { return c.value; }).join("");
+  }
+
+  var last = null;
+
+  function render() {
+    var p = $("pattern").value, t = $("text").value, f = flags();
+    var tbody = $("matchTable").querySelector("tbody");
+    tbody.innerHTML = "";
+    $("matchTable").hidden = true;
+    $("explainTable").querySelector("tbody").innerHTML = "";
+    if (!p) {
+      BATool.status("", T.empty); $("highlight").innerHTML = BATool.esc(t); $("replaceOut").textContent = "";
+      last = null; return;
+    }
+    /* explanation */
+    $("explainTable").querySelector("tbody").innerHTML = BARegex.explain(p, L).map(function (x) {
+      return "<tr><td><code>" + BATool.esc(x.token) + "</code></td><td>" + BATool.esc(x.text) + "</td></tr>";
+    }).join("");
+
+    search(p, f, t, function (r) {
+      if (r.timeout) { BATool.status("error", T.timeout); $("highlight").innerHTML = BATool.esc(t); return; }
+      if (r.error) { BATool.status("error", r.error); $("highlight").innerHTML = BATool.esc(t); $("replaceOut").textContent = ""; last = null; return; }
+      $("highlight").innerHTML = BARegex.highlight(t, r.matches);
+      BATool.status(r.matches.length ? "ok" : "", r.matches.length ? r.matches.length + " " + T.found + (r.truncated ? " — " + T.more : "") : T.none);
+      if (r.matches.length) {
+        $("matchTable").hidden = false;
+        tbody.innerHTML = r.matches.slice(0, 200).map(function (m, i) {
+          var g = m.groups.map(function (x, k) { return (k + 1) + ": " + (x === null ? "∅" : x); });
+          Object.keys(m.named).forEach(function (k) { g.push(k + " = " + m.named[k]); });
+          return "<tr><td>" + (i + 1) + "</td><td><code>" + BATool.esc(m.text) + "</code></td><td>" + m.index + "–" + m.end + "</td><td>" + (g.length ? BATool.esc(g.join("  |  ")) : T.noGroups) + "</td></tr>";
+        }).join("");
+      }
+      var rep = BARegex.replacePreview(p, f, t, $("replacement").value);
+      $("replaceOut").textContent = rep.error ? "" : rep.output;
+      last = { pattern: p, flags: f, text: t, replacement: $("replacement").value };
+    });
+  }
+
+  var renderSoon = BATool.debounce(render, 150);
+  $("pattern").addEventListener("input", renderSoon);
+  $("text").addEventListener("input", renderSoon);
+  $("replacement").addEventListener("input", renderSoon);
+  Array.prototype.forEach.call(document.querySelectorAll(".flag"), function (c) { c.addEventListener("change", render); });
+
+  var histSoon = BATool.debounce(function () {
+    if (!window.BAHistory || !last) { return; }
+    var top = BAHistory.list("regex-builder")[0];
+    if (!top || top.data.pattern !== last.pattern || top.data.flags !== last.flags) { BAHistory.record(); }
+  }, 1200);
+  $("pattern").addEventListener("input", histSoon);
+
+  $("copyButton").addEventListener("click", function () {
+    var p = $("pattern").value;
+    if (!p) { BATool.status("error", T.empty); return; }
+    BATool.copy("/" + p + "/" + flags(), function () { BATool.status("ok", T.copied); }, function () { BATool.status("error", T.copyFail); });
+  });
+  $("clearButton").addEventListener("click", function () { $("pattern").value = ""; $("text").value = ""; $("replacement").value = ""; render(); $("pattern").focus(); });
+
+  function setFlags(f) {
+    Array.prototype.forEach.call(document.querySelectorAll(".flag"), function (c) { c.checked = f.indexOf(c.value) !== -1; });
+  }
+
+  $("lib").innerHTML = BARegex.LIBRARY.map(function (x) {
+    return '<button type="button" class="chip" data-id="' + x.id + '">' + BATool.esc(L === "tr" ? x.tr : x.en) + "</button>";
+  }).join("");
+  $("lib").addEventListener("click", function (e) {
+    var b = e.target.closest(".chip"); if (!b) { return; }
+    var x = BARegex.LIBRARY.filter(function (y) { return y.id === b.getAttribute("data-id"); })[0];
+    $("pattern").value = x.pattern; $("text").value = x.sample; setFlags(x.flags);
+    render();
+    if (window.BAHistory) { setTimeout(function () { if (last) { BAHistory.record(); } }, 300); }
+  });
+
+  if (window.BAHistory) {
+    BAHistory.init({
+      page: "regex-builder",
+      label: function (d) { return "/" + d.pattern + "/" + d.flags; },
+      capture: function () { return last; },
+      restore: function (d) {
+        $("pattern").value = d.pattern; $("text").value = d.text; $("replacement").value = d.replacement || "";
+        setFlags(d.flags); render();
+      }
+    });
+  }
+
+  $("text").value = "";
+  render();
+})();
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

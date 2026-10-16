@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - Mock Data Generator</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+</head>
+<body>
+<main>
+
+  <section class="hero">
+    <h1 data-t="title">Mock Data Generator</h1>
+    <p data-t="subtitle"></p>
+  </section>
+
+  <section class="card">
+    <div class="toolbar">
+      <label class="field">
+        <span data-t="preset">Start from a preset</span>
+        <select id="preset">
+          <option value="" data-t="custom">Custom</option>
+          <option value="customers" data-t="pCustomers">Customers</option>
+          <option value="orders" data-t="pOrders">Orders</option>
+          <option value="employees" data-t="pEmployees">Employees</option>
+        </select>
+      </label>
+      <label class="field"><span data-t="rows">Rows (max 10,000)</span><input type="number" id="count" value="10" min="1" max="10000" /></label>
+      <label class="field"><span data-t="locale">Names &amp; places</span>
+        <select id="locale"><option value="en">English</option><option value="tr">Türkçe</option></select>
+      </label>
+      <label class="field"><span data-t="seed">Seed (same seed = same data)</span><input type="number" id="seed" value="12345" /></label>
+      <label class="field"><span data-t="format">Output</span>
+        <select id="format"><option value="json">JSON</option><option value="csv">CSV</option><option value="sql">SQL INSERT</option><option value="ndjson">NDJSON</option></select>
+      </label>
+      <label class="field" id="tableWrap"><span data-t="table">Table name</span><input type="text" id="table" value="my_table" /></label>
+    </div>
+
+    <div class="table-wrap">
+      <table class="grid" id="fields">
+        <thead><tr><th data-t="colName">Field name</th><th data-t="colType">Type</th><th data-t="colParam">Options</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn small" id="addField" data-t="addField">+ Add field</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 data-t="output">Output</h2>
+    <textarea id="output" spellcheck="false" readonly aria-label="Output"></textarea>
+    <div class="actions">
+      <button type="button" class="btn primary" id="genButton" data-t="generate">Generate</button>
+      <button type="button" class="btn" id="copyButton" data-t="copy">Copy</button>
+      <button type="button" class="btn" id="downloadButton" data-t="download">Download</button>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+  </section>
+
+  <details class="rules">
+    <summary data-t="rulesTitle">Notes</summary>
+    <ul id="rulesList"></ul>
+  </details>
+
+</main>
+
+<script src="/core/mock-data.js"></script>
+<script src="/core/tool-ui.js"></script>
+<script src="/core/history.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = BATool.$;
+  var DICT = {
+    en: {
+      pageTitle: "BAForge AI - Mock Data Generator",
+      title: "Mock Data Generator",
+      subtitle: "Create realistic fake data for tests and demos: JSON, CSV, SQL INSERT or NDJSON. Runs in your browser; nothing is sent anywhere.",
+      preset: "Start from a preset", custom: "Custom", pCustomers: "Customers", pOrders: "Orders", pEmployees: "Employees",
+      rows: "Rows (max 10,000)", locale: "Names & places", seed: "Seed (same seed = same data)", format: "Output", table: "Table name",
+      colName: "Field name", colType: "Type", colParam: "Options", addField: "+ Add field",
+      output: "Output", generate: "Generate", copy: "Copy", download: "Download",
+      rulesTitle: "Notes", remove: "Remove",
+      copied: "Copied to clipboard.", copyFail: "Could not copy.", nothing: "Nothing generated yet.", noFields: "Add at least one field with a name.",
+      done: "Generated rows: ",
+      types: { sequence: "Sequence number", uuid: "UUID", firstName: "First name", lastName: "Last name", fullName: "Full name", email: "Email", phone: "Phone (fake)", city: "City", country: "Country", company: "Company", int: "Whole number", float: "Decimal number", bool: "Yes / No", date: "Date", datetime: "Date and time", text: "Short text", enum: "Pick from list", url: "Web address", ipv4: "IPv4 address" },
+      hints: { sequence: "start, e.g. 1", int: "min,max e.g. 1,100", float: "min,max e.g. 5,500", date: "from,to e.g. 2025-01-01,2026-12-31", datetime: "from,to e.g. 2026-01-01,2026-10-16", text: "max words e.g. 8", enum: "values separated by commas" },
+      rules: [
+        "All data is invented. Emails use example.com and phone numbers use fake ranges, so nothing points to a real person.",
+        "Identity-card numbers, IBANs and card numbers are intentionally not generated.",
+        "Use the same seed to get the same data again, e.g. for repeatable tests.",
+        "SQL output is plain INSERT statements; check column types for your database."
+      ]
+    },
+    tr: {
+      pageTitle: "BAForge AI - Sahte Veri Üretici",
+      title: "Sahte Veri Üretici",
+      subtitle: "Test ve demolar için gerçekçi sahte veri üretin: JSON, CSV, SQL INSERT veya NDJSON. Tarayıcınızda çalışır; hiçbir şey gönderilmez.",
+      preset: "Hazır şablon", custom: "Özel", pCustomers: "Müşteriler", pOrders: "Siparişler", pEmployees: "Çalışanlar",
+      rows: "Satır (en çok 10.000)", locale: "İsim ve yerler", seed: "Tohum (aynı tohum = aynı veri)", format: "Çıktı", table: "Tablo adı",
+      colName: "Alan adı", colType: "Tür", colParam: "Seçenekler", addField: "+ Alan ekle",
+      output: "Çıktı", generate: "Üret", copy: "Kopyala", download: "İndir",
+      rulesTitle: "Notlar", remove: "Kaldır",
+      copied: "Panoya kopyalandı.", copyFail: "Kopyalanamadı.", nothing: "Henüz üretilmedi.", noFields: "Adı olan en az bir alan ekleyin.",
+      done: "Üretilen satır: ",
+      types: { sequence: "Sıra numarası", uuid: "UUID", firstName: "Ad", lastName: "Soyad", fullName: "Ad Soyad", email: "E-posta", phone: "Telefon (sahte)", city: "Şehir", country: "Ülke", company: "Şirket", int: "Tam sayı", float: "Ondalıklı sayı", bool: "Evet / Hayır", date: "Tarih", datetime: "Tarih ve saat", text: "Kısa metin", enum: "Listeden seç", url: "Web adresi", ipv4: "IPv4 adresi" },
+      hints: { sequence: "başlangıç, örn. 1", int: "min,maks örn. 1,100", float: "min,maks örn. 5,500", date: "başlangıç,bitiş örn. 2025-01-01,2026-12-31", datetime: "başlangıç,bitiş örn. 2026-01-01,2026-10-16", text: "en çok kelime örn. 8", enum: "değerler virgülle ayrılır" },
+      rules: [
+        "Tüm veriler uydurmadır. E-postalar example.com kullanır, telefonlar sahte aralıklardandır; hiçbiri gerçek bir kişiyi göstermez.",
+        "T.C. kimlik no, IBAN ve kart numarası bilerek üretilmez.",
+        "Aynı veriyi tekrar almak için aynı tohumu kullanın (ör. tekrarlanabilir testler).",
+        "SQL çıktısı düz INSERT komutlarıdır; sütun türlerini kendi veritabanınıza göre kontrol edin."
+      ]
+    }
+  };
+  var T = BATool.applyI18n(DICT);
+  $("rulesList").innerHTML = T.rules.map(function (r) { return "<li>" + BATool.esc(r) + "</li>"; }).join("");
+
+  var tbody = $("fields").querySelector("tbody");
+  var lastOk = null, boot = true;
+
+  function paramOf(f) {
+    if (f.type === "int" || f.type === "float" || f.type === "date" || f.type === "datetime") { return (f.min !== undefined ? f.min : "") + "," + (f.max !== undefined ? f.max : ""); }
+    if (f.type === "sequence") { return f.start !== undefined ? f.start : ""; }
+    if (f.type === "enum") { return f.options || ""; }
+    if (f.type === "text") { return f.max !== undefined ? f.max : ""; }
+    return "";
+  }
+  function toField(name, type, param) {
+    var f = { name: name, type: type }, p = String(param || "").trim();
+    if (type === "int" || type === "float" || type === "date" || type === "datetime") {
+      var s = p.split(","); f.min = (s[0] || "").trim(); f.max = (s[1] || "").trim();
+    } else if (type === "sequence") { f.start = p; }
+    else if (type === "enum") { f.options = p; }
+    else if (type === "text") { f.max = p; }
+    return f;
+  }
+
+  function addRow(f) {
+    f = f || { name: "", type: "fullName" };
+    var tr = document.createElement("tr");
+    var opts = BAMock.TYPES.map(function (t) { return '<option value="' + t + '"' + (t === f.type ? " selected" : "") + ">" + BATool.esc(T.types[t]) + "</option>"; }).join("");
+    tr.innerHTML = '<td><input class="inp f-name" type="text" value="' + BATool.esc(f.name) + '" /></td>' +
+      '<td><select class="f-type">' + opts + "</select></td>" +
+      '<td><input class="inp f-param" type="text" value="' + BATool.esc(paramOf(f)) + '" /></td>' +
+      '<td><button type="button" class="btn small danger f-del" aria-label="' + BATool.esc(T.remove) + '">✕</button></td>';
+    tbody.appendChild(tr);
+    syncHint(tr);
+  }
+  function syncHint(tr) {
+    var type = tr.querySelector(".f-type").value, p = tr.querySelector(".f-param");
+    p.placeholder = T.hints[type] || "";
+    p.disabled = !T.hints[type];
+    if (p.disabled) { p.value = ""; }
+  }
+  function readFields() {
+    return Array.prototype.map.call(tbody.querySelectorAll("tr"), function (tr) {
+      return toField(tr.querySelector(".f-name").value.trim(), tr.querySelector(".f-type").value, tr.querySelector(".f-param").value);
+    }).filter(function (f) { return f.name; });
+  }
+  function loadPreset(key) {
+    tbody.innerHTML = "";
+    (BAMock.PRESETS[key] || []).forEach(addRow);
+  }
+
+  tbody.addEventListener("change", function (e) { if (e.target.classList.contains("f-type")) { syncHint(e.target.closest("tr")); } });
+  tbody.addEventListener("click", function (e) { if (e.target.classList.contains("f-del")) { e.target.closest("tr").remove(); } });
+  $("addField").addEventListener("click", function () { addRow(); });
+  $("preset").addEventListener("change", function () { if ($("preset").value) { loadPreset($("preset").value); run(); } });
+  $("format").addEventListener("change", function () { $("tableWrap").style.display = $("format").value === "sql" ? "" : "none"; });
+
+  function run() {
+    var fields = readFields();
+    if (!fields.length) { $("output").value = ""; lastOk = null; BATool.status("error", T.noFields); return; }
+    var rows = BAMock.generate(fields, $("count").value, { seed: $("seed").value, locale: $("locale").value });
+    var out = BAMock.format(rows, $("format").value, { table: $("table").value.trim() || "my_table" });
+    $("output").value = out;
+    BATool.status("ok", T.done + rows.length);
+    lastOk = { fields: fields, count: $("count").value, seed: $("seed").value, locale: $("locale").value, format: $("format").value, table: $("table").value, output: out };
+    if (window.BAHistory && !boot) {
+      var top = BAHistory.list("mock-data")[0];
+      var sig = JSON.stringify([lastOk.fields, lastOk.count, lastOk.seed, lastOk.locale, lastOk.format, lastOk.table]);
+      if (!top || JSON.stringify([top.data.fields, top.data.count, top.data.seed, top.data.locale, top.data.format, top.data.table]) !== sig) { BAHistory.record(); }
+    }
+  }
+
+  $("genButton").addEventListener("click", run);
+  $("copyButton").addEventListener("click", function () {
+    var o = $("output").value;
+    if (!o) { BATool.status("error", T.nothing); return; }
+    BATool.copy(o, function () { BATool.status("ok", T.copied); }, function () { BATool.status("error", T.copyFail); });
+  });
+  $("downloadButton").addEventListener("click", function () {
+    var o = $("output").value;
+    if (!o) { BATool.status("error", T.nothing); return; }
+    var f = $("format").value;
+    BATool.download("mock-data." + (f === "sql" ? "sql" : f === "ndjson" ? "ndjson" : f), o, f === "json" ? "application/json" : "text/plain");
+  });
+
+  if (window.BAHistory) {
+    BAHistory.init({
+      page: "mock-data",
+      label: function (d) { return d.fields.map(function (f) { return f.name; }).join(", ") + " × " + d.count; },
+      capture: function () { return lastOk; },
+      restore: function (d) {
+        tbody.innerHTML = ""; d.fields.forEach(addRow);
+        $("count").value = d.count; $("seed").value = d.seed; $("locale").value = d.locale; $("format").value = d.format; $("table").value = d.table;
+        $("tableWrap").style.display = d.format === "sql" ? "" : "none";
+        $("output").value = d.output; BATool.status("", ""); lastOk = d;
+      }
+    });
+  }
+
+  $("tableWrap").style.display = "none";
+  loadPreset("customers");
+  $("preset").value = "customers";
+  run();
+  boot = false;
+})();
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

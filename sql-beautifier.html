@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - SQL Beautifier</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+</head>
+<body>
+<main>
+
+  <section class="hero">
+    <h1 data-t="title">SQL Beautifier</h1>
+    <p data-t="subtitle"></p>
+  </section>
+
+  <section class="card">
+
+    <div class="toolbar">
+      <label class="field">
+        <span data-t="kwCase">Keyword case</span>
+        <select id="kwCase">
+          <option value="upper" data-t="upper">UPPERCASE</option>
+          <option value="lower" data-t="lower">lowercase</option>
+          <option value="keep" data-t="keep">Keep as typed</option>
+        </select>
+      </label>
+      <label class="field">
+        <span data-t="indent">Indent</span>
+        <select id="indent">
+          <option value="2" data-t="sp2">2 spaces</option>
+          <option value="4" data-t="sp4">4 spaces</option>
+          <option value="tab" data-t="tab">Tab</option>
+        </select>
+      </label>
+      <label class="field">
+        <span data-t="comma">Comma style</span>
+        <select id="comma">
+          <option value="trailing" data-t="trailing">Comma at end of line</option>
+          <option value="leading" data-t="leading">Comma at start of line</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="panes">
+      <div class="pane">
+        <h2 data-t="input">Input</h2>
+        <textarea id="input" spellcheck="false" aria-label="Input"></textarea>
+      </div>
+      <div class="pane">
+        <h2 data-t="output">Output</h2>
+        <textarea id="output" spellcheck="false" readonly aria-label="Output"></textarea>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn primary" id="formatButton" data-t="format">Format</button>
+      <button type="button" class="btn" id="minifyButton" data-t="minify">Minify</button>
+      <button type="button" class="btn" id="copyButton" data-t="copy">Copy output</button>
+      <button type="button" class="btn" id="downloadButton" data-t="download">Download</button>
+      <button type="button" class="btn" id="sampleButton" data-t="sample">Load sample</button>
+      <button type="button" class="btn" id="clearButton" data-t="clear">Clear</button>
+    </div>
+
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+  </section>
+
+  <details class="rules">
+    <summary data-t="rulesTitle">What it does</summary>
+    <ul id="rulesList"></ul>
+  </details>
+
+</main>
+
+<script src="/core/sql-format.js"></script>
+<script src="/core/tool-ui.js"></script>
+<script src="/core/history.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = BATool.$;
+
+  var DICT = {
+    en: {
+      pageTitle: "BAForge AI - SQL Beautifier",
+      title: "SQL Beautifier",
+      subtitle: "Format or minify SQL in your browser. Nothing you paste is sent to a server.",
+      kwCase: "Keyword case", upper: "UPPERCASE", lower: "lowercase", keep: "Keep as typed",
+      indent: "Indent", sp2: "2 spaces", sp4: "4 spaces", tab: "Tab",
+      comma: "Comma style", trailing: "Comma at end of line", leading: "Comma at start of line",
+      input: "Input", output: "Output",
+      format: "Format", minify: "Minify", copy: "Copy output", download: "Download", sample: "Load sample", clear: "Clear",
+      rulesTitle: "What it does",
+      copied: "Copied to clipboard.", copyFail: "Could not copy. Select the output and copy it manually.",
+      nothing: "There is no output yet.", emptyIn: "Paste some SQL first.", done: "Done.", chars: "characters",
+      rules: [
+        "Only whitespace and (optionally) keyword case change. The statement itself is never rewritten or reordered.",
+        "Works with SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, CTEs (WITH), subqueries, joins, CASE and comments.",
+        "Text inside quotes ('...', \"...\", `...`, [...]) and comments is never touched.",
+        "Minify removes comments and extra whitespace, so use it only on finished queries.",
+        "The formatter is dialect-neutral. Very vendor-specific syntax is kept as is, but may not be laid out perfectly."
+      ]
+    },
+    tr: {
+      pageTitle: "BAForge AI - SQL Güzelleştirici",
+      title: "SQL Güzelleştirici",
+      subtitle: "SQL'i tarayıcınızda biçimlendirin veya sıkıştırın. Yapıştırdığınız hiçbir şey sunucuya gönderilmez.",
+      kwCase: "Anahtar kelime harfleri", upper: "BÜYÜK HARF", lower: "küçük harf", keep: "Yazıldığı gibi bırak",
+      indent: "Girinti", sp2: "2 boşluk", sp4: "4 boşluk", tab: "Sekme (Tab)",
+      comma: "Virgül yeri", trailing: "Virgül satır sonunda", leading: "Virgül satır başında",
+      input: "Girdi", output: "Çıktı",
+      format: "Biçimlendir", minify: "Sıkıştır", copy: "Çıktıyı kopyala", download: "İndir", sample: "Örnek yükle", clear: "Temizle",
+      rulesTitle: "Ne yapar",
+      copied: "Panoya kopyalandı.", copyFail: "Kopyalanamadı. Çıktıyı seçip elle kopyalayın.",
+      nothing: "Henüz çıktı yok.", emptyIn: "Önce bir SQL yapıştırın.", done: "Tamam.", chars: "karakter",
+      rules: [
+        "Yalnızca boşluklar ve (isteğe bağlı) anahtar kelime harfleri değişir. Sorgunun kendisi asla yeniden yazılmaz veya sıralanmaz.",
+        "SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, CTE (WITH), alt sorgu, join, CASE ve yorumlarla çalışır.",
+        "Tırnak içindeki metinler ('...', \"...\", `...`, [...]) ve yorumlar asla değiştirilmez.",
+        "Sıkıştırma yorumları ve fazla boşlukları siler; yalnızca bitmiş sorgularda kullanın.",
+        "Biçimlendirici belirli bir veritabanına bağlı değildir. Çok özel söz dizimleri olduğu gibi korunur ama düzeni mükemmel olmayabilir."
+      ]
+    }
+  };
+
+  var T = BATool.applyI18n(DICT);
+  $("rulesList").innerHTML = T.rules.map(function (r) { return "<li>" + BATool.esc(r) + "</li>"; }).join("");
+
+  var SAMPLE = "select o.id, c.name, sum(l.qty*l.price) as total, case when sum(l.qty*l.price)>1000 then 'big' else 'small' end as size from orders o inner join customers c on c.id=o.customer_id left join order_lines l on l.order_id=o.id where o.created>='2026-01-01' and c.country in ('TR','DE') and o.status<>'cancelled' group by o.id,c.name having sum(l.qty*l.price)>0 order by total desc limit 20;";
+
+  var lastOk = null;
+
+  function opts() {
+    var ind = $("indent").value;
+    return {
+      keywordCase: $("kwCase").value,
+      indent: ind === "tab" ? "tab" : parseInt(ind, 10),
+      comma: $("comma").value
+    };
+  }
+
+  function run(mode) {
+    var text = $("input").value;
+    if (!text.trim()) { $("output").value = ""; lastOk = null; BATool.status("error", T.emptyIn); return; }
+    try {
+      var out = mode === "minify" ? BASqlFormat.minify(text) : BASqlFormat.format(text, opts());
+      $("output").value = out;
+      BATool.status("ok", T.done + " " + out.length + " " + T.chars + ".");
+      lastOk = { mode: mode, input: text, output: out, kwCase: $("kwCase").value, indent: $("indent").value, comma: $("comma").value };
+      if (window.BAHistory) {
+        var top = BAHistory.list("sql-beautifier")[0];
+        if (!top || top.data.input !== text || top.data.mode !== mode || top.data.indent !== lastOk.indent || top.data.kwCase !== lastOk.kwCase || top.data.comma !== lastOk.comma) {
+          BAHistory.record();
+        }
+      }
+    } catch (e) {
+      $("output").value = ""; lastOk = null;
+      BATool.status("error", e.message || String(e));
+    }
+  }
+
+  $("formatButton").addEventListener("click", function () { run("format"); });
+  $("minifyButton").addEventListener("click", function () { run("minify"); });
+  $("copyButton").addEventListener("click", function () {
+    var out = $("output").value;
+    if (!out) { BATool.status("error", T.nothing); return; }
+    BATool.copy(out, function () { BATool.status("ok", T.copied); }, function () { BATool.status("error", T.copyFail); });
+  });
+  $("downloadButton").addEventListener("click", function () {
+    var out = $("output").value;
+    if (!out) { BATool.status("error", T.nothing); return; }
+    BATool.download("query.sql", out, "text/plain");
+  });
+  $("sampleButton").addEventListener("click", function () { $("input").value = SAMPLE; run("format"); });
+  $("clearButton").addEventListener("click", function () { $("input").value = ""; $("output").value = ""; lastOk = null; BATool.status("", ""); $("input").focus(); });
+  $("input").addEventListener("keydown", function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); run("format"); }
+  });
+
+  if (window.BAHistory) {
+    BAHistory.init({
+      page: "sql-beautifier",
+      label: function (d) { return (d.mode === "minify" ? "Minify: " : "Format: ") + d.input; },
+      capture: function () { return lastOk; },
+      restore: function (d) {
+        $("input").value = d.input; $("output").value = d.output;
+        $("kwCase").value = d.kwCase; $("indent").value = d.indent; $("comma").value = d.comma;
+        BATool.status("", ""); lastOk = d;
+      }
+    });
+  }
+})();
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>
