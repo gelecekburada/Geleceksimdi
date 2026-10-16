@@ -70,7 +70,7 @@
       emailLabel: "Email address", pwLabel: "Password", signIn: "Sign in", signUp: "Create account",
       hint: "Your history stays in this browser; an account lets us show your usage and keep your AI daily limit.",
       role: "Role", aiToday: "AI requests today", aiLimit: "Daily AI limit", toTools: "Go to the tools", admin: "Admin panel", signOut: "Sign out",
-      working: "Please wait…", badEmail: "Enter a valid email address.", badPw: "Enter your password.", shortPw: "The password must be at least 8 characters.", fail: "Could not complete the request.", expired: "That link has expired or was already used. Request a new one.",
+      working: "Please wait…", badEmail: "Enter a valid email address.", badPw: "Enter your password.", shortPw: "The password must be at least 8 characters.", fail: "Could not complete the request.", sessionLost: "Your session could not be restored. Please sign in again.", meFail: "You were signed in, but your account details could not be loaded", expired: "That link has expired or was already used. Request a new one.",
       signedAs: "Signed in as ", disabled: "This account is disabled. Please contact the administrator.", roleUser: "User", roleAdmin: "Admin", signedOut: "You have been signed out."
     },
     tr: {
@@ -79,7 +79,7 @@
       emailLabel: "E-posta adresi", pwLabel: "Şifre", signIn: "Giriş yap", signUp: "Hesap oluştur",
       hint: "Geçmişiniz bu tarayıcıda kalır; hesap, kullanımınızı göstermemizi ve günlük yapay zekâ limitinizi korumamızı sağlar.",
       role: "Rol", aiToday: "Bugünkü yapay zekâ isteği", aiLimit: "Günlük yapay zekâ limiti", toTools: "Araçlara git", admin: "Yönetim paneli", signOut: "Çıkış yap",
-      working: "Lütfen bekleyin…", badEmail: "Geçerli bir e-posta adresi girin.", badPw: "Şifrenizi yazın.", shortPw: "Şifre en az 8 karakter olmalı.", fail: "İşlem tamamlanamadı.", expired: "Bağlantının süresi dolmuş veya zaten kullanılmış. Yeni bir tane isteyin.",
+      working: "Lütfen bekleyin…", badEmail: "Geçerli bir e-posta adresi girin.", badPw: "Şifrenizi yazın.", shortPw: "Şifre en az 8 karakter olmalı.", fail: "İşlem tamamlanamadı.", sessionLost: "Oturumunuz geri yüklenemedi. Lütfen tekrar giriş yapın.", meFail: "Giriş yapıldı ama hesap bilgileriniz alınamadı", expired: "Bağlantının süresi dolmuş veya zaten kullanılmış. Yeni bir tane isteyin.",
       signedAs: "Giriş yapıldı: ", disabled: "Bu hesap devre dışı. Lütfen yönetici ile iletişime geçin.", roleUser: "Kullanıcı", roleAdmin: "Yönetici", signedOut: "Çıkış yaptınız."
     }
   });
@@ -103,10 +103,17 @@
     var err = BAAuth.hashError();
     if (err && !BAAuth.isSignedIn()) { showGuest(T.expired); return; }
     if (!BAAuth.isSignedIn()) { showGuest(); return; }
-    BAAuth.me(true).then(function (info) {
-      if (!info) { showGuest(); return; }
-      showMember(info);
-    });
+    /* ask /api/me directly so a failure can be named instead of silently showing the form again */
+    BAAuth.getToken().then(function (tok) {
+      if (!tok) { showGuest(T.sessionLost); return; }
+      return fetch("/api/me", { headers: { Authorization: "Bearer " + tok } }).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (d) {
+          if (r.ok && d && d.enabled !== false && d.email) { BAAuth.me(true).then(function (info) { if (info) { showMember(info); } else { showGuest(T.meFail + " (" + r.status + ")"); } }); return; }
+          BAAuth.signOut();
+          showGuest(T.meFail + " (" + r.status + (d && d.error ? ": " + d.error : "") + ")");
+        });
+      });
+    }).catch(function () { showGuest(T.meFail); });
   }
 
   function submit(action) {
