@@ -28,8 +28,13 @@
       <span data-t="emailLabel">Email address</span>
       <input class="big-input" type="email" id="email" autocomplete="email" inputmode="email" placeholder="name@example.com" />
     </label>
+    <label class="field" style="margin-top:10px">
+      <span data-t="pwLabel">Password</span>
+      <input class="big-input" type="password" id="password" autocomplete="current-password" />
+    </label>
     <div class="actions">
-      <button type="button" class="btn primary" id="sendButton" data-t="send">Email me a sign-in link</button>
+      <button type="button" class="btn primary" id="signInButton" data-t="signIn">Sign in</button>
+      <button type="button" class="btn" id="signUpButton" data-t="signUp">Create account</button>
     </div>
     <div class="status" id="status" role="status" aria-live="polite"></div>
     <p style="color:var(--muted);font-size:13px;margin:12px 0 0" data-t="hint"></p>
@@ -61,22 +66,20 @@
   var T = BATool.applyI18n({
     en: {
       pageTitle: "BAForge AI - Sign in", title: "Sign in",
-      subtitle: "No password needed. Enter your email and we send you a one-time sign-in link. New here? The same link creates your account.",
-      emailLabel: "Email address", send: "Email me a sign-in link",
+      subtitle: "Sign in with your email and password. New here? Choose a password (at least 8 characters) and press Create account.",
+      emailLabel: "Email address", pwLabel: "Password", signIn: "Sign in", signUp: "Create account",
       hint: "Your history stays in this browser; an account lets us show your usage and keep your AI daily limit.",
       role: "Role", aiToday: "AI requests today", aiLimit: "Daily AI limit", toTools: "Go to the tools", admin: "Admin panel", signOut: "Sign out",
-      sent: "Check your inbox: we sent a sign-in link to ", spam: ". It may take a minute; look in spam too.", sending: "Sending…",
-      badEmail: "Enter a valid email address.", fail: "Could not send the link.", expired: "That link has expired or was already used. Request a new one.",
+      working: "Please wait…", badEmail: "Enter a valid email address.", badPw: "Enter your password.", shortPw: "The password must be at least 8 characters.", fail: "Could not complete the request.", expired: "That link has expired or was already used. Request a new one.",
       signedAs: "Signed in as ", disabled: "This account is disabled. Please contact the administrator.", roleUser: "User", roleAdmin: "Admin", signedOut: "You have been signed out."
     },
     tr: {
       pageTitle: "BAForge AI - Giriş", title: "Giriş yap",
-      subtitle: "Şifre gerekmez. E-postanızı yazın, size tek kullanımlık bir giriş bağlantısı gönderelim. İlk kez mi geliyorsunuz? Aynı bağlantı hesabınızı da oluşturur.",
-      emailLabel: "E-posta adresi", send: "Bana giriş bağlantısı gönder",
+      subtitle: "E-posta ve şifrenizle giriş yapın. İlk kez mi geliyorsunuz? En az 8 karakterlik bir şifre belirleyip \"Hesap oluştur\"a basın.",
+      emailLabel: "E-posta adresi", pwLabel: "Şifre", signIn: "Giriş yap", signUp: "Hesap oluştur",
       hint: "Geçmişiniz bu tarayıcıda kalır; hesap, kullanımınızı göstermemizi ve günlük yapay zekâ limitinizi korumamızı sağlar.",
       role: "Rol", aiToday: "Bugünkü yapay zekâ isteği", aiLimit: "Günlük yapay zekâ limiti", toTools: "Araçlara git", admin: "Yönetim paneli", signOut: "Çıkış yap",
-      sent: "Gelen kutunuza bakın: şu adrese giriş bağlantısı gönderdik: ", spam: ". Bir dakika sürebilir; spam klasörüne de bakın.", sending: "Gönderiliyor…",
-      badEmail: "Geçerli bir e-posta adresi girin.", fail: "Bağlantı gönderilemedi.", expired: "Bağlantının süresi dolmuş veya zaten kullanılmış. Yeni bir tane isteyin.",
+      working: "Lütfen bekleyin…", badEmail: "Geçerli bir e-posta adresi girin.", badPw: "Şifrenizi yazın.", shortPw: "Şifre en az 8 karakter olmalı.", fail: "İşlem tamamlanamadı.", expired: "Bağlantının süresi dolmuş veya zaten kullanılmış. Yeni bir tane isteyin.",
       signedAs: "Giriş yapıldı: ", disabled: "Bu hesap devre dışı. Lütfen yönetici ile iletişime geçin.", roleUser: "Kullanıcı", roleAdmin: "Yönetici", signedOut: "Çıkış yaptınız."
     }
   });
@@ -106,17 +109,21 @@
     });
   }
 
-  $("sendButton").addEventListener("click", function () {
-    var email = $("email").value.trim();
+  function submit(action) {
+    var email = $("email").value.trim(), pw = $("password").value;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { BATool.status("error", T.badEmail); return; }
-    var b = $("sendButton"); b.disabled = true; BATool.status("", T.sending);
-    BAAuth.sendLink(email).then(function (r) {
-      b.disabled = false;
-      if (r.ok) { BATool.status("ok", T.sent + email + T.spam); }
-      else { BATool.status("error", r.error || T.fail); }
-    }).catch(function () { b.disabled = false; BATool.status("error", T.fail); });
-  });
-  $("email").addEventListener("keydown", function (e) { if (e.key === "Enter") { $("sendButton").click(); } });
+    if (!pw) { BATool.status("error", T.badPw); return; }
+    if (action === "signup" && pw.length < 8) { BATool.status("error", T.shortPw); return; }
+    var bs = [$("signInButton"), $("signUpButton")]; bs.forEach(function (b) { b.disabled = true; }); BATool.status("", T.working);
+    BAAuth.credentials(action, email, pw).then(function (r) {
+      bs.forEach(function (b) { b.disabled = false; });
+      if (r.ok) { location.reload(); } else { BATool.status("error", r.error || T.fail); }
+    }).catch(function () { bs.forEach(function (b) { b.disabled = false; }); BATool.status("error", T.fail); });
+  }
+  $("signInButton").addEventListener("click", function () { submit("signin"); });
+  $("signUpButton").addEventListener("click", function () { submit("signup"); });
+  $("password").addEventListener("keydown", function (e) { if (e.key === "Enter") { submit("signin"); } });
+  $("email").addEventListener("keydown", function (e) { if (e.key === "Enter") { $("password").focus(); } });
   $("signOut").addEventListener("click", function () { BAAuth.signOut(); showGuest(T.signedOut, "ok"); location.reload(); });
 
   boot();
