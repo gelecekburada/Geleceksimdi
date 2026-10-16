@@ -339,10 +339,38 @@
     return { text: parts.join("\n"), omitted: omitted };
   }
 
+  /* Business sections as short lines: context for the technical-design pass. */
+  function compactBusiness(m, budget) {
+    budget = budget || 20000;
+    var out = "", used = 0;
+    function add(title, list, fn) {
+      if (!list || !list.length) { return; }
+      var block = "## " + title + "\n";
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].status === "rejected") { continue; }
+        var l = fn(list[i]).slice(0, 320) + "\n";
+        if (used + block.length + l.length > budget) { break; }
+        block += l;
+      }
+      used += block.length; out += block;
+    }
+    var a = m.accounting || {};
+    if (a.summary) { out += "## MUHASEBE ÖZETİ\n" + a.summary.slice(0, 600) + "\n"; used += out.length; }
+    add("MUHASEBE KAYITLARI", a.entries, function (x) { return x.id + " " + x.event + ": borç " + x.debit + " / alacak " + x.credit + " / tutar " + x.amount + " / " + x.timing; });
+    add("DEKONT", a.receipt, function (x) { return x.id + " " + x.item + ": " + x.detail; });
+    add("İADE", a.returns, function (x) { return x.id + " " + x.item + ": " + x.detail; });
+    add("MUTABAKAT", a.reconciliation, function (x) { return x.id + " " + x.item + ": " + x.detail; });
+    add("ONAY", m.approvals, function (x) { return x.id + " " + x.step + ": " + x.rule + " (" + x.who + ")"; });
+    add("EKRANLAR", m.screens, function (x) { return x.id + " " + x.name + ": " + x.purpose + " | alanlar: " + x.fields; });
+    add("BİLDİRİM", m.notifications, function (x) { return x.id + " " + x.event + " -> " + x.to; });
+    add("YETKİ", m.authorization, function (x) { return x.id + " " + x.role + " / " + x.screen + ": " + x.rights; });
+    return out;
+  }
+
   var api = {
     CATEGORIES: CATEGORIES, squish: squish, pageTextFromItems: pageTextFromItems, buildChunks: buildChunks, splitChunk: splitChunk,
     normalizeFindings: normalizeFindings, merge: merge, verifyQuote: verifyQuote, annotate: annotate, stats: stats,
-    compactForSynthesis: compactForSynthesis
+    compactForSynthesis: compactForSynthesis, compactBusiness: compactBusiness
   };
   if (typeof module !== "undefined" && module.exports) { module.exports = api; } else { root.SpecModel = api; }
 })(typeof window !== "undefined" ? window : globalThis);

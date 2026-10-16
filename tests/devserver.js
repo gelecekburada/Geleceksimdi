@@ -8,7 +8,9 @@ const http = require("http"), fs = require("fs"), path = require("path");
 const fake = require("./fake-supabase");
 const root = path.join(__dirname, "..");
 const port = parseInt(process.argv[2] || "8802", 10);
-const MIME = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml" };
+const MIME = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml", ".mjs": "text/javascript" };
+const fo = require("./fake-openai");
+if (process.env.FAKE_OPENAI) { process.env.OPENAI_API_KEY = "test-key-not-real"; fo.install(); }
 fake.reset();
 
 function readBody(req) { return new Promise((r) => { let b = ""; req.on("data", (c) => (b += c)); req.on("end", () => r(b)); }); }
@@ -16,6 +18,12 @@ function readBody(req) { return new Promise((r) => { let b = ""; req.on("data", 
 http.createServer(async (req, res) => {
   const u = new URL(req.url, "http://x");
   if (u.pathname === "/__fake/reset") { fake.reset(); res.end("ok"); return; }
+  if (u.pathname === "/__fake/openai") { // ?mode=ok|incomplete|... &failNext=N ; returns recorded stages
+    if (u.searchParams.get("mode")) { fo.state.mode = u.searchParams.get("mode"); }
+    if (u.searchParams.get("failNext")) { fo.state.failNext = parseInt(u.searchParams.get("failNext"), 10); }
+    if (u.searchParams.get("reset")) { fo.reset(); }
+    res.setHeader("content-type", "application/json"); res.end(JSON.stringify({ mode: fo.state.mode, stages: fo.state.calls.map((c) => c.stage) })); return;
+  }
   if (u.pathname === "/__fake/state") { res.setHeader("content-type", "application/json"); res.end(JSON.stringify({ db: fake.db, otp: fake.state.otpCalls })); return; }
   if (u.pathname === "/__fake/token") { // a ready-made session for a fake user
     const id = u.searchParams.get("id"); res.setHeader("content-type", "application/json");
