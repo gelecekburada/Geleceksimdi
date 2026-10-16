@@ -145,7 +145,7 @@
     var st = document.createElement("style");
     st.id = "baforge-auth-css";
     st.textContent =
-      ".baforge-account{display:inline-flex;align-items:center;height:32px;padding:0 12px;border:1px solid rgba(255,255,255,.2);border-radius:8px;background:rgba(255,255,255,.08);color:#fff;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis}" +
+      ".baforge-account{display:inline-flex;align-items:center;height:32px;padding:0 12px;border:1px solid rgba(255,255,255,.2);border-radius:8px;background:rgba(255,255,255,.08);color:#fff;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;flex:0 0 auto;max-width:170px;overflow:hidden;text-overflow:ellipsis}" +
       ".baforge-account:hover{background:rgba(255,255,255,.18)}" +
       ".baforge-account.in{background:#2563eb;border-color:#2563eb}" +
       ".baforge-nav-inner .baforge-language{gap:8px}" +
