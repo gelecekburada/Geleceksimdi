@@ -23,5 +23,5 @@ async function handler(req, res) {
 }
 
 module.exports = async (req, res) => {
-  try { return await handler(req, res); } catch (e) { return sb.send(res, 503, { error: "Service unavailable" }); }
+  try { return await handler(req, res); } catch (e) { console.error("api/me failed:", e && e.message ? e.message : String(e)); return sb.send(res, 503, { error: "Service unavailable" }); }
 };
