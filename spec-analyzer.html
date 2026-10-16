@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/core/tool-ui.css" />
   <style>
     main { max-width: 1320px; }
+    [hidden] { display: none !important; }
     .zones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
     .zone { border: 2px dashed #c9d3e6; border-radius: 14px; padding: 16px; background: #fbfcfe; display: grid; gap: 6px; align-content: start; min-height: 150px; }
     .zone.drag { border-color: var(--primary); background: #eef3ff; }
@@ -142,10 +143,10 @@
 
   <section class="card" id="resultCard" hidden>
     <h2 data-t="result">Analysis</h2>
-    <div class="tiles" id="tiles"></div>
-    <ul class="sumlist" id="sumlist"></ul>
+    <div class="tiles" id="tiles" hidden></div>
+    <ul class="sumlist" id="sumlist" hidden></ul>
     <div class="actions" style="margin:12px 0"><button type="button" class="btn primary" id="btnDownload2" data-t="download">Download Word</button></div>
-    <label class="check" style="margin:6px 0 12px"><input type="checkbox" id="showDetail" /> <span data-t="showDetail">Show the rows for detailed review</span></label>
+    <label class="check" style="margin:6px 0 12px" hidden><input type="checkbox" id="showDetail" /> <span data-t="showDetail">Show the rows for detailed review</span></label>
     <div id="detail" hidden>
     <div class="tabs" id="tabs" role="tablist"></div>
     <div class="tools-row">

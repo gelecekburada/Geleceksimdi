@@ -44,7 +44,7 @@
       failedChunks: "Okunamayan bölümler: {list}. Diğer kısımlar hazır; \"Eksik kısımları yeniden dene\" ile tamamlayabilirsiniz.",
       limitHit: "Günlük yapay zekâ limitinize ulaşıldı ya da giriş gerekiyor: {msg}",
       partialReady: "Kaynaktan çıkarma bitti ({m} mesaj, {f} alan, {r} kural). Öneriler (muhasebe, onay, yetki, teknik tasarım) arka planda hazırlanıyor…",
-      analyzed: "Analiz hazır: {m} mesaj, {f} alan, {r} kural. Önerilen satırlar \"Öneri\" etiketlidir; gözden geçirip onaylayın.",
+      analyzed: "Analiz hazır: {m} mesaj, {f} alan, {r} kural. Word dosyası indirildi; indirme başlamadıysa \"Word indir\" düğmesine basın. Öneri etiketli satırları Word'de gözden geçirin.",
       noFindings: "PDF'ten hiçbir bulgu çıkarılamadı. Dosyanın metin içerdiğinden emin olun.",
       cancelled: "İptal edildi.", stepFailed: "Bu adım tamamlanamadı: {msg}",
       applying: "Talimatlar yapay zekâya gönderiliyor…", needModel: "Önce bir analiz oluşturun ya da Word dosyası yükleyin.", needIns: "Talimat yazın.",
@@ -98,7 +98,7 @@
       failedChunks: "Sections that could not be read: {list}. The rest is ready; use \"Retry the missing parts\" to complete it.",
       limitHit: "Your daily AI limit was reached or you need to sign in: {msg}",
       partialReady: "Source extraction finished ({m} messages, {f} fields, {r} rules). Proposals (accounting, approvals, authorization, technical design) are being prepared in the background…",
-      analyzed: "Analysis ready: {m} messages, {f} fields, {r} rules. Proposed rows are labelled \"Proposal\"; review and approve them.",
+      analyzed: "Analysis ready: {m} messages, {f} fields, {r} rules. The Word file was downloaded; if it did not start, press \"Download Word\". Review the rows labelled Proposal in Word.",
       noFindings: "No findings could be extracted from the PDF. Make sure the file contains text.",
       cancelled: "Cancelled.", stepFailed: "This step could not be completed: {msg}",
       applying: "Sending the instructions to the AI…", needModel: "Create an analysis first or upload a Word file.", needIns: "Write an instruction.",
@@ -409,7 +409,7 @@
       if (!S.items(state.model, "messages").length && !S.items(state.model, "rules").length && !S.items(state.model, "fields").length) { throw new Error(t("noFindings")); }
       run.failedList = failed.map(function (j) { return "D" + j.docNo + " s." + j.chunk.from + "–" + j.chunk.to; });
       /* the source findings are ready: show them now, then prepare the proposals in parallel */
-      addFirstLogIfNeeded(); state.tab = "source"; render(); saveNow();
+      addFirstLogIfNeeded(); saveNow();
       status("", t("partialReady", { m: S.items(state.model, "messages").length, f: S.items(state.model, "fields").length, r: S.items(state.model, "rules").length }));
       var settle = function (pr) { return pr.then(function () { return null; }, function (e) { if (signal.aborted || isFatal(e)) { throw e; } return e; }); };
       return Promise.all([settle(stageBusiness(run, signal)), settle(stageDesign(run, signal))]).then(function (errs) {
@@ -462,6 +462,7 @@
     state.tab = "overview"; render(); saveNow();
     if (!w.length) { $("progressCard").hidden = true; }
     $("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    download(true);
   }
 
   /* ---------- instructions (revise) ---------- */
@@ -651,7 +652,7 @@
 
   /* ---------- Word out ---------- */
 
-  function download() {
+  function download(auto) {
     if (!state.model) { return; }
     state.model.meta.title = $("metaTitle").value.trim() || state.model.meta.title;
     state.model.meta.author = $("metaAuthor").value.trim() || state.model.meta.author;
@@ -661,7 +662,7 @@
     var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 800);
-    status("ok", t("downloaded", { name: name })); save();
+    if (auto !== true) { status("ok", t("downloaded", { name: name })); } save();
   }
 
   /* ---------- wiring ---------- */
@@ -703,8 +704,8 @@
     $("btnAnalyze").addEventListener("click", analyze);
     $("btnRetry").addEventListener("click", analyze);
     $("btnApply").addEventListener("click", applyInstructions);
-    $("btnDownload").addEventListener("click", download);
-    $("btnDownload2").addEventListener("click", download);
+    $("btnDownload").addEventListener("click", function () { download(); });
+    $("btnDownload2").addEventListener("click", function () { download(); });
     $("showDetail").addEventListener("change", render);
     $("btnAccept").addEventListener("click", acceptPending);
     $("btnDiscard").addEventListener("click", discardPending);
