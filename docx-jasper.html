@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BAForge AI - Word to JasperReports Converter</title>
+  <link rel="stylesheet" href="/core/tool-ui.css" />
+<link rel="stylesheet" href="/core/ba-unify.css">
+  <style>
+    .drop { display: grid; place-items: center; gap: 8px; text-align: center; padding: 34px 18px; border: 2px dashed #c7d2fe; border-radius: 16px; background: #f8faff; cursor: pointer; transition: background .15s, border-color .15s; }
+    .drop:hover, .drop.over { background: #eef3ff; border-color: var(--primary); }
+    .drop .big { font-size: 34px; line-height: 1; }
+    .drop strong { color: var(--heading); font-size: 16px; }
+    .drop span { color: var(--muted); font-size: 13px; }
+    .drop .file-name { color: var(--primary); font-weight: 700; font-size: 14px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 10px; }
+    .stat { border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 13px; background: #fff; }
+    .stat b { color: var(--heading); }
+    .names { font-size: 13px; color: var(--text); margin: 0 0 6px; }
+    .names code { margin: 0 3px 3px 0; display: inline-block; }
+    .tabs { display: inline-flex; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 6px 0 12px; }
+    .tabs button { border: 0; background: #fff; padding: 9px 16px; font: inherit; font-weight: 700; font-size: 14px; color: var(--muted); cursor: pointer; }
+    .tabs button[aria-selected="true"] { background: var(--primary); color: #fff; }
+    .pages { display: grid; gap: 16px; justify-items: center; padding: 16px; background: #eef1f6; border-radius: 12px; max-height: 720px; overflow: auto; }
+    .pg { position: relative; background: #fff; box-shadow: 0 4px 16px rgba(16,24,40,.12); overflow: hidden; flex: none; }
+    .pg .el { position: absolute; overflow: hidden; color: #111; line-height: 1.2; white-space: pre-wrap; word-wrap: break-word; }
+    .pg .el.cell { box-sizing: border-box; }
+    .pg img.el { object-fit: contain; }
+    .pg .num { position: absolute; right: 6px; top: 4px; font-size: 10px; color: #98a2b3; }
+    .tok { background: #e0e7ff; color: #3730a3; border-radius: 3px; padding: 0 2px; font-family: Consolas, monospace; font-size: .9em; }
+    .note { font-size: 13px; color: var(--muted); margin: 0 0 10px; }
+    #result[hidden] { display: none; }
+    #code { min-height: 420px; white-space: pre; }
+  </style>
+</head>
+<body>
+<main>
+
+  <section class="hero">
+    <h1 data-t="title">Word → JasperReports Converter</h1>
+    <p data-t="subtitle"></p>
+  </section>
+
+  <section class="card">
+    <label class="drop" id="drop" for="file">
+      <div class="big" aria-hidden="true">📄</div>
+      <strong data-t="dropTitle">Choose a Word file or drop it here</strong>
+      <span data-t="dropHint">.docx files only. The file stays in your browser.</span>
+      <span class="file-name" id="fileName"></span>
+      <input type="file" id="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
+    </label>
+
+    <div class="toolbar" style="margin-top:18px">
+      <label class="field">
+        <span data-t="reportName">Report name</span>
+        <input type="text" id="reportName" placeholder="Report" />
+      </label>
+      <label class="field">
+        <span data-t="phLabel">Placeholders</span>
+        <select id="ph">
+          <option value="field" data-t="phField">Report fields ($F)</option>
+          <option value="parameter" data-t="phParam">Parameters ($P)</option>
+          <option value="off" data-t="phOff">Keep as plain text</option>
+        </select>
+      </label>
+      <label class="field">
+        <span data-t="fontLabel">Font</span>
+        <select id="font">
+          <option value="" data-t="fontKeep">Same as in Word</option>
+          <option value="DejaVu Sans" data-t="fontDejavu">DejaVu Sans (Turkish letters safe in PDF)</option>
+          <option value="Arial">Arial</option>
+          <option value="Times New Roman">Times New Roman</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" id="images" checked /> <span data-t="images">Include pictures</span></label>
+      <label class="check"><input type="checkbox" id="hf" checked /> <span data-t="hf">Header and footer</span></label>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn primary" id="convertButton" data-t="convert">Convert</button>
+      <button type="button" class="btn" id="downloadButton" data-t="download">Download .jrxml</button>
+      <button type="button" class="btn" id="copyButton" data-t="copy">Copy JRXML</button>
+      <button type="button" class="btn" id="sampleButton" data-t="sample">Try a sample</button>
+      <button type="button" class="btn" id="clearButton" data-t="clear">Clear</button>
+    </div>
+
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <ul class="warnings" id="warnings"></ul>
+  </section>
+
+  <section class="card" id="result" hidden>
+    <h2 data-t="resultTitle">Result</h2>
+    <div class="stats" id="stats"></div>
+    <p class="names" id="names"></p>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="tabPreview" aria-selected="true" data-t="tabPreview">Preview</button>
+      <button type="button" role="tab" id="tabCode" aria-selected="false" data-t="tabCode">JRXML code</button>
+    </div>
+    <div id="panePreview">
+      <p class="note" data-t="previewNote"></p>
+      <div class="pages" id="pages"></div>
+    </div>
+    <div id="paneCode" hidden>
+      <p class="note" data-t="codeNote"></p>
+      <textarea id="code" spellcheck="false" readonly aria-label="JRXML"></textarea>
+    </div>
+  </section>
+
+  <details class="rules">
+    <summary data-t="rulesTitle">How to use</summary>
+    <ul id="rulesList"></ul>
+  </details>
+
+</main>
+
+<script src="/core/docx-lite.js"></script>
+<script src="/core/docx-jrxml.js"></script>
+<script src="/core/tool-ui.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = BATool.$;
+
+  var DICT = {
+    en: {
+      pageTitle: "BAForge AI - Word to JasperReports Converter",
+      title: "Word → JasperReports Converter",
+      subtitle: "Turn a Word (.docx) document into a JasperReports template (.jrxml) you can open in Jaspersoft Studio. The conversion runs in your browser; the file is not uploaded anywhere.",
+      dropTitle: "Choose a Word file or drop it here", dropHint: ".docx files only. The file stays in your browser.",
+      reportName: "Report name", phLabel: "Placeholders", phField: "Report fields ($F)", phParam: "Parameters ($P)", phOff: "Keep as plain text",
+      fontLabel: "Font", fontKeep: "Same as in Word", fontDejavu: "DejaVu Sans (Turkish letters safe in PDF)",
+      images: "Include pictures", hf: "Header and footer",
+      convert: "Convert", download: "Download .jrxml", copy: "Copy JRXML", sample: "Try a sample", clear: "Clear",
+      resultTitle: "Result", tabPreview: "Preview", tabCode: "JRXML code",
+      previewNote: "Approximate preview. Fonts and line breaks can differ slightly in JasperReports; long text grows downwards there.",
+      codeNote: "Picture data is shortened here to keep the view readable. Download and Copy give the full file.",
+      rulesTitle: "How to use",
+      rules: [
+        "Choose or drop a Word .docx file (old .doc files: open in Word and save as .docx first).",
+        "Optional: write placeholders in Word such as ${customer_name}, {{Total}} or «Code», or use Word mail-merge fields. They become report fields ($F) or parameters ($P).",
+        "Press Convert, check the preview, then download the .jrxml file.",
+        "Open the file in Jaspersoft Studio (6.x) or compile it with JasperReports 6.x. Studio previews it with the \"One Empty Record\" data adapter.",
+        "With a data source of several records, every record prints the whole document starting on a new page (like a mail merge).",
+        "Kept: text formatting (bold, italic, underline, size, colour, font), alignment, spacing, headings, numbered and bulleted lists, tables (widths, merged cells, shading), pictures (PNG, JPEG, GIF, BMP), page breaks, page size and margins, header and footer, page numbers (Page X of Y) and dates.",
+        "Not kept: charts, shapes, SmartArt, footnotes, comments and text columns. Text boxes become normal paragraphs. Anything left out is listed under the Convert button.",
+        "For PDF export with Turkish letters (ğ, ş, ı, İ) choose the DejaVu Sans font, which ships with the JasperReports font extension."
+      ],
+      busy: "Converting…", done: "Converted.", noFile: "Choose a Word (.docx) file first.", nothing: "Convert a file first.",
+      copied: "Copied to clipboard.", copyFail: "Could not copy. Open the JRXML code tab and copy it manually.", downloaded: "Downloaded",
+      sParagraphs: "paragraphs", sTables: "tables", sImages: "pictures", sBreaks: "page breaks", sHeader: "header", sFooter: "footer", sPages: "pages (approx.)",
+      fieldsLbl: "Fields:", paramsLbl: "Parameters:", page: "Page", imgData: "picture data"
+    },
+    tr: {
+      pageTitle: "BAForge AI - Word → JasperReports Dönüştürücü",
+      title: "Word → JasperReports Dönüştürücü",
+      subtitle: "Bir Word (.docx) belgesini Jaspersoft Studio'da açabileceğiniz JasperReports şablonuna (.jrxml) dönüştürün. Dönüştürme tarayıcınızda yapılır; dosya hiçbir yere yüklenmez.",
+      dropTitle: "Word dosyası seçin veya buraya bırakın", dropHint: "Yalnızca .docx dosyaları. Dosya tarayıcınızdan çıkmaz.",
+      reportName: "Rapor adı", phLabel: "Yer tutucular", phField: "Rapor alanı ($F)", phParam: "Parametre ($P)", phOff: "Düz metin olarak bırak",
+      fontLabel: "Yazı tipi", fontKeep: "Word'deki gibi", fontDejavu: "DejaVu Sans (PDF'te Türkçe karakter güvenli)",
+      images: "Görselleri ekle", hf: "Üst ve alt bilgi",
+      convert: "Dönüştür", download: ".jrxml indir", copy: "JRXML kopyala", sample: "Örnekle dene", clear: "Temizle",
+      resultTitle: "Sonuç", tabPreview: "Önizleme", tabCode: "JRXML kodu",
+      previewNote: "Yaklaşık önizlemedir. JasperReports'ta yazı tipi ve satır kırılımları biraz farklı olabilir; uzun metinler orada aşağı doğru uzar.",
+      codeNote: "Görünüm okunur kalsın diye görsel verileri burada kısaltıldı. İndir ve Kopyala tam dosyayı verir.",
+      rulesTitle: "Nasıl kullanılır",
+      rules: [
+        "Bir Word .docx dosyası seçin veya bırakın (eski .doc dosyalarını önce Word'de açıp .docx olarak kaydedin).",
+        "İsteğe bağlı: Word'e ${musteri_adi}, {{Toplam}} veya «Kod» gibi yer tutucular yazın ya da Word adres mektup birleştirme alanlarını kullanın. Bunlar rapor alanına ($F) veya parametreye ($P) dönüşür.",
+        "Dönüştür'e basın, önizlemeyi kontrol edin ve .jrxml dosyasını indirin.",
+        "Dosyayı Jaspersoft Studio'da (6.x) açın veya JasperReports 6.x ile derleyin. Studio, \"One Empty Record\" veri bağdaştırıcısıyla önizleme yapar.",
+        "Birden çok kayıt içeren bir veri kaynağıyla her kayıt, belgenin tamamını yeni bir sayfadan başlayarak basar (adres mektup birleştirme gibi).",
+        "Korunanlar: yazı biçimi (kalın, italik, altı çizili, boyut, renk, yazı tipi), hizalama, boşluklar, başlıklar, numaralı ve madde işaretli listeler, tablolar (genişlik, birleşik hücre, gölgelendirme), görseller (PNG, JPEG, GIF, BMP), sayfa sonları, sayfa boyutu ve kenar boşlukları, üst ve alt bilgi, sayfa numarası (Sayfa X / Y) ve tarih.",
+        "Korunmayanlar: grafikler, şekiller, SmartArt, dipnotlar, yorumlar ve metin sütunları. Metin kutuları normal paragraf olur. Dışarıda kalan her şey Dönüştür düğmesinin altında listelenir.",
+        "Türkçe karakterli (ğ, ş, ı, İ) PDF çıktısı için JasperReports yazı tipi eklentisiyle gelen DejaVu Sans yazı tipini seçin."
+      ],
+      busy: "Dönüştürülüyor…", done: "Dönüştürüldü.", noFile: "Önce bir Word (.docx) dosyası seçin.", nothing: "Önce bir dosya dönüştürün.",
+      copied: "Panoya kopyalandı.", copyFail: "Kopyalanamadı. JRXML kodu sekmesini açıp elle kopyalayın.", downloaded: "İndirildi",
+      sParagraphs: "paragraf", sTables: "tablo", sImages: "görsel", sBreaks: "sayfa sonu", sHeader: "üst bilgi", sFooter: "alt bilgi", sPages: "sayfa (yaklaşık)",
+      fieldsLbl: "Alanlar:", paramsLbl: "Parametreler:", page: "Sayfa", imgData: "görsel verisi"
+    }
+  };
+
+  var T = BATool.applyI18n(DICT);
+  $("rulesList").innerHTML = T.rules.map(function (r) { return "<li>" + BATool.esc(r) + "</li>"; }).join("");
+  $("reportName").setAttribute("placeholder", BATool.lang() === "tr" ? "Rapor" : "Report");
+
+  var current = null;   // { name, bytes }
+  var last = null;      // conversion result
+  var urls = [];
+
+  function setFile(name, bytes) {
+    current = { name: name, bytes: bytes };
+    $("fileName").textContent = name;
+    if (!$("reportName").value || $("reportName").dataset.auto === "1") {
+      $("reportName").value = name.replace(/\.docx$/i, "");
+      $("reportName").dataset.auto = "1";
+    }
+    convert();
+  }
+
+  function readFile(f) {
+    if (!f) { return; }
+    var fr = new FileReader();
+    fr.onload = function () { setFile(f.name, new Uint8Array(fr.result)); };
+    fr.onerror = function () { BATool.status("error", String(fr.error)); };
+    fr.readAsArrayBuffer(f);
+  }
+
+  $("file").addEventListener("change", function () { readFile(this.files[0]); this.value = ""; });
+  var drop = $("drop");
+  ["dragenter", "dragover"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add("over"); }); });
+  ["dragleave", "drop"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove("over"); }); });
+  drop.addEventListener("drop", function (e) { var f = e.dataTransfer && e.dataTransfer.files[0]; readFile(f); });
+  $("reportName").addEventListener("input", function () { this.dataset.auto = "0"; });
+
+  function options() {
+    var ph = $("ph").value;
+    return {
+      name: $("reportName").value.trim() || "Report",
+      placeholders: ph !== "off", placeholderKind: ph === "parameter" ? "parameter" : "field",
+      images: $("images").checked, headerFooter: $("hf").checked, font: $("font").value, lang: BATool.lang()
+    };
+  }
+
+  function convert() {
+    if (!current) { BATool.status("error", T.noFile); return; }
+    BATool.status("", T.busy); BATool.warnings([]);
+    DocxJrxml.convert(current.bytes, options()).then(function (res) {
+      last = res;
+      BATool.status("ok", T.done);
+      BATool.warnings(res.warnings);
+      show(res);
+    }).catch(function (e) {
+      last = null; $("result").hidden = true;
+      BATool.status("error", e && e.message ? e.message : String(e));
+    });
+  }
+
+  function show(res) {
+    var s = res.stats, chips = [];
+    function chip(n, label) { chips.push('<span class="stat"><b>' + n + "</b> " + BATool.esc(label) + "</span>"); }
+    var pages = paint(res.model);
+    chip(pages, T.sPages);
+    chip(s.paragraphs, T.sParagraphs); chip(s.tables, T.sTables); chip(s.images, T.sImages);
+    if (s.pageBreaks) { chip(s.pageBreaks, T.sBreaks); }
+    if (s.header) { chips.push('<span class="stat">✓ ' + T.sHeader + "</span>"); }
+    if (s.footer) { chips.push('<span class="stat">✓ ' + T.sFooter + "</span>"); }
+    $("stats").innerHTML = chips.join("");
+    var names = "";
+    if (s.fields.length) { names += "<b>" + T.fieldsLbl + "</b> " + s.fields.map(function (f) { return "<code>$F{" + BATool.esc(f) + "}</code>"; }).join(" ") + " "; }
+    if (s.parameters.length) { names += "<b>" + T.paramsLbl + "</b> " + s.parameters.map(function (f) { return "<code>$P{" + BATool.esc(f) + "}</code>"; }).join(" "); }
+    $("names").innerHTML = names;
+    $("names").hidden = !names;
+    $("code").value = res.jrxml.replace(/new String\[\] \{[^}]*\}/g, function (m0) { return 'new String[] {"… ' + T.imgData + ", " + Math.round(m0.length * 0.75 / 1024) + ' KB …"}'; });
+    $("result").hidden = false;
+  }
+
+  /* ---- approximate preview, drawn from the same layout the JRXML uses ---- */
+  function segHtml(e) {
+    return e.segs.map(function (sg) {
+      var r = sg.r, st = "";
+      if (r.b) { st += "font-weight:700;"; }
+      if (r.i) { st += "font-style:italic;"; }
+      if (r.u || r.s) { st += "text-decoration:" + (r.u ? "underline " : "") + (r.s ? "line-through" : "") + ";"; }
+      if (r.color) { st += "color:" + r.color + ";"; }
+      if (r.sz !== e.r.sz) { st += "font-size:" + (r.sz / e.r.sz) + "em;"; }
+      if (r.font !== e.r.font) { st += "font-family:'" + r.font.replace(/'/g, "") + "',sans-serif;"; }
+      var inner;
+      if (sg.text !== undefined) { inner = BATool.esc(sg.text); }
+      else {
+        var k = sg.tok.kind;
+        inner = '<span class="tok">' + BATool.esc(k === "field" ? "$F{" + sg.tok.name + "}" : k === "param" ? "$P{" + sg.tok.name + "}" : k === "var" ? "$V{" + sg.tok.name + "}" : k === "page" ? "1" : k === "pages" ? "N" : new Date().toLocaleDateString()) + "</span>";
+      }
+      return st ? '<span style="' + st + '">' + inner + "</span>" : inner;
+    }).join("");
+  }
+
+  function paint(m) {
+    urls.forEach(function (u) { URL.revokeObjectURL(u); }); urls = [];
+    var box = $("pages"), avail = Math.min(760, (box.clientWidth || 700) - 32), k = Math.max(0.4, Math.min(1.2, avail / m.page.w, 680 / m.page.h));
+    box.innerHTML = "";
+    var pageNo = 0, pg = null, y = 0;
+    var bodyTop = m.page.top + (m.header ? m.header.h : 0), bodyMax = m.page.maxH;
+
+    function el(e, ox, oy) {
+      var d;
+      if (e.k === "image") {
+        d = document.createElement("img");
+        var u = URL.createObjectURL(new Blob([e.data], { type: e.mime })); urls.push(u);
+        d.src = u; d.alt = "";
+      } else {
+        d = document.createElement("div");
+        d.innerHTML = segHtml(e);
+        d.style.fontFamily = "'" + e.r.font.replace(/'/g, "") + "', Arial, sans-serif";
+        d.style.fontSize = (e.r.sz * k) + "px";
+        if (e.r.b) { d.style.fontWeight = "700"; }
+        if (e.r.i) { d.style.fontStyle = "italic"; }
+        if (e.r.color) { d.style.color = e.r.color; }
+        d.style.textAlign = { Left: "left", Center: "center", Right: "right", Justified: "justify" }[e.align];
+        if (e.line) { d.style.lineHeight = String(1.2 * e.line); }
+        if (e.firstLine) { d.style.textIndent = (e.firstLine * k) + "px"; }
+        if (e.cell) { d.classList.add("cell"); d.style.padding = (3 * k) + "px"; }
+        if (e.border) {
+          var b = Math.max(1, 0.5 * k) + "px solid #000";
+          d.style.border = b;
+          if (e.noTop) { d.style.borderTop = "0"; }
+          if (e.noBottom) { d.style.borderBottom = "0"; }
+        }
+        if (e.bg) { d.style.background = e.bg; }
+      }
+      d.className += " el";
+      d.style.left = ((ox + e.x) * k) + "px"; d.style.top = ((oy + e.y) * k) + "px";
+      d.style.width = (e.w * k) + "px"; d.style.height = (e.h * k) + "px";
+      pg.appendChild(d);
+    }
+    function newPage() {
+      pageNo++;
+      pg = document.createElement("div");
+      pg.className = "pg";
+      pg.style.width = (m.page.w * k) + "px"; pg.style.height = (m.page.h * k) + "px";
+      pg.innerHTML = '<span class="num">' + T.page + " " + pageNo + "</span>";
+      box.appendChild(pg);
+      y = 0;
+      if (m.header) { m.header.els.forEach(function (e) { el(withPage(e), m.page.left, m.page.top); }); }
+      if (m.footer) { m.footer.els.forEach(function (e) { el(withPage(e), m.page.left, m.page.h - m.page.bottom - m.footer.h); }); }
+    }
+    function withPage(e) { // show the real page number in header/footer
+      if (e.k !== "text") { return e; }
+      return Object.assign({}, e, { segs: e.segs.map(function (s) { return s.tok && (s.tok.kind === "page") ? { text: String(pageNo), r: s.r } : s; }) });
+    }
+    var pending = [];
+    newPage();
+    m.bands.forEach(function (b) {
+      if (b.brk) { if (y > 0) { pending.push("break"); } return; }
+      if (pending.length || (y + b.h > bodyMax && y > 0)) { pending = []; newPage(); }
+      b.els.forEach(function (e) { el(e, m.page.left, bodyTop + y); });
+      y += b.h;
+    });
+    // fill in the total page count now that it is known
+    Array.prototype.forEach.call(box.querySelectorAll(".tok"), function (t) { if (t.textContent === "N") { t.textContent = String(pageNo); } });
+    return pageNo;
+  }
+
+  function tab(which) {
+    var code = which === "code";
+    $("tabPreview").setAttribute("aria-selected", String(!code));
+    $("tabCode").setAttribute("aria-selected", String(code));
+    $("panePreview").hidden = code; $("paneCode").hidden = !code;
+  }
+  $("tabPreview").addEventListener("click", function () { tab("preview"); });
+  $("tabCode").addEventListener("click", function () { tab("code"); });
+
+  $("convertButton").addEventListener("click", convert);
+  ["ph", "font", "images", "hf"].forEach(function (id) { $(id).addEventListener("change", function () { if (current) { convert(); } }); });
+  $("reportName").addEventListener("change", function () { if (current) { convert(); } });
+
+  $("downloadButton").addEventListener("click", function () {
+    if (!last) { BATool.status("error", T.nothing); return; }
+    var name = (options().name || "Report").replace(/[\\/:*?"<>|]+/g, "_") + ".jrxml";
+    BATool.download(name, last.jrxml, "application/xml");
+    BATool.status("ok", T.downloaded + ": " + name);
+  });
+  $("copyButton").addEventListener("click", function () {
+    if (!last) { BATool.status("error", T.nothing); return; }
+    BATool.copy(last.jrxml, function () { BATool.status("ok", T.copied); }, function () { BATool.status("error", T.copyFail); });
+  });
+  $("clearButton").addEventListener("click", function () {
+    current = null; last = null;
+    $("fileName").textContent = ""; $("reportName").value = ""; $("reportName").dataset.auto = "1";
+    $("result").hidden = true; BATool.status("", ""); BATool.warnings([]);
+  });
+
+  /* sample: a small letter built in the browser with DocxLite, with placeholders */
+  $("sampleButton").addEventListener("click", function () {
+    var tr = BATool.lang() === "tr";
+    var bytes = DocxLite.build({
+      title: tr ? "Sipariş Onayı" : "Order Confirmation", subtitle: tr ? "Sipariş no: ${siparis_no}" : "Order no: ${order_no}",
+      footer: "BAForge AI", landscape: false,
+      blocks: tr ? [
+        { t: "p", text: "Sayın **${musteri_adi}**," },
+        { t: "p", text: "Siparişiniz alınmıştır. Teslimat adresi: ${adres}" },
+        { t: "h2", text: "Sipariş özeti" },
+        { t: "table", head: ["Ürün", "Adet", "Tutar"], widths: [60, 15, 25], rows: [["${urun}", "${adet}", "${tutar} TL"]] },
+        { t: "bullets", items: ["Kargo 2-3 iş günü içinde teslim edilir.", "Sorularınız için bizimle iletişime geçin."] },
+        { t: "p", text: "Saygılarımızla,\n**BAForge Mağaza**" }
+      ] : [
+        { t: "p", text: "Dear **${customer_name}**," },
+        { t: "p", text: "We have received your order. Delivery address: ${address}" },
+        { t: "h2", text: "Order summary" },
+        { t: "table", head: ["Product", "Qty", "Amount"], widths: [60, 15, 25], rows: [["${product}", "${qty}", "${amount}"]] },
+        { t: "bullets", items: ["Shipping takes 2-3 working days.", "Contact us if you have any questions."] },
+        { t: "p", text: "Kind regards,\n**BAForge Store**" }
+      ]
+    });
+    $("reportName").dataset.auto = "1"; $("reportName").value = "";
+    setFile(tr ? "Siparis_Onayi.docx" : "Order_Confirmation.docx", bytes);
+  });
+})();
+</script>
+<script src="/nav.js"></script>
+<script src="/core/ba-unify.js"></script>
+<script src="/core/page-shell.js"></script>
+</body>
+</html>

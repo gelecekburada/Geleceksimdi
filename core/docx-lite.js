@@ -288,6 +288,6 @@
     });
   }
 
-  var api = { build: build, read: read, _zip: zip, _crc32: crc32, _parseXml: parseXml };
+  var api = { build: build, read: read, _zip: zip, _crc32: crc32, _parseXml: parseXml, _unzip: unzip };
   if (typeof module !== "undefined" && module.exports) { module.exports = api; } else { root.DocxLite = api; }
 })(typeof window !== "undefined" ? window : globalThis);

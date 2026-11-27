@@ -40,6 +40,8 @@
     currentPage = "mock-data";
   } else if (path.endsWith("/api-designer.html")) {
     currentPage = "api-designer";
+  } else if (path.endsWith("/docx-jasper.html")) {
+    currentPage = "docx-jasper";
   } else if (path.endsWith("/flowchart.html")) {
     currentPage = "flowchart";
   } else if (path.endsWith("/er-diagram.html")) {
@@ -119,6 +121,7 @@
         jsonSchema: "JSON Schema Generator",
         mockData: "Mock Data Generator",
         apiDesigner: "API Designer",
+        docxJasper: "Word → JasperReports",
         groupDesign: "Design Tools",
         flowchartD: "Flowchart Designer",
         erDiagram: "ER Diagram Designer",
@@ -182,6 +185,7 @@
         jsonSchema: "JSON Schema Oluşturucu",
         mockData: "Sahte Veri Üretici",
         apiDesigner: "API Tasarımcısı",
+        docxJasper: "Word → JasperReports",
         groupDesign: "Tasarım Araçları",
         flowchartD: "Akış Şeması Tasarımcısı",
         erDiagram: "ER Diyagram Tasarımcısı",
@@ -698,6 +702,7 @@
       jsonSchema: t("nav.jsonSchema"),
       mockData: t("nav.mockData"),
       apiDesigner: t("nav.apiDesigner"),
+      docxJasper: t("nav.docxJasper"),
       groupDesign: t("nav.groupDesign"),
       flowchartD: t("nav.flowchartD"),
       erDiagram: t("nav.erDiagram"),
@@ -744,7 +749,8 @@
           ["regex-builder", "/regex-builder.html", navText.regexBuilder],
           ["json-schema", "/json-schema.html", navText.jsonSchema],
           ["mock-data", "/mock-data.html", navText.mockData],
-          ["api-designer", "/api-designer.html", navText.apiDesigner]
+          ["api-designer", "/api-designer.html", navText.apiDesigner],
+          ["docx-jasper", "/docx-jasper.html", navText.docxJasper]
         ]
       }
       ,{
@@ -1560,6 +1566,9 @@
           "api.t": "API Designer",
           "api.d": "Design endpoints and export an OpenAPI 3.0.3 document.",
           "api.l": "Open Designer →",
+          "dj.t": "Word → JasperReports Converter",
+          "dj.d": "Turn a Word (.docx) document into a JasperReports template (.jrxml). Nothing is sent to a server.",
+          "dj.l": "Open Converter →",
           "g.design": "Design Tools",
           "fc.t": "Flowchart Designer",
           "fc.d": "Write the flow as text and get a flowchart. Export as SVG or PNG.",
@@ -1675,6 +1684,9 @@
           "api.t": "API Tasarımcısı",
           "api.d": "Endpoint'leri tasarlayın, OpenAPI 3.0.3 belgesi olarak dışa aktarın.",
           "api.l": "Tasarımcıyı Aç →",
+          "dj.t": "Word → JasperReports Dönüştürücü",
+          "dj.d": "Word (.docx) belgesini JasperReports şablonuna (.jrxml) dönüştürün. Hiçbir şey sunucuya gönderilmez.",
+          "dj.l": "Dönüştürücüyü Aç →",
           "g.design": "Tasarım Araçları",
           "fc.t": "Akış Şeması Tasarımcısı",
           "fc.d": "Akışı metin olarak yazın, akış şemasını alın. SVG veya PNG olarak aktarın.",
