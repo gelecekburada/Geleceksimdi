@@ -6,6 +6,11 @@ module.exports = async (req, res) => {
     });
   }
 
+  // The Word -> JasperReports instruction helper shares this function (the Vercel plan allows 12 API functions).
+  if (req.body && req.body.tool === "docx-jasper") {
+    return require("./_lib/docx-jasper")(req, res);
+  }
+
   if (!(await require("./_lib/guard")(req, res, "generate"))) {
     return;
   }

@@ -1,5 +1,5 @@
 /*
- * POST /api/docx-jasper  { instruction, outline, language }  ->  { ok, rules, summary[], unsupported[] }
+ * POST /api/generate  { tool: "docx-jasper", instruction, outline, language }  ->  { ok, rules, summary[], unsupported[] }
  *
  * Turns a plain-language formatting instruction for the Word -> JasperReports converter
  * ("body text 10pt, headings bold and blue, margins 2 cm") into the small rule object that
@@ -8,7 +8,7 @@
  */
 "use strict";
 
-const { cleanRules } = require("../core/docx-jrxml.js");
+const { cleanRules } = require("../../core/docx-jrxml.js");
 
 const MAX_INSTRUCTION = 2000;
 
@@ -88,7 +88,7 @@ module.exports = async (req, res) => {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) { return res.status(503).json({ error: L("Yapay zekâ servisi yapılandırılmamış.", "The AI service is not configured.") }); }
 
-  if (!(await require("./_lib/guard")(req, res, "docx-jasper"))) { return; }
+  if (!(await require("./guard")(req, res, "docx-jasper"))) { return; }
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 45000);

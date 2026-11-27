@@ -1,8 +1,9 @@
-/* /api/docx-jasper checks with a fake AI service.  Run with:  node tests/docx-jasper-api.test.js */
+/* /api/generate {tool:"docx-jasper"} checks with a fake AI service.  Run with:  node tests/docx-jasper-api.test.js */
 const assert = require("assert");
 process.env.OPENAI_API_KEY = "test-key-not-real";
 delete process.env.SUPABASE_URL; // guard: no accounts configured -> allowed
-const handler = require("../api/docx-jasper.js");
+const generate = require("../api/generate.js");
+const handler = (req, res) => { req.body = Object.assign({ tool: "docx-jasper" }, req.body); return generate(req, res); };
 
 let failed = 0, passed = 0;
 async function check(name, fn) { try { await fn(); passed++; console.log("PASS", name); } catch (e) { failed++; console.log("FAIL", name, "-", e.message); } }

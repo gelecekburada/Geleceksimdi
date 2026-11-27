@@ -259,9 +259,9 @@
   function askRules(instruction, outline) {
     if (ruleCache && ruleCache.instruction === instruction) { return Promise.resolve(ruleCache); }
     BATool.status("", T.asking);
-    return fetch("/api/docx-jasper", {
+    return fetch("/api/generate", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ instruction: instruction, outline: outline, language: BATool.lang() })
+      body: JSON.stringify({ tool: "docx-jasper", instruction: instruction, outline: outline, language: BATool.lang() })
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (d) {
         if (!r.ok || !d.ok) { throw new Error(d.error || ("HTTP " + r.status)); }
