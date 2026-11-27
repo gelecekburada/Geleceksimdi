@@ -31,6 +31,16 @@
     .note { font-size: 13px; color: var(--muted); margin: 0 0 10px; }
     #result[hidden] { display: none; }
     #code { min-height: 420px; white-space: pre; }
+    .instr { margin: 4px 0 6px; }
+    .instr .lbl { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+    .instr textarea { min-height: 96px; font-family: inherit; font-size: 14px; }
+    .instr .chips { margin-top: 8px; }
+    .instr .chip { font-size: 12.5px; padding: 4px 10px; }
+    .instr .note { margin: 8px 0 0; font-size: 12.5px; }
+    .applied { border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 12px; padding: 10px 14px; margin: 0 0 12px; font-size: 14px; }
+    .applied b { color: #166534; }
+    .applied ul { margin: 6px 0 0; padding-left: 20px; }
+    .applied li.no { color: var(--warn); }
   </style>
 </head>
 <body>
@@ -76,6 +86,13 @@
       <label class="check"><input type="checkbox" id="hf" checked /> <span data-t="hf">Header and footer</span></label>
     </div>
 
+    <div class="instr">
+      <label class="lbl" for="instruction" data-t="instrLabel">Extra instructions (optional)</label>
+      <textarea id="instruction" spellcheck="true" maxlength="2000" data-t-placeholder="instrPh"></textarea>
+      <div class="chips" id="instrChips"></div>
+      <p class="note" data-t="instrNote"></p>
+    </div>
+
     <div class="actions">
       <button type="button" class="btn primary" id="convertButton" data-t="convert">Convert</button>
       <button type="button" class="btn" id="downloadButton" data-t="download">Download .jrxml</button>
@@ -90,6 +107,7 @@
 
   <section class="card" id="result" hidden>
     <h2 data-t="resultTitle">Result</h2>
+    <div class="applied" id="applied" hidden></div>
     <div class="stats" id="stats"></div>
     <p class="names" id="names"></p>
     <div class="tabs" role="tablist">
@@ -139,6 +157,7 @@
         "Choose or drop a Word .docx file (old .doc files: open in Word and save as .docx first).",
         "Optional: write placeholders in Word such as ${customer_name}, {{Total}} or «Code», or use Word mail-merge fields. They become report fields ($F) or parameters ($P).",
         "Press Convert, check the preview, then download the .jrxml file.",
+        "Want changes? Write them in Extra instructions, e.g. \"body text 10 pt, headings bold and navy, margins 2 cm\", and press Convert again. You can change font size, font, colour, bold/italic, alignment, spacing, page size and orientation, margins, table lines and colours, remove pictures/header/footer and replace words.",
         "Open the file in Jaspersoft Studio (6.x) or compile it with JasperReports 6.x. Studio previews it with the \"One Empty Record\" data adapter.",
         "With a data source of several records, every record prints the whole document starting on a new page (like a mail merge).",
         "Kept: text formatting (bold, italic, underline, size, colour, font), alignment, spacing, headings, numbered and bulleted lists, tables (widths, merged cells, shading), pictures (PNG, JPEG, GIF, BMP), page breaks, page size and margins, header and footer, page numbers (Page X of Y) and dates.",
@@ -148,7 +167,13 @@
       busy: "Converting…", done: "Converted.", noFile: "Choose a Word (.docx) file first.", nothing: "Convert a file first.",
       copied: "Copied to clipboard.", copyFail: "Could not copy. Open the JRXML code tab and copy it manually.", downloaded: "Downloaded",
       sParagraphs: "paragraphs", sTables: "tables", sImages: "pictures", sBreaks: "page breaks", sHeader: "header", sFooter: "footer", sPages: "pages (approx.)",
-      fieldsLbl: "Fields:", paramsLbl: "Parameters:", page: "Page", imgData: "picture data"
+      fieldsLbl: "Fields:", paramsLbl: "Parameters:", page: "Page", imgData: "picture data",
+      instrLabel: "Extra instructions (optional)",
+      instrPh: "For example: All text Arial 10 pt. Headings 14 pt, bold and navy. Table header row with a grey background. Margins 2 cm.",
+      instrNote: "Your instruction is turned into settings with AI; the text of your document is not sent. Uses 1 of your daily AI requests. Leave it empty to convert as is.",
+      chips: ["All text 10 pt", "Headings bold and navy", "Font Arial everywhere", "Table header grey background", "Margins 2 cm", "Landscape page", "Justify body text", "Remove the header"],
+      asking: "Reading your instruction…", appliedTitle: "Applied from your instruction:", notDone: "Not possible:", noChange: "The instruction did not lead to any change.",
+      instrFail: "The instruction could not be applied, so the document was converted without it: "
     },
     tr: {
       pageTitle: "BAForge AI - Word → JasperReports Dönüştürücü",
@@ -167,6 +192,7 @@
         "Bir Word .docx dosyası seçin veya bırakın (eski .doc dosyalarını önce Word'de açıp .docx olarak kaydedin).",
         "İsteğe bağlı: Word'e ${musteri_adi}, {{Toplam}} veya «Kod» gibi yer tutucular yazın ya da Word adres mektup birleştirme alanlarını kullanın. Bunlar rapor alanına ($F) veya parametreye ($P) dönüşür.",
         "Dönüştür'e basın, önizlemeyi kontrol edin ve .jrxml dosyasını indirin.",
+        "Değişiklik mi istiyorsunuz? Ek talimatlar kutusuna yazın; örneğin \"gövde metni 10 punto, başlıklar kalın ve lacivert, kenar boşlukları 2 cm\" ve tekrar Dönüştür'e basın. Punto, yazı tipi, renk, kalın/italik, hizalama, satır aralığı, sayfa boyutu ve yönü, kenar boşlukları, tablo çizgi ve renkleri değiştirilebilir; görseller, üst/alt bilgi kaldırılabilir ve kelimeler değiştirilebilir.",
         "Dosyayı Jaspersoft Studio'da (6.x) açın veya JasperReports 6.x ile derleyin. Studio, \"One Empty Record\" veri bağdaştırıcısıyla önizleme yapar.",
         "Birden çok kayıt içeren bir veri kaynağıyla her kayıt, belgenin tamamını yeni bir sayfadan başlayarak basar (adres mektup birleştirme gibi).",
         "Korunanlar: yazı biçimi (kalın, italik, altı çizili, boyut, renk, yazı tipi), hizalama, boşluklar, başlıklar, numaralı ve madde işaretli listeler, tablolar (genişlik, birleşik hücre, gölgelendirme), görseller (PNG, JPEG, GIF, BMP), sayfa sonları, sayfa boyutu ve kenar boşlukları, üst ve alt bilgi, sayfa numarası (Sayfa X / Y) ve tarih.",
@@ -176,7 +202,13 @@
       busy: "Dönüştürülüyor…", done: "Dönüştürüldü.", noFile: "Önce bir Word (.docx) dosyası seçin.", nothing: "Önce bir dosya dönüştürün.",
       copied: "Panoya kopyalandı.", copyFail: "Kopyalanamadı. JRXML kodu sekmesini açıp elle kopyalayın.", downloaded: "İndirildi",
       sParagraphs: "paragraf", sTables: "tablo", sImages: "görsel", sBreaks: "sayfa sonu", sHeader: "üst bilgi", sFooter: "alt bilgi", sPages: "sayfa (yaklaşık)",
-      fieldsLbl: "Alanlar:", paramsLbl: "Parametreler:", page: "Sayfa", imgData: "görsel verisi"
+      fieldsLbl: "Alanlar:", paramsLbl: "Parametreler:", page: "Sayfa", imgData: "görsel verisi",
+      instrLabel: "Ek talimatlar (isteğe bağlı)",
+      instrPh: "Örneğin: Tüm yazılar Arial 10 punto olsun. Başlıklar 14 punto, kalın ve lacivert. Tablonun başlık satırı gri zeminli olsun. Kenar boşlukları 2 cm.",
+      instrNote: "Talimatınız yapay zekâ ile ayarlara çevrilir; belgenizin metni gönderilmez. Günlük yapay zekâ hakkınızdan 1 kullanım düşer. Boş bırakırsanız belge olduğu gibi dönüştürülür.",
+      chips: ["Tüm yazılar 10 punto", "Başlıklar kalın ve lacivert", "Her yerde Arial yazı tipi", "Tablo başlığı gri zemin", "Kenar boşlukları 2 cm", "Yatay sayfa", "Gövde metni iki yana yaslı", "Üst bilgiyi kaldır"],
+      asking: "Talimatınız okunuyor…", appliedTitle: "Talimatınızdan uygulananlar:", notDone: "Yapılamayan:", noChange: "Talimat herhangi bir değişikliğe yol açmadı.",
+      instrFail: "Talimat uygulanamadı, belge talimatsız dönüştürüldü: "
     }
   };
 
@@ -222,19 +254,66 @@
     };
   }
 
+  var ruleCache = null; // { instruction, rules, summary, unsupported }
+
+  function askRules(instruction, outline) {
+    if (ruleCache && ruleCache.instruction === instruction) { return Promise.resolve(ruleCache); }
+    BATool.status("", T.asking);
+    return fetch("/api/docx-jasper", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ instruction: instruction, outline: outline, language: BATool.lang() })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) {
+        if (!r.ok || !d.ok) { throw new Error(d.error || ("HTTP " + r.status)); }
+        ruleCache = { instruction: instruction, rules: d.rules, summary: d.summary || [], unsupported: d.unsupported || [] };
+        return ruleCache;
+      });
+    });
+  }
+
+  function showApplied(info) {
+    var box = $("applied");
+    if (!info) { box.hidden = true; box.innerHTML = ""; return; }
+    var items = (info.summary.length ? info.summary : [T.noChange]).map(function (s) { return "<li>" + BATool.esc(s) + "</li>"; });
+    info.unsupported.forEach(function (s) { items.push('<li class="no">' + BATool.esc(T.notDone + " " + s) + "</li>"); });
+    box.innerHTML = "<b>" + T.appliedTitle + "</b><ul>" + items.join("") + "</ul>";
+    box.hidden = false;
+  }
+
   function convert() {
     if (!current) { BATool.status("error", T.noFile); return; }
+    var instruction = $("instruction").value.trim(), opts = options();
     BATool.status("", T.busy); BATool.warnings([]);
-    DocxJrxml.convert(current.bytes, options()).then(function (res) {
-      last = res;
-      BATool.status("ok", T.done);
-      BATool.warnings(res.warnings);
-      show(res);
+    DocxJrxml.convert(current.bytes, opts).then(function (plainRes) {
+      if (!instruction) { return { res: plainRes, info: null }; }
+      return askRules(instruction, plainRes.outline).then(function (info) {
+        return DocxJrxml.convert(current.bytes, Object.assign({}, opts, { rules: info.rules })).then(function (res) { return { res: res, info: info }; });
+      }, function (err) {
+        return { res: plainRes, info: null, err: err };
+      });
+    }).then(function (o) {
+      last = o.res;
+      if (o.err) { BATool.status("error", T.instrFail + (o.err.message || String(o.err))); } else { BATool.status("ok", T.done); }
+      BATool.warnings(o.res.warnings);
+      showApplied(o.info);
+      show(o.res);
     }).catch(function (e) {
       last = null; $("result").hidden = true;
       BATool.status("error", e && e.message ? e.message : String(e));
     });
   }
+
+  $("instrChips").innerHTML = T.chips.map(function (c) { return '<button type="button" class="chip">' + BATool.esc(c) + "</button>"; }).join("");
+  $("instrChips").addEventListener("click", function (e) {
+    var b = e.target.closest("button.chip");
+    if (!b) { return; }
+    var ta = $("instruction"), v = ta.value.trim();
+    ta.value = (v ? v.replace(/[.\s]*$/, "") + ". " : "") + b.textContent + ".";
+    ta.focus();
+  });
+  $("instruction").addEventListener("keydown", function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); convert(); }
+  });
 
   function show(res) {
     var s = res.stats, chips = [];
@@ -365,7 +444,7 @@
     BATool.copy(last.jrxml, function () { BATool.status("ok", T.copied); }, function () { BATool.status("error", T.copyFail); });
   });
   $("clearButton").addEventListener("click", function () {
-    current = null; last = null;
+    current = null; last = null; ruleCache = null; $("instruction").value = ""; showApplied(null);
     $("fileName").textContent = ""; $("reportName").value = ""; $("reportName").dataset.auto = "1";
     $("result").hidden = true; BATool.status("", ""); BATool.warnings([]);
   });

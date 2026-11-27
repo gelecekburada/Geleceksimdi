@@ -343,8 +343,9 @@
       var sname = ((st.byId[styleId] && st.byId[styleId].name) || styleId || "").toLowerCase();
       var hm = /(?:heading|başlık|baslik)\s*(\d)/.exec(sname) || /^(?:heading|baslik|başlık)(\d)$/i.exec(styleId || "");
       var level = hm ? parseInt(hm[1], 10) : (P.outline !== undefined && P.outline < 9 ? P.outline + 1 : 0);
+      var isTitle = sname === "title" || sname === "konu başlığı" || styleId === "Title";
       if (!styleHasSize) {
-        if (sname === "title" || sname === "konu başlığı") { R.sz = 24; R.b = true; }
+        if (isTitle) { R.sz = 24; R.b = true; }
         else if (level) { R.sz = [18, 15, 13, 12, 11, 11, 11, 11, 11][level - 1]; R.b = true; }
       }
 
@@ -443,7 +444,7 @@
       var cur = [], made = false;
       function flush(force) {
         if (!cur.length && !force) { return; }
-        var b = { t: "p", segs: cur, P: P, R: finalR(R), level: level };
+        var b = { t: "p", segs: cur, P: P, R: finalR(R), level: isTitle ? 0 : level, title: isTitle };
         if (list && !made) { b.list = list; }
         blocks.push(b); made = true; cur = [];
       }
@@ -569,7 +570,7 @@
           cells.push({ gi: gi, span: span, vm: vm, fill: fill, segs: segs, jc: jc, R: segs.length ? segs[0].r : finalR(R0()) });
           gi += span;
         });
-        return { cells: cells, minH: hEl ? (num(val(hEl)) || 0) / 20 : 0, exactH: hEl && hEl.attrs["w:hRule"] === "exact" };
+        return { cells: cells, minH: hEl ? (num(val(hEl)) || 0) / 20 : 0, exactH: hEl && hEl.attrs["w:hRule"] === "exact", isHeader: !!(kid(trPr, "w:tblHeader") && on(kid(trPr, "w:tblHeader"))) };
       });
       var cols = rows.reduce(function (m, r) { return Math.max(m, r.cells.reduce(function (a, c) { return Math.max(a, c.gi + c.span); }, 0)); }, 0);
       while (grid.length < cols) { grid.push(0); }
@@ -698,7 +699,7 @@
             var contBelow = next && next.cells.some(function (n) { return n.gi === c.gi && n.vm === "cont"; });
             var segs = c.vm === "cont" ? [] : c.segs;
             els.push(textEl(segs.length ? segs : [{ text: "", r: c.R }], cx, 0, cw, rh, { jc: c.jc }, c.R, {
-              cell: true, border: b.borders, noTop: b.borders && c.vm === "cont", noBottom: b.borders && (c.vm === "restart" || c.vm === "cont") && contBelow, bg: c.fill
+              cell: true, border: b.borders, borderWidth: b.borderWidth, borderColor: b.borderColor, noTop: b.borders && c.vm === "cont", noBottom: b.borders && (c.vm === "restart" || c.vm === "cont") && contBelow, bg: c.fill
             }));
           });
           bands.push({ h: rh, els: els, rowStretch: true });
@@ -716,6 +717,177 @@
       y += b.h;
     });
     return { h: Math.round(y), els: els };
+  }
+
+  /* ---------- user instructions as rules ----------
+   * opts.rules (normally made by /api/docx-jasper from a plain-language instruction, always re-checked here):
+   * {
+   *   rules:   [{ target, contains?, fontSize?, fontSizeDelta?, fontScale?, fontName?, bold?, italic?, underline?, strike?,
+   *               uppercase?, color?, background?, align?, spaceBefore?, spaceAfter?, lineSpacing? }],
+   *            target: all | body | headings | heading1..heading6 | title | lists | tables | tableHeader | tableBody | header | footer
+   *   page:    { size?: A3|A4|A5|Letter|Legal, orientation?: portrait|landscape, marginsMm?: {top,bottom,left,right} }
+   *   tables:  { borders?: bool, borderWidth?: pt, borderColor? }
+   *   remove:  { images?, header?, footer?, pageBreaks?, emptyParagraphs? }
+   *   replace: [{ find, replace }]
+   * }
+   */
+  var TARGETS = ["all", "body", "headings", "heading1", "heading2", "heading3", "heading4", "heading5", "heading6", "title", "lists", "tables", "tableHeader", "tableBody", "header", "footer"];
+  var PAGES = { A3: [842, 1191], A4: [595, 842], A5: [420, 595], LETTER: [612, 792], LEGAL: [612, 1008] };
+
+  function cleanRules(input) {
+    var o = { rules: [], page: {}, tables: {}, remove: {}, replace: [] };
+    if (!input || typeof input !== "object") { return o; }
+    var n = function (v, a, b) { v = Number(v); return isFinite(v) ? clamp(v, a, b) : undefined; };
+    var bool = function (v) { return typeof v === "boolean" ? v : undefined; };
+    var color = function (v) { v = String(v || "").trim(); if (/^#?[0-9a-fA-F]{6}$/.test(v)) { return "#" + v.replace("#", "").toUpperCase(); } return undefined; };
+    var font = function (v) { v = String(v || "").trim(); return /^[\p{L}\p{N} ._-]{1,40}$/u.test(v) ? v : undefined; };
+    (Array.isArray(input.rules) ? input.rules : []).slice(0, 40).forEach(function (r) {
+      if (!r || typeof r !== "object" || TARGETS.indexOf(r.target) < 0) { return; }
+      var x = { target: r.target };
+      if (typeof r.contains === "string" && r.contains.trim()) { x.contains = r.contains.trim().slice(0, 100); }
+      x.fontSize = n(r.fontSize, 4, 96); x.fontSizeDelta = n(r.fontSizeDelta, -30, 30); x.fontScale = n(r.fontScale, 0.3, 4);
+      x.fontName = font(r.fontName);
+      ["bold", "italic", "underline", "strike", "uppercase"].forEach(function (k) { x[k] = bool(r[k]); });
+      x.color = color(r.color); x.background = color(r.background);
+      x.align = ["left", "center", "right", "justify"].indexOf(r.align) > -1 ? r.align : undefined;
+      x.spaceBefore = n(r.spaceBefore, 0, 72); x.spaceAfter = n(r.spaceAfter, 0, 72); x.lineSpacing = n(r.lineSpacing, 0.8, 3);
+      Object.keys(x).forEach(function (k) { if (x[k] === undefined) { delete x[k]; } });
+      if (Object.keys(x).length > (x.contains ? 2 : 1)) { o.rules.push(x); }
+    });
+    var pg = input.page || {};
+    if (typeof pg.size === "string" && PAGES[pg.size.toUpperCase()]) { o.page.size = pg.size.toUpperCase(); }
+    if (pg.orientation === "portrait" || pg.orientation === "landscape") { o.page.orientation = pg.orientation; }
+    if (pg.marginsMm && typeof pg.marginsMm === "object") {
+      var mm = {};
+      ["top", "bottom", "left", "right"].forEach(function (k) { var v = n(pg.marginsMm[k], 0, 80); if (v !== undefined) { mm[k] = v; } });
+      if (Object.keys(mm).length) { o.page.marginsMm = mm; }
+    }
+    var tb = input.tables || {};
+    if (bool(tb.borders) !== undefined) { o.tables.borders = tb.borders; }
+    if (n(tb.borderWidth, 0.1, 4) !== undefined) { o.tables.borderWidth = n(tb.borderWidth, 0.1, 4); }
+    if (color(tb.borderColor)) { o.tables.borderColor = color(tb.borderColor); }
+    var rm = input.remove || {};
+    ["images", "header", "footer", "pageBreaks", "emptyParagraphs"].forEach(function (k) { if (rm[k] === true) { o.remove[k] = true; } });
+    (Array.isArray(input.replace) ? input.replace : []).slice(0, 30).forEach(function (r) {
+      if (r && typeof r.find === "string" && r.find && r.find.length <= 200) { o.replace.push({ find: r.find, replace: String(r.replace == null ? "" : r.replace).slice(0, 500) }); }
+    });
+    return o;
+  }
+
+  function plain(segs) { return segs.map(function (s) { return s.text !== undefined ? s.text : ""; }).join(""); }
+  function lower(s) { return String(s).toLocaleLowerCase("tr"); }
+
+  function restyle(r, x) {
+    var o = Object.assign({}, r);
+    if (x.fontScale) { o.sz = o.sz * x.fontScale; }
+    if (x.fontSizeDelta) { o.sz = o.sz + x.fontSizeDelta; }
+    if (x.fontSize) { o.sz = x.fontSize; }
+    o.sz = clamp(Math.round(o.sz * 2) / 2, 4, 96);
+    if (x.fontName) { o.font = x.fontName; }
+    if (x.bold !== undefined) { o.b = x.bold; }
+    if (x.italic !== undefined) { o.i = x.italic; }
+    if (x.underline !== undefined) { o.u = x.underline; }
+    if (x.strike !== undefined) { o.s = x.strike; }
+    if (x.color) { o.color = x.color; }
+    o.key = [o.font, o.sz, o.b, o.i, o.u, o.s, o.color].join("|");
+    return o;
+  }
+  function restyleSegs(segs, x) {
+    return segs.map(function (s) {
+      var c = Object.assign({}, s, { r: restyle(s.r, x) });
+      if (x.uppercase && c.text !== undefined) { c.text = c.text.toLocaleUpperCase("tr"); }
+      return c;
+    });
+  }
+  function matches(x, cats, text) {
+    if (cats.indexOf(x.target) < 0) { return false; }
+    return !x.contains || lower(text).indexOf(lower(x.contains)) > -1;
+  }
+  function paraCats(b, zone) {
+    var c = ["all"];
+    if (zone !== "body") { c.push(zone); return c; }
+    if (b.title) { c.push("title"); }
+    else if (b.level) { c.push("headings", "heading" + b.level); }
+    else { c.push("body"); if (b.list) { c.push("lists"); } }
+    return c;
+  }
+  function editPara(b, x) {
+    b.segs = restyleSegs(b.segs, x);
+    b.R = restyle(b.R, x);
+    var P = b.P = Object.assign({}, b.P);
+    if (x.align) { P.jc = x.align === "justify" ? "both" : x.align; }
+    if (x.spaceBefore !== undefined) { P.before = x.spaceBefore; }
+    if (x.spaceAfter !== undefined) { P.after = x.spaceAfter; }
+    if (x.lineSpacing !== undefined) { P.line = x.lineSpacing; }
+  }
+
+  function applyRules(blocks, R, zone) {
+    var out = [];
+    blocks.forEach(function (b) {
+      if (b.t === "break" && R.remove.pageBreaks) { return; }
+      if (b.t === "img" && R.remove.images) { return; }
+      if (b.t === "p") {
+        if (R.replace.length) {
+          b.segs = b.segs.map(function (s) {
+            if (s.text === undefined) { return s; }
+            var t = s.text;
+            R.replace.forEach(function (rp) { t = t.split(rp.find).join(rp.replace); });
+            return Object.assign({}, s, { text: t });
+          });
+        }
+        if (R.remove.emptyParagraphs && !hasContent(b.segs) && !b.list) { return; }
+        var txt = plain(b.segs), cats = paraCats(b, zone);
+        R.rules.forEach(function (x) { if (matches(x, cats, txt)) { editPara(b, x); } });
+      }
+      if (b.t === "table") {
+        if (R.tables.borders !== undefined) { b.borders = R.tables.borders; }
+        if (R.tables.borderWidth) { b.borderWidth = R.tables.borderWidth; }
+        if (R.tables.borderColor) { b.borderColor = R.tables.borderColor; }
+        var anyHeader = b.rows.some(function (r) { return r.isHeader; });
+        b.rows.forEach(function (row, ri) {
+          var head = anyHeader ? row.isHeader : ri === 0;
+          row.cells.forEach(function (c) {
+            if (R.replace.length) {
+              c.segs = c.segs.map(function (s) {
+                if (s.text === undefined) { return s; }
+                var t = s.text;
+                R.replace.forEach(function (rp) { t = t.split(rp.find).join(rp.replace); });
+                return Object.assign({}, s, { text: t });
+              });
+            }
+            var txt2 = plain(c.segs), cats2 = zone === "body" ? ["all", "tables", head ? "tableHeader" : "tableBody"] : ["all", zone];
+            R.rules.forEach(function (x) {
+              if (!matches(x, cats2, txt2)) { return; }
+              c.segs = restyleSegs(c.segs, x);
+              c.R = restyle(c.R, x);
+              if (x.align) { c.jc = x.align === "justify" ? "both" : x.align; }
+              if (x.background) { c.fill = x.background; }
+            });
+          });
+        });
+      }
+      out.push(b);
+    });
+    return out;
+  }
+
+  /* short description of the document for the AI: only its shape, never its text */
+  function outline(bodyBlocks, hfBlocks, pw, ph) {
+    var o = { page: { widthPt: pw, heightPt: ph }, headings: [], title: false, lists: false, tables: 0, images: 0, header: !!hfBlocks.header, footer: !!hfBlocks.footer, fonts: {}, sizes: {} };
+    bodyBlocks.forEach(function (b) {
+      if (b.t === "p") {
+        if (b.title) { o.title = true; }
+        if (b.level && o.headings.indexOf(b.level) < 0) { o.headings.push(b.level); }
+        if (b.list) { o.lists = true; }
+        b.segs.forEach(function (s) { o.fonts[s.r.font] = 1; o.sizes[s.r.sz] = 1; });
+      }
+      if (b.t === "table") { o.tables++; }
+      if (b.t === "img") { o.images++; }
+    });
+    o.headings.sort();
+    o.fonts = Object.keys(o.fonts).slice(0, 8);
+    o.sizes = Object.keys(o.sizes).map(Number).sort(function (a, b) { return a - b; }).slice(0, 12);
+    return o;
   }
 
   /* ---------- JRXML writer ---------- */
@@ -765,7 +937,7 @@
       (e.r.color ? ' forecolor="' + e.r.color + '"' : "") + "/>";
     var box = "";
     if (e.border) {
-      box = '<box padding="3"><pen lineWidth="0.5" lineColor="#000000"/>' + (e.noTop ? '<topPen lineWidth="0.0"/>' : "") + (e.noBottom ? '<bottomPen lineWidth="0.0"/>' : "") + "</box>";
+      box = '<box padding="3"><pen lineWidth="' + (e.borderWidth ? fontSize(e.borderWidth) : "0.5") + '" lineColor="' + (e.borderColor || "#000000") + '"/>' + (e.noTop ? '<topPen lineWidth="0.0"/>' : "") + (e.noBottom ? '<bottomPen lineWidth="0.0"/>' : "") + "</box>";
     } else if (e.cell) { box = '<box padding="3"/>'; }
     var f = '<font fontName="' + xmlEsc(e.r.font) + '" size="' + fontSize(e.r.sz) + '"' +
       (e.r.b ? ' isBold="true"' : "") + (e.r.i ? ' isItalic="true"' : "") + (e.r.u ? ' isUnderline="true"' : "") + (e.r.s ? ' isStrikeThrough="true"' : "") + "/>";
@@ -894,6 +1066,13 @@
 
   function build(ctx, opts, T, bodyBlocks, hfBlocks, imgs, wanted, mediaFiles) {
     var warnings = [], media = {}, skippedFmt = {}, linked = 0, off = 0;
+    var RU = cleanRules(opts.rules);
+    var wordPage = (function () { var g = kid(ctx.sect, "w:pgSz"); return [Math.round((num(g && g.attrs["w:w"]) || 11906) / 20), Math.round((num(g && g.attrs["w:h"]) || 16838) / 20)]; })();
+    var docOutline = outline(bodyBlocks, hfBlocks, wordPage[0], wordPage[1]);
+    if (RU.remove.header) { delete hfBlocks.header; }
+    if (RU.remove.footer) { delete hfBlocks.footer; }
+    bodyBlocks = applyRules(bodyBlocks, RU, "body");
+    ["header", "footer"].forEach(function (k) { if (hfBlocks[k]) { hfBlocks[k].blocks = applyRules(hfBlocks[k].blocks, RU, k); } });
     imgs.forEach(function (b) {
       var p = wanted[b.img.rid];
       if (p === null) { linked++; return; }
@@ -908,6 +1087,16 @@
     var pw = Math.round((num(pg && pg.attrs["w:w"]) || 11906) / 20), ph = Math.round((num(pg && pg.attrs["w:h"]) || 16838) / 20);
     var m = function (k, d) { var v = num(mar && mar.attrs["w:" + k]); return Math.max(0, Math.round((v !== undefined ? v : d) / 20)); };
     var top = m("top", 1417), bottom = m("bottom", 1417), left = m("left", 1417), right = m("right", 1417), hDist = m("header", 708), fDist = m("footer", 708);
+    if (RU.page.size) { pw = PAGES[RU.page.size][0]; ph = PAGES[RU.page.size][1]; if (!RU.page.orientation && wordPage[0] > wordPage[1]) { var sw = pw; pw = ph; ph = sw; } }
+    if (RU.page.orientation && (RU.page.orientation === "landscape") !== (pw > ph)) { var sw2 = pw; pw = ph; ph = sw2; }
+    if (RU.page.marginsMm) {
+      var mmPt = function (v) { return Math.round(v * 72 / 25.4); }, MM = RU.page.marginsMm;
+      if (MM.top !== undefined) { top = mmPt(MM.top); hDist = Math.min(hDist, top); }
+      if (MM.bottom !== undefined) { bottom = mmPt(MM.bottom); fDist = Math.min(fDist, bottom); }
+      if (MM.left !== undefined) { left = mmPt(MM.left); }
+      if (MM.right !== undefined) { right = mmPt(MM.right); }
+      if (left + right > pw - 100) { left = right = Math.round((pw - 100) / 2); }
+    }
     var W = Math.max(50, pw - left - right);
     var cols = kid(sect, "w:cols");
     if (cols && parseInt(cols.attrs["w:num"] || "1", 10) > 1) { warnings.push(T.columns); }
@@ -999,9 +1188,9 @@
       header: !!head, footer: !!foot
     };
     var model = { page: { w: pw, h: ph, top: topMargin, bottom: bottomMargin, left: left, right: right, W: W, maxH: maxH }, header: head, footer: foot, bands: bands };
-    return { jrxml: x, model: model, stats: stats, warnings: warnings };
+    return { jrxml: x, model: model, stats: stats, warnings: warnings, outline: docOutline, rules: RU };
   }
 
-  var api = { convert: convert, _javaStr: javaStr, _expression: expression };
+  var api = { convert: convert, cleanRules: cleanRules, _javaStr: javaStr, _expression: expression };
   if (typeof module !== "undefined" && module.exports) { module.exports = api; } else { root.DocxJrxml = api; }
 })(typeof window !== "undefined" ? window : globalThis);
